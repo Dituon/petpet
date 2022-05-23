@@ -6,7 +6,15 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 使用方法
 
-使用 **戳一戳** 或 **指令`pet @xxx`** 有 `30%` 的概率触发。
+1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/tag/dev)
+
+2. 将插件放入 `Mirai/plugins/`
+
+3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/res/petpet)
+
+4. 将图片素材放入 `Mirai/res/petpet`
+
+5. 使用 **戳一戳** 或 **指令`pet @xxx`** 有 `30%` 的概率触发。
 
 ## 二次开发
 
