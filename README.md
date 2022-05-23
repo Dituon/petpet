@@ -2,7 +2,7 @@
 
 一个生成摸摸头GIF的 Mirai 插件，灵感/数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
-纯java编写，**未使用任何第三方库**：轻量，高效。
+java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 使用方法
 
