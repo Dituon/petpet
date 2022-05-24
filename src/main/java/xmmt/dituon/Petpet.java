@@ -12,6 +12,8 @@ import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Random;
 
@@ -19,10 +21,13 @@ import static xmmt.dituon.ImageSynthesis.sendImage;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
+    public static boolean antialias = false;
+    public static String command = "pet";
+    public static int randomMax = 40;
     Bot bot = null;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "1.0")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "1.1")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -30,7 +35,7 @@ public final class Petpet extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Plugin loaded!");
+        readConfig();
         GlobalEventChannel.INSTANCE.subscribeOnce(BotOnlineEvent.class, e -> {
             if (bot == null) {
                 bot = e.getBot();
@@ -42,34 +47,38 @@ public final class Petpet extends JavaPlugin {
 
     private void onNudge(NudgeEvent e) {
         if (e.getFrom().getId() == e.getTarget().getId()) {
-            makeImage((Group) e.getSubject(), (Member) e.getTarget());
+            makeImage((Group) e.getSubject(), (Member) e.getTarget(), new Random().nextInt(randomMax));
+            return;
         }
-        makeImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget());
+        makeImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), new Random().nextInt(randomMax));
     }
 
     private void onGroupMessage(GroupMessageEvent e) {
-        if(e.getMessage().contains(At.Key)&&e.getMessage().contentToString().startsWith("pet")){
-            for (Message m : e.getMessage()){
-                if (m instanceof At){
+        if (e.getMessage().contains(At.Key) && e.getMessage().contentToString().startsWith(command)) {
+            for (Message m : e.getMessage()) {
+                if (m instanceof At) {
                     At at = (At) m;
                     Member to = e.getGroup().get(at.getTarget());
-                    makeImage(e.getGroup(),e.getSender(),to);
+                    assert to != null;
+                    if (to.getId() == e.getSender().getId()) {
+                        makeImage(e.getGroup(), to, new Random().nextInt(14));
+                    }
+                    makeImage(e.getGroup(), e.getSender(), to, new Random().nextInt(14));
                 }
             }
         }
     }
 
-    void makeImage(Group group, Member member) {
-        makeImage(group, group.getBotAsMember(), member);
+    void makeImage(Group group, Member member, int index) {
+        makeImage(group, group.getBotAsMember(), member, index);
     }
 
-    void makeImage(Group group, Member from, Member to) {
-        int random = new Random().nextInt(40);
+    void makeImage(Group group, Member from, Member to, int index) {
         int[][] fromPos;
         int[][] toPos;
         int[][] pos;
 
-        switch (random) {
+        switch (index) {
             case 0:
                 fromPos = new int[][]{
                         {92, 64, 40, 40}, {135, 40, 40, 40}, {84, 105, 40, 40}, {80, 110, 40, 40},
@@ -206,6 +215,38 @@ public final class Petpet extends JavaPlugin {
                 group.sendMessage(Objects.requireNonNull(
                         ImageSynthesis.sendImage(to, "./res/petpet/tightly/", pos, false, false)));
                 break;
+        }
+    }
+
+    public void readConfig() {
+        File configFile = new File("./plugins/petpet.json");
+        try {
+            if (configFile.exists()) {
+                BufferedReader configBr = new BufferedReader(new FileReader(configFile));
+                StringBuilder configSb = new StringBuilder();
+                String str;
+                while ((str = configBr.readLine()) != null) {
+                    configSb.append(str);
+                }
+                configBr.close();
+                ConfigJSON config = ConfigJSONKt.decode(configSb.toString());
+                command = config.getCommand();
+                antialias = config.getAntialias();
+                randomMax = (int) (14 / (config.getProbability() * 0.01));
+                getLogger().info("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
+            } else {
+                String defaultConfig = "{\n  \"command\": \"pet\",\n  \"probability\": 30,\n  \"antialias\": false\n}";
+                if (!configFile.createNewFile()) {
+                    getLogger().error("无法创建配置文件，请检查权限!");
+                    return;
+                }
+                FileOutputStream defaultConfigOS = new FileOutputStream(configFile);
+                defaultConfigOS.write(defaultConfig.getBytes(StandardCharsets.UTF_8));
+                getLogger().info("创建配置文件成功，请去 Mirai/plugins/ 目录编辑 petpet.json");
+                readConfig();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

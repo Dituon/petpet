@@ -35,9 +35,7 @@ public class GifMaker {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(255);
         long counter = 0;
         try {
-            System.out.println("getStreamPosition()[BEFORE]=" + ios.getStreamPosition());
             ios.seek(0);
-            System.out.println("getStreamPosition()[AFTER]=" + ios.getStreamPosition());
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -47,14 +45,12 @@ public class GifMaker {
                 bos.write(ios.readByte());
                 counter++;
             } catch (EOFException e) {
-                System.out.println("End of Image Stream");
                 break;
             } catch (IOException e) {
                 System.out.println("Error processing the Image Stream");
                 break;
             }
         }
-        System.out.println("Total bytes read=" + counter);
         return bos.toByteArray();
     }
 
