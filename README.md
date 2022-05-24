@@ -6,7 +6,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 使用方法
 
-1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/tag/dev)
+1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/)
 
 2. 将插件放入 `Mirai/plugins/`
 
