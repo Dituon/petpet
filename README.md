@@ -14,7 +14,53 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 4. 将图片素材放入 `Mirai/res/petpet`
 
-5. 使用 **戳一戳** 或 **指令`pet @xxx`** 有 `30%` 的概率触发。
+5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
+
+## 配置文件
+
+首次运行 Petpet 插件时，会生成 `Mirai/plugins/petpet.json` 文件
+
+```
+{
+  "command": "pet", // 触发 petpet 的指令
+  "probability": 30, // 使用 戳一戳 的触发概率
+  "antialias": false // 抗锯齿
+}
+```
+
+修改后重启 Mirai 以重新加载
+
+## 图片预览
+
+**图片按index排序(见`Petpet.java`)**
+
+![image](img/0.gif)
+
+![image](img/1.gif)
+
+![image](img/2.gif)
+
+![image](img/3.gif)
+
+![image](img/4.gif)
+
+![image](img/5.gif)
+
+![image](img/6.gif)
+
+![image](img/7.gif)
+
+![image](img/8.gif)
+
+![image](img/9.gif)
+
+![image](img/10.gif)
+
+![image](img/11.gif)
+
+![image](img/12.gif)
+
+![image](img/13.gif)
 
 ## 二次开发
 
@@ -63,6 +109,14 @@ gifMaker.getOutput();
 // ExternalResource resource = ExternalResource.create(gifMaker.getOutput());
 // Image image = xxx.uploadImage(resource);
 ```
+
+## 常见问题
+
+> 为什么戳一戳无法触发?
+>> 检查 Mirai 登录协议，仅 `ANDORID_PHONE` 可以收到 戳一戳 消息
+
+> 为什么不用 Mirai 的原生配置文件方法?
+>> 因为 **JAutoSavePluginData 根本无法使用**, 如果 Mirai 的开发者看到了麻烦测试一下
 
 ## 后话
 
