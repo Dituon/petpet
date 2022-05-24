@@ -121,7 +121,7 @@ gifMaker.getOutput();
 >> 检查 Mirai 登录协议，仅 `ANDORID_PHONE` 可以收到 戳一戳 消息
 
 > 为什么不用 Mirai 的原生配置文件方法?
->> 因为 **JAutoSavePluginData 根本无法使用**, 如果 Mirai 的开发者看到了麻烦测试一下
+>> 因为 **JAutoSavePluginConfig 根本无法使用**, 如果 Mirai 的开发者看到了麻烦测试一下
 
 ## 后话
 
