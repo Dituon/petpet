@@ -34,6 +34,9 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 **图片按index排序(见`Petpet.java`)**
 
+<details>
+<summary>展开/收起</summary>
+
 ![image](img/0.gif)
 
 ![image](img/1.gif)
@@ -61,6 +64,8 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 ![image](img/12.gif)
 
 ![image](img/13.gif)
+
+</details>
 
 ## 二次开发
 
