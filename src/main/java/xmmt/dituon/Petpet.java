@@ -27,7 +27,7 @@ public final class Petpet extends JavaPlugin {
     Bot bot = null;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "1.1")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "1.2")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -50,7 +50,12 @@ public final class Petpet extends JavaPlugin {
             makeImage((Group) e.getSubject(), (Member) e.getTarget(), new Random().nextInt(randomMax));
             return;
         }
-        makeImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), new Random().nextInt(randomMax));
+        e.getTarget().getBot();
+        try {
+            makeImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), new Random().nextInt(randomMax));
+        } catch (Exception ex){
+            makeImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), new Random().nextInt(randomMax));
+        }
     }
 
     private void onGroupMessage(GroupMessageEvent e) {
