@@ -12,6 +12,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.message.data.QuoteReply;
 
 import java.io.*;
@@ -31,7 +32,7 @@ public final class Petpet extends JavaPlugin {
     public static int randomMax = 40;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "1.3")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "1.4")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -53,10 +54,6 @@ public final class Petpet extends JavaPlugin {
         if (isDisabled((Group) e.getSubject())) {
             return; // 如果禁用了petpet就返回
         }
-        if (e.getFrom().getId() == e.getTarget().getId()) { // 如果戳和被戳的是同一个对象
-            makeImage((Group) e.getSubject(), (Member) e.getTarget(), new Random().nextInt(randomMax));
-            return;
-        }
         try {
             makeImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), new Random().nextInt(randomMax));
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
@@ -77,18 +74,24 @@ public final class Petpet extends JavaPlugin {
             return;
         }
 
-        if (!isDisabled(e.getGroup()) && e.getMessage().contains(At.Key) && e.getMessage().contentToString().startsWith(command)) {
+        if (!isDisabled(e.getGroup()) && e.getMessage().contains(At.Key)
+                && e.getMessage().contentToString().startsWith(command)) {
+            At at = null;
+            Member to = e.getSender();
+            int index = new Random().nextInt(14);
             for (Message m : e.getMessage()) {
                 if (m instanceof At) { // 遍历消息取出At的对象
-                    At at = (At) m;
-                    Member to = e.getGroup().get(at.getTarget());
-                    assert to != null;
-                    if (to.getId() == e.getSender().getId()) {
-                        makeImage(e.getGroup(), to, new Random().nextInt(14));
+                    at = (At) m;
+                    to = e.getGroup().get(at.getTarget());
+                }
+                if (m instanceof PlainText && at != null) {
+                    try {
+                        index = Integer.parseInt(m.contentToString().replace(" ", ""));
+                    } catch (NumberFormatException ignored) {
                     }
-                    makeImage(e.getGroup(), e.getSender(), to, new Random().nextInt(14));
                 }
             }
+            makeImage(e.getGroup(), e.getSender(), to, index);
         }
     }
 

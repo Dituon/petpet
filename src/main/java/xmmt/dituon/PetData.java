@@ -8,11 +8,9 @@ import java.util.Objects;
 import static xmmt.dituon.ImageSynthesis.sendImage;
 
 public class PetData {
-    public static void makeImage(Group group, Member member, int index) {
-        makeImage(group, group.getBotAsMember(), member, index);
-    }
-
     public static void makeImage(Group group, Member from, Member to, int index) {
+        from = from.equals(to) ? group.getBotAsMember() : from;
+
         int[][] fromPos;
         int[][] toPos;
         int[][] pos;

@@ -16,6 +16,8 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
 
+> `pet @xxx` 后跟 `index` 可以返回指定index的图片
+
 ## 配置文件
 
 首次运行 Petpet 插件时，会生成 `Mirai/plugins/petpet.json` 文件
@@ -40,34 +42,22 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 <details>
 <summary>展开/收起</summary>
-
-![image](img/0.gif)
-
-![image](img/1.gif)
-
-![image](img/2.gif)
-
-![image](img/3.gif)
-
-![image](img/4.gif)
-
-![image](img/5.gif)
-
-![image](img/6.gif)
-
-![image](img/7.gif)
-
-![image](img/8.gif)
-
-![image](img/9.gif)
-
-![image](img/10.gif)
-
-![image](img/11.gif)
-
-![image](img/12.gif)
-
-![image](img/13.gif)
+| index | 预览 |
+| --- | --- |
+| 0 | ![image](img/0.gif) |
+| 1 | ![image](img/1.gif) |
+| 2 | ![image](img/2.gif) |
+| 3 | ![image](img/3.gif) |
+| 4 | ![image](img/4.gif) |
+| 5 | ![image](img/5.gif) |
+| 6 | ![image](img/6.gif) |
+| 7 | ![image](img/7.gif) |
+| 8 | ![image](img/8.gif) |
+| 9 | ![image](img/9.gif) |
+| 10 | ![image](img/10.gif) |
+| 11 | ![image](img/11.gif) |
+| 12 | ![image](img/12.gif) |
+| 13 | ![image](img/13.gif) |
 
 </details>
 

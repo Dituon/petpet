@@ -33,7 +33,6 @@ public class GifMaker {
 
     public byte[] getBytes(ImageOutputStream ios) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(255);
-        long counter = 0;
         try {
             ios.seek(0);
         } catch (IOException e1) {
@@ -43,7 +42,6 @@ public class GifMaker {
         while (true) {
             try {
                 bos.write(ios.readByte());
-                counter++;
             } catch (EOFException e) {
                 break;
             } catch (IOException e) {
@@ -71,7 +69,7 @@ public class GifMaker {
         child.setAttribute("authenticationCode", "2.0");
 
         int loopContinuously = loop ? 0 : 1;
-        child.setUserObject(new byte[]{ 0x1, (byte) (loopContinuously & 0xFF), (byte) ((loopContinuously >> 8) & 0xFF)});
+        child.setUserObject(new byte[]{ 0x1, (byte) (loopContinuously & 0xFF), (byte) (0)});
         appExtensionsNode.appendChild(child);
         metadata.setFromTree(metaFormatName, root);
     }

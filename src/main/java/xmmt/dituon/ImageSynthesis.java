@@ -59,6 +59,7 @@ public class ImageSynthesis {
             resource.close();
             return image;
         } catch (IOException ex) {
+            System.out.println("(sendImage)构造GIF失败，请检查 PetData.java");
             ex.printStackTrace();
         }
         return null;
@@ -102,6 +103,7 @@ public class ImageSynthesis {
             resource.close();
             return image;
         } catch (IOException ex) {
+            System.out.println("(sendImage)构造GIF失败，请检查 PetData.java");
             ex.printStackTrace();
         }
         return null;
@@ -130,6 +132,7 @@ public class ImageSynthesis {
             conn = (HttpURLConnection) url.openConnection();
             image = ImageIO.read(conn.getInputStream());
         } catch (Exception e) {
+            System.out.println("获取头像失败\nURL: "+URL);
             e.printStackTrace();
         } finally {
             assert conn != null;
