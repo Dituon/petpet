@@ -38,7 +38,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 图片预览
 
-**图片按index排序(见`Petpet.java`)**
+**图片按index排序(见`PetData.java`)**
 
 <details>
 <summary>展开/收起</summary>
