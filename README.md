@@ -42,6 +42,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 <details>
 <summary>展开/收起</summary>
+
 | index | 预览 |
 | --- | --- |
 | 0 | ![image](img/0.gif) |
