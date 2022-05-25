@@ -130,9 +130,11 @@ public class ImageSynthesis {
         try {
             java.net.URL url = new URL(URL);
             conn = (HttpURLConnection) url.openConnection();
+            conn.connect();
             image = ImageIO.read(conn.getInputStream());
+            conn.disconnect();
         } catch (Exception e) {
-            System.out.println("获取头像失败\nURL: "+URL);
+            System.out.println("获取头像失败\nHttpURLConnection: "+conn+"\nURL: "+URL);
             e.printStackTrace();
         } finally {
             assert conn != null;
