@@ -3,15 +3,18 @@ package xmmt.dituon;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
+import xmmt.dituon.share.BaseGifMaker;
+import xmmt.dituon.share.GifBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
-import static xmmt.dituon.ImageSynthesis.*;
+import static xmmt.dituon.share.ImageSynthesis.*;
 
-public class GifMaker {
+public class GifMaker extends BaseGifMaker {
     // 单头像GIF
     public static Image makeGIF(Member m, String path, int[][] pos, boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
         return makeGIF(m, m.getAvatarUrl(), path, pos, isAvatarOnTop, isRotate, isRound);
@@ -19,31 +22,18 @@ public class GifMaker {
 
     public static Image makeGIF(Member m, String URL, String path, int[][] pos,
                                 boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
-        int i = 0;
+        BufferedImage avatarImage = getAvatarImage(URL);
+        InputStream gifResultStream = makeOneAvatarGIF(avatarImage, path, pos, isAvatarOnTop, isRotate, isRound);
         try {
-            GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(path + "0.png")).getType(), 65, true);
-            BufferedImage avatarImage = getAvatarImage(URL);
-            if (isRound) {
-                avatarImage = convertCircular(avatarImage);
-            }
-            for (int[] p : pos) {
-                File f = new File(path + i + ".png");
-                i++;
-                BufferedImage sticker = ImageIO.read(f);
-                if (isRotate) {
-                    gifBuilder.writeToSequence(synthesisImage(avatarImage, sticker, p, i, isAvatarOnTop));
-                    continue;
-                }
-                gifBuilder.writeToSequence(synthesisImage(avatarImage, sticker, p, isAvatarOnTop));
-            }
-            gifBuilder.close();
-            ExternalResource resource = ExternalResource.create(gifBuilder.getOutput());
+            if (gifResultStream != null) {
+                ExternalResource resource = ExternalResource.create(gifResultStream);
 
-            Image image = m.uploadImage(resource);
-            resource.close();
-            return image;
+                Image image = m.uploadImage(resource);
+                resource.close();
+                return image;
+            }
         } catch (IOException ex) {
-            System.out.println("构造GIF失败，请检查 PetData.java");
+            System.out.println("构造ExternalResource失败");
             ex.printStackTrace();
         }
         return null;
@@ -57,10 +47,11 @@ public class GifMaker {
 
     public static Image makeGIF(Member m, String m1URL, String m2URL, String path, int[][] pos1, int[][] pos2,
                                 boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
+        BufferedImage avatarImage1 = getAvatarImage(m1URL);
+        BufferedImage avatarImage2 = getAvatarImage(m2URL);
         try {
             GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(path + "0.png")).getType(), 60, true);
-            BufferedImage avatarImage1 = getAvatarImage(m1URL);
-            BufferedImage avatarImage2 = getAvatarImage(m2URL);
+
 
             if (isRound) {
                 avatarImage1 = convertCircular(avatarImage1);

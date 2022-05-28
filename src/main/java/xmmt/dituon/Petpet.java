@@ -34,8 +34,8 @@ public final class Petpet extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        readConfig();
-        readData();
+        readConfig(resolveConfigFile("./"));
+        readData(resolveDataFile("./"));
         GlobalEventChannel.INSTANCE.subscribeOnce(BotOnlineEvent.class, e -> {
             if (bot == null) {
                 bot = e.getBot();
