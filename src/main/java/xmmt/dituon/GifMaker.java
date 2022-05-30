@@ -1,101 +1,95 @@
 package xmmt.dituon;
 
-import javax.imageio.*;
-import javax.imageio.metadata.IIOInvalidTreeException;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.metadata.IIOMetadataNode;
-import javax.imageio.stream.ImageOutputStream;
-import java.awt.image.RenderedImage;
-import java.io.*;
+import net.mamoe.mirai.contact.Member;
+import net.mamoe.mirai.message.data.Image;
+import net.mamoe.mirai.utils.ExternalResource;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import static xmmt.dituon.ImageSynthesis.*;
 
 public class GifMaker {
-
-    protected ImageWriter writer;
-    protected ImageWriteParam params;
-    protected IIOMetadata metadata;
-    protected ImageOutputStream image;
-    protected InputStream output;
-
-    public GifMaker(int imageType, int delay, boolean loop) throws IOException {
-        writer = ImageIO.getImageWritersBySuffix("gif").next();
-        params = writer.getDefaultWriteParam();
-
-        ImageTypeSpecifier imageTypeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(imageType);
-        metadata = writer.getDefaultImageMetadata(imageTypeSpecifier, params);
-
-        configureRootMetadata(delay, loop);
-
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        image = ImageIO.createImageOutputStream(os);
-        writer.setOutput(image);
-        writer.prepareWriteSequence(null);
+    // 单头像GIF
+    public static Image makeGIF(Member m, String path, int[][] pos, boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
+        return makeGIF(m, m.getAvatarUrl(), path, pos, isAvatarOnTop, isRotate, isRound);
     }
 
-    public byte[] getBytes(ImageOutputStream ios) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(255);
+    public static Image makeGIF(Member m, String URL, String path, int[][] pos,
+                                boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
+        int i = 0;
         try {
-            ios.seek(0);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-
-        while (true) {
-            try {
-                bos.write(ios.readByte());
-            } catch (EOFException e) {
-                break;
-            } catch (IOException e) {
-                System.out.println("Error processing the Image Stream");
-                break;
+            GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(path + "0.png")).getType(), 65, true);
+            BufferedImage avatarImage = getAvatarImage(URL);
+            if (isRound) {
+                avatarImage = convertCircular(avatarImage);
             }
-        }
-        return bos.toByteArray();
-    }
-
-    private void configureRootMetadata(int delay, boolean loop) throws IIOInvalidTreeException {
-        String metaFormatName = metadata.getNativeMetadataFormatName();
-        IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree(metaFormatName);
-
-        IIOMetadataNode graphicsControlExtensionNode = getNode(root, "GraphicControlExtension");
-        graphicsControlExtensionNode.setAttribute("disposalMethod", "none");
-        graphicsControlExtensionNode.setAttribute("userInputFlag", "FALSE");
-        graphicsControlExtensionNode.setAttribute("transparentColorFlag", "FALSE");
-        graphicsControlExtensionNode.setAttribute("delayTime", Integer.toString(delay / 10));
-        graphicsControlExtensionNode.setAttribute("transparentColorIndex", "0");
-
-        IIOMetadataNode appExtensionsNode = getNode(root, "ApplicationExtensions");
-        IIOMetadataNode child = new IIOMetadataNode("ApplicationExtension");
-        child.setAttribute("applicationID", "NETSCAPE");
-        child.setAttribute("authenticationCode", "2.0");
-
-        int loopContinuously = loop ? 0 : 1;
-        child.setUserObject(new byte[]{ 0x1, (byte) (loopContinuously & 0xFF), (byte) (0)});
-        appExtensionsNode.appendChild(child);
-        metadata.setFromTree(metaFormatName, root);
-    }
-
-    private static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName){
-        int nNodes = rootNode.getLength();
-        for (int i = 0; i < nNodes; i++){
-            if (rootNode.item(i).getNodeName().equalsIgnoreCase(nodeName)){
-                return (IIOMetadataNode) rootNode.item(i);
+            for (int[] p : pos) {
+                File f = new File(path + i + ".png");
+                i++;
+                BufferedImage sticker = ImageIO.read(f);
+                if (isRotate) {
+                    gifBuilder.writeToSequence(synthesisImage(avatarImage, sticker, p, i, isAvatarOnTop));
+                    break;
+                }
+                gifBuilder.writeToSequence(synthesisImage(avatarImage, sticker, p, isAvatarOnTop));
             }
+            gifBuilder.close();
+            ExternalResource resource = ExternalResource.create(gifBuilder.getOutput());
+
+            Image image = m.uploadImage(resource);
+            resource.close();
+            return image;
+        } catch (IOException ex) {
+            System.out.println("构造GIF失败，请检查 PetData.java");
+            ex.printStackTrace();
         }
-        IIOMetadataNode node = new IIOMetadataNode(nodeName);
-        rootNode.appendChild(node);
-        return(node);
+        return null;
     }
 
-    public void writeToSequence(RenderedImage img) throws IOException {
-        writer.writeToSequence(new IIOImage(img, null, metadata), params);
+    // 两张头像GIF
+    public static Image makeGIF(Member m1, Member m2, String path, int[][] pos1, int[][] pos2,
+                                boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
+        return makeGIF(m1, m1.getAvatarUrl(), m2.getAvatarUrl(), path, pos1, pos2, isAvatarOnTop, isRotate, isRound);
     }
 
-    public InputStream getOutput(){
-        return output;
-    }
+    public static Image makeGIF(Member m, String m1URL, String m2URL, String path, int[][] pos1, int[][] pos2,
+                                boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
+        try {
+            GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(path + "0.png")).getType(), 60, true);
+            BufferedImage avatarImage1 = getAvatarImage(m1URL);
+            BufferedImage avatarImage2 = getAvatarImage(m2URL);
 
-    public void close() throws IOException {
-        writer.endWriteSequence();
-        output = new ByteArrayInputStream(getBytes(image));
+            if (isRound) {
+                avatarImage1 = convertCircular(avatarImage1);
+                avatarImage2 = convertCircular(avatarImage2);
+            }
+
+            for (int i = 0; i < pos1.length; i++) {
+                File f = new File(path + i + ".png");
+                BufferedImage sticker = ImageIO.read(f);
+
+                if (isRotate) {
+                    gifBuilder.writeToSequence(synthesisImage(
+                            sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], i+1, isAvatarOnTop));
+                    break;
+                }
+                gifBuilder.writeToSequence(synthesisImage(
+                        sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], isAvatarOnTop));
+            }
+
+            gifBuilder.close();
+            ExternalResource resource = ExternalResource.create(gifBuilder.getOutput());
+
+            Image image = m.uploadImage(resource);
+            resource.close();
+            return image;
+        } catch (IOException ex) {
+            System.out.println("构造GIF失败，请检查 PetData");
+            ex.printStackTrace();
+        }
+        return null;
     }
 }
