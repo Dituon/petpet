@@ -25,9 +25,9 @@ public class ImageSynthesis {
     public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos,
                                                 int rotateIndex, boolean isAvatarOnTop) {
         BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
-        if (rotateIndex != 0F) {
+        if (rotateIndex != 0) {
             Graphics2D rotateG2d = newAvatarImage.createGraphics();
-            rotateG2d.rotate(Math.toRadians((float) (360 / pos.length) * (rotateIndex + 1)),
+            rotateG2d.rotate(Math.toRadians((float) (360 / pos.length) * rotateIndex),
                     avatarImage.getWidth() / 2, avatarImage.getHeight() / 2);
             rotateG2d.drawImage(avatarImage, null, 0, 0);
         } else {
@@ -61,7 +61,7 @@ public class ImageSynthesis {
         BufferedImage newAvatarImage1 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
         BufferedImage newAvatarImage2 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
 
-        if (rotateIndex != 0F) {
+        if (rotateIndex != 0) {
             Graphics2D rotateG2d1 = newAvatarImage1.createGraphics();
             rotateG2d1.rotate(Math.toRadians((float) (360 / pos1.length) * (rotateIndex + 1)),
                     avatarImage1.getWidth() / 2, avatarImage1.getHeight() / 2);

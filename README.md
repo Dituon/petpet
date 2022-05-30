@@ -16,7 +16,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
 
-> `pet @xxx` 后跟 `index` 可以返回指定图片 例如 `pet @xxx 1`
+> `pet @xxx` 后跟 `key` 可以返回指定图片 例如 `pet @xxx kiss`
 
 ## 配置文件
 
@@ -24,9 +24,12 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 {
+  "version": 2.0, // 配置文件版本
   "command": "pet", // 触发 petpet 的指令
   "probability": 30, // 使用 戳一戳 的触发概率
   "antialias": false // 抗锯齿
+  "disabled": [], // 禁用列表
+  "resPath": "./res/petpet/" // 图片素材路径
 }
 ```
 
@@ -38,76 +41,110 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 图片预览
 
-**图片按index排序(见`PetData.java`)**
+**图片按key排序(见`res/petpet/`)**
 
 <details>
 <summary>展开/收起</summary>
 
 | index | 预览 |
 | --- | --- |
-| 0 | ![image](img/0.gif) |
-| 1 | ![image](img/1.gif) |
-| 2 | ![image](img/2.gif) |
-| 3 | ![image](img/3.gif) |
-| 4 | ![image](img/4.gif) |
-| 5 | ![image](img/5.gif) |
-| 6 | ![image](img/6.gif) |
-| 7 | ![image](img/7.gif) |
-| 8 | ![image](img/8.gif) |
-| 9 | ![image](img/9.gif) |
-| 10 | ![image](img/10.gif) |
-| 11 | ![image](img/11.gif) |
-| 12 | ![image](img/12.gif) |
-| 13 | ![image](img/13.gif) |
+| kiss | ![image](img/0.gif) |
+| rub | ![image](img/1.gif) |
+| throw | ![image](img/2.gif) |
+| petpet | ![image](img/3.gif) |
+| play | ![image](img/4.gif) |
+| roll | ![image](img/5.gif) |
+| bite | ![image](img/6.gif) |
+| twist | ![image](img/7.gif) |
+| pound | ![image](img/8.gif) |
+| thump | ![image](img/9.gif) |
+| knock | ![image](img/10.gif) |
+| suck | ![image](img/11.gif) |
+| hammer | ![image](img/12.gif) |
+| tightly | ![image](img/13.gif) |
 
 </details>
 
-## 二次开发
+## 自定义
 
-快速进行二次开发
+### data.json
 
-### `ImageSynthesis.java`
+`./res/petpet/` 下的目录名为 `key` ，插件启动时会遍历 `./res/petpet/$key/data.json`
 
-通过坐标和图片路径生成GIF并发送:
-
-**单个头像生成GIF**
-
-`sendImage(Member m, String path, int[][] pos, boolean isAvatarOnTop, boolean isRotate)`
-
-- m: Member对象，用于获取头像和上传图片
-- path: 图片路径，用于遍历图片
-- pos: 头像坐标，用于生成图片
-- isAvatarOnTop: 头像在贴图之上
-- isRotate: 头像旋转，自动旋转360度
-返回 Mirai Image 对象。
-
-**两个头像生成GIF**
-
-`sendImage(Member m1, Member m2, String path, int[][] pos1, int[][] pos2)`
-
-- m1&m2: Member对象，**m2在m1图层之上**
-- path: 图片路径，用于遍历图片
-- pos1&pos2: 头像坐标，对应m1&m2
-返回 Mirai Image 对象。
-
-### `GifMaker.java`
-
-构造GifMaker对象并生成GIF
-
-使用例:
+`data.json` 标准如下 (以 `thump/data.json` 为例)
 
 ```
-GifMaker gifMaker = new GifMaker(ImageIO.read(new File("0.png")).getType(), 60, true);
-// 构造对象，参数为: 图片标签, 帧间距(ms), 循环
-BufferedImage output = new BufferedImage(...);
-gifMaker.writeToSequence(output);
-// 输入 BufferedImage 对象
-gifMaker.close();
-// 停止输入并生成GIF
-gifMaker.getOutput();
-// 获取GIF (InputStream)
-// ExternalResource resource = ExternalResource.create(gifMaker.getOutput());
-// Image image = xxx.uploadImage(resource);
+{
+  "type": "GIF", // 图片类型(enum)
+  "avatar": "SINGLE", // 头像数(enum)
+  "pos": [ // 坐标
+    [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
+  ],
+  "text": "", // 文字，暂不可用
+  "round": true, // 值为true时 会将头像裁切为椭圆形
+  "rotate": false, // 值为true时 GIF头像会旋转
+  "avatarOnTop": false // 值为true时 头像图层在顶端
+}
+```
+
+#### 类型枚举
+
+**`type`**
+
+- `GIF`  动图
+- `IMG`  静态图片
+
+**`avatar`**
+
+- `SINGLE`  单头像
+- `DOUBLE`  双头像
+
+#### 坐标
+
+坐标的基本组成单位是 4长度 `int[]` 数组
+
+其中，前两项为 **左上角顶点坐标**， 后两项为 **宽度和高度**
+
+例: 
+`[65, 128, 77, 72]` 即 头像的左上角顶点坐标是 `(65,128)`, 宽度为 `77`, 高度为 `72`
+
+如果是 `GIF` 类型，坐标应为二维数组，`GIF` 的每一帧视为单个图像文件
+```
+"type": "GIF", // GIF 类型
+"avatar": "SINGLE", // 单头像
+"pos": [ // pos的元素对应GIF的4帧
+    [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
+  ],
+```
+
+如果是 `DOUBLE` 类型，应有2个数组
+```
+  "type": "GIF", // GIF 类型
+  "avatar": "DOUBLE", // 双头像
+  "pos": [ // 两个子数组对应两个头像
+    [ // 元素对应GIF的6帧
+      [102, 95, 70, 80], [108, 60, 50, 100], [97, 18, 65, 95],
+      [65, 5, 75, 75], [95, 57, 100, 55], [109, 107, 65, 75]
+    ],
+    [ // 元素对应GIF的6帧
+      [39, 91, 75, 75], [49, 101, 75, 75], [67, 98, 75, 75],
+      [55, 86, 75, 75], [61, 109, 75, 75], [65, 101, 75, 75]
+    ]
+  ]
+```
+发送者头像对应第1个数组, 接收者对应第2个数组, **发送者头像图层在接收者头像之上**
+
+相信你已经明白了坐标的格式规范, 下面还有两个例子
+
+```
+  "type": "IMG", // IMG 类型
+  "avatar": "SINGLE", // 单头像
+  "pos": [0, 0, 200, 200]
+```
+```
+  "type": "IMG", // IMG 类型
+  "avatar": "DOUBLE", // 双头像
+  "pos": [[0, 0, 200, 200] , [150, 160, 200, 200]]
 ```
 
 ## 常见问题

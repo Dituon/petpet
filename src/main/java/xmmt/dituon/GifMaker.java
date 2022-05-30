@@ -32,7 +32,7 @@ public class GifMaker {
                 BufferedImage sticker = ImageIO.read(f);
                 if (isRotate) {
                     gifBuilder.writeToSequence(synthesisImage(avatarImage, sticker, p, i, isAvatarOnTop));
-                    break;
+                    continue;
                 }
                 gifBuilder.writeToSequence(synthesisImage(avatarImage, sticker, p, isAvatarOnTop));
             }
@@ -74,7 +74,7 @@ public class GifMaker {
                 if (isRotate) {
                     gifBuilder.writeToSequence(synthesisImage(
                             sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], i+1, isAvatarOnTop));
-                    break;
+                    continue;
                 }
                 gifBuilder.writeToSequence(synthesisImage(
                         sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], isAvatarOnTop));
