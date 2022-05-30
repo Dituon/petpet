@@ -106,13 +106,13 @@ public class ImageSynthesis {
         return output;
     }
 
-    public static BufferedImage convertCircular(BufferedImage input) throws IOException {
+    public static BufferedImage convertCircular(BufferedImage input, boolean antialias) throws IOException {
         BufferedImage output = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         Ellipse2D.Double shape = new Ellipse2D.Double(0, 0, input.getWidth(), input.getHeight());
         Graphics2D g2 = output.createGraphics();
         g2.setClip(shape);
 
-        if (BasePetData.antialias) {
+        if (antialias) {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 

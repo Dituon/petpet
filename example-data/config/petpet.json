@@ -3,6 +3,5 @@
   "command": "pet",
   "probability": 30,
   "antialias": false,
-  "disabled": [],
-  "resPath": "./res/petpet/"
+  "disabled": []
 }

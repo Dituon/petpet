@@ -1,7 +1,6 @@
-package xmmt.dituon;
+package xmmt.dituon.plugin;
 
 import kotlinx.serialization.json.JsonArray;
-import kotlinx.serialization.json.JsonElement;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.Image;
@@ -12,15 +11,20 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.Random;
 
-import static xmmt.dituon.share.ImageSynthesis.getAvatarImage;
+public class PluginPetService extends BasePetService {
 
-public class PetData extends BasePetData {
-
-    public static void sendImage(Group group, Member from, Member to) {
-        sendImage(group, from, to, BasePetData.keyList.get(new Random().nextInt(keyList.size())));
+    public void readConfigByPluginAutoSave() {
+        ConfigDTO config = PetPetAutoSaveConfig.INSTANCE.content.get();
+        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
+        readConfig(config);
     }
 
-    public static void sendImage(Group group, Member from, Member to, boolean random) {
+
+    public void sendImage(Group group, Member from, Member to) {
+        sendImage(group, from, to, keyList.get(new Random().nextInt(keyList.size())));
+    }
+
+    public void sendImage(Group group, Member from, Member to, boolean random) {
         if (!random) {
             sendImage(group, from, to);
             return;
@@ -32,9 +36,9 @@ public class PetData extends BasePetData {
         sendImage(group, from, to, keyList.get(r));
     }
 
-    public static void sendImage(Group group, Member from, Member to, String key) {
-        BufferedImage fromAvatarImage = getAvatarImage(from.getAvatarUrl());
-        BufferedImage toAvatarImage = getAvatarImage(to.getAvatarUrl());
+    public void sendImage(Group group, Member from, Member to, String key) {
+        BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(from.getAvatarUrl());
+        BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(to.getAvatarUrl());
 
         InputStream generatedImage = generateImage(fromAvatarImage, toAvatarImage, key);
 
@@ -52,7 +56,7 @@ public class PetData extends BasePetData {
         }
     }
 
-    private static int[] JsonArrayToIntArray(JsonArray ja) {
+    private int[] JsonArrayToIntArray(JsonArray ja) {
         return new int[]{
                 Integer.parseInt(ja.get(0).toString()),
                 Integer.parseInt(ja.get(1).toString()),

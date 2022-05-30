@@ -1,4 +1,4 @@
-package xmmt.dituon;
+package xmmt.dituon.plugin;
 
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
@@ -15,30 +15,29 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.message.data.QuoteReply;
 
-import javax.print.attribute.standard.Fidelity;
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import static xmmt.dituon.PetData.*;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
 
     Bot bot = null;
     ArrayList<Group> disabledGroup = new ArrayList<>();
+    PluginPetService pluginPetService;
 
     private Petpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.0")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
+        this.pluginPetService = new PluginPetService();
     }
 
     @Override
     public void onEnable() {
-        readConfig(resolveConfigFile("petpet.json"));
-        readData(getDataFolder());
+        this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
+
+        pluginPetService.readConfigByPluginAutoSave();
+        pluginPetService.readData(getDataFolder());
         GlobalEventChannel.INSTANCE.subscribeOnce(BotOnlineEvent.class, e -> {
             if (bot == null) {
                 bot = e.getBot();
@@ -53,27 +52,27 @@ public final class Petpet extends JavaPlugin {
             return; // 如果禁用了petpet就返回
         }
         try {
-            sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
+            pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
-            sendImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), true);
+            pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), true);
         }
     }
 
     private void onGroupMessage(GroupMessageEvent e) {
-        if (e.getMessage().contentToString().equals((command + " off")) && !isDisabled(e.getGroup()) && isPermission(e)) {
+        if (e.getMessage().contentToString().equals((pluginPetService.command + " off")) && !isDisabled(e.getGroup()) && isPermission(e)) {
             disabledGroup.add(e.getGroup());
-            sendReplyMessage(e, "已禁用 " + command);
+            sendReplyMessage(e, "已禁用 " + pluginPetService.command);
             return;
         }
 
-        if (e.getMessage().contentToString().equals((command + " on")) && isDisabled(e.getGroup()) && isPermission(e)) {
+        if (e.getMessage().contentToString().equals((pluginPetService.command + " on")) && isDisabled(e.getGroup()) && isPermission(e)) {
             disabledGroup.remove(e.getGroup());
-            sendReplyMessage(e, "已启用 " + command);
+            sendReplyMessage(e, "已启用 " + pluginPetService.command);
             return;
         }
 
         if (!isDisabled(e.getGroup()) && e.getMessage().contains(At.Key)
-                && e.getMessage().contentToString().startsWith(command)) {
+                && e.getMessage().contentToString().startsWith(pluginPetService.command)) {
             At at = null;
             Member to = e.getSender();
             for (Message m : e.getMessage()) {
@@ -82,11 +81,11 @@ public final class Petpet extends JavaPlugin {
                     to = e.getGroup().get(at.getTarget());
                 }
                 if (m instanceof PlainText && at != null && !m.contentToString().endsWith(" ")) {
-                    sendImage(e.getGroup(), e.getSender(), to, m.contentToString().replace(" ", ""));
+                    pluginPetService.sendImage(e.getGroup(), e.getSender(), to, m.contentToString().replace(" ", ""));
                     return;
                 }
             }
-            sendImage(e.getGroup(), e.getSender(), to);
+            pluginPetService.sendImage(e.getGroup(), e.getSender(), to);
         }
     }
 
