@@ -91,8 +91,8 @@ public class PetData {
                     "  \"command\": \"pet\",\n" +
                     "  \"probability\": 30,\n" +
                     "  \"antialias\": false,\n" +
-                    "  \"disabled\": []\n" +
-                    "  \"resPath\": \"./res/petpet/\",\n" +
+                    "  \"disabled\": [],\n" +
+                    "  \"resPath\": \"./res/petpet/\"\n" +
                     "}";
             if (!configFile.createNewFile()) {
                 System.out.print("正在写入新版本配置文件");
