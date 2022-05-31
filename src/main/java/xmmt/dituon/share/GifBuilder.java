@@ -1,4 +1,4 @@
-package xmmt.dituon;
+package xmmt.dituon.share;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOInvalidTreeException;

@@ -3,14 +3,16 @@ package xmmt.dituon;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
+import xmmt.dituon.share.BaseImageMaker;
+import xmmt.dituon.share.GifBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-import static xmmt.dituon.ImageSynthesis.*;
+import static xmmt.dituon.share.ImageSynthesis.*;
 
-public class ImageMaker {
+public class ImageMaker extends BaseImageMaker {
     // 单头像生成图片
     public static Image makeImage(Member m, String path, int[] pos,
                                   boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
@@ -20,13 +22,8 @@ public class ImageMaker {
     public static Image makeImage(Member m, String URL, String path, int[] pos,
                                   boolean isAvatarOnTop, boolean isRotate, boolean isRound) {
         try {
-            BufferedImage sticker = ImageIO.read(new File(path + "0.png"));
             BufferedImage avatarImage = getAvatarImage(URL);
-            if (isRound) {
-                avatarImage = convertCircular(avatarImage);
-            }
-            ExternalResource res = ExternalResource.create(bufferedImageToInputStream(
-                    synthesisImage(avatarImage, sticker, pos, isAvatarOnTop)));
+            ExternalResource res = ExternalResource.create(makeOneAvatarImage(avatarImage, path, pos, isAvatarOnTop, isRotate, isRound));
             Image img = m.uploadImage(res);
             res.close();
             return img;

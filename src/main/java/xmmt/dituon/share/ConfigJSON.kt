@@ -1,4 +1,4 @@
-package xmmt.dituon
+package xmmt.dituon.share
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
@@ -24,10 +24,10 @@ enum class Avatar {
 
 @Serializable
 data class DataJSON(
-    val type: Type, val avatar: Avatar, val pos: JsonArray, val text: String ,
+    val type: Type, val avatar: Avatar, val pos: JsonArray, val text: String,
     val round: Boolean, val rotate: Boolean, val avatarOnTop: Boolean
 )
 
-fun getData(str: String): DataJSON{
+fun getData(str: String): DataJSON {
     return Json.decodeFromString(str)
 }
