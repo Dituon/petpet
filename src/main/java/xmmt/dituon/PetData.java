@@ -21,7 +21,7 @@ public class PetData {
     public static boolean antialias = false;
     public static String command = "pet";
     public static int randomMax = 40;
-    public static String resPath = "./data/petpet/";
+    public static String resPath = "./data/xmmt.dituon.petpet/";
 
     static ArrayList<String> disabledKey = new ArrayList<>();
     static ArrayList<String> keyList = new ArrayList<>();
@@ -92,7 +92,7 @@ public class PetData {
                     "  \"probability\": 30,\n" +
                     "  \"antialias\": false,\n" +
                     "  \"disabled\": [],\n" +
-                    "  \"resPath\": \"./res/data/\"\n" +
+                    "  \"resPath\": \"./data/xmmt.dituon.petpet/\"\n" +
                     "}";
             if (!configFile.createNewFile()) {
                 System.out.print("正在写入新版本配置文件");
