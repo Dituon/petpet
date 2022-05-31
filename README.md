@@ -10,9 +10,9 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 2. 将插件放入 `Mirai/plugins/`
 
-3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/res/petpet)
+3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/petpet)
 
-4. 将图片素材放入 `Mirai/res/petpet`
+4. 将图片素材放入 `Mirai/data/petpet`
 
 5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
 
@@ -20,7 +20,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 配置文件
 
-首次运行 Petpet 插件时，会生成 `Mirai/plugins/petpet.json` 文件
+首次运行 Petpet 插件时，会生成 `Mirai/config/petpet.json` 文件
 
 ```
 {
@@ -43,7 +43,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 图片预览
 
-**图片按key排序(见`res/petpet/`)**
+**图片按key排序(见`data/petpet/`)**
 
 <details>
 <summary>展开/收起</summary>
@@ -71,7 +71,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ### data.json
 
-`./res/petpet/` 下的目录名为 `key` ，插件启动时会遍历 `./res/petpet/$key/data.json`
+`./data/petpet/` 下的目录名为 `key` ，插件启动时会遍历 `./data/petpet/$key/data.json`
 
 `data.json` 标准如下 (以 `thump/data.json` 为例)
 
