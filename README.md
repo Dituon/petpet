@@ -29,7 +29,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
   "probability": 30, // 使用 戳一戳 的触发概率
   "antialias": false // 抗锯齿
   "disabled": [], // 禁用列表
-  "resPath": "./res/petpet/" // 图片素材路径
+  "resPath": "./data/xmmt.dituon.petpet/" // 图片素材路径
 }
 ```
 
