@@ -1,5 +1,5 @@
 # for runPlugin
-/config/
+/config/*
 /bots/
 /plugins/
 /data/*
@@ -8,6 +8,7 @@
 
 # petpet special
 !/data/xmmt.dituon.petpet
+!/config/xmmt.dituon.petpet
 
 # User-specific stuff
 .idea/

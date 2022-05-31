@@ -29,7 +29,7 @@ public class SimpleUsage {
 
     public static void main(String[] args) {
         try {
-            BasePetData.readConfig(new File("./plugins/petpet.json"));
+            BasePetData.readConfig(new File("./config/xmmt.dituon.petpet/petpet.json"));
             BasePetData.readData(new File("./data/xmmt.dituon.petpet"));
 
             testPetpet();
