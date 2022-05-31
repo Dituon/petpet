@@ -81,7 +81,7 @@ public final class Petpet extends JavaPlugin {
                     at = (At) m;
                     to = e.getGroup().get(at.getTarget());
                 }
-                if (m instanceof PlainText && at != null) {
+                if (m instanceof PlainText && at != null && !m.contentToString().endsWith(" ")) {
                     sendImage(e.getGroup(), e.getSender(), to, m.contentToString().replace(" ", ""));
                     return;
                 }
