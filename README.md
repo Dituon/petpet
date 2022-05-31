@@ -10,7 +10,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 2. 将插件放入 `Mirai/plugins/`
 
-3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/petpet)
+3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
 
 4. 将图片素材放入 `Mirai/data/xmmt.dituon.petpet`
 
