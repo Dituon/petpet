@@ -59,7 +59,7 @@ public class ImageSynthesis {
                                                 int[] pos1, int[] pos2,
                                                 int rotateIndex, boolean isAvatarOnTop) {
         BufferedImage newAvatarImage1 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
-        BufferedImage newAvatarImage2 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
+        BufferedImage newAvatarImage2 = new BufferedImage(avatarImage2.getWidth(), avatarImage2.getHeight(), avatarImage2.getType());
 
         if (rotateIndex != 0) {
             Graphics2D rotateG2d1 = newAvatarImage1.createGraphics();
@@ -125,6 +125,7 @@ public class ImageSynthesis {
         try {
             java.net.URL url = new URL(URL);
             conn = (HttpURLConnection) url.openConnection();
+            assert conn != null;
             conn.connect();
             image = ImageIO.read(conn.getInputStream());
             conn.disconnect();

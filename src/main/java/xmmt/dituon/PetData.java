@@ -21,7 +21,7 @@ public class PetData {
     public static boolean antialias = false;
     public static String command = "pet";
     public static int randomMax = 40;
-    public static String resPath = "./res/petpet/";
+    public static String resPath = "./data/petpet/";
 
     static ArrayList<String> disabledKey = new ArrayList<>();
     static ArrayList<String> keyList = new ArrayList<>();
@@ -55,7 +55,7 @@ public class PetData {
     }
 
     public static void readConfig() {
-        File configFile = new File("./plugins/petpet.json");
+        File configFile = new File("./config/petpet.json");
         try {
             if (configFile.exists()) {
                 ConfigJSON config = ConfigJSONKt.decode(getFileStr(configFile));
@@ -92,14 +92,14 @@ public class PetData {
                     "  \"probability\": 30,\n" +
                     "  \"antialias\": false,\n" +
                     "  \"disabled\": [],\n" +
-                    "  \"resPath\": \"./res/petpet/\"\n" +
+                    "  \"resPath\": \"./res/data/\"\n" +
                     "}";
             if (!configFile.createNewFile()) {
                 System.out.print("正在写入新版本配置文件");
             }
             FileOutputStream defaultConfigOS = new FileOutputStream(configFile);
             defaultConfigOS.write(defaultConfig.getBytes(StandardCharsets.UTF_8));
-            System.out.println("写入配置文件成功，路径: Mirai/plugins/petpet.json");
+            System.out.println("写入配置文件成功，路径: Mirai/config/petpet.json");
         } catch (IOException ex) {
             System.out.println("无法写入配置文件，请检查文件路径!");
         }
