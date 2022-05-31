@@ -15,6 +15,9 @@ import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.message.data.QuoteReply;
 
+import javax.print.attribute.standard.Fidelity;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static xmmt.dituon.PetData.*;
