@@ -25,7 +25,7 @@ public final class Petpet extends JavaPlugin {
     PluginPetService pluginPetService;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.0")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.1")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
