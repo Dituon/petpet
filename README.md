@@ -17,6 +17,9 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
 
 > `pet @xxx` 后跟 `key` 可以返回指定图片 例如 `pet @xxx kiss`
+>> 启用 `keyCommand` 后 上述指令可简写为 `kiss @xxx`
+
+> 启用 `respondImage` 后 可通过发送的图片生成Petpet `pet [图片] kiss`
 
 ## 配置文件
 
