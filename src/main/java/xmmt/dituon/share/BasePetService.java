@@ -11,19 +11,26 @@ import java.util.HashMap;
 import java.util.Random;
 
 
-public class BasePetData {
-    public static final float VERSION = 2.0F;
+public class BasePetService {
 
-    public static boolean antialias = false;
-    public static String command = "pet";
-    public static int randomMax = 40;
-    public static File dataRoot;
-    public static ArrayList<String> disabledKey = new ArrayList<>();
-    public static ArrayList<String> keyList = new ArrayList<>();
-    public static HashMap<String, DataJSON> dataMap = new HashMap<>();
+    public boolean antialias = false;
+    public String command = "pet";
+    public int randomMax = 40;
+    public File dataRoot;
+    public ArrayList<String> disabledKey = new ArrayList<>();
+    public ArrayList<String> keyList = new ArrayList<>();
+    public HashMap<String, DataJSON> dataMap = new HashMap<>();
 
-    public static void readData(File dir) {
-        BasePetData.dataRoot = dir;
+    protected BaseImageMaker imageMaker;
+    protected BaseGifMaker gifMaker;
+
+    public BasePetService() {
+        this.imageMaker = new BaseImageMaker();
+        this.gifMaker = new BaseGifMaker();
+    }
+    
+    public void readData(File dir) {
+        this.dataRoot = dir;
         String[] children = dir.list();
 
         if (children == null) {
@@ -35,7 +42,7 @@ public class BasePetData {
 
             File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
             try {
-                DataJSON data = ConfigJSONKt.getData(getFileStr(dataFile));
+                DataJSON data = ConfigDTOKt.getData(getFileStr(dataFile));
                 if (!disabledKey.contains(path)) {
                     keyList.add(path);
                 }
@@ -49,58 +56,21 @@ public class BasePetData {
         System.out.println("Petpet 加载完毕 (共 " + keyList.size() + " 素材，已排除 " + disabledKey.size() + " )");
     }
 
-    public static void readConfig(File configFile) {
 
-        try {
-            if (configFile.exists()) {
-                ConfigJSON config = ConfigJSONKt.decode(getFileStr(configFile));
 
-                if (config.getVersion() != VERSION) {
-                    createConfig(configFile);
-                    return;
-                }
+    public void readConfig(ConfigDTO config) {
+        command = config.getCommand();
+        antialias = config.getAntialias();
+        randomMax = config.getProbability();
 
-                command = config.getCommand();
-                antialias = config.getAntialias();
-                randomMax = config.getProbability();
-
-                for (JsonElement path : config.getDisabled()) {
-                    disabledKey.add(path.toString().replace("\"", ""));
-                }
-
-                System.out.println("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
-            } else {
-                createConfig(configFile);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (Exception ex) { // MissingFieldException
-            createConfig(configFile);
+        for (String path : config.getDisabled()) {
+            disabledKey.add(path.toString().replace("\"", ""));
         }
+
+        System.out.println("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
     }
 
-    private static void createConfig(File configFile) {
-        try {
-            String defaultConfig = "{\n" +
-                    "  \"version\": 2.0,\n" +
-                    "  \"command\": \"pet\",\n" +
-                    "  \"probability\": 30,\n" +
-                    "  \"antialias\": false,\n" +
-                    "  \"disabled\": [],\n" +
-                    "  \"resPath\": \"./res/petpet/\"\n" +
-                    "}";
-            if (!configFile.createNewFile()) {
-                System.out.print("正在写入新版本配置文件");
-            }
-            FileOutputStream defaultConfigOS = new FileOutputStream(configFile);
-            defaultConfigOS.write(defaultConfig.getBytes(StandardCharsets.UTF_8));
-            System.out.println("写入配置文件成功，路径: Mirai/plugins/petpet.json");
-        } catch (IOException ex) {
-            System.out.println("无法写入配置文件，请检查文件路径!");
-        }
-    }
-
-    private static String getFileStr(File file) throws IOException {
+    public String getFileStr(File file) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         StringBuilder sb = new StringBuilder();
         String str;
@@ -111,11 +81,16 @@ public class BasePetData {
         return sb.toString();
     }
 
-    public static InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage) {
-        return generateImage(fromAvatarImage, toAvatarImage, BasePetData.keyList.get(new Random().nextInt(keyList.size())));
+
+
+    
+
+
+    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage) {
+        return generateImage(fromAvatarImage, toAvatarImage, keyList.get(new Random().nextInt(keyList.size())));
     }
 
-    public static InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, boolean random) {
+    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, boolean random) {
         if (!random) {
             return generateImage(fromAvatarImage, toAvatarImage);
         }
@@ -126,7 +101,7 @@ public class BasePetData {
         return generateImage(fromAvatarImage, toAvatarImage, keyList.get(r));
     }
 
-    public static InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key) {
+    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key) {
         if (!dataMap.containsKey(key)) {
             System.out.println("无效的key: " + key);
             return generateImage(fromAvatarImage, toAvatarImage);
@@ -144,8 +119,8 @@ public class BasePetData {
                         pos[i++] = JsonArrayToIntArray((JsonArray) je);
                     }
 
-                    InputStream resultStream = BaseGifMaker.makeOneAvatarGIF(toAvatarImage, key, pos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound());
+                    InputStream resultStream = gifMaker.makeOneAvatarGIF(toAvatarImage, key, pos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
                     return resultStream;
                 }
                 if (data.getAvatar() == Avatar.DOUBLE) {
@@ -164,8 +139,8 @@ public class BasePetData {
                         toPos[i++] = JsonArrayToIntArray((JsonArray) toJe);
                     }
 
-                    InputStream resultStream = BaseGifMaker.makeTwoAvatarGIF(fromAvatarImage, toAvatarImage, key, fromPos, toPos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound());
+                    InputStream resultStream = gifMaker.makeTwoAvatarGIF(fromAvatarImage, toAvatarImage, key, fromPos, toPos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
                     return resultStream;
                 }
             }
@@ -174,16 +149,16 @@ public class BasePetData {
                 if (data.getAvatar() == Avatar.SINGLE) {
                     int[] pos = JsonArrayToIntArray(data.getPos());
 
-                    InputStream resultStream = BaseImageMaker.makeOneAvatarImage(toAvatarImage, key, pos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound());
+                    InputStream resultStream = imageMaker.makeOneAvatarImage(toAvatarImage, key, pos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
                     return resultStream;
                 }
                 if (data.getAvatar() == Avatar.DOUBLE) {
                     int[] pos1 = JsonArrayToIntArray((JsonArray) data.getPos().get(0));
                     int[] pos2 = JsonArrayToIntArray((JsonArray) data.getPos().get(1));
 
-                    InputStream resultStream = BaseImageMaker.makeTwoAvatarImage(fromAvatarImage, toAvatarImage, key, pos1, pos2,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound());
+                    InputStream resultStream = imageMaker.makeTwoAvatarImage(fromAvatarImage, toAvatarImage, key, pos1, pos2,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
                     return resultStream;
                 }
             }
@@ -194,7 +169,7 @@ public class BasePetData {
         return null;
     }
 
-    private static int[] JsonArrayToIntArray(JsonArray ja) {
+    private int[] JsonArrayToIntArray(JsonArray ja) {
         return new int[]{
                 Integer.parseInt(ja.get(0).toString()),
                 Integer.parseInt(ja.get(1).toString()),
@@ -202,4 +177,6 @@ public class BasePetData {
                 Integer.parseInt(ja.get(3).toString())
         };
     }
+
+
 }

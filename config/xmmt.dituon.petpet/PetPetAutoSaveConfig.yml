@@ -1,0 +1,6 @@
+content: 
+  version: 2.0
+  command: pet
+  probability: 30
+  antialias: false
+  disabled: []

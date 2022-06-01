@@ -7,6 +7,7 @@
 /plugin-shared-libraries/
 
 # petpet special
+/example-data/output
 !/data/xmmt.dituon.petpet
 !/config/xmmt.dituon.petpet
 

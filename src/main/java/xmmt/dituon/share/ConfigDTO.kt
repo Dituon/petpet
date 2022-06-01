@@ -4,14 +4,22 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 
+
 @Serializable
-data class ConfigJSON(
-    val version: Float, val command: String, val probability: Int, val antialias: Boolean,
-    val disabled: JsonArray, val resPath: String
+data class ConfigDTO(
+    val version: Float = 2.0F,
+    val command: String = "pet",
+    val probability: Int = 30,
+    val antialias: Boolean = false,
+    val disabled: List<String> = emptyList()
 )
 
-fun decode(str: String): ConfigJSON {
+fun decode(str: String): ConfigDTO {
     return Json.decodeFromString(str)
+}
+
+fun encode(config: ConfigDTO): String {
+    return Json{encodeDefaults = true}.encodeToString(config)
 }
 
 enum class Type {
