@@ -160,9 +160,11 @@ content:
 > 为什么不用 Mirai 的原生配置文件方法?
 >> 因为 **JAutoSavePluginConfig 根本无法使用**, 如果 Mirai 的开发者看到了麻烦测试一下
 
-## 后话
+## 分享你的作品
 
-造轮子是非常痛苦的，我这辈子再也不想碰 ImageWriter 和 IIOMetadata 这些东西了...
+如果你想分享自定义的 Petpet, **欢迎Pr**
+
+## 后话
 
 对此插件进行二次开发比你想象的简单很多，我认为这是初学者入门 Mirai 开发的不二选择。
 
