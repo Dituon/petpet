@@ -20,17 +20,17 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 配置文件
 
-首次运行 Petpet 插件时，会生成 `Mirai/config/petpet.json` 文件
+首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/PetPetAutoSaveConfig.yml` 文件
 
 ```
-{
-  "version": 2.0, // 配置文件版本
-  "command": "pet", // 触发 petpet 的指令
-  "probability": 30, // 使用 戳一戳 的触发概率
-  "antialias": false // 抗锯齿
-  "disabled": [], // 禁用列表
-  "resPath": "./data/xmmt.dituon.petpet/" // 图片素材路径
-}
+content: 
+  version: 2.2 #配置文件版本
+  command: pet #触发 petpet 的指令
+  probability: 30 #使用 戳一戳 的触发概率
+  antialias: false #抗锯齿
+  disabled: [] #禁用列表
+  keyCommand: false #以 key 作为指令头
+  respondImage: false #使用发送的图片生成 petpet
 ```
 
 修改后重启 Mirai 以重新加载
