@@ -1,6 +1,5 @@
 package xmmt.dituon.plugin;
 
-import kotlinx.serialization.json.JsonArray;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.Image;
@@ -15,13 +14,17 @@ public class PluginPetService extends BasePetService {
 
     public void readConfigByPluginAutoSave() {
         ConfigDTO config = PetPetAutoSaveConfig.INSTANCE.content.get();
-        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
+//        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
         readConfig(config);
     }
 
 
     public void sendImage(Group group, Member from, Member to) {
         sendImage(group, from, to, keyList.get(new Random().nextInt(keyList.size())));
+    }
+
+    public void sendImage(Group group, Member m, String fromURL, String toURL) {
+        sendImage(group, m, fromURL, toURL, keyList.get(new Random().nextInt(keyList.size())));
     }
 
     public void sendImage(Group group, Member from, Member to, boolean random) {
@@ -37,15 +40,20 @@ public class PluginPetService extends BasePetService {
     }
 
     public void sendImage(Group group, Member from, Member to, String key) {
-        BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(from.getAvatarUrl());
-        BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(to.getAvatarUrl());
+        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key);
+    }
+
+    public void sendImage(Group group, Member m, String fromURL, String toURL, String key) {
+        BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(fromURL);
+        BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(toURL);
 
         InputStream generatedImage = generateImage(fromAvatarImage, toAvatarImage, key);
 
         try {
             if (generatedImage != null) {
                 ExternalResource resource = ExternalResource.create(generatedImage);
-                Image image = to.uploadImage(resource);
+                Image image = m.uploadImage(resource);
+                resource.close();
                 group.sendMessage(image);
             } else {
                 System.out.println("生成图片失败");
@@ -54,14 +62,5 @@ public class PluginPetService extends BasePetService {
             System.out.println("发送生成的图片时出错：" + ex.getMessage());
             ex.printStackTrace();
         }
-    }
-
-    private int[] JsonArrayToIntArray(JsonArray ja) {
-        return new int[]{
-                Integer.parseInt(ja.get(0).toString()),
-                Integer.parseInt(ja.get(1).toString()),
-                Integer.parseInt(ja.get(2).toString()),
-                Integer.parseInt(ja.get(3).toString())
-        };
     }
 }

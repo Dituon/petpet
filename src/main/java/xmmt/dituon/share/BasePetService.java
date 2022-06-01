@@ -5,7 +5,6 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -16,6 +15,8 @@ public class BasePetService {
     public boolean antialias = false;
     public String command = "pet";
     public int randomMax = 40;
+    public boolean keyCommand = false;
+    public boolean respondImage = false;
     public File dataRoot;
     public ArrayList<String> disabledKey = new ArrayList<>();
     public ArrayList<String> keyList = new ArrayList<>();
@@ -28,7 +29,7 @@ public class BasePetService {
         this.imageMaker = new BaseImageMaker();
         this.gifMaker = new BaseGifMaker();
     }
-    
+
     public void readData(File dir) {
         this.dataRoot = dir;
         String[] children = dir.list();
@@ -43,7 +44,9 @@ public class BasePetService {
             File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
             try {
                 DataJSON data = ConfigDTOKt.getData(getFileStr(dataFile));
-                if (!disabledKey.contains(path)) {
+                if (!disabledKey.contains(path)
+                        && !disabledKey.contains("Type." + data.getType())
+                        && !disabledKey.contains("Avatar." + data.getAvatar())) {
                     keyList.add(path);
                 }
                 dataMap.put(path, data);
@@ -57,14 +60,15 @@ public class BasePetService {
     }
 
 
-
     public void readConfig(ConfigDTO config) {
         command = config.getCommand();
         antialias = config.getAntialias();
         randomMax = config.getProbability();
+        keyCommand = config.getKeyCommand();
+        respondImage = config.getRespondImage();
 
         for (String path : config.getDisabled()) {
-            disabledKey.add(path.toString().replace("\"", ""));
+            disabledKey.add(path.replace("\"", ""));
         }
 
         System.out.println("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
@@ -80,11 +84,6 @@ public class BasePetService {
         br.close();
         return sb.toString();
     }
-
-
-
-    
-
 
     public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage) {
         return generateImage(fromAvatarImage, toAvatarImage, keyList.get(new Random().nextInt(keyList.size())));
@@ -145,7 +144,7 @@ public class BasePetService {
                 }
             }
 
-            if (data.getType() == Type.IMG){
+            if (data.getType() == Type.IMG) {
                 if (data.getAvatar() == Avatar.SINGLE) {
                     int[] pos = JsonArrayToIntArray(data.getPos());
 

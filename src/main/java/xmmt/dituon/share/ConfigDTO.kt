@@ -7,11 +7,13 @@ import kotlinx.serialization.json.JsonArray
 
 @Serializable
 data class ConfigDTO(
-    val version: Float = 2.0F,
+    val version: Float = 2.2F,
     val command: String = "pet",
     val probability: Int = 30,
     val antialias: Boolean = false,
-    val disabled: List<String> = emptyList()
+    val disabled: List<String> = emptyList(),
+    val keyCommand: Boolean = false,
+    val respondImage: Boolean = false
 )
 
 fun decode(str: String): ConfigDTO {
@@ -19,7 +21,7 @@ fun decode(str: String): ConfigDTO {
 }
 
 fun encode(config: ConfigDTO): String {
-    return Json{encodeDefaults = true}.encodeToString(config)
+    return Json { encodeDefaults = true }.encodeToString(config)
 }
 
 enum class Type {
@@ -27,7 +29,7 @@ enum class Type {
 }
 
 enum class Avatar {
-    SINGLE , DOUBLE
+    SINGLE, DOUBLE
 }
 
 @Serializable

@@ -10,10 +10,7 @@ import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.BotOnlineEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
-import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.PlainText;
-import net.mamoe.mirai.message.data.QuoteReply;
+import net.mamoe.mirai.message.data.*;
 
 import java.util.ArrayList;
 
@@ -25,7 +22,7 @@ public final class Petpet extends JavaPlugin {
     PluginPetService pluginPetService;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.1")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.2")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -38,6 +35,7 @@ public final class Petpet extends JavaPlugin {
 
         pluginPetService.readConfigByPluginAutoSave();
         pluginPetService.readData(getDataFolder());
+
         GlobalEventChannel.INSTANCE.subscribeOnce(BotOnlineEvent.class, e -> {
             if (bot == null) {
                 bot = e.getBot();
@@ -71,24 +69,56 @@ public final class Petpet extends JavaPlugin {
             return;
         }
 
-        if (!isDisabled(e.getGroup()) && e.getMessage().contains(At.Key)
-                && e.getMessage().contentToString().startsWith(pluginPetService.command)) {
-            At at = null;
-            Member to = e.getSender();
+        if (pluginPetService.keyCommand && e.getMessage().contains(At.Key)) {
+            String key = null;
             for (Message m : e.getMessage()) {
-                if (m instanceof At) { // 遍历消息取出At的对象
-                    at = (At) m;
-                    to = e.getGroup().get(at.getTarget());
+                if (m instanceof PlainText &&
+                        pluginPetService.dataMap.containsKey(m.contentToString().replace(" ", ""))) {
+                    key = m.contentToString().replace(" ", "");
+                    continue;
                 }
-                if (m instanceof PlainText && at != null && !m.contentToString().endsWith(" ")) {
-                    pluginPetService.sendImage(e.getGroup(), e.getSender(), to, m.contentToString().replace(" ", ""));
+                if (m instanceof At && key != null) {
+                    At at = (At) m;
+                    pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getGroup().get(at.getTarget()), key);
                     return;
                 }
             }
-            pluginPetService.sendImage(e.getGroup(), e.getSender(), to);
+        }
+
+        if (!isDisabled(e.getGroup()) && e.getMessage().contentToString().startsWith(pluginPetService.command)) {
+            if (pluginPetService.respondImage && e.getMessage().contains(Image.Key)) {
+                getLogger().info("img");
+                String toURL = null;
+                for (Message m : e.getMessage()) {
+                    if (m instanceof Image) {
+                        toURL = Image.queryUrl((Image) m);
+                        getLogger().info(toURL);
+                        continue;
+                    }
+                    if (m instanceof PlainText && toURL != null && !m.contentToString().endsWith(" ")) {
+                        pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getSender().getAvatarUrl(), toURL, m.contentToString().replace(" ", ""));
+                        return;
+                    }
+                }
+                pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getSender().getAvatarUrl(), toURL);
+                return;
+            }
+                At at = null;
+                Member to = e.getSender();
+                for (Message m : e.getMessage()) {
+                    if (m instanceof At) { // 遍历消息取出At的对象
+                        at = (At) m;
+                        to = e.getGroup().get(at.getTarget());
+                        continue;
+                    }
+                    if (m instanceof PlainText && at != null && !m.contentToString().endsWith(" ")) {
+                        pluginPetService.sendImage(e.getGroup(), e.getSender(), to, m.contentToString().replace(" ", ""));
+                        return;
+                    }
+                }
+                pluginPetService.sendImage(e.getGroup(), e.getSender(), to);
         }
     }
-
 
     private boolean isDisabled(Group group) {
         if (disabledGroup != null && !disabledGroup.isEmpty()) {
