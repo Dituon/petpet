@@ -23,11 +23,11 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ## 配置文件
 
-首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/PetPetAutoSaveConfig.yml` 文件
+首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/Petpet.yml` 文件
 
 ```
 content: 
-  version: 2.2 #配置文件版本
+  version: 2.3 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: false #抗锯齿
