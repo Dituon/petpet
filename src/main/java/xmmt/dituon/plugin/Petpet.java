@@ -36,7 +36,7 @@ public final class Petpet extends JavaPlugin {
         pluginPetService.readConfigByPluginAutoSave();
         pluginPetService.readData(getDataFolder());
 
-        GlobalEventChannel.INSTANCE.subscribeOnce(BotOnlineEvent.class, e -> {
+        GlobalEventChannel.INSTANCE.subscribeAlways(BotOnlineEvent.class, e -> {
             if (bot == null) {
                 bot = e.getBot();
                 bot.getEventChannel().subscribeAlways(GroupMessageEvent.class, this::onGroupMessage);
