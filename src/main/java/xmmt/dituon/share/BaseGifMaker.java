@@ -5,12 +5,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 
 public class BaseGifMaker {
 
     public InputStream makeOneAvatarGIF(BufferedImage avatarImage, String path, int[][] pos,
-                                      boolean isAvatarOnTop, boolean isRotate, boolean isRound, boolean antialias) {
+                                        boolean isAvatarOnTop, boolean isRotate, boolean isRound,
+                                        boolean antialias, ArrayList<Text> texts) {
         int i = 0;
         try {
             GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(path + "0.png")).getType(), 65, true);
@@ -25,7 +27,7 @@ public class BaseGifMaker {
                     gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(avatarImage, sticker, p, i, isAvatarOnTop));
                     continue;
                 }
-                gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(avatarImage, sticker, p, isAvatarOnTop));
+                gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(avatarImage, sticker, p, isAvatarOnTop,texts));
             }
             gifBuilder.close();
             return gifBuilder.getOutput();
@@ -36,8 +38,9 @@ public class BaseGifMaker {
         return null;
     }
 
-    public InputStream makeTwoAvatarGIF(BufferedImage avatarImage1, BufferedImage avatarImage2, String path, int[][] pos1, int[][] pos2,
-                                               boolean isAvatarOnTop, boolean isRotate, boolean isRound, boolean antialias) {
+    public InputStream makeTwoAvatarGIF(BufferedImage avatarImage1, BufferedImage avatarImage2, String path,
+                                        int[][] pos1, int[][] pos2, boolean isAvatarOnTop, boolean isRotate,
+                                        boolean isRound, boolean antialias, ArrayList<Text> texts) {
         try {
             GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(path + "0.png")).getType(), 65, true);
             if (isRound) {
@@ -50,11 +53,11 @@ public class BaseGifMaker {
 
                 if (isRotate) {
                     gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(
-                            sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], i+1, isAvatarOnTop));
+                            sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], i + 1, isAvatarOnTop));
                     continue;
                 }
                 gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(
-                        sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], isAvatarOnTop));
+                        sticker, avatarImage1, avatarImage2, pos1[i], pos2[i], isAvatarOnTop, texts));
             }
             gifBuilder.close();
             return gifBuilder.getOutput();

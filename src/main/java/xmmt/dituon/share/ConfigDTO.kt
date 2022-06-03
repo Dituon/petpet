@@ -3,6 +3,7 @@ package xmmt.dituon.share
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 
 
 @Serializable
@@ -34,7 +35,7 @@ enum class Avatar {
 
 @Serializable
 data class DataJSON(
-    val type: Type, val avatar: Avatar, val pos: JsonArray, val text: String,
+    val type: Type, val avatar: Avatar, val pos: JsonArray, val text: JsonArray,
     val round: Boolean, val rotate: Boolean, val avatarOnTop: Boolean
 )
 

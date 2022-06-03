@@ -1,7 +1,6 @@
 package xmmt.dituon.share;
 
 
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -9,23 +8,37 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class ImageSynthesis {
 
-    // 单头像合成，不旋转
-    public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos, boolean isAvatarOnTop) {
-        return synthesisImage(avatarImage, sticker, pos, 0, isAvatarOnTop);
+    // 单头像合成，不旋转，带文字
+    public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos
+            , boolean isAvatarOnTop, ArrayList<Text> texts) {
+        return synthesisImage(avatarImage, sticker, pos, 0, isAvatarOnTop, texts);
     }
 
-    // 两个头像合成，不旋转
+    // 两个头像合成，不旋转，带文字
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
-                                                int[] pos1, int[] pos2, boolean isAvatarOnTop) {
-        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, 0, isAvatarOnTop);
+                                               int[] pos1, int[] pos2, boolean isAvatarOnTop, ArrayList<Text> texts) {
+        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, 0, isAvatarOnTop, texts);
     }
 
-    // 单头像合成，旋转
+    // 单头像合成，旋转，不带文字
     public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos,
-                                                int rotateIndex, boolean isAvatarOnTop) {
+                                               int rotateIndex, boolean isAvatarOnTop) {
+        return synthesisImage(avatarImage, sticker, pos, rotateIndex, isAvatarOnTop, null);
+    }
+
+    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
+                                               int[] pos1, int[] pos2,
+                                               int rotateIndex, boolean isAvatarOnTop) {
+        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, null);
+    }
+
+    // 单头像合成，旋转，带文字
+    public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos,
+                                               int rotateIndex, boolean isAvatarOnTop, ArrayList<Text> texts) {
         BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
         if (rotateIndex != 0) {
             Graphics2D rotateG2d = newAvatarImage.createGraphics();
@@ -52,14 +65,21 @@ public class ImageSynthesis {
             g2d.drawImage(newAvatarImage, x, y, w, h, null);
             g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
         }
+        if (texts != null && !texts.isEmpty()) {
+            for (Text text : texts){
+                g2d.setColor(text.getColor());
+                g2d.setFont(text.getFont());
+                g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
+            }
+        }
         g2d.dispose();
         return output;
     }
 
     // 两个头像合成，旋转
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
-                                                int[] pos1, int[] pos2,
-                                                int rotateIndex, boolean isAvatarOnTop) {
+                                               int[] pos1, int[] pos2,
+                                               int rotateIndex, boolean isAvatarOnTop, ArrayList<Text> texts) {
         BufferedImage newAvatarImage1 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
         BufferedImage newAvatarImage2 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
 
@@ -101,6 +121,13 @@ public class ImageSynthesis {
             g2d.drawImage(newAvatarImage1, x1, y1, w1, h1, null);
             g2d.drawImage(newAvatarImage2, x2, y2, w2, h2, null);
             g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
+        }
+        if (texts != null && !texts.isEmpty()) {
+            for (Text text : texts){
+                g2d.setColor(text.getColor());
+                g2d.setFont(text.getFont());
+                g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
+            }
         }
         g2d.dispose();
         return output;

@@ -23,8 +23,8 @@ public class PluginPetService extends BasePetService {
         sendImage(group, from, to, keyList.get(new Random().nextInt(keyList.size())));
     }
 
-    public void sendImage(Group group, Member m, String fromURL, String toURL) {
-        sendImage(group, m, fromURL, toURL, keyList.get(new Random().nextInt(keyList.size())));
+    public void sendImage(Group group, Member m, String fromURL, String toURL, String[] info) {
+        sendImage(group, m, fromURL, toURL, keyList.get(new Random().nextInt(keyList.size())), info);
     }
 
     public void sendImage(Group group, Member from, Member to, boolean random) {
@@ -40,14 +40,19 @@ public class PluginPetService extends BasePetService {
     }
 
     public void sendImage(Group group, Member from, Member to, String key) {
-        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key);
+        String[] info = {
+                from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
+                to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
+                group.getName()
+        };
+        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, info);
     }
 
-    public void sendImage(Group group, Member m, String fromURL, String toURL, String key) {
+    public void sendImage(Group group, Member m, String fromURL, String toURL, String key, String[] info) {
         BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(fromURL);
         BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(toURL);
 
-        InputStream generatedImage = generateImage(fromAvatarImage, toAvatarImage, key);
+        InputStream generatedImage = generateImage(fromAvatarImage, toAvatarImage, key, info);
 
         try {
             if (generatedImage != null) {

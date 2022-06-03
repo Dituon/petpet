@@ -22,7 +22,7 @@ public final class Petpet extends JavaPlugin {
     PluginPetService pluginPetService;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.2")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.3")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -96,11 +96,15 @@ public final class Petpet extends JavaPlugin {
                         continue;
                     }
                     if (m instanceof PlainText && toURL != null && !m.contentToString().endsWith(" ")) {
-                        pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getSender().getAvatarUrl(), toURL, m.contentToString().replace(" ", ""));
+                        pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getSender().getAvatarUrl(), toURL,
+                                m.contentToString().replace(" ", ""), new String[]{
+                                        e.getSender().getNameCard().isEmpty()? e.getSender().getNick(): e.getSender().getNameCard(),
+                                        "你",
+                                        e.getGroup().getName()
+                                });
                         return;
                     }
                 }
-                pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getSender().getAvatarUrl(), toURL);
                 return;
             }
                 At at = null;

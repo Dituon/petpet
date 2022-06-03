@@ -2,6 +2,7 @@ package xmmt.dituon.share;
 
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
+import kotlinx.serialization.json.JsonObject;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -85,30 +86,32 @@ public class BasePetService {
         return sb.toString();
     }
 
-    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage) {
-        return generateImage(fromAvatarImage, toAvatarImage, keyList.get(new Random().nextInt(keyList.size())));
+    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key){
+        return generateImage(fromAvatarImage, toAvatarImage, key, new String[]{"我","你","你群"});
     }
 
-    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, boolean random) {
-        if (!random) {
-            return generateImage(fromAvatarImage, toAvatarImage);
-        }
-        int r = new Random().nextInt(keyList.size());
-        if (r >= keyList.size()) {
-            return null;
-        }
-        return generateImage(fromAvatarImage, toAvatarImage, keyList.get(r));
+    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String[] info) {
+        return generateImage(fromAvatarImage, toAvatarImage, keyList.get(new Random().nextInt(keyList.size())), info);
     }
 
-    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key) {
+    public InputStream generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key, String[] info) {
         if (!dataMap.containsKey(key)) {
             System.out.println("无效的key: " + key);
-            return generateImage(fromAvatarImage, toAvatarImage);
+            return generateImage(fromAvatarImage, toAvatarImage ,info);
         }
         DataJSON data = dataMap.get(key);
         key = dataRoot.getAbsolutePath() + File.separator + key + File.separator;
 
         try {
+            ArrayList<Text> textList = null;
+            if (!data.getText().isEmpty()) {
+                textList = new ArrayList<>();
+                for (JsonElement textElement : data.getText()) {
+                    JsonObject textObj = (JsonObject) textElement;
+                    textList.add(new Text(textObj, info));
+                }
+            }
+
             if (data.getType() == Type.GIF) {
                 if (data.getAvatar() == Avatar.SINGLE) {
                     int[][] pos = new int[data.getPos().getSize()][4];
@@ -118,9 +121,8 @@ public class BasePetService {
                         pos[i++] = JsonArrayToIntArray((JsonArray) je);
                     }
 
-                    InputStream resultStream = gifMaker.makeOneAvatarGIF(toAvatarImage, key, pos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
-                    return resultStream;
+                    return gifMaker.makeOneAvatarGIF(toAvatarImage, key, pos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
                 }
                 if (data.getAvatar() == Avatar.DOUBLE) {
                     JsonArray fromJa = (JsonArray) data.getPos().get(0);
@@ -138,9 +140,8 @@ public class BasePetService {
                         toPos[i++] = JsonArrayToIntArray((JsonArray) toJe);
                     }
 
-                    InputStream resultStream = gifMaker.makeTwoAvatarGIF(fromAvatarImage, toAvatarImage, key, fromPos, toPos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
-                    return resultStream;
+                    return gifMaker.makeTwoAvatarGIF(fromAvatarImage, toAvatarImage, key, fromPos, toPos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
                 }
             }
 
@@ -148,17 +149,15 @@ public class BasePetService {
                 if (data.getAvatar() == Avatar.SINGLE) {
                     int[] pos = JsonArrayToIntArray(data.getPos());
 
-                    InputStream resultStream = imageMaker.makeOneAvatarImage(toAvatarImage, key, pos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
-                    return resultStream;
+                    return imageMaker.makeOneAvatarImage(toAvatarImage, key, pos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
                 }
                 if (data.getAvatar() == Avatar.DOUBLE) {
                     int[] pos1 = JsonArrayToIntArray((JsonArray) data.getPos().get(0));
                     int[] pos2 = JsonArrayToIntArray((JsonArray) data.getPos().get(1));
 
-                    InputStream resultStream = imageMaker.makeTwoAvatarImage(fromAvatarImage, toAvatarImage, key, pos1, pos2,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias);
-                    return resultStream;
+                    return imageMaker.makeTwoAvatarImage(fromAvatarImage, toAvatarImage, key, pos1, pos2,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
                 }
             }
         } catch (Exception ex) {
@@ -176,6 +175,4 @@ public class BasePetService {
                 Integer.parseInt(ja.get(3).toString())
         };
     }
-
-
 }

@@ -39,7 +39,6 @@ public class SimpleUsage {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void testPetpet() throws IOException {
