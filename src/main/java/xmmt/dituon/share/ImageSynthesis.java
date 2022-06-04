@@ -1,6 +1,8 @@
 package xmmt.dituon.share;
 
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -12,59 +14,75 @@ import java.util.ArrayList;
 
 public class ImageSynthesis {
 
-    // 单头像合成，不旋转，带文字
-    public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos
+    /**
+     * 单头像合成，不旋转，带文字
+     */
+    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage, int[] pos
             , boolean isAvatarOnTop, ArrayList<Text> texts) {
-        return synthesisImage(avatarImage, sticker, pos, 0, isAvatarOnTop, texts);
+        return synthesisImage(sticker, avatarImage, pos, 0, isAvatarOnTop, texts);
     }
 
-    // 两个头像合成，不旋转，带文字
+    /**
+     * 两个头像合成，不旋转，带文字
+     */
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
                                                int[] pos1, int[] pos2, boolean isAvatarOnTop, ArrayList<Text> texts) {
         return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, 0, isAvatarOnTop, texts);
     }
 
-    // 单头像合成，旋转，不带文字
-    public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos,
+    /**
+     * 单头像合成，旋转，不带文字
+     */
+    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage, int[] pos,
                                                int rotateIndex, boolean isAvatarOnTop) {
-        return synthesisImage(avatarImage, sticker, pos, rotateIndex, isAvatarOnTop, null);
+        return synthesisImage(sticker, avatarImage, pos, rotateIndex, isAvatarOnTop, null);
     }
 
+    /**
+     * 两个头像合成，旋转，带文字
+     */
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
                                                int[] pos1, int[] pos2,
                                                int rotateIndex, boolean isAvatarOnTop) {
         return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, null);
     }
 
-    // 单头像合成，旋转，带文字
-    public static BufferedImage synthesisImage(BufferedImage avatarImage, BufferedImage sticker, int[] pos,
+    /**
+     * 单头像合成，旋转，带文字
+     */
+    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage, int[] pos,
                                                int rotateIndex, boolean isAvatarOnTop, ArrayList<Text> texts) {
+        return synthesisImageGeneral(sticker, avatarImage, null, pos, null, rotateIndex, isAvatarOnTop, texts);
+    }
+
+    /**
+     * 无头像合成，带文字
+     */
+    public static BufferedImage synthesisImage(BufferedImage sticker, ArrayList<Text> texts) {
+        return synthesisImageGeneral(sticker, null, null, null, null, 0, false, texts);
+    }
+
+    private static void g2dDrawAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos, int rotateIndex) {
+        if (avatarImage == null) {
+            return;
+        }
         BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
         if (rotateIndex != 0) {
-            Graphics2D rotateG2d = newAvatarImage.createGraphics();
-            rotateG2d.rotate(Math.toRadians((float) (360 / pos.length) * rotateIndex),
+            Graphics2D rotateG2d1 = newAvatarImage.createGraphics();
+            rotateG2d1.rotate(Math.toRadians((float) (360 / pos.length) * (rotateIndex + 1)),
                     avatarImage.getWidth() / 2, avatarImage.getHeight() / 2);
-            rotateG2d.drawImage(avatarImage, null, 0, 0);
+            rotateG2d1.drawImage(avatarImage, null, 0, 0);
         } else {
             newAvatarImage = avatarImage;
         }
-
         int x = pos[0];
         int y = pos[1];
         int w = pos[2];
         int h = pos[3];
-        BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
-        Graphics2D g2d = output.createGraphics();
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
-        if (isAvatarOnTop) {
-            g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
-            g2d.drawImage(newAvatarImage, x, y, w, h, null);
-        } else {
-            g2d.drawImage(newAvatarImage, x, y, w, h, null);
-            g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
-        }
+        g2d.drawImage(newAvatarImage, x, y, w, h, null);
+    }
+
+    private static void g2dDrawTexts(Graphics2D g2d, ArrayList<Text> texts) {
         if (texts != null && !texts.isEmpty()) {
             for (Text text : texts){
                 g2d.setColor(text.getColor());
@@ -72,65 +90,46 @@ public class ImageSynthesis {
                 g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
             }
         }
+    }
+
+    private static BufferedImage synthesisImageGeneral(
+            BufferedImage sticker,
+            @Nullable BufferedImage avatarImage1,
+            @Nullable BufferedImage avatarImage2,
+            @Nullable int[] pos1, @Nullable int[] pos2,
+            int rotateIndex,
+            boolean isAvatarOnTop,
+            @Nullable ArrayList<Text> texts
+    ) {
+
+        BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
+        Graphics2D g2d = output.createGraphics();
+        // 背景
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
+        // 按图层顺序依次添加，方便直观调整顺序
+        if (isAvatarOnTop) {
+            g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
+            g2dDrawAvatar(g2d, avatarImage1, pos1, rotateIndex);
+            g2dDrawAvatar(g2d, avatarImage2, pos2, rotateIndex);
+        } else {
+            g2dDrawAvatar(g2d, avatarImage1, pos1, rotateIndex);
+            g2dDrawAvatar(g2d, avatarImage2, pos2, rotateIndex);
+            g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
+        }
+        g2dDrawTexts(g2d, texts);
+
         g2d.dispose();
         return output;
     }
+
 
     // 两个头像合成，旋转
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
                                                int[] pos1, int[] pos2,
                                                int rotateIndex, boolean isAvatarOnTop, ArrayList<Text> texts) {
-        BufferedImage newAvatarImage1 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
-        BufferedImage newAvatarImage2 = new BufferedImage(avatarImage1.getWidth(), avatarImage1.getHeight(), avatarImage1.getType());
-
-        if (rotateIndex != 0) {
-            Graphics2D rotateG2d1 = newAvatarImage1.createGraphics();
-            rotateG2d1.rotate(Math.toRadians((float) (360 / pos1.length) * (rotateIndex + 1)),
-                    avatarImage1.getWidth() / 2, avatarImage1.getHeight() / 2);
-            rotateG2d1.drawImage(avatarImage1, null, 0, 0);
-
-            Graphics2D rotateG2d2 = newAvatarImage2.createGraphics();
-            rotateG2d2.rotate(Math.toRadians((float) (360 / pos1.length) * (rotateIndex + 1)),
-                    avatarImage2.getWidth() / 2, avatarImage2.getHeight() / 2);
-            rotateG2d2.drawImage(avatarImage2, null, 0, 0);
-        } else {
-            newAvatarImage1 = avatarImage1;
-            newAvatarImage2 = avatarImage2;
-        }
-
-        int x1 = pos1[0];
-        int y1 = pos1[1];
-        int w1 = pos1[2];
-        int h1 = pos1[3];
-
-        int x2 = pos2[0];
-        int y2 = pos2[1];
-        int w2 = pos2[2];
-        int h2 = pos2[3];
-
-        BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
-        Graphics2D g2d = output.createGraphics();
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
-        if (isAvatarOnTop) {
-            g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
-            g2d.drawImage(newAvatarImage1, x1, y1, w1, h1, null);
-            g2d.drawImage(newAvatarImage2, x2, y2, w2, h2, null);
-        } else {
-            g2d.drawImage(newAvatarImage1, x1, y1, w1, h1, null);
-            g2d.drawImage(newAvatarImage2, x2, y2, w2, h2, null);
-            g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
-        }
-        if (texts != null && !texts.isEmpty()) {
-            for (Text text : texts){
-                g2d.setColor(text.getColor());
-                g2d.setFont(text.getFont());
-                g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
-            }
-        }
-        g2d.dispose();
-        return output;
+        return synthesisImageGeneral(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, texts);
     }
 
     public static BufferedImage convertCircular(BufferedImage input, boolean antialias) throws IOException {

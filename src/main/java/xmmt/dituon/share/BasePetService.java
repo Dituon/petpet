@@ -146,18 +146,21 @@ public class BasePetService {
             }
 
             if (data.getType() == Type.IMG) {
+                if (data.getAvatar() == Avatar.NONE) {
+                    return imageMaker.makeNoneAvatarImage(key, textList);
+                }
                 if (data.getAvatar() == Avatar.SINGLE) {
                     int[] pos = JsonArrayToIntArray(data.getPos());
 
                     return imageMaker.makeOneAvatarImage(toAvatarImage, key, pos,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
+                            data.getAvatarOnTop(), data.getRound(), antialias, textList);
                 }
                 if (data.getAvatar() == Avatar.DOUBLE) {
                     int[] pos1 = JsonArrayToIntArray((JsonArray) data.getPos().get(0));
                     int[] pos2 = JsonArrayToIntArray((JsonArray) data.getPos().get(1));
 
                     return imageMaker.makeTwoAvatarImage(fromAvatarImage, toAvatarImage, key, pos1, pos2,
-                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
+                            data.getAvatarOnTop(), data.getRound(), antialias, textList);
                 }
             }
         } catch (Exception ex) {

@@ -30,7 +30,7 @@ enum class Type {
 }
 
 enum class Avatar {
-    SINGLE, DOUBLE
+    NONE, SINGLE, DOUBLE
 }
 
 @Serializable
