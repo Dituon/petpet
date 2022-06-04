@@ -5,6 +5,11 @@ plugins {
     id 'net.mamoe.mirai-console' version '2.11.0'
 }
 
+apply plugin: "maven-publish"
+apply plugin: "java"
+
+
+
 group = 'xmmt.dituon'
 version = '2.4'
 
@@ -15,4 +20,30 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // useless for jitpack: groupId = GROUP
+            artifactId = "petpet-share"
+            // useless for jitpack: version = VERSION
+
+            from components.java
+        }
+    }
 }

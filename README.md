@@ -8,6 +8,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/dituon/petpet)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed/dituon/petpet)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/dituon/petpet)
+[![](https://jitpack.io/v/Dituon/petpet.svg)](https://jitpack.io/#Dituon/petpet)
 
 一个生成摸摸头GIF的 Mirai 插件，灵感/数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
@@ -210,6 +211,11 @@ content:
 ## 分享你的作品
 
 如果你想分享自定义的 Petpet, **欢迎Pr**
+
+## 依赖share包二次开发
+
+- 方式1. 在本项目内二次开发（非mirai插件形式）：见`xmmt.dituon.example.SimpleUsage`
+- 方式2. 在别的项目二次开发：通过jitpack获得依赖（待补充样例）
 
 ## 后话
 
