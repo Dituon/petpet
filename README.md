@@ -1,4 +1,4 @@
-# petpet
+# Petpet
 
 ![Mirai version](https://img.shields.io/badge/Mirai-2.11.0-ff69b4)
 ![GitHub](https://img.shields.io/github/license/dituon/petpet)
