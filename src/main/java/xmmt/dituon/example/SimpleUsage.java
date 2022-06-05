@@ -53,6 +53,15 @@ public class SimpleUsage {
         System.out.println("testBite done.");
     }
 
+    /** 如果要使用文字构造方法，请在generateImage后接String数组
+     * String[0] 对应 $from
+     * String[1] 对应 $to
+     * String[2] 对应 $group
+     * 使用例:
+     * petService.generateImage(avatarImage1, avatarImage2, "key", new String[]{"$from", "$to", "$group"});
+     */
+
+
     private void copyInputStreamToFile(InputStream inputStream, File file)
             throws IOException {
         // append = false
@@ -71,8 +80,7 @@ public class SimpleUsage {
 
             if (configFile.exists()) {
                 try {
-                    ConfigDTO config = ConfigDTOKt.decode(petService.getFileStr(configFile));
-                    return config;
+                    return ConfigDTOKt.decode(petService.getFileStr(configFile));
                 } catch (IOException e) {
                     e.printStackTrace();
                     return createConfig(configFile);

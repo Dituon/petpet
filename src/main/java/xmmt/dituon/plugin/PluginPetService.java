@@ -20,7 +20,12 @@ public class PluginPetService extends BasePetService {
 
 
     public void sendImage(Group group, Member from, Member to) {
-        sendImage(group, from, to, keyList.get(new Random().nextInt(keyList.size())));
+        try {
+            sendImage(group, from, to, keyList.get(new Random().nextInt(keyList.size())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("图片素材应位于 Mirai/data/xmmt.dituon.petpet 目录下, 请检查路径");
+        }
     }
 
     public void sendImage(Group group, Member m, String fromURL, String toURL, String[] info) {

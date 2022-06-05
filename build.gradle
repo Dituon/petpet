@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'xmmt.dituon'
-version = '2.3'
+version = '2.4'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
