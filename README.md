@@ -1,8 +1,8 @@
 # petpet
 
-![GitHub all releases](https://img.shields.io/github/downloads/dituon/petpet/total)
 ![Mirai version](https://img.shields.io/badge/Mirai-2.11.0-ff69b4)
 ![GitHub](https://img.shields.io/github/license/dituon/petpet)
+![GitHub all releases](https://img.shields.io/github/downloads/dituon/petpet/total)
 ![GitHub Repo stars](https://img.shields.io/github/stars/dituon/petpet)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/dituon/petpet)
 ![GitHub issues](https://img.shields.io/github/issues/dituon/petpet)
