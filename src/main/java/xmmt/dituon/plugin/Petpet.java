@@ -9,6 +9,7 @@ import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.*;
+import xmmt.dituon.share.TextExtraData;
 
 import java.util.ArrayList;
 
@@ -118,11 +119,13 @@ public final class Petpet extends JavaPlugin {
 
     private void respondImage(Group g, Member m, String imgURL, String key) {
         pluginPetService.sendImage(g, m, m.getAvatarUrl(), imgURL,
-                key, new String[]{
+                key,
+                new TextExtraData(
                         m.getNameCard().isEmpty() ? m.getNick() : m.getNameCard(),
                         "你",
                         g.getName()
-                });
+                )
+        );
     }
 
     private void respondImage(GroupMessageEvent e) {

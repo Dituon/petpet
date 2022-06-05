@@ -1,5 +1,6 @@
 package xmmt.dituon.plugin;
 
+import kotlin.Pair;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.Image;
@@ -28,10 +29,6 @@ public class PluginPetService extends BasePetService {
         }
     }
 
-    public void sendImage(Group group, Member m, String fromURL, String toURL, String[] info) {
-        sendImage(group, m, fromURL, toURL, keyList.get(new Random().nextInt(keyList.size())), info);
-    }
-
     public void sendImage(Group group, Member from, Member to, boolean random) {
         if (!random) {
             sendImage(group, from, to);
@@ -45,23 +42,23 @@ public class PluginPetService extends BasePetService {
     }
 
     public void sendImage(Group group, Member from, Member to, String key) {
-        String[] info = {
+        TextExtraData textExtraData = new TextExtraData(
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
                 to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
                 group.getName()
-        };
-        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, info);
+        );
+        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, textExtraData);
     }
 
-    public void sendImage(Group group, Member m, String fromURL, String toURL, String key, String[] info) {
+    public void sendImage(Group group, Member m, String fromURL, String toURL, String key, TextExtraData textExtraData) {
         BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(fromURL);
         BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(toURL);
 
-        InputStream generatedImage = generateImage(fromAvatarImage, toAvatarImage, key, info);
+        Pair<InputStream, String> generatedImageAndType = generateImage(fromAvatarImage, toAvatarImage, key, textExtraData, null);
 
         try {
-            if (generatedImage != null) {
-                ExternalResource resource = ExternalResource.create(generatedImage);
+            if (generatedImageAndType != null) {
+                ExternalResource resource = ExternalResource.create(generatedImageAndType.getFirst());
                 Image image = m.uploadImage(resource);
                 resource.close();
                 group.sendMessage(image);

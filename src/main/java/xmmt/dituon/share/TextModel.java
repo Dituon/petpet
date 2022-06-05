@@ -2,35 +2,33 @@ package xmmt.dituon.share;
 
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
-import kotlinx.serialization.json.JsonObject;
 
 import java.awt.*;
-import java.util.Objects;
+import java.util.List;
 
-public class Text {
+public class TextModel {
     private String text = null;
     private int[] pos = {2, 14};
     private Color color = new Color(25, 25, 25, 255); // #191919
     private Font font = null;
 
-    public Text(JsonObject jsonObject, String[] info) {
-        text = Objects.requireNonNull(jsonObject.get("text")).toString().replace("\"","")
-                .replace("$from",info[0]).replace("$to",info[1]).replace("$group",info[2]);
-        pos = jsonObject.containsKey("pos") ? setPos(jsonObject.get("pos")) : pos;
-        color = jsonObject.containsKey("color") ? setColor(jsonObject.get("color")) : color;
+    public TextModel(TextData textData, TextExtraData extraInfo) {
+        text = extraInfo != null ? textData.getText().replace("\"","")
+                .replace("$from", extraInfo.getFromReplacement())
+                .replace("$to", extraInfo.getToReplacement())
+                .replace("$group", extraInfo.getGroupReplacement()) : textData.getText();
+        pos = textData.getPos() != null ? setPos(textData.getPos()) : pos;
+        color = textData.getColor() != null ? setColor(textData.getColor()) : color;
         font = new Font(
-                jsonObject.containsKey("font") ?
-                        Objects.requireNonNull(jsonObject.get("font")).toString().replace("\"","") : "黑体",
+                textData.getFont() != null ? textData.getFont().replace("\"","") : "黑体",
                 Font.PLAIN,
-                jsonObject.containsKey("size") ?
-                        Integer.parseInt(Objects.requireNonNull(jsonObject.get("size")).toString()) : 12
+                textData.getSize() != null ? textData.getSize() : 12
         );
     }
 
-    private int[] setPos(JsonElement jsonElement) {
-        JsonArray jsonArray = (JsonArray) jsonElement;
-        int x = Integer.parseInt(jsonArray.get(0).toString());
-        int y = Integer.parseInt(jsonArray.get(1).toString());
+    private int[] setPos(List<Integer> posElements) {
+        int x = Integer.parseInt(posElements.get(0).toString());
+        int y = Integer.parseInt(posElements.get(1).toString());
         return new int[]{x, y};
     }
 
