@@ -1,5 +1,14 @@
 # petpet
 
+![GitHub all releases](https://img.shields.io/github/downloads/dituon/petpet/total)
+![Mirai version](https://img.shields.io/badge/Mirai-2.11.0-ff69b4)
+![GitHub](https://img.shields.io/github/license/dituon/petpet)
+![GitHub Repo stars](https://img.shields.io/github/stars/dituon/petpet)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/dituon/petpet)
+![GitHub issues](https://img.shields.io/github/issues/dituon/petpet)
+![GitHub closed issues](https://img.shields.io/github/issues-closed/dituon/petpet)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/dituon/petpet)
+
 一个生成摸摸头GIF的 Mirai 插件，灵感/数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
 java 编写，**未使用任何第三方库** ：轻量，高效。
