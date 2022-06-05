@@ -187,13 +187,16 @@ content:
 >> 检查 Mirai 登录协议, 仅 `ANDORID_PHONE` 可以收到 戳一戳 消息
 
 > `NoClassDefFoundError`?
->> `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 如果你不想更新可以使用本插件的 `2.0` 版本
+>> `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 或使用本插件的 `2.0` 版本
 
 > `Exception in coroutine <unnamed>`?
 >> 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
 
 > `YamlDecodingException`?
 >> 配置文件中不能包含注释，最简单的解决方法是删除配置文件让插件自动生成
+
+> 文字构造乱码, 无法正常显示
+>> `Linux` 系统 可能缺少中文字体, 使用 `fc-list` 列出已安装的字体; `Windows` 系统 可能是文件编码问题, 更改 `data.json` 编码 或加入`-Dfile.encoding=utf-8` 启动项
 
 ## 分享你的作品
 
