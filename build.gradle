@@ -56,3 +56,10 @@ jar {
         attributes 'Main-Class': 'xmmt.dituon.server.WebServer'
     }
 }
+
+test {
+    filter {
+        //exclude all tests from a package.
+        excludeTestsMatching "xmmt.dituon.example.*"
+    }
+}

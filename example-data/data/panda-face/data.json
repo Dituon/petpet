@@ -1,10 +1,6 @@
 {
   "type": "IMG",
-  "avatar": "NONE",
-  "pos": [],
+  "avatar": [],
   "text": [
-  ],
-  "round": false,
-  "rotate": false,
-  "avatarOnTop": false
+  ]
 }

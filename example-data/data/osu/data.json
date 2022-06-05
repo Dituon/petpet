@@ -1,17 +1,12 @@
 {
     "type": "IMG",
-    "avatar": "NONE",
-    "pos": [],
+    "avatar": [],
     "text": [
         {
             "text": "$txt1[osu!]",
             "color": "ffffff",
             "pos": [60,210],
-            "size": 114,
-            "font": "MiSans"
+            "size": 114
         }
-    ],
-    "round": false,
-    "rotate": false,
-    "avatarOnTop": false
+    ]
 }

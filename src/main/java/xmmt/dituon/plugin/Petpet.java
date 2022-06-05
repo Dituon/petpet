@@ -10,6 +10,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.*;
 import xmmt.dituon.share.AvatarExtraData;
+import xmmt.dituon.share.BaseConfigFactory;
 import xmmt.dituon.share.TextExtraData;
 
 import java.util.ArrayList;
@@ -178,7 +179,7 @@ public final class Petpet extends JavaPlugin {
 
     private void respondImage(Group g, Member m, String imgURL, String key, String otherText) {
         pluginPetService.sendImage(g, key,
-                new AvatarExtraData(
+                BaseConfigFactory.getAvatarExtraDataFromUrls(
                         m.getAvatarUrl(), imgURL, g.getAvatarUrl(), g.getBotAsMember().getAvatarUrl()
                 ),
                 new TextExtraData(

@@ -47,7 +47,7 @@ public class BasePetService {
                 // TODO 模板应放在data/templates而不是直接data
                 File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
                 try {
-                    KeyData data = BaseConfigKt.getData(getFileStr(dataFile));
+                    KeyData data = KeyData.getData(getFileStr(dataFile));
                     dataMap.put(path, data);
                 } catch (Exception ex) {
                     System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);

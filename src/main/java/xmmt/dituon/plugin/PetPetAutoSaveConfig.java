@@ -11,6 +11,6 @@ public class PetPetAutoSaveConfig extends JavaAutoSavePluginConfig {
         super("PetPet");
     }
 
-    public final Value<PluginConfig> content = typedValue("content", createKType(PluginConfig.class), new PluginConfig()); // 默认值 "test"
+    public final Value<PluginConfig> content = typedValue("content", createKType(PluginConfig.class), new PluginConfig());
 
 }
