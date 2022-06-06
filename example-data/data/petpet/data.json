@@ -1,0 +1,12 @@
+{
+
+  "type": "GIF",
+  "avatar": "SINGLE",
+  "pos": [
+    [14, 20, 98, 98], [12, 33, 101, 85], [8, 40, 110, 76], [10, 33, 102, 84], [12, 20, 98, 98]
+  ],
+  "text": [],
+  "round": true,
+  "rotate": false,
+  "avatarOnTop": false
+}

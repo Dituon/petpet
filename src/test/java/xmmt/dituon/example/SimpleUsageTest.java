@@ -1,56 +1,62 @@
 package xmmt.dituon.example;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
 import xmmt.dituon.share.BasePetService;
 import xmmt.dituon.share.ConfigDTO;
 import xmmt.dituon.share.ConfigDTOKt;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class SimpleUsage {
-    BasePetService petService = new BasePetService();
+public class SimpleUsageTest {
+
+    static BasePetService petService = new BasePetService();
     static final int DEFAULT_BUFFER_SIZE = 8192;
+    static final String EXAMPLE_ROOT = "./example-data/";
     static final String INPUT_ROOT = "./example-data/input/";
     static final String OUTPUT_ROOT = "./example-data/output/";
-    BufferedImage avatarImage1;
-    BufferedImage avatarImage2;
+    static BufferedImage avatarImage1;
+    static BufferedImage avatarImage2;
 
-    public SimpleUsage() {
+    @BeforeClass
+    public static void init() {
         try {
             avatarImage1 = ImageIO.read(new File(INPUT_ROOT + "avatar1.png"));
             avatarImage2 = ImageIO.read(new File(INPUT_ROOT + "avatar2.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConfigDTO configDTO = getConfigFromFile(new File(INPUT_ROOT + "config/petpet.json"));
+        ConfigDTO configDTO = getConfigFromFile(new File(EXAMPLE_ROOT + "config/petpet.json"));
         petService.readConfig(configDTO);
-        petService.readData(new File("./data/xmmt.dituon.petpet"));
+        petService.readData(new File(EXAMPLE_ROOT + "./data"));
     }
 
 
-
-    public static void main(String[] args) {
-        SimpleUsage simpleUsage = new SimpleUsage();
-        try {
-            simpleUsage.testPetpet();
-            simpleUsage.testBite();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Test
+    public void testNijigen() throws IOException {
+        InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "nijigen");
+        copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "nijigen.png"));
+        System.out.println("testNijigen done.");
     }
 
-    private void testPetpet() throws IOException {
+    @Test
+    public void testPetpet() throws IOException {
         InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "petpet");
         copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "testPetpet.gif"));
         System.out.println("testPetpet done.");
     }
 
-    private void testBite() throws IOException {
-        InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "bite");
-        copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "testBite.gif"));
-        System.out.println("testBite done.");
+    @Test
+    public void testKiss() throws IOException {
+        InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "kiss");
+        copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "testKiss.gif"));
+        System.out.println("testKiss done.");
     }
 
     /** 如果要使用文字构造方法，请在generateImage后接String数组
@@ -76,7 +82,7 @@ public class SimpleUsage {
     }
 
 
-    public ConfigDTO getConfigFromFile(File configFile) {
+    private static ConfigDTO getConfigFromFile(File configFile) {
 
             if (configFile.exists()) {
                 try {
@@ -91,7 +97,7 @@ public class SimpleUsage {
 
     }
 
-    private ConfigDTO createConfig(File configFile) {
+    private static ConfigDTO createConfig(File configFile) {
         ConfigDTO configDTO = new ConfigDTO();
         try {
             String defaultConfig = ConfigDTOKt.encode(configDTO);

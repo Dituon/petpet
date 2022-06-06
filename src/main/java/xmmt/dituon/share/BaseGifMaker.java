@@ -24,10 +24,10 @@ public class BaseGifMaker {
                 i++;
                 BufferedImage sticker = ImageIO.read(f);
                 if (isRotate) {
-                    gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(avatarImage, sticker, p, i, isAvatarOnTop));
+                    gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(sticker, avatarImage, p, i, isAvatarOnTop));
                     continue;
                 }
-                gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(avatarImage, sticker, p, isAvatarOnTop,texts));
+                gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(sticker, avatarImage, p, isAvatarOnTop,texts));
             }
             gifBuilder.close();
             return gifBuilder.getOutput();
