@@ -1,10 +1,9 @@
 package xmmt.dituon.example;
 
+import kotlin.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import xmmt.dituon.share.BasePetService;
-import xmmt.dituon.share.ConfigDTO;
-import xmmt.dituon.share.ConfigDTOKt;
+import xmmt.dituon.share.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -13,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 public class SimpleUsageTest {
 
@@ -39,24 +40,47 @@ public class SimpleUsageTest {
 
 
     @Test
-    public void testNijigen() throws IOException {
-        InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "nijigen");
-        copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "nijigen.png"));
-        System.out.println("testNijigen done.");
+    public void testPandaFace() throws IOException {
+        testGeneral("testPandaFace", "panda-face", null, Arrays.asList(textDataForPandaFace("。。。")));
     }
 
     @Test
+    public void testPandaFace2() throws IOException {
+        testGeneral("testPandaFace2", "panda-face", null, Arrays.asList(textDataForPandaFace("二次元，二次元")));
+    }
+
+    private TextData textDataForPandaFace(String text) {
+        int fullWidth = 500;
+        int board = 50;
+        int textWidth = 500 - board * 2;
+        int fontSizeByHeight = 56;
+        int fontSizeByWidth = (int) (textWidth * 1.0 / text.length());
+        int fontSize = Math.min(fontSizeByWidth, fontSizeByHeight);
+        int x = (fullWidth / 2) - (text.length() * fontSize / 2);
+        return new TextData(
+                text,
+                Arrays.asList(x, 430),
+                null,
+                null,
+                fontSize
+        );
+    }
+
+
+    @Test
     public void testPetpet() throws IOException {
-        InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "petpet");
-        copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "testPetpet.gif"));
-        System.out.println("testPetpet done.");
+        testGeneral("testPetpet", "petpet", null, null);
     }
 
     @Test
     public void testKiss() throws IOException {
-        InputStream resultStream = petService.generateImage(avatarImage1, avatarImage2, "kiss");
-        copyInputStreamToFile(resultStream, new File(OUTPUT_ROOT + "testKiss.gif"));
-        System.out.println("testKiss done.");
+        testGeneral("testKiss", "kiss", null, null);
+    }
+
+    private void testGeneral(String saveName, String key, TextExtraData textExtraData, List<TextData> additionTextDatas) throws IOException {
+        Pair<InputStream, String> resultStreamAndType = petService.generateImage(avatarImage1, avatarImage2, key, textExtraData, additionTextDatas);
+        copyInputStreamToFile(resultStreamAndType.getFirst(), new File(OUTPUT_ROOT + saveName + "." + resultStreamAndType.getSecond()));
+        System.out.println("test " + key + " done.");
     }
 
     /** 如果要使用文字构造方法，请在generateImage后接String数组

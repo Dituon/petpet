@@ -10,21 +10,21 @@ import java.util.ArrayList;
 public class BaseImageMaker {
     // 无头像生成图片
     public InputStream makeNoneAvatarImage(String path,
-                                          ArrayList<Text> texts) {
+                                           ArrayList<TextModel> texts) {
         return makeImageGeneral(null, null, path, null, null, false, false, false, texts);
     }
 
     // 单头像生成图片
     public InputStream makeOneAvatarImage(BufferedImage avatarImage, String path, int[] pos,
                                           boolean isAvatarOnTop, boolean isRound, boolean antialias,
-                                          ArrayList<Text> texts) {
+                                          ArrayList<TextModel> texts) {
         return makeImageGeneral(avatarImage, null, path, pos, null, isAvatarOnTop, isRound, antialias, texts);
     }
 
     // 双头像生成图片
     public InputStream makeTwoAvatarImage(BufferedImage avatarImage1, BufferedImage avatarImage2, String path,
-                                          int[] pos1, int[] pos2,boolean isAvatarOnTop,
-                                          boolean isRound, boolean antialias, ArrayList<Text> texts) {
+                                          int[] pos1, int[] pos2, boolean isAvatarOnTop,
+                                          boolean isRound, boolean antialias, ArrayList<TextModel> texts) {
         return makeImageGeneral(avatarImage1, avatarImage2, path, pos1, pos2, isAvatarOnTop, isRound, antialias, texts);
     }
 
@@ -35,7 +35,7 @@ public class BaseImageMaker {
                                          boolean isAvatarOnTop,
                                          boolean isRound,
                                          boolean antialias,
-                                         @Nullable ArrayList<Text> texts) {
+                                         @Nullable ArrayList<TextModel> texts) {
         try {
             if (isRound) {
                 avatarImage1 = avatarImage1 != null ? ImageSynthesis.convertCircular(avatarImage1, antialias) : null;

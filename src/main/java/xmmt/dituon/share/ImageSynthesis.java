@@ -14,32 +14,17 @@ import java.util.ArrayList;
 
 public class ImageSynthesis {
 
-    /**
-     * 单头像合成，不旋转，带文字
-     */
-    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage, int[] pos
-            , boolean isAvatarOnTop, ArrayList<Text> texts) {
-        return synthesisImage(sticker, avatarImage, pos, 0, isAvatarOnTop, texts);
-    }
 
     /**
-     * 两个头像合成，不旋转，带文字
+     * 至多两个（可null）头像合成，不旋转，带文字
      */
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
-                                               int[] pos1, int[] pos2, boolean isAvatarOnTop, ArrayList<Text> texts) {
+                                               int[] pos1, int[] pos2, boolean isAvatarOnTop, ArrayList<TextModel> texts) {
         return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, 0, isAvatarOnTop, texts);
     }
 
     /**
-     * 单头像合成，旋转，不带文字
-     */
-    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage, int[] pos,
-                                               int rotateIndex, boolean isAvatarOnTop) {
-        return synthesisImage(sticker, avatarImage, pos, rotateIndex, isAvatarOnTop, null);
-    }
-
-    /**
-     * 两个头像合成，旋转，带文字
+     * 至多两个（可null）头像合成，旋转
      */
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
                                                int[] pos1, int[] pos2,
@@ -47,19 +32,11 @@ public class ImageSynthesis {
         return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, null);
     }
 
-    /**
-     * 单头像合成，旋转，带文字
-     */
-    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage, int[] pos,
-                                               int rotateIndex, boolean isAvatarOnTop, ArrayList<Text> texts) {
-        return synthesisImageGeneral(sticker, avatarImage, null, pos, null, rotateIndex, isAvatarOnTop, texts);
-    }
-
-    /**
-     * 无头像合成，带文字
-     */
-    public static BufferedImage synthesisImage(BufferedImage sticker, ArrayList<Text> texts) {
-        return synthesisImageGeneral(sticker, null, null, null, null, 0, false, texts);
+    // 至多两个（可null）头像合成，旋转，带文字
+    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
+                                               int[] pos1, int[] pos2,
+                                               int rotateIndex, boolean isAvatarOnTop, ArrayList<TextModel> texts) {
+        return synthesisImageGeneral(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, texts);
     }
 
     private static void g2dDrawAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos, int rotateIndex) {
@@ -82,9 +59,9 @@ public class ImageSynthesis {
         g2d.drawImage(newAvatarImage, x, y, w, h, null);
     }
 
-    private static void g2dDrawTexts(Graphics2D g2d, ArrayList<Text> texts) {
+    private static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
         if (texts != null && !texts.isEmpty()) {
-            for (Text text : texts){
+            for (TextModel text : texts){
                 g2d.setColor(text.getColor());
                 g2d.setFont(text.getFont());
                 g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
@@ -99,7 +76,7 @@ public class ImageSynthesis {
             @Nullable int[] pos1, @Nullable int[] pos2,
             int rotateIndex,
             boolean isAvatarOnTop,
-            @Nullable ArrayList<Text> texts
+            @Nullable ArrayList<TextModel> texts
     ) {
 
         BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
@@ -125,12 +102,7 @@ public class ImageSynthesis {
     }
 
 
-    // 两个头像合成，旋转
-    public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
-                                               int[] pos1, int[] pos2,
-                                               int rotateIndex, boolean isAvatarOnTop, ArrayList<Text> texts) {
-        return synthesisImageGeneral(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, texts);
-    }
+
 
     public static BufferedImage convertCircular(BufferedImage input, boolean antialias) throws IOException {
         BufferedImage output = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
