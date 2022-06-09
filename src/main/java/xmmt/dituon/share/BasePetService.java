@@ -88,7 +88,7 @@ public class BasePetService {
     }
 
     public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key){
-        return generateImage(fromAvatarImage, toAvatarImage, key, new TextExtraData("我","你","你群"), null);
+        return generateImage(fromAvatarImage, toAvatarImage, key, new TextExtraData("我","你","你群",new ArrayList<>()), null);
     }
 
     public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, TextExtraData textExtraData) {

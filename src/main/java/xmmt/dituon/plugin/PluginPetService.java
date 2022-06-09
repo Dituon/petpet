@@ -9,6 +9,8 @@ import xmmt.dituon.share.*;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class PluginPetService extends BasePetService {
@@ -20,7 +22,7 @@ public class PluginPetService extends BasePetService {
     }
 
 
-    public void sendImage(Group group, Member from, Member to) {
+    public void sendImage(Group group, Member from, Member to) { //发送随机图片
         try {
             sendImage(group, from, to, keyList.get(new Random().nextInt(keyList.size())));
         } catch (Exception ex) {
@@ -29,7 +31,7 @@ public class PluginPetService extends BasePetService {
         }
     }
 
-    public void sendImage(Group group, Member from, Member to, boolean random) {
+    public void sendImage(Group group, Member from, Member to, boolean random) { //有概率发送随机图片
         if (!random) {
             sendImage(group, from, to);
             return;
@@ -41,15 +43,27 @@ public class PluginPetService extends BasePetService {
         sendImage(group, from, to, keyList.get(r));
     }
 
-    public void sendImage(Group group, Member from, Member to, String key) {
+    public void sendImage(Group group, Member from, Member to, String key) { //用key发送图片(无otherText)
         TextExtraData textExtraData = new TextExtraData(
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
                 to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
-                group.getName()
+                group.getName(), new ArrayList<>()
         );
         sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, textExtraData);
     }
 
+    public void sendImage(Group group, Member from, Member to, String key, String otherText) { //用key发送图片，指定otherText
+        TextExtraData textExtraData = new TextExtraData(
+                from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
+                to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
+                group.getName(),
+                otherText == null || otherText.equals("") ? new ArrayList<>() :
+                        new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
+        );
+        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, textExtraData);
+    }
+
+    //发送图片
     public void sendImage(Group group, Member m, String fromURL, String toURL, String key, TextExtraData textExtraData) {
         BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(fromURL);
         BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(toURL);
@@ -66,7 +80,7 @@ public class PluginPetService extends BasePetService {
                 System.out.println("生成图片失败");
             }
         } catch (Exception ex) {
-            System.out.println("发送生成的图片时出错：" + ex.getMessage());
+            System.out.println("发送图片时出错：" + ex.getMessage());
             ex.printStackTrace();
         }
     }

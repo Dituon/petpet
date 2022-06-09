@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ConfigDTO(
-    val version: Float = 2.2F,
+    val version: Float = 2.5F,
     val command: String = "pet",
     val probability: Int = 30,
     val antialias: Boolean = false,
@@ -59,7 +59,8 @@ data class TextData @JvmOverloads constructor(
 
 @Serializable
 data class TextExtraData (
-    var fromReplacement: String,
+    val fromReplacement: String,
     val toReplacement: String,
     val groupReplacement: String,
+    val textList: ArrayList<String>
 )

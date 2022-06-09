@@ -83,15 +83,6 @@ public class SimpleUsageTest {
         System.out.println("test " + key + " done.");
     }
 
-    /** 如果要使用文字构造方法，请在generateImage后接String数组
-     * String[0] 对应 $from
-     * String[1] 对应 $to
-     * String[2] 对应 $group
-     * 使用例:
-     * petService.generateImage(avatarImage1, avatarImage2, "key", new String[]{"$from", "$to", "$group"});
-     */
-
-
     private void copyInputStreamToFile(InputStream inputStream, File file)
             throws IOException {
         // append = false
@@ -101,8 +92,9 @@ public class SimpleUsageTest {
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
-
     }
 
 
@@ -130,7 +122,7 @@ public class SimpleUsageTest {
             }
             FileOutputStream defaultConfigOS = new FileOutputStream(configFile);
             defaultConfigOS.write(defaultConfig.getBytes(StandardCharsets.UTF_8));
-            System.out.println("写入配置文件成功，路径: Mirai/plugins/petpet.json");
+            System.out.println("写入配置文件成功，路径: Mirai/config/xmmt.dituon.petpet/petpet.json");
         } catch (IOException ex) {
             System.out.println("无法写入配置文件，请检查文件路径!");
         }

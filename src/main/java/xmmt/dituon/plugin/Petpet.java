@@ -1,5 +1,6 @@
 package xmmt.dituon.plugin;
 
+import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.contact.Group;
@@ -12,6 +13,9 @@ import net.mamoe.mirai.message.data.*;
 import xmmt.dituon.share.TextExtraData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
@@ -20,7 +24,7 @@ public final class Petpet extends JavaPlugin {
     PluginPetService pluginPetService;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.4")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.5")
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -43,7 +47,7 @@ public final class Petpet extends JavaPlugin {
     }
 
     private void onNudge(NudgeEvent e) {
-        if (isDisabled((Group) e.getSubject())) {
+        if (isDisabled((Group) e.getSubject()) || e.getFrom() instanceof Bot) {
             return; // 如果禁用了petpet就返回
         }
         try {
@@ -68,19 +72,25 @@ public final class Petpet extends JavaPlugin {
 
         if (pluginPetService.keyCommand) {
             String key = null;
+            String otherText = null;
             for (Message m : e.getMessage()) {
-                if (m instanceof PlainText &&
-                        pluginPetService.dataMap.containsKey(m.contentToString().replace(" ", ""))) {
-                    key = m.contentToString().replace(" ", "");
-                    continue;
+                if (m instanceof PlainText && key == null) {
+                    String firstWord = getFirstWord(m.contentToString());
+                    if (pluginPetService.dataMap.containsKey(firstWord)) {
+                        key = firstWord;
+                        otherText = m.contentToString().replace(key, "").trim();
+                        continue;
+                    }
+                    break;
                 }
-                if (m instanceof Image && key != null) {
-                    respondImage(e.getGroup(), e.getSender(), Image.queryUrl((Image) m), key);
+                if (pluginPetService.respondImage && m instanceof Image && key != null) {
+                    respondImage(e.getGroup(), e.getSender(), Image.queryUrl((Image) m), key, otherText);
                     return;
                 }
                 if (m instanceof At && key != null) {
                     At at = (At) m;
-                    pluginPetService.sendImage(e.getGroup(), e.getSender(), e.getGroup().get(at.getTarget()), key);
+                    pluginPetService.sendImage(e.getGroup(), e.getSender(),
+                            Objects.requireNonNull(e.getGroup().get(at.getTarget())), key, otherText);
                     return;
                 }
             }
@@ -95,8 +105,11 @@ public final class Petpet extends JavaPlugin {
                         getLogger().info(toURL);
                         continue;
                     }
-                    if (m instanceof PlainText && toURL != null && !m.contentToString().endsWith(" ")) {
-                        respondImage(e.getGroup(), e.getSender(), toURL, m.contentToString().replace(" ", ""));
+                    if (m instanceof PlainText && toURL != null) {
+                        String firstWord = getFirstWord(m.contentToString());
+                        respondImage(e.getGroup(), e.getSender(), toURL, firstWord,
+                                m.contentToString().replace(firstWord, "").trim());
+                        return;
                     }
                 }
             }
@@ -108,8 +121,10 @@ public final class Petpet extends JavaPlugin {
                     to = e.getGroup().get(at.getTarget());
                     continue;
                 }
-                if (m instanceof PlainText && at != null && !m.contentToString().endsWith(" ")) {
-                    pluginPetService.sendImage(e.getGroup(), e.getSender(), to, m.contentToString().replace(" ", ""));
+                if (m instanceof PlainText && at != null) {
+                    String firstWord = getFirstWord(m.contentToString());
+                    pluginPetService.sendImage(e.getGroup(), e.getSender(), to, firstWord,
+                            m.contentToString().replace(firstWord, "").trim());
                     return;
                 }
             }
@@ -117,19 +132,22 @@ public final class Petpet extends JavaPlugin {
         }
     }
 
-    private void respondImage(Group g, Member m, String imgURL, String key) {
+    private String getFirstWord(String text) {
+        return text.trim().contains(" ") ?
+                text.trim().split("\\s+")[0] : text.trim();
+    }
+
+    private void respondImage(Group g, Member m, String imgURL, String key, String otherText) {
         pluginPetService.sendImage(g, m, m.getAvatarUrl(), imgURL,
                 key,
                 new TextExtraData(
                         m.getNameCard().isEmpty() ? m.getNick() : m.getNameCard(),
                         "你",
-                        g.getName()
+                        g.getName(),
+                        otherText == null || otherText.equals("") ? new ArrayList<>() :
+                                new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
                 )
         );
-    }
-
-    private void respondImage(GroupMessageEvent e) {
-
     }
 
     private boolean isDisabled(Group group) {

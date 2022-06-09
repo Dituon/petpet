@@ -4,7 +4,11 @@ import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextModel {
     private String text = null;
@@ -13,17 +17,35 @@ public class TextModel {
     private Font font = null;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
-        text = extraInfo != null ? textData.getText().replace("\"","")
-                .replace("$from", extraInfo.getFromReplacement())
-                .replace("$to", extraInfo.getToReplacement())
-                .replace("$group", extraInfo.getGroupReplacement()) : textData.getText();
+        text = extraInfo != null ? buildText(textData.getText(), extraInfo)
+                : textData.getText().replace("\"", "");
         pos = textData.getPos() != null ? setPos(textData.getPos()) : pos;
         color = textData.getColor() != null ? setColor(textData.getColor()) : color;
         font = new Font(
-                textData.getFont() != null ? textData.getFont().replace("\"","") : "黑体",
+                textData.getFont() != null ? textData.getFont().replace("\"", "") : "黑体",
                 Font.PLAIN,
                 textData.getSize() != null ? textData.getSize() : 12
         );
+    }
+
+    private String buildText(String text, TextExtraData extraData) {
+        text = text.replace("\"", "")
+                .replace("$from", extraData.getFromReplacement())
+                .replace("$to", extraData.getToReplacement())
+                .replace("$group", extraData.getGroupReplacement());
+
+        String regex = "\\$txt([1-9]):(.+?\\b)"; //$txt(num):(xxx)
+        Matcher m = Pattern.compile(regex).matcher(text);
+        while (m.find()) {
+            short i = Short.parseShort(m.group(1));
+            String replaceText = m.group(2);
+            try {
+                replaceText = extraData.getTextList().get(i-1);
+            } catch (IndexOutOfBoundsException ignored) {
+            }
+            text = text.replaceAll(regex, replaceText);
+        }
+        return text;
     }
 
     private int[] setPos(List<Integer> posElements) {
@@ -42,8 +64,8 @@ public class TextModel {
                 rgba[2] = Integer.parseInt(jsonArray.get(2).toString());
                 rgba[3] = jsonArray.getSize() == 4 ? Integer.parseInt(jsonArray.get(3).toString()) : 255;
             }
-        } catch (Exception ignored){ //hex
-            String hex = jsonElement.toString().replace("#", "").replace("\"","");
+        } catch (Exception ignored) { //hex
+            String hex = jsonElement.toString().replace("#", "").replace("\"", "");
             if (hex.length() != 6 && hex.length() != 8) {
                 System.out.println("颜色格式有误，请输入正确的16进制颜色\n输入: " + hex);
                 return color;
