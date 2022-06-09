@@ -12,7 +12,7 @@
     [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]
   ],
   "text": [],
-  "round": true,
+  "round": false,
   "rotate": false,
   "avatarOnTop": false
 }

@@ -8,7 +8,7 @@
     [72, 165, 144, 54], [80, 132, 128, 87], [81, 127, 127, 92], [79, 111, 132, 108]
   ],
   "text": [],
-  "round": true,
+  "round": false,
   "rotate": false,
   "avatarOnTop": false
 }
