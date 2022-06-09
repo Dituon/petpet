@@ -111,6 +111,7 @@ content:
 
 **`avatar`**
 
+- `NONE`  无
 - `SINGLE`  单头像
 - `DOUBLE`  双头像
 
