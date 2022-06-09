@@ -33,15 +33,15 @@ public final class Petpet extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
-
-        pluginPetService.readConfigByPluginAutoSave();
         try {
-            pluginPetService.readData(getDataFolder());
+        this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
         } catch (Exception ex) {
             ex.printStackTrace();
             getLogger().info("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n若不想更新可使用本插件 2.0 版本");
         }
+
+        pluginPetService.readConfigByPluginAutoSave();
+        pluginPetService.readData(getDataFolder());
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::onGroupMessage);
         GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, this::onNudge);
     }
