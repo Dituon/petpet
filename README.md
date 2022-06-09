@@ -37,7 +37,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 2.4 #配置文件版本
+  version: 2.5 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: false #抗锯齿
@@ -188,6 +188,7 @@ content:
 - `$from` : 发送者, 会被替换为发送者群名片，如果没有群名片就替换为昵称
 - `$to` : 接收者, 被戳或At的对象, 发送图片构造时为"你"
 - `$group` : 群名称
+- `$txt(i):(xxx)` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1:我 超市 $txt2:你` 指令为 `pet [at] [key] 我 你`
 
 **需要更多变量请提交 Issue**
 
@@ -202,9 +203,6 @@ content:
 > `Exception in coroutine <unnamed>`?
 >> 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
 
-> `YamlDecodingException`?
->> 配置文件中不能包含注释，最简单的解决方法是删除配置文件让插件自动生成
-
 > 文字构造乱码?
 >> `Linux` 系统 可能缺少中文字体, 使用 `fc-list` 列出已安装的字体; `Windows` 系统 可能是文件编码问题, 更改 `data.json` 编码 或加入`-Dfile.encoding=utf-8` 启动项
 
@@ -218,8 +216,6 @@ content:
 - 方式2. 在别的项目二次开发：通过jitpack获得依赖（待补充样例）
 
 ## 后话
-
-对此插件进行二次开发比你想象的简单很多，我认为这是初学者入门 Mirai 开发的不二选择。
 
 如果此插件和您预期的一样正常工作，请给我一个 `star`
 
