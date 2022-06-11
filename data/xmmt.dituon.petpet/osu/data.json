@@ -8,7 +8,7 @@
             "color": "ffffff",
             "pos": [60,210],
             "size": 114,
-            "font": "./data/xmmt.dituon.petpet/osu/Aller-Bold.ttf"
+            "font": "Aller"
         }
     ],
     "round": false,

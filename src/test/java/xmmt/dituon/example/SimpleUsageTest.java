@@ -66,6 +66,10 @@ public class SimpleUsageTest {
         );
     }
 
+    @Test
+    public void testOsu() throws IOException {
+        testGeneral("testOsu", "osu", new TextExtraData("", "", "", Arrays.asList("测试！")), null);
+    }
 
     @Test
     public void testPetpet() throws IOException {
