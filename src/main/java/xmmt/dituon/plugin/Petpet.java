@@ -1,6 +1,5 @@
 package xmmt.dituon.plugin;
 
-import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.contact.Group;
@@ -14,17 +13,17 @@ import xmmt.dituon.share.TextExtraData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
+    public static final float VERSION = 2.6F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     PluginPetService pluginPetService;
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", "2.5")
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(VERSION))
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -34,7 +33,7 @@ public final class Petpet extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-        this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
+            this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
         } catch (Exception ex) {
             ex.printStackTrace();
             getLogger().info("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n若不想更新可使用本插件 2.0 版本");
@@ -42,18 +41,33 @@ public final class Petpet extends JavaPlugin {
 
         pluginPetService.readConfigByPluginAutoSave();
         pluginPetService.readData(getDataFolder());
+
+        if (pluginPetService.headless) {
+            System.setProperty("java.awt.headless", "true");
+        }
+
+        getLogger().info("\n____ ____ ____ ____ ____ ____ \n| . \\| __\\|_ _\\| . \\| __\\|_ _\\\n" +
+                "| __/|  ]_  || | __/|  ]_  || \n|/   |___/  |/ |/   |___/  |/ ");
+
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::onGroupMessage);
         GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, this::onNudge);
     }
 
     private void onNudge(NudgeEvent e) {
-        if (isDisabled((Group) e.getSubject()) || e.getFrom() instanceof Bot) {
+        if (isDisabled((Group) e.getSubject())) {
             return; // 如果禁用了petpet就返回
         }
         try {
             pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
-            pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), true);
+            try {
+                pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), true);
+            } catch (Exception ignored) { // 如果bot戳了别人
+                if (!pluginPetService.respondSelfNudge) {
+                    return;
+                }
+                pluginPetService.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
+            }
         }
     }
 
@@ -76,12 +90,19 @@ public final class Petpet extends JavaPlugin {
             for (Message m : e.getMessage()) {
                 if (m instanceof PlainText && key == null) {
                     String firstWord = getFirstWord(m.contentToString());
-                    if (pluginPetService.dataMap.containsKey(firstWord)) {
-                        key = firstWord;
-                        otherText = m.contentToString().replace(key, "").trim();
-                        continue;
+                    if (!pluginPetService.dataMap.containsKey(firstWord)) {
+                        break;
                     }
-                    break;
+                    key = firstWord;
+                    otherText = m.contentToString().replace(key, "").trim();
+
+                    if (!pluginPetService.commandMustAt && notContainsAt(e.getMessage())) {
+                        pluginPetService.sendImage(e.getGroup(), e.getGroup().getBotAsMember(),
+                                e.getSender(), key, otherText);
+                        getLogger().info("re");
+                        return;
+                    }
+                    continue;
                 }
                 if (pluginPetService.respondImage && m instanceof Image && key != null) {
                     respondImage(e.getGroup(), e.getSender(), Image.queryUrl((Image) m), key, otherText);
@@ -113,6 +134,15 @@ public final class Petpet extends JavaPlugin {
                     }
                 }
             }
+
+            if (!pluginPetService.commandMustAt && notContainsAt(e.getMessage())) {
+                String message = e.getMessage().contentToString().replace(pluginPetService.command, "");
+                String firstWord = getFirstWord(message);
+                String otherText = message.replace(firstWord, "");
+                pluginPetService.sendImage(e.getGroup(), e.getGroup().getBotAsMember(), e.getSender(), firstWord, otherText);
+                return;
+            }
+
             At at = null;
             Member to = e.getSender();
             for (Message m : e.getMessage()) {
@@ -130,6 +160,15 @@ public final class Petpet extends JavaPlugin {
             }
             pluginPetService.sendImage(e.getGroup(), e.getSender(), to);
         }
+    }
+
+    private boolean notContainsAt(MessageChain messages) {
+        for (Message m : messages) {
+            if (m instanceof At) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String getFirstWord(String text) {

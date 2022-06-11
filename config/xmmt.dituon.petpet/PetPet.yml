@@ -1,8 +1,11 @@
 content: 
-  version: 2.5
+  version: 2.6
   command: pet
   probability: 30
   antialias: false
   disabled: []
   keyCommand: false
+  commandMustAt: true
   respondImage: false
+  respondSelfNudge: false
+  headless: false

@@ -4,17 +4,21 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import xmmt.dituon.plugin.Petpet
 
 
 @Serializable
 data class ConfigDTO(
-    val version: Float = 2.5F,
+    val version: Float = Petpet.VERSION,
     val command: String = "pet",
     val probability: Int = 30,
     val antialias: Boolean = false,
     val disabled: List<String> = emptyList(),
     val keyCommand: Boolean = false,
-    val respondImage: Boolean = false
+    val commandMustAt: Boolean = true,
+    val respondImage: Boolean = false,
+    val respondSelfNudge: Boolean = false,
+    val headless: Boolean = false
 )
 
 fun decode(str: String): ConfigDTO {
@@ -58,7 +62,7 @@ data class TextData @JvmOverloads constructor(
 )
 
 @Serializable
-data class TextExtraData (
+data class TextExtraData(
     val fromReplacement: String,
     val toReplacement: String,
     val groupReplacement: String,

@@ -3,6 +3,8 @@ package xmmt.dituon.share;
 import kotlin.Pair;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
+import xmmt.dituon.plugin.PetPetAutoSaveConfig;
+import xmmt.dituon.plugin.Petpet;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -18,7 +20,11 @@ public class BasePetService {
     public String command = "pet";
     public int randomMax = 40;
     public boolean keyCommand = false;
+    public boolean commandMustAt = true;
     public boolean respondImage = false;
+    public boolean respondSelfNudge = false;
+    public boolean headless = false;
+
     public File dataRoot;
     public ArrayList<String> disabledKey = new ArrayList<>();
     public ArrayList<String> keyList = new ArrayList<>();
@@ -63,11 +69,18 @@ public class BasePetService {
 
 
     public void readConfig(ConfigDTO config) {
+        if (config.getVersion() == Petpet.VERSION) {
+            System.out.println("配置文件可能已经过时，当前版本: " + Petpet.VERSION);
+        }
+
         command = config.getCommand();
         antialias = config.getAntialias();
         randomMax = config.getProbability();
         keyCommand = config.getKeyCommand();
+        commandMustAt = config.getCommandMustAt();
         respondImage = config.getRespondImage();
+        respondSelfNudge = config.getRespondSelfNudge();
+        headless = config.getHeadless();
 
         for (String path : config.getDisabled()) {
             disabledKey.add(path.replace("\"", ""));
@@ -87,8 +100,8 @@ public class BasePetService {
         return sb.toString();
     }
 
-    public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key){
-        return generateImage(fromAvatarImage, toAvatarImage, key, new TextExtraData("我","你","你群",new ArrayList<>()), null);
+    public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key) {
+        return generateImage(fromAvatarImage, toAvatarImage, key, new TextExtraData("我", "你", "你群", new ArrayList<>()), null);
     }
 
     public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, TextExtraData textExtraData) {
