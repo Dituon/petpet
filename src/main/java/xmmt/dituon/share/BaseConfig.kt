@@ -6,28 +6,10 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import xmmt.dituon.plugin.Petpet
 
-
 @Serializable
-data class ConfigDTO(
-    val version: Float = Petpet.VERSION,
-    val command: String = "pet",
-    val probability: Int = 30,
-    val antialias: Boolean = true,
-    val disabled: List<String> = emptyList(),
-    val keyCommand: Boolean = false,
-    val commandMustAt: Boolean = true,
-    val respondImage: Boolean = false,
-    val respondSelfNudge: Boolean = false,
-    val headless: Boolean = false
+data class BaseServiceConfig(
+    val antialias: Boolean = true
 )
-
-fun decode(str: String): ConfigDTO {
-    return Json.decodeFromString(str)
-}
-
-fun encode(config: ConfigDTO): String {
-    return Json { encodeDefaults = true }.encodeToString(config)
-}
 
 enum class Type {
     GIF, IMG

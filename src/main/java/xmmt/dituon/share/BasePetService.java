@@ -3,7 +3,6 @@ package xmmt.dituon.share;
 import kotlin.Pair;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
-import xmmt.dituon.plugin.Petpet;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,19 +13,13 @@ import java.util.List;
 
 public class BasePetService {
     private static final String FONTS_FOLDER = "fonts";
-    public boolean antialias = true;
-    public String command = "pet";
-    public int randomMax = 40;
-    public boolean keyCommand = false;
-    public boolean commandMustAt = true;
-    public boolean respondImage = false;
-    public boolean respondSelfNudge = false;
-    public boolean headless = false;
+    protected boolean antialias = true;
 
-    public File dataRoot;
-    public ArrayList<String> disabledKey = new ArrayList<>();
-    public ArrayList<String> keyList = new ArrayList<>();
-    public HashMap<String, KeyData> dataMap = new HashMap<>();
+
+    protected File dataRoot;
+
+
+    protected HashMap<String, KeyData> dataMap = new HashMap<>();
 
     protected BaseImageMaker imageMaker;
     protected BaseGifMaker gifMaker;
@@ -54,12 +47,7 @@ public class BasePetService {
                 // TODO 模板应放在data/templates而不是直接data
                 File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
                 try {
-                    KeyData data = ConfigDTOKt.getData(getFileStr(dataFile));
-                    if (!disabledKey.contains(path)
-                            && !disabledKey.contains("Type." + data.getType())
-                            && !disabledKey.contains("Avatar." + data.getAvatar())) {
-                        keyList.add(path);
-                    }
+                    KeyData data = BaseConfigKt.getData(getFileStr(dataFile));
                     dataMap.put(path, data);
                 } catch (Exception ex) {
                     System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
@@ -67,8 +55,6 @@ public class BasePetService {
             }
         }
 
-        randomMax = (int) (keyList.size() / (randomMax * 0.01));
-        System.out.println("Petpet 加载完毕 (共 " + keyList.size() + " 素材，已排除 " + disabledKey.size() + " )");
     }
 
     private void registerFontsToAwt(File fontsFolder){
@@ -92,29 +78,14 @@ public class BasePetService {
                 System.out.println("registerFontsToAwt异常: " + e);
             }
         }
-        System.out.println("registerFontsToAwt成功: " + successNames.size() + ", current AvailableFontFamilyNames = " + Arrays.toString(ge.getAvailableFontFamilyNames()));
+        System.out.println("registerFontsToAwt成功: " + successNames);
     }
 
 
-    public void readConfig(ConfigDTO config) {
-        if (config.getVersion() != Petpet.VERSION) {
-            System.out.println("配置文件可能已经过时，当前版本: " + Petpet.VERSION);
-        }
+    public void readBaseServiceConfig(BaseServiceConfig config) {
 
-        command = config.getCommand();
         antialias = config.getAntialias();
-        randomMax = config.getProbability();
-        keyCommand = config.getKeyCommand();
-        commandMustAt = config.getCommandMustAt();
-        respondImage = config.getRespondImage();
-        respondSelfNudge = config.getRespondSelfNudge();
-        headless = config.getHeadless();
 
-        for (String path : config.getDisabled()) {
-            disabledKey.add(path.replace("\"", ""));
-        }
-
-        System.out.println("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
     }
 
     public String getFileStr(File file) throws IOException {
@@ -128,13 +99,7 @@ public class BasePetService {
         return sb.toString();
     }
 
-    public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, String key) {
-        return generateImage(fromAvatarImage, toAvatarImage, key, new TextExtraData("我", "你", "你群", new ArrayList<>()), null);
-    }
 
-    public Pair<InputStream, String> generateImage(BufferedImage fromAvatarImage, BufferedImage toAvatarImage, TextExtraData textExtraData) {
-        return generateImage(fromAvatarImage, toAvatarImage, keyList.get(new Random().nextInt(keyList.size())), textExtraData, null);
-    }
 
     /**
      * @return InputStream 及其图片格式（值域：["gif", "png"...]）
@@ -147,7 +112,7 @@ public class BasePetService {
     ) {
         if (!dataMap.containsKey(key)) {
             System.out.println("无效的key: " + key);
-            return generateImage(fromAvatarImage, toAvatarImage, textExtraData);
+            return null;
         }
         KeyData data = dataMap.get(key);
         key = dataRoot.getAbsolutePath() + File.separator + key + File.separator;
@@ -237,5 +202,9 @@ public class BasePetService {
                 Integer.parseInt(ja.get(2).toString()),
                 Integer.parseInt(ja.get(3).toString())
         };
+    }
+
+    public HashMap<String, KeyData> getDataMap() {
+        return dataMap;
     }
 }

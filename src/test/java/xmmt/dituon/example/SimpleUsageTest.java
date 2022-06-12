@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +32,8 @@ public class SimpleUsageTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConfigDTO configDTO = getConfigFromFile(new File(EXAMPLE_ROOT + "config/petpet.json"));
-        petService.readConfig(configDTO);
+        BaseServiceConfig config = new BaseServiceConfig();
+        petService.readBaseServiceConfig(config);
         petService.readData(new File(EXAMPLE_ROOT + "./data"));
     }
 
@@ -99,38 +98,6 @@ public class SimpleUsageTest {
         } catch (Exception ex){
             ex.printStackTrace();
         }
-    }
-
-
-    private static ConfigDTO getConfigFromFile(File configFile) {
-
-            if (configFile.exists()) {
-                try {
-                    return ConfigDTOKt.decode(petService.getFileStr(configFile));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return createConfig(configFile);
-                }
-            } else {
-                return createConfig(configFile);
-            }
-
-    }
-
-    private static ConfigDTO createConfig(File configFile) {
-        ConfigDTO configDTO = new ConfigDTO();
-        try {
-            String defaultConfig = ConfigDTOKt.encode(configDTO);
-            if (!configFile.createNewFile()) {
-                System.out.print("正在写入新版本配置文件");
-            }
-            FileOutputStream defaultConfigOS = new FileOutputStream(configFile);
-            defaultConfigOS.write(defaultConfig.getBytes(StandardCharsets.UTF_8));
-            System.out.println("写入配置文件成功，路径: Mirai/config/xmmt.dituon.petpet/petpet.json");
-        } catch (IOException ex) {
-            System.out.println("无法写入配置文件，请检查文件路径!");
-        }
-        return configDTO;
     }
 
 
