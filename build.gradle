@@ -1,3 +1,5 @@
+import sun.font.EAttribute
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
@@ -46,5 +48,11 @@ publishing {
 
             from components.java
         }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'xmmt.dituon.server.WebServer'
     }
 }
