@@ -37,13 +37,16 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 2.5 #配置文件版本
+  version: 2.6 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
-  antialias: false #抗锯齿
+  antialias: true #抗锯齿
   disabled: [] #禁用列表
   keyCommand: false #以 key 作为指令头
+  commandMustAt: true #必须有At对象
   respondImage: false #使用发送的图片生成 petpet
+  respondSelfNudge: false #响应机器人发出的戳一戳
+  headless: false #使用headless模式
 ```
 
 修改后重启 Mirai 以重新加载
@@ -180,6 +183,11 @@ content:
     "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
     "pos": [20, 150], // 坐标
     "font": "宋体" // 字体, 默认为黑体
+  },
+  {
+    "text": "$txt1[我]超市$txt2[你]!", // 支持关键词变量
+    "pos": [0,200],
+    "font":  "./data/xmmt.dituon.petpet/key/微软雅黑.ttf" // 支持路径
   }
   ]
 ```
@@ -189,7 +197,7 @@ content:
 - `$from` : 发送者, 会被替换为发送者群名片，如果没有群名片就替换为昵称
 - `$to` : 接收者, 被戳或At的对象, 发送图片构造时为"你"
 - `$group` : 群名称
-- `$txt(i):(xxx)` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1:我 超市 $txt2:你` 指令为 `pet [at] [key] 我 你`
+- `$txt(i)[(xxx)]` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1[我]超市$txt2[你]` 指令为 `pet [key] 我 你`
 
 **需要更多变量请提交 Issue**
 
