@@ -215,6 +215,9 @@ content:
 > 文字构造乱码?
 >> `Linux` 系统 可能缺少中文字体, 使用 `fc-list` 列出已安装的字体; `Windows` 系统 可能是文件编码问题, 更改 `data.json` 编码 或加入`-Dfile.encoding=utf-8` 启动项
 
+> `Could not initialize class java.awt.Toolkit`?
+>> 对于无输入输出设备的服务器 需要启用`headless`
+
 ## 分享你的作品
 
 如果你想分享自定义的 Petpet, **欢迎Pr**
