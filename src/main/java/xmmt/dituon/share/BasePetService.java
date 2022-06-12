@@ -68,7 +68,7 @@ public class BasePetService {
 
 
     public void readConfig(ConfigDTO config) {
-        if (config.getVersion() == Petpet.VERSION) {
+        if (config.getVersion() != Petpet.VERSION) {
             System.out.println("配置文件可能已经过时，当前版本: " + Petpet.VERSION);
         }
 
