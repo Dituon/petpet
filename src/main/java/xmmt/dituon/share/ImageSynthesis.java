@@ -5,11 +5,14 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.ArrayList;
 
 public class ImageSynthesis {
@@ -19,8 +22,8 @@ public class ImageSynthesis {
      * 至多两个（可null）头像合成，不旋转，带文字
      */
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
-                                               int[] pos1, int[] pos2, boolean isAvatarOnTop, ArrayList<TextModel> texts) {
-        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, 0, isAvatarOnTop, texts);
+                                               int[] pos1, int[] pos2, boolean isAvatarOnTop,boolean antialias, ArrayList<TextModel> texts) {
+        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, 0, isAvatarOnTop, antialias, texts);
     }
 
     /**
@@ -28,15 +31,16 @@ public class ImageSynthesis {
      */
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
                                                int[] pos1, int[] pos2,
-                                               int rotateIndex, boolean isAvatarOnTop) {
-        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, null);
+                                               int rotateIndex, boolean isAvatarOnTop, boolean antialias) {
+        return synthesisImage(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, antialias, null);
     }
 
     // 至多两个（可null）头像合成，旋转，带文字
     public static BufferedImage synthesisImage(BufferedImage sticker, BufferedImage avatarImage1, BufferedImage avatarImage2,
                                                int[] pos1, int[] pos2,
-                                               int rotateIndex, boolean isAvatarOnTop, ArrayList<TextModel> texts) {
-        return synthesisImageGeneral(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, texts);
+                                               int rotateIndex, boolean isAvatarOnTop, boolean antialias,
+                                               ArrayList<TextModel> texts) {
+        return synthesisImageGeneral(sticker, avatarImage1, avatarImage2, pos1, pos2, rotateIndex, isAvatarOnTop, antialias, texts);
     }
 
     private static void g2dDrawAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos, int rotateIndex) {
@@ -61,7 +65,7 @@ public class ImageSynthesis {
 
     private static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
         if (texts != null && !texts.isEmpty()) {
-            for (TextModel text : texts){
+            for (TextModel text : texts) {
                 g2d.setColor(text.getColor());
                 g2d.setFont(text.getFont());
                 g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
@@ -76,11 +80,18 @@ public class ImageSynthesis {
             @Nullable int[] pos1, @Nullable int[] pos2,
             int rotateIndex,
             boolean isAvatarOnTop,
+            boolean antialias,
             @Nullable ArrayList<TextModel> texts
     ) {
 
         BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
         Graphics2D g2d = output.createGraphics();
+
+        if (antialias) { //抗锯齿
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        }
+
         // 背景
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
@@ -100,8 +111,6 @@ public class ImageSynthesis {
         g2d.dispose();
         return output;
     }
-
-
 
 
     public static BufferedImage convertCircular(BufferedImage input, boolean antialias) throws IOException {

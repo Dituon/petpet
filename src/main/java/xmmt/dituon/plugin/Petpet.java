@@ -99,7 +99,6 @@ public final class Petpet extends JavaPlugin {
                     if (!pluginPetService.commandMustAt && notContainsAt(e.getMessage())) {
                         pluginPetService.sendImage(e.getGroup(), e.getGroup().getBotAsMember(),
                                 e.getSender(), key, otherText);
-                        getLogger().info("re");
                         return;
                     }
                     continue;

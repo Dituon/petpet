@@ -3,7 +3,6 @@ package xmmt.dituon.share;
 import kotlin.Pair;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
-import xmmt.dituon.plugin.PetPetAutoSaveConfig;
 import xmmt.dituon.plugin.Petpet;
 
 import java.awt.image.BufferedImage;
@@ -16,7 +15,7 @@ import java.util.Random;
 
 public class BasePetService {
 
-    public boolean antialias = false;
+    public boolean antialias = true;
     public String command = "pet";
     public int randomMax = 40;
     public boolean keyCommand = false;
@@ -176,7 +175,7 @@ public class BasePetService {
 
             if (data.getType() == Type.IMG) {
                 if (data.getAvatar() == Avatar.NONE) {
-                    InputStream inputStream = imageMaker.makeNoneAvatarImage(key, textList);
+                    InputStream inputStream = imageMaker.makeNoneAvatarImage(key, antialias , textList);
                     return new Pair<>(inputStream, "png");
                 }
                 if (data.getAvatar() == Avatar.SINGLE) {

@@ -47,7 +47,8 @@ public class BaseGifMaker {
                 int[] pos1OfThisFrame = pos1 != null ? pos1[i] : null;
                 int[] pos2OfThisFrame = pos2 != null ? pos2[i] : null;
                 gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(
-                            sticker, avatarImage1, avatarImage2, pos1OfThisFrame, pos2OfThisFrame, rotateIndex, isAvatarOnTop, texts));
+                            sticker, avatarImage1, avatarImage2, pos1OfThisFrame, pos2OfThisFrame, rotateIndex,
+                        isAvatarOnTop,antialias, texts));
             }
             gifBuilder.close();
             return gifBuilder.getOutput();

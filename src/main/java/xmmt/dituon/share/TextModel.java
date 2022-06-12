@@ -5,7 +5,6 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,19 +44,16 @@ public class TextModel {
         return text;
     }
 
-    public static Font loadFont(String fontFileName, int size){
-        //TODO 照着网上抄的，不知道为什么用不了..?
+    public static Font loadFont(String fontFileName, int size) {
         try {
-            File file = new File(fontFileName);
-            if (!file.isFile()){
+            File fontFile = new File(fontFileName);
+            System.out.println(fontFileName);
+            if (!fontFile.isFile() || !fontFile.canRead()) {
                 return new Font(fontFileName, Font.PLAIN, size);
             }
-            FileInputStream aixing = new FileInputStream(file);
-            Font dynamicFont = Font.createFont(Font.TRUETYPE_FONT, aixing);
-            Font dynamicFontPt = dynamicFont.deriveFont(size);
-            aixing.close();
-            return dynamicFontPt;
-        } catch (Exception ignored){
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+            return font.deriveFont(Font.PLAIN, size);
+        } catch (Exception ignored) {
             return new Font(fontFileName, Font.PLAIN, size);
         }
     }

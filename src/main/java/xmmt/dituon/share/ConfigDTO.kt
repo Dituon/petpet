@@ -12,7 +12,7 @@ data class ConfigDTO(
     val version: Float = Petpet.VERSION,
     val command: String = "pet",
     val probability: Int = 30,
-    val antialias: Boolean = false,
+    val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
     val keyCommand: Boolean = false,
     val commandMustAt: Boolean = true,

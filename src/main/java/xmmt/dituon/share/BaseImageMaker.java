@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class BaseImageMaker {
     // 无头像生成图片
-    public InputStream makeNoneAvatarImage(String path,
+    public InputStream makeNoneAvatarImage(String path, boolean antialias,
                                            ArrayList<TextModel> texts) {
-        return makeImageGeneral(null, null, path, null, null, false, false, false, texts);
+        return makeImageGeneral(null, null, path, null, null, false, false, antialias, texts);
     }
 
     // 单头像生成图片
@@ -45,7 +45,7 @@ public class BaseImageMaker {
             BufferedImage sticker = ImageIO.read(new File(path + "0.png"));
 
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(
-                    sticker, avatarImage1, avatarImage2, pos1, pos2, isAvatarOnTop, texts));
+                    sticker, avatarImage1, avatarImage2, pos1, pos2, isAvatarOnTop, antialias, texts));
         } catch (IOException ex) {
             System.out.println("构造图片失败，请检查 PetData");
             ex.printStackTrace();

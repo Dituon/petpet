@@ -2,7 +2,7 @@ content:
   version: 2.6
   command: pet
   probability: 30
-  antialias: false
+  antialias: true
   disabled: []
   keyCommand: false
   commandMustAt: true
