@@ -1,0 +1,17 @@
+{
+    "type": "IMG",
+    "avatar": "NONE",
+    "pos": [],
+    "text": [
+        {
+            "text": "$txt1[osu!]",
+            "color": "ffffff",
+            "pos": [60,210],
+            "size": 114,
+            "font": "./data/xmmt.dituon.petpet/osu/Aller-Bold.ttf"
+        }
+    ],
+    "round": false,
+    "rotate": false,
+    "avatarOnTop": false
+}
