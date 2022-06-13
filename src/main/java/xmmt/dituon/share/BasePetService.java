@@ -5,16 +5,15 @@ import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 import xmmt.dituon.plugin.Petpet;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 
 public class BasePetService {
-
+    private static final String FONTS_FOLDER = "fonts";
     public boolean antialias = true;
     public String command = "pet";
     public int randomMax = 40;
@@ -47,23 +46,53 @@ public class BasePetService {
         }
 
         for (String path : children) {
-
-            File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
-            try {
-                KeyData data = ConfigDTOKt.getData(getFileStr(dataFile));
-                if (!disabledKey.contains(path)
-                        && !disabledKey.contains("Type." + data.getType())
-                        && !disabledKey.contains("Avatar." + data.getAvatar())) {
-                    keyList.add(path);
+            if (path.equals(FONTS_FOLDER)) {
+                // load fonts folder
+                registerFontsToAwt(new File(dir.getAbsolutePath() + File.separator + path));
+            } else {
+                // load templates folder
+                // TODO 模板应放在data/templates而不是直接data
+                File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
+                try {
+                    KeyData data = ConfigDTOKt.getData(getFileStr(dataFile));
+                    if (!disabledKey.contains(path)
+                            && !disabledKey.contains("Type." + data.getType())
+                            && !disabledKey.contains("Avatar." + data.getAvatar())) {
+                        keyList.add(path);
+                    }
+                    dataMap.put(path, data);
+                } catch (Exception ex) {
+                    System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
                 }
-                dataMap.put(path, data);
-            } catch (Exception ex) {
-                System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
             }
         }
 
         randomMax = (int) (keyList.size() / (randomMax * 0.01));
         System.out.println("Petpet 加载完毕 (共 " + keyList.size() + " 素材，已排除 " + disabledKey.size() + " )");
+    }
+
+    private void registerFontsToAwt(File fontsFolder){
+        if (!fontsFolder.exists() || !fontsFolder.isDirectory()) {
+            System.out.println("无fonts");
+            return;
+        }
+
+        List<String> successNames = new ArrayList<>();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        for (File fontFile : fontsFolder.listFiles()) {
+            try (InputStream inputStream = new FileInputStream(fontFile)){
+                Font customFont =  Font.createFont(Font.TRUETYPE_FONT, inputStream);
+                boolean success = ge.registerFont(customFont);
+                if (success) {
+                    successNames.add(fontFile.getName());
+                } else {
+                    System.out.println("registerFontsToAwt失败: " + fontFile.getName());
+                }
+            } catch (Exception e) {
+                System.out.println("registerFontsToAwt异常: " + e);
+            }
+        }
+        System.out.println("registerFontsToAwt成功: " + successNames.size() + ", current AvailableFontFamilyNames = " + Arrays.toString(ge.getAvailableFontFamilyNames()));
     }
 
 

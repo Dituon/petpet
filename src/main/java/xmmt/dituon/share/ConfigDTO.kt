@@ -66,5 +66,5 @@ data class TextExtraData(
     val fromReplacement: String,
     val toReplacement: String,
     val groupReplacement: String,
-    val textList: ArrayList<String>
+    val textList: List<String>
 )

@@ -24,7 +24,7 @@ public class TextModel {
                 textData.getSize() != null ? textData.getSize() : 12);
     }
 
-    private String buildText(String text, TextExtraData extraData) {
+    private static String buildText(String text, TextExtraData extraData) {
         text = text.replace("\"", "")
                 .replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
@@ -44,18 +44,8 @@ public class TextModel {
         return text;
     }
 
-    public static Font loadFont(String fontFileName, int size) {
-        try {
-            File fontFile = new File(fontFileName);
-            System.out.println(fontFileName);
-            if (!fontFile.isFile() || !fontFile.canRead()) {
-                return new Font(fontFileName, Font.PLAIN, size);
-            }
-            Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            return font.deriveFont(Font.PLAIN, size);
-        } catch (Exception ignored) {
-            return new Font(fontFileName, Font.PLAIN, size);
-        }
+    private static Font loadFont(String fontName, int size) {
+        return new Font(fontName, Font.PLAIN, size);
     }
 
     private int[] setPos(List<Integer> posElements) {
