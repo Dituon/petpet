@@ -225,7 +225,7 @@ content:
 ## 依赖share包二次开发
 
 - 方式1. 在本项目内二次开发（非mirai插件形式）：见`xmmt.dituon.example.SimpleUsage`
-- 方式2. 在别的项目二次开发：通过jitpack获得依赖（待补充样例）
+- 方式2. 在别的项目二次开发：[mirai-simplepetpet-plugin](https://github.com/hundun000/mirai-simplepetpet-plugin)
 
 ## 后话
 
