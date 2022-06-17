@@ -41,26 +41,72 @@
             margin: 0 auto;
         }
 
-        #info {
+        .bar {
             width: 60%;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-evenly;
             flex-wrap: wrap;
-            background-color: #FFF0F5;
-            padding: 0.5em;
             border-radius: 12px;
             margin: 0.8em auto;
+        }
+
+        .info{
+            padding: 0.5em;
+            background-color: #FFF0F5;
+        }
+
+        .check {
+            background-color: #FFF0F5;
+            color: #606060;
+            padding: 0.3em 0.4em;
+            border-radius: 12px;
+            margin: 0.4em;
         }
     </style>
 </head>
 <body>
-<div id="info"><span id="bg_size"></span><span id="avatar_pos"></span></div>
+<div class="bar info"><span id="bg_size"></span><span id="avatar_pos"></span></div>
 <div id="drop_area">
     <h1>拖拽上传</h1><br/>
     <button id="file_button" onclick="chooseFile()">或选择文件</button>
 </div>
 <input type="file" id="file">
 <canvas id="app" width="0" height="0"></canvas>
+<div class="bar">
+    <div class="check">round<input type="checkbox" id="round"></div>
+    <div class="check">avatarOnTop<input type="checkbox" id="avatarOnTop" checked></div>
+</div>
+<script>
+    $('.bar').hide()
+    $('#round').change(function (){
+        if(this.checked){
+            const roundedCorners = (avatar, radius) => new fabric.Rect({
+                width: avatar.width,
+                height: avatar.height,
+                rx: radius / avatar.scaleX,
+                ry: radius / avatar.scaleY,
+                left: -avatar.width / 2,
+                top: -avatar.height / 2
+            })
+            avatar.set("clipPath", roundedCorners(avatar,
+                avatar.width < avatar.height ? (avatar.width / 2) : (avatar.height / 2)))
+        } else {
+            avatar.set("clipPath", null)
+        }
+        canvas.renderAll()
+    })
+
+    $('#avatarOnTop').change(function (){
+        if(this.checked){
+            canvas.overlayImage = backGroundImage
+            canvas.backgroundImage = null
+        } else {
+            canvas.backgroundImage = backGroundImage
+            canvas.overlayImage = null
+        }
+        canvas.renderAll()
+    })
+</script>
 <script>
     $(function () { //拖拽
         $(document).on({
@@ -101,6 +147,7 @@
             return false;
         }
         $('#drop_area').hide()
+        $('.bar').slideDown()
         const reader = new FileReader();
         const image = new Image()
         reader.readAsDataURL(fileList[0]);
@@ -114,10 +161,11 @@
 </script>
 <script>
     const canvas = new fabric.Canvas('app');
+    let avatar;
     let backGroundImage;
     let avatarURL = 'https://q.qlogo.cn/headimg_dl?dst_uin=2544193782&spec=640&img_type=jpg'
-    fabric.Image.fromURL(avatarURL, function (avatar) {
-        this.avatar = avatar
+    fabric.Image.fromURL(avatarURL, function (a) {
+        avatar = a
         avatar.scale(0.2)
         avatar.setControlsVisibility({
             mtr: false
