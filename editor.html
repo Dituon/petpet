@@ -177,9 +177,9 @@
     fabric.Image.fromURL(avatarURL, function (a) {
         avatar = a
         avatar.scale(0.2)
-        avatar.setControlsVisibility({
-            mtr: false
-        })
+        // avatar.setControlsVisibility({
+        //     mtr: false
+        // })
         avatar.uniformScaling = true
         canvas.add(avatar);
         avatar.on('moving', function () {
