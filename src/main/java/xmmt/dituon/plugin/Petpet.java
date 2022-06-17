@@ -90,7 +90,7 @@ public final class Petpet extends JavaPlugin {
             for (Message m : e.getMessage()) {
                 if (m instanceof PlainText && key == null) {
                     String firstWord = getFirstWord(m.contentToString());
-                    if (!pluginPetService.dataMap.containsKey(firstWord)) {
+                    if (!pluginPetService.getDataMap().containsKey(firstWord)) {
                         break;
                     }
                     key = firstWord;
