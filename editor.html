@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Petpet Editor</title>
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
+    <style>
+        #drop_area {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #FFB6C1;
+            border: 2px dotted #FFB6C1;
+            text-align: center;
+            width: 60%;
+            padding: 14em 0;
+            border-radius: 12px;
+        }
+
+        #file_button {
+            color: #FFB6C1;
+            border: 2px solid #FFB6C1;
+            background-color: white;
+            padding: 0.8em 1.6em;
+            border-radius: 12px;
+        }
+
+        #file_button:hover {
+            color: white;
+            background-color: #FFB6C1;
+        }
+
+        #file {
+            display: none;
+        }
+
+        .canvas-container {
+            border: 1px dotted #FFB6C1;
+            margin: 0 auto;
+        }
+
+        #info {
+            width: 60%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            background-color: #FFF0F5;
+            padding: 0.5em;
+            border-radius: 12px;
+            margin: 0.8em auto;
+        }
+    </style>
+</head>
+<body>
+<div id="info"><span id="bg_size"></span><span id="avatar_pos"></span></div>
+<div id="drop_area">
+    <h1>拖拽上传</h1><br/>
+    <button id="file_button" onclick="chooseFile()">或选择文件</button>
+</div>
+<input type="file" id="file">
+<canvas id="app" width="0" height="0"></canvas>
+<script>
+    $(function () { //拖拽
+        $(document).on({
+            dragleave: function (e) {
+                e.preventDefault();
+            },
+            drop: function (e) {
+                e.preventDefault();
+            },
+            dragenter: function (e) {
+                e.preventDefault();
+            },
+            dragover: function (e) {
+                e.preventDefault();
+            }
+        });
+        const box = document.getElementById('drop_area');
+        box.addEventListener("drop", function (e) {
+            e.preventDefault();
+            const fileList = e.dataTransfer.files;
+            if (fileList.length === 0) {
+                return false;
+            }
+            loadImage(fileList)
+        }, false);
+    });
+
+    function chooseFile() { //选择
+        $('#file').click().change(function () {
+            const fileList = $('#file').prop('files')
+            loadImage(fileList)
+        })
+    }
+
+    function loadImage(fileList) {
+        if (fileList[0].type.indexOf('image') === -1) {
+            alert("仅支持图片格式");
+            return false;
+        }
+        $('#drop_area').hide()
+        const reader = new FileReader();
+        const image = new Image()
+        reader.readAsDataURL(fileList[0]);
+        reader.onload = function () {
+            image.src = reader.result.toString()
+        }
+        image.onload = function () {
+            loadBackGround(image)
+        }
+    }
+</script>
+<script>
+    const canvas = new fabric.Canvas('app');
+    let backGroundImage;
+    let avatarURL = 'https://q.qlogo.cn/headimg_dl?dst_uin=2544193782&spec=640&img_type=jpg'
+    fabric.Image.fromURL(avatarURL, function (avatar) {
+        this.avatar = avatar
+        avatar.scale(0.2)
+        avatar.setControlsVisibility({
+            mtr: false
+        })
+        avatar.uniformScaling = true
+        canvas.add(avatar);
+        avatar.on('moving', function () {
+            avatarMoving(avatar)
+        })
+        avatar.on('scaling', function () {
+            avatarMoving(avatar)
+        })
+    });
+
+    function loadBackGround(img) {
+        const image = new fabric.Image(img)
+        backGroundImage = image
+
+        $('#bg_size').text('画布: ' + image.width + '*' + image.height)
+        canvas.setWidth(image.width)
+        canvas.setHeight(image.height)
+        canvas.backgroundImage = image
+        canvas.renderAll()
+    }
+
+    function avatarMoving(a) {
+        let pos = '[' + a.left.toFixed() + ',' + a.top.toFixed() + ', ' +
+            a.getScaledWidth().toFixed() + ',' + a.getScaledHeight().toFixed() + ']'
+        $('#avatar_pos').text('坐标: ' + pos)
+    }
+</script>
+</body>
+</html>
