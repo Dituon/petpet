@@ -4,7 +4,6 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
-import xmmt.dituon.plugin.Petpet
 
 @Serializable
 data class BaseServiceConfig(
@@ -15,19 +14,11 @@ enum class Type {
     GIF, IMG
 }
 
-enum class Avatar {
-    NONE, SINGLE, DOUBLE
-}
-
 @Serializable
 data class KeyData(
     val type: Type,
-    val avatar: Avatar,
-    val pos: JsonArray,
+    val avatar: List<AvatarData>,
     val text: List<TextData>,
-    val round: Boolean,
-    val rotate: Boolean,
-    val avatarOnTop: Boolean
 )
 
 fun getData(str: String): KeyData {
@@ -49,4 +40,28 @@ data class TextExtraData(
     val toReplacement: String,
     val groupReplacement: String,
     val textList: List<String>
+)
+
+enum class AvatarType {
+    FROM, TO, GROUP, BOT
+}
+
+@Serializable
+data class AvatarData @JvmOverloads constructor(
+    val type: AvatarType,
+    val pos: JsonArray? = null,
+    val format: String? = "png",
+    val angle: Int? = 0,
+    val round: Boolean? = false,
+    val rotate: Boolean? = false,
+    val avatarOnTop: Boolean? = true,
+    val antialias: Boolean? = false
+)
+
+@Serializable
+data class AvatarExtraData(
+    val fromAvatarUrl: String? = null,
+    val toAvatarUrl: String? = null,
+    val groupAvatarUrl: String? = null,
+    val botAvatarUrl: String? = null
 )

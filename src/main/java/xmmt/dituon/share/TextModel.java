@@ -4,16 +4,15 @@ import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 
 import java.awt.*;
-import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextModel {
-    private String text = null;
-    private int[] pos = {2, 14};
-    private Color color = new Color(25, 25, 25, 255); // #191919
-    private Font font = null;
+    protected String text;
+    protected int[] pos = {2, 14};
+    protected Color color = new Color(25, 25, 25, 255); // #191919
+    protected Font font;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
         text = extraInfo != null ? buildText(textData.getText(), extraInfo)
