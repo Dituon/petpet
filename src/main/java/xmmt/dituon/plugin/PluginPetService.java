@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
 import xmmt.dituon.share.*;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class PluginPetService extends BasePetService {
     @Override
     public void readData(File dir) {
         // 1. 所有key加载到dataMap
-        super.readData(dir);
+        readData(dir);
         // 2. 其中某些key加入randomableList
         dataMap.forEach((path, keyData) -> {
             if (!disabledKey.contains(path)
@@ -99,10 +100,8 @@ public class PluginPetService extends BasePetService {
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
                 to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
                 group.getName(), new ArrayList<>()
-        );AvatarExtraData avatarExtraData = new AvatarExtraData(
-                from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
         );
-        sendImage(group, key, avatarExtraData, textExtraData);
+        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, textExtraData);
     }
 
     public void sendImage(Group group, Member from, Member to, String key, String otherText) { //用key发送图片，指定otherText
@@ -113,22 +112,20 @@ public class PluginPetService extends BasePetService {
                 otherText == null || otherText.equals("") ? new ArrayList<>() :
                         new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
         );
-        AvatarExtraData avatarExtraData = new AvatarExtraData(
-                from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
-        );
-        sendImage(group, key, avatarExtraData, textExtraData);
+        sendImage(group, from, from.getAvatarUrl(), to.getAvatarUrl(), key, textExtraData);
     }
 
     //发送图片
-    public void sendImage(Group group, String key, AvatarExtraData avatarExtraData, TextExtraData textExtraData) {
+    public void sendImage(Group group, Member m, String fromURL, String toURL, String key, TextExtraData textExtraData) {
+        BufferedImage fromAvatarImage = ImageSynthesis.getAvatarImage(fromURL);
+        BufferedImage toAvatarImage = ImageSynthesis.getAvatarImage(toURL);
 
-        Pair<InputStream, String> generatedImageAndType = generateImage(key, avatarExtraData,
-                textExtraData, null);
+        Pair<InputStream, String> generatedImageAndType = generateImage(fromAvatarImage, toAvatarImage, key, textExtraData, null);
 
         try {
             if (generatedImageAndType != null) {
                 ExternalResource resource = ExternalResource.create(generatedImageAndType.getFirst());
-                Image image = group.uploadImage(resource);
+                Image image = m.uploadImage(resource);
                 resource.close();
                 group.sendMessage(image);
             } else {

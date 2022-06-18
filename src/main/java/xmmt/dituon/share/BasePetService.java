@@ -57,7 +57,7 @@ public class BasePetService {
 
     }
 
-    private void registerFontsToAwt(File fontsFolder) {
+    private void registerFontsToAwt(File fontsFolder){
         if (!fontsFolder.exists() || !fontsFolder.isDirectory()) {
             System.out.println("无fonts");
             return;
@@ -66,8 +66,8 @@ public class BasePetService {
         List<String> successNames = new ArrayList<>();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         for (File fontFile : fontsFolder.listFiles()) {
-            try (InputStream inputStream = new FileInputStream(fontFile)) {
-                Font customFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+            try (InputStream inputStream = new FileInputStream(fontFile)){
+                Font customFont =  Font.createFont(Font.TRUETYPE_FONT, inputStream);
                 boolean success = ge.registerFont(customFont);
                 if (success) {
                     successNames.add(fontFile.getName());
@@ -100,11 +100,13 @@ public class BasePetService {
     }
 
 
+
     /**
      * @return InputStream 及其图片格式（值域：["gif", "png"...]）
      */
     public Pair<InputStream, String> generateImage(
-            String key, AvatarExtraData avatarExtraData,
+            BufferedImage fromAvatarImage, BufferedImage toAvatarImage,
+            String key,
             TextExtraData textExtraData,
             List<TextData> additionTextDatas
     ) {
@@ -130,22 +132,61 @@ public class BasePetService {
                 }
             }
 
-            ArrayList<AvatarModel> avatarList = new ArrayList<>();
+            if (data.getType() == Type.GIF) {
+                if (data.getAvatar() == Avatar.SINGLE) {
+                    int[][] pos = new int[data.getPos().getSize()][4];
 
-            if (!data.getAvatar().isEmpty()) {
-                for (AvatarData avatarData : data.getAvatar()) {
-                    avatarList.add(new AvatarModel(avatarData, avatarExtraData, data.getType()));
+                    int i = 0;
+                    for (JsonElement je : data.getPos()) {
+                        pos[i++] = JsonArrayToIntArray((JsonArray) je);
+                    }
+
+                    InputStream inputStream = gifMaker.makeOneAvatarGIF(toAvatarImage, key, pos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
+                    return new Pair<>(inputStream, "gif");
+                }
+                if (data.getAvatar() == Avatar.DOUBLE) {
+                    JsonArray fromJa = (JsonArray) data.getPos().get(0);
+                    JsonArray toJa = (JsonArray) data.getPos().get(1);
+
+                    int[][] fromPos = new int[fromJa.getSize()][4];
+                    int[][] toPos = new int[toJa.getSize()][4];
+
+                    int i = 0;
+                    for (JsonElement fromJe : fromJa) {
+                        fromPos[i++] = JsonArrayToIntArray((JsonArray) fromJe);
+                    }
+                    i = 0;
+                    for (JsonElement toJe : toJa) {
+                        toPos[i++] = JsonArrayToIntArray((JsonArray) toJe);
+                    }
+
+                    InputStream inputStream = gifMaker.makeTwoAvatarGIF(fromAvatarImage, toAvatarImage, key, fromPos, toPos,
+                            data.getAvatarOnTop(), data.getRotate(), data.getRound(), antialias, textList);
+                    return new Pair<>(inputStream, "gif");
                 }
             }
 
-            if (data.getType() == Type.GIF) {
-                InputStream inputStream = gifMaker.makeAvatarGIF(key, avatarList, textList, antialias);
-                return new Pair<>(inputStream, "gif");
-            }
-
             if (data.getType() == Type.IMG) {
-                InputStream inputStream = imageMaker.makeImage(key, avatarList, textList, antialias);
-                return new Pair<>(inputStream, "png");
+                if (data.getAvatar() == Avatar.NONE) {
+                    InputStream inputStream = imageMaker.makeNoneAvatarImage(key, antialias , textList);
+                    return new Pair<>(inputStream, "png");
+                }
+                if (data.getAvatar() == Avatar.SINGLE) {
+                    int[] pos = JsonArrayToIntArray(data.getPos());
+
+                    InputStream inputStream = imageMaker.makeOneAvatarImage(toAvatarImage, key, pos,
+                            data.getAvatarOnTop(), data.getRound(), antialias, textList);
+                    return new Pair<>(inputStream, "png");
+                }
+                if (data.getAvatar() == Avatar.DOUBLE) {
+                    int[] pos1 = JsonArrayToIntArray((JsonArray) data.getPos().get(0));
+                    int[] pos2 = JsonArrayToIntArray((JsonArray) data.getPos().get(1));
+
+                    InputStream inputStream = imageMaker.makeTwoAvatarImage(fromAvatarImage, toAvatarImage, key, pos1, pos2,
+                            data.getAvatarOnTop(), data.getRound(), antialias, textList);
+                    return new Pair<>(inputStream, "png");
+                }
             }
         } catch (Exception ex) {
             System.out.println("解析 " + key + "/data.json 出错");

@@ -38,12 +38,12 @@ public class SimpleUsageTest {
     }
 
 
-//    @Test
+    @Test
     public void testPandaFace() throws IOException {
         testGeneral("testPandaFace", "panda-face", null, Arrays.asList(textDataForPandaFace("。。。")));
     }
 
-//    @Test
+    @Test
     public void testPandaFace2() throws IOException {
         testGeneral("testPandaFace2", "panda-face", null, Arrays.asList(textDataForPandaFace("二次元，二次元")));
     }
@@ -65,26 +65,23 @@ public class SimpleUsageTest {
         );
     }
 
-//    @Test
+    @Test
     public void testOsu() throws IOException {
         testGeneral("testOsu", "osu", new TextExtraData("", "", "", Arrays.asList("测试！")), null);
     }
 
-//    @Test
+    @Test
     public void testPetpet() throws IOException {
         testGeneral("testPetpet", "petpet", null, null);
     }
 
-//    @Test
+    @Test
     public void testKiss() throws IOException {
         testGeneral("testKiss", "kiss", null, null);
     }
 
     private void testGeneral(String saveName, String key, TextExtraData textExtraData, List<TextData> additionTextDatas) throws IOException {
-        Pair<InputStream, String> resultStreamAndType = petService.generateImage(key,
-                new AvatarExtraData(INPUT_ROOT + "avatar1.png", INPUT_ROOT + "avatar2.png",
-                        INPUT_ROOT + "avatar1.png", INPUT_ROOT + "avatar2.png")
-                , textExtraData, additionTextDatas);
+        Pair<InputStream, String> resultStreamAndType = petService.generateImage(avatarImage1, avatarImage2, key, textExtraData, additionTextDatas);
         copyInputStreamToFile(resultStreamAndType.getFirst(), new File(OUTPUT_ROOT + saveName + "." + resultStreamAndType.getSecond()));
         System.out.println("test " + key + " done.");
     }
@@ -98,7 +95,7 @@ public class SimpleUsageTest {
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
-        } catch (Exception ex) {
+        } catch (Exception ex){
             ex.printStackTrace();
         }
     }
