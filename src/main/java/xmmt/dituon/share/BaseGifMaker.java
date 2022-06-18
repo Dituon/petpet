@@ -15,13 +15,11 @@ public class BaseGifMaker {
     public InputStream makeAvatarGIF(String path, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                      boolean antialias) {
         try {
-            String format = avatarList.get(0).getFormat();
-
             //遍历获取GIF长度(图片文件数量)
             if(!imageNumMap.containsKey(path)){
                 short imageNum = 0;
                 for (File file : Objects.requireNonNull(new File(path).listFiles())) {
-                    if (file.getName().endsWith(format)) {
+                    if (file.getName().endsWith(".png")) {
                         imageNum++;
                     }
                 }
@@ -30,10 +28,10 @@ public class BaseGifMaker {
 
 
             GifBuilder gifBuilder = new GifBuilder(ImageIO.read(new File(
-                    path + "0." + format)).getType(), 65, true);
+                    path + "0.png")).getType(), 65, true);
 
             for (int i = 0; i < imageNumMap.get(path); i++) {
-                BufferedImage sticker = ImageIO.read(new File(path + i + '.' + format));
+                BufferedImage sticker = ImageIO.read(new File(path + i + ".png"));
                 gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(sticker, avatarList, textList, antialias));
             }
             gifBuilder.close();

@@ -12,7 +12,7 @@ public class BaseImageMaker {
                                  ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                  boolean antialias) {
         try {
-            BufferedImage sticker = ImageIO.read(new File(path + "0." + avatarList.get(0).getFormat()));
+            BufferedImage sticker = ImageIO.read(new File(path + "0.png"));
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(
                     sticker, avatarList, textList, antialias));
         } catch (IOException e) {

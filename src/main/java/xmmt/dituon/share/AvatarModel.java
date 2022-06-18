@@ -9,7 +9,6 @@ import java.io.IOException;
 public class AvatarModel {
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
-    protected String format;
     protected int angle;
     protected boolean round;
     protected boolean rotate;
@@ -22,7 +21,6 @@ public class AvatarModel {
         type = data.getType();
         setImage(type, extraData);
         setPos(data.getPos(), imageType);
-        format = data.getFormat() != null ? data.getFormat() : "png";
         angle = data.getAngle() != null ? data.getAngle() : 0;
         round = Boolean.TRUE.equals(data.getRound());
         rotate = Boolean.TRUE.equals(data.getRotate());
@@ -81,10 +79,6 @@ public class AvatarModel {
 
     public int[][] getPos() {
         return pos;
-    }
-
-    public String getFormat() {
-        return format;
     }
 
     public int getAngle() {

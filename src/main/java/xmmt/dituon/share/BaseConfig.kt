@@ -19,6 +19,7 @@ data class KeyData(
     val type: Type,
     val avatar: List<AvatarData>,
     val text: List<TextData>,
+    val format: String? = "png"
 )
 
 fun getData(str: String): KeyData {
@@ -50,7 +51,6 @@ enum class AvatarType {
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     val pos: JsonArray? = null,
-    val format: String? = "png",
     val angle: Int? = 0,
     val round: Boolean? = false,
     val rotate: Boolean? = false,
