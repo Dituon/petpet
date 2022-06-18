@@ -94,16 +94,14 @@ content:
 ```
 {
   "type": "GIF", // 图片类型(enum)
-  "avatar": [ //头像(objArr), 参考下文
-    {
+  "avatar": [{ //头像(objArr), 参考下文
       "type": "TO",
       "pos": [
         [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
       ],
       "round": true,
       "avatarOnTop": false
-    }
-  ],
+    }],
   "text": [] //文字(objArr), 参考下文
 }
 ```
