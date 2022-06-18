@@ -37,7 +37,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 2.6 #配置文件版本
+  version: 3.0 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: true #抗锯齿
@@ -94,7 +94,7 @@ content:
 ```
 {
   "type": "GIF", // 图片类型(enum)
-  "avatar": [ //头像(ObjArr), 参考下文
+  "avatar": [ //头像(objArr), 参考下文
     {
       "type": "TO",
       "pos": [
@@ -104,7 +104,7 @@ content:
       "avatarOnTop": false
     }
   ],
-  "text": [] //文字(ObjArr), 参考下文
+  "text": [] //文字(objArr), 参考下文
 }
 ```
 
