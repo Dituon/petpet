@@ -99,7 +99,7 @@ public class AvatarModel {
 
     public BufferedImage getImage() {
         assert image != null;
-        if (rotate) {
+        if (round) {
             try {
                 return ImageSynthesis.convertCircular(image, antialias);
             } catch (IOException e) {
