@@ -5,6 +5,8 @@
     <title>Petpet Editor</title>
     <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
+    <script src="./libgif.min.js"></script>
+    <script src="./rubbable.min.js"></script>
     <style>
         body {
             text-align: center;
@@ -71,6 +73,19 @@
             border-radius: 12px;
             margin: 0.4em;
         }
+
+        #gifBar {
+            margin: 0 auto;
+            width: 60%;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .frame {
+            z-index: 10;
+            width: 6em;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +100,7 @@
     <div class="check">round<input type="checkbox" id="round"></div>
     <div class="check">avatarOnTop<input type="checkbox" id="avatarOnTop" checked></div>
 </div>
+<div id="gifBar"></div>
 <a href="https://github.com/Dituon/petpet">♥ 项目地址 ♥</a>
 <script>
     $('.bar').hide()
@@ -164,6 +180,10 @@
         reader.onload = function () {
             image.src = reader.result.toString()
         }
+        if (fileList[0].type === 'image/gif') {
+            loadGif(image);
+            return;
+        }
         image.onload = function () {
             loadBackGround(image)
         }
@@ -177,9 +197,9 @@
     fabric.Image.fromURL(avatarURL, function (a) {
         avatar = a
         avatar.scale(0.2)
-        // avatar.setControlsVisibility({
-        //     mtr: false
-        // })
+        avatar.setControlsVisibility({
+            mtr: false
+        })
         avatar.uniformScaling = true
         canvas.add(avatar);
         avatar.on('moving', function () {
@@ -206,6 +226,32 @@
             a.getScaledWidth().toFixed() + ',' + a.getScaledHeight().toFixed() + ']'
         $('#avatar_pos').text('坐标: ' + pos)
     }
+</script>
+<script>
+    function loadGif(image) {
+        image.id = 'gifLoader'
+        $('#gifBar').append(image)
+        document.getElementById('gifLoader').onload = function () {
+            let gif = new RubbableGif({gif: document.getElementById('gifLoader')})
+            gif.load(function () {
+                $('.jsgif').hide()
+                for (let i = 1; i <= gif.get_length(); i++) {
+                    gif.move_to(i);
+                    let frameImage = new Image();
+                    frameImage.src = gif.get_canvas().toDataURL();
+                    frameImage.id = 'f' + i
+                    frameImage.className = 'frame'
+                    $('#gifBar').append(frameImage)
+                }
+            })
+        }
+    }
+
+    $('#gifBar').on('click', '.frame', function () {
+        const backgroundImage = new Image()
+        backgroundImage.src = this.src
+        loadBackGround(backgroundImage)
+    })
 </script>
 </body>
 </html>
