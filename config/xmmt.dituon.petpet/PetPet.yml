@@ -3,7 +3,8 @@ content:
   command: pet
   probability: 30
   antialias: true
-  disabled: ["Avatar.NONE"]
+  disabled: 
+    - Avatar.NONE
   keyCommand: false
   commandMustAt: true
   respondImage: false

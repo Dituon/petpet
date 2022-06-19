@@ -31,20 +31,16 @@ public class AvatarModel {
     private void setImage(AvatarType type, AvatarExtraData extraData) {
         switch (type) {
             case FROM:
-                image = extraData.getFromAvatarUrl() != null ?
-                        ImageSynthesis.getAvatarImage(extraData.getFromAvatarUrl()) : null;
+                image = extraData.getFromAvatar();
                 break;
             case TO:
-                image = extraData.getToAvatarUrl() != null ?
-                        ImageSynthesis.getAvatarImage(extraData.getToAvatarUrl()) : null;
+                image = extraData.getToAvatar();
                 break;
             case GROUP:
-                image = extraData.getGroupAvatarUrl() != null ?
-                        ImageSynthesis.getAvatarImage(extraData.getGroupAvatarUrl()) : null;
+                image = extraData.getGroupAvatar();
                 break;
             case BOT:
-                image = extraData.getBotAvatarUrl() != null ?
-                        ImageSynthesis.getAvatarImage(extraData.getBotAvatarUrl()) : null;
+                image = extraData.getBotAvatar();
                 break;
         }
     }

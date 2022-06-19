@@ -4,6 +4,7 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import java.awt.image.BufferedImage
 
 @Serializable
 data class BaseServiceConfig(
@@ -20,11 +21,16 @@ data class KeyData(
     val avatar: List<AvatarData>,
     val text: List<TextData>,
     val format: String? = "png"
-)
-
-fun getData(str: String): KeyData {
-    return Json.decodeFromString(str)
+) {
+    companion object {
+        @JvmStatic
+        fun getData(str: String): KeyData {
+            return Json.decodeFromString(str)
+        }
+    }
 }
+
+
 
 @Serializable
 data class TextData @JvmOverloads constructor(
@@ -58,10 +64,9 @@ data class AvatarData @JvmOverloads constructor(
     val antialias: Boolean? = false
 )
 
-@Serializable
 data class AvatarExtraData(
-    val fromAvatarUrl: String? = null,
-    val toAvatarUrl: String? = null,
-    val groupAvatarUrl: String? = null,
-    val botAvatarUrl: String? = null
+    val fromAvatar: BufferedImage? = null,
+    val toAvatar: BufferedImage? = null,
+    val groupAvatar: BufferedImage? = null,
+    val botAvatar: BufferedImage? = null
 )

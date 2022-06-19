@@ -113,13 +113,7 @@ public class ImageSynthesis {
             image = ImageIO.read(conn.getInputStream());
             conn.disconnect();
         } catch (Exception e) {
-            try {
-                return ImageIO.read(new File(URL));
-            } catch (IOException ioex) {
-                System.out.println("获取本地头像失败\nPath: " + URL);
-                e.printStackTrace();
-            }
-            System.out.println("获取网络头像失败\nHttpURLConnection: " + conn + "\nURL: " + URL);
+            System.out.println("获取头像失败\nHttpURLConnection: " + conn + "\nURL: " + URL);
             e.printStackTrace();
         } finally {
             assert conn != null;

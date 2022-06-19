@@ -99,7 +99,8 @@ public class PluginPetService extends BasePetService {
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
                 to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
                 group.getName(), new ArrayList<>()
-        );AvatarExtraData avatarExtraData = new AvatarExtraData(
+        );
+        AvatarExtraData avatarExtraData = BaseConfigFactory.getAvatarExtraDataFromUrls(
                 from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
         );
         sendImage(group, key, avatarExtraData, textExtraData);
@@ -113,7 +114,7 @@ public class PluginPetService extends BasePetService {
                 otherText == null || otherText.equals("") ? new ArrayList<>() :
                         new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
         );
-        AvatarExtraData avatarExtraData = new AvatarExtraData(
+        AvatarExtraData avatarExtraData = BaseConfigFactory.getAvatarExtraDataFromUrls(
                 from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
         );
         sendImage(group, key, avatarExtraData, textExtraData);
