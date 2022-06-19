@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <title>Petpet Editor</title>
@@ -88,170 +89,172 @@
         }
     </style>
 </head>
-<body>
-<div class="bar info"><span id="bg_size"></span><span id="avatar_pos"></span></div>
-<div id="drop_area">
-    <h1>拖拽上传</h1><br/>
-    <button id="file_button" onclick="chooseFile()">或选择文件</button>
-</div>
-<input type="file" id="file">
-<canvas id="app" width="0" height="0"></canvas>
-<div class="bar">
-    <div class="check">round<input type="checkbox" id="round"></div>
-    <div class="check">avatarOnTop<input type="checkbox" id="avatarOnTop" checked></div>
-</div>
-<div id="gifBar"></div>
-<a href="https://github.com/Dituon/petpet">♥ 项目地址 ♥</a>
-<script>
-    $('.bar').hide()
-    $('#round').change(function () {
-        if (this.checked) {
-            const roundedCorners = (avatar, radius) => new fabric.Rect({
-                width: avatar.width,
-                height: avatar.height,
-                rx: radius / avatar.scaleX,
-                ry: radius / avatar.scaleY,
-                left: -avatar.width / 2,
-                top: -avatar.height / 2
-            })
-            avatar.set("clipPath", roundedCorners(avatar,
-                avatar.width < avatar.height ? (avatar.width / 2) : (avatar.height / 2)))
-        } else {
-            avatar.set("clipPath", null)
-        }
-        canvas.renderAll()
-    })
 
-    $('#avatarOnTop').change(function () {
-        if (this.checked) {
-            canvas.backgroundImage = backGroundImage
-            canvas.overlayImage = null
-        } else {
-            canvas.overlayImage = backGroundImage
-            canvas.backgroundImage = null
-        }
-        canvas.renderAll()
-    })
-</script>
-<script>
-    $(function () { //拖拽
-        $(document).on({
-            dragleave: function (e) {
-                e.preventDefault();
-            },
-            drop: function (e) {
-                e.preventDefault();
-            },
-            dragenter: function (e) {
-                e.preventDefault();
-            },
-            dragover: function (e) {
-                e.preventDefault();
+<body>
+    <div class="bar info"><span id="bg_size"></span><span id="avatar_pos"></span></div>
+    <div id="drop_area">
+        <h1>拖拽上传</h1><br />
+        <button id="file_button" onclick="chooseFile()">或选择文件</button>
+    </div>
+    <input type="file" id="file">
+    <canvas id="app" width="0" height="0"></canvas>
+    <div class="bar">
+        <div class="check">round<input type="checkbox" id="round"></div>
+        <div class="check">avatarOnTop<input type="checkbox" id="avatarOnTop" checked></div>
+    </div>
+    <div id="gifBar"></div>
+    <a href="https://github.com/Dituon/petpet">♥ 项目地址 ♥</a>
+    <script>
+        $('.bar').hide()
+        $('#round').change(function () {
+            if (this.checked) {
+                const roundedCorners = (avatar, radius) => new fabric.Rect({
+                    width: avatar.width,
+                    height: avatar.height,
+                    rx: radius / avatar.scaleX,
+                    ry: radius / avatar.scaleY,
+                    left: -avatar.width / 2,
+                    top: -avatar.height / 2
+                })
+                avatar.set("clipPath", roundedCorners(avatar,
+                    avatar.width < avatar.height ? (avatar.width / 2) : (avatar.height / 2)))
+            } else {
+                avatar.set("clipPath", null)
             }
+            canvas.renderAll()
+        })
+
+        $('#avatarOnTop').change(function () {
+            if (this.checked) {
+                canvas.backgroundImage = backGroundImage
+                canvas.overlayImage = null
+            } else {
+                canvas.overlayImage = backGroundImage
+                canvas.backgroundImage = null
+            }
+            canvas.renderAll()
+        })
+    </script>
+    <script>
+        $(function () { //拖拽
+            $(document).on({
+                dragleave: function (e) {
+                    e.preventDefault();
+                },
+                drop: function (e) {
+                    e.preventDefault();
+                },
+                dragenter: function (e) {
+                    e.preventDefault();
+                },
+                dragover: function (e) {
+                    e.preventDefault();
+                }
+            });
+            const box = document.getElementById('drop_area');
+            box.addEventListener("drop", function (e) {
+                e.preventDefault();
+                const fileList = e.dataTransfer.files;
+                if (fileList.length === 0) {
+                    return false;
+                }
+                loadImage(fileList)
+            }, false);
         });
-        const box = document.getElementById('drop_area');
-        box.addEventListener("drop", function (e) {
-            e.preventDefault();
-            const fileList = e.dataTransfer.files;
-            if (fileList.length === 0) {
+
+        function chooseFile() { //选择
+            $('#file').click().change(function () {
+                const fileList = $('#file').prop('files')
+                loadImage(fileList)
+            })
+        }
+
+        function loadImage(fileList) {
+            if (fileList[0].type.indexOf('image') === -1) {
+                alert("仅支持图片格式");
                 return false;
             }
-            loadImage(fileList)
-        }, false);
-    });
-
-    function chooseFile() { //选择
-        $('#file').click().change(function () {
-            const fileList = $('#file').prop('files')
-            loadImage(fileList)
-        })
-    }
-
-    function loadImage(fileList) {
-        if (fileList[0].type.indexOf('image') === -1) {
-            alert("仅支持图片格式");
-            return false;
+            $('#drop_area').hide()
+            $('.bar').slideDown()
+            const reader = new FileReader();
+            const image = new Image()
+            reader.readAsDataURL(fileList[0]);
+            reader.onload = function () {
+                image.src = reader.result.toString()
+            }
+            if (fileList[0].type === 'image/gif') {
+                loadGif(image);
+                return;
+            }
+            image.onload = function () {
+                loadBackGround(image)
+            }
         }
-        $('#drop_area').hide()
-        $('.bar').slideDown()
-        const reader = new FileReader();
-        const image = new Image()
-        reader.readAsDataURL(fileList[0]);
-        reader.onload = function () {
-            image.src = reader.result.toString()
-        }
-        if (fileList[0].type === 'image/gif') {
-            loadGif(image);
-            return;
-        }
-        image.onload = function () {
-            loadBackGround(image)
-        }
-    }
-</script>
-<script>
-    const canvas = new fabric.Canvas('app');
-    let avatar;
-    let backGroundImage;
-    let avatarURL = 'https://q.qlogo.cn/headimg_dl?dst_uin=2544193782&spec=640&img_type=jpg'
-    fabric.Image.fromURL(avatarURL, function (a) {
-        avatar = a
-        avatar.scale(0.2)
-        avatar.setControlsVisibility({
-            mtr: false
-        })
-        avatar.uniformScaling = true
-        canvas.add(avatar);
-        avatar.on('moving', function () {
-            avatarMoving(avatar)
-        })
-        avatar.on('scaling', function () {
-            avatarMoving(avatar)
-        })
-    });
-
-    function loadBackGround(img) {
-        const image = new fabric.Image(img)
-        backGroundImage = image
-
-        $('#bg_size').text('画布: ' + image.width + '*' + image.height)
-        canvas.setWidth(image.width)
-        canvas.setHeight(image.height)
-        canvas.backgroundImage = image
-        canvas.renderAll()
-    }
-
-    function avatarMoving(a) {
-        let pos = '[' + a.left.toFixed() + ',' + a.top.toFixed() + ', ' +
-            a.getScaledWidth().toFixed() + ',' + a.getScaledHeight().toFixed() + ']'
-        $('#avatar_pos').text('坐标: ' + pos)
-    }
-</script>
-<script>
-    function loadGif(image) {
-        image.id = 'gifLoader'
-        $('#gifBar').append(image)
-        document.getElementById('gifLoader').onload = function () {
-            let gif = new RubbableGif({gif: document.getElementById('gifLoader')})
-            gif.load(function () {
-                $('.jsgif').hide()
-                for (let i = 1; i <= gif.get_length(); i++) {
-                    gif.move_to(i);
-                    let frameImage = new Image();
-                    frameImage.src = gif.get_canvas().toDataURL();
-                    frameImage.id = 'f' + i
-                    frameImage.className = 'frame'
-                    $('#gifBar').append(frameImage)
-                }
+    </script>
+    <script>
+        const canvas = new fabric.Canvas('app');
+        let avatar;
+        let backGroundImage;
+        let avatarURL = 'https://q.qlogo.cn/headimg_dl?dst_uin=2544193782&spec=640&img_type=jpg'
+        fabric.Image.fromURL(avatarURL, function (a) {
+            avatar = a
+            avatar.scale(0.2)
+            avatar.setControlsVisibility({
+                mtr: false
             })
-        }
-    }
+            avatar.uniformScaling = true
+            canvas.add(avatar);
+            avatar.on('moving', function () {
+                avatarMoving(avatar)
+            })
+            avatar.on('scaling', function () {
+                avatarMoving(avatar)
+            })
+        });
 
-    $('#gifBar').on('click', '.frame', function () {
-        const backgroundImage = new Image()
-        backgroundImage.src = this.src
-        loadBackGround(backgroundImage)
-    })
-</script>
+        function loadBackGround(img) {
+            const image = new fabric.Image(img)
+            backGroundImage = image
+
+            $('#bg_size').text('画布: ' + image.width + '*' + image.height)
+            canvas.setWidth(image.width)
+            canvas.setHeight(image.height)
+            canvas.backgroundImage = image
+            canvas.renderAll()
+        }
+
+        function avatarMoving(a) {
+            let pos = '[' + a.left.toFixed() + ',' + a.top.toFixed() + ', ' +
+                a.getScaledWidth().toFixed() + ',' + a.getScaledHeight().toFixed() + ']'
+            $('#avatar_pos').text('坐标: ' + pos)
+        }
+    </script>
+    <script>
+        function loadGif(image) {
+            image.id = 'gifLoader'
+            $('#gifBar').append(image)
+            document.getElementById('gifLoader').onload = function () {
+                let gif = new RubbableGif({ gif: document.getElementById('gifLoader') })
+                gif.load(function () {
+                    $('.jsgif').hide()
+                    for (let i = 1; i <= gif.get_length(); i++) {
+                        gif.move_to(i);
+                        let frameImage = new Image();
+                        frameImage.src = gif.get_canvas().toDataURL();
+                        frameImage.id = 'f' + i
+                        frameImage.className = 'frame'
+                        $('#gifBar').append(frameImage)
+                    }
+                })
+            }
+        }
+
+        $('#gifBar').on('click', '.frame', function () {
+            const backgroundImage = new Image()
+            backgroundImage.src = this.src
+            loadBackGround(backgroundImage)
+        })
+    </script>
 </body>
+
 </html>
