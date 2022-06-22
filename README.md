@@ -37,13 +37,16 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 2.4 #配置文件版本
+  version: 3.0 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
-  antialias: false #抗锯齿
+  antialias: true #抗锯齿
   disabled: [] #禁用列表
   keyCommand: false #以 key 作为指令头
+  commandMustAt: true #必须有At对象
   respondImage: false #使用发送的图片生成 petpet
+  respondSelfNudge: false #响应机器人发出的戳一戳
+  headless: false #使用headless模式
 ```
 
 修改后重启 Mirai 以重新加载
@@ -91,30 +94,28 @@ content:
 ```
 {
   "type": "GIF", // 图片类型(enum)
-  "avatar": "SINGLE", // 头像数(enum)
-  "pos": [ // 坐标
-    [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
-  ],
-  "text": [], // 文字
-  "round": true, // 值为true时 会将头像裁切为椭圆形
-  "rotate": false, // 值为true时 GIF头像会旋转
-  "avatarOnTop": false // 值为true时 头像图层在顶端
+  "avatar": [{ //头像(objArr), 参考下文
+      "type": "TO",
+      "pos": [
+        [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
+      ],
+      "round": true,
+      "avatarOnTop": false
+    }],
+  "text": [] //文字(objArr), 参考下文
 }
 ```
 
-#### 类型枚举
+##### 图片类型枚举
 
 **`type`**
 
 - `GIF`  动图
 - `IMG`  静态图片
 
-**`avatar`**
-
-- `SINGLE`  单头像
-- `DOUBLE`  双头像
-
 #### 坐标
+
+**[在线编辑器](https://dituon.github.io/petpet/editor)**
 
 坐标的基本组成单位是 4长度 `int[]` 数组
 
@@ -125,42 +126,46 @@ content:
 
 如果是 `GIF` 类型，坐标应为二维数组，`GIF` 的每一帧视为单个图像文件
 ```
-"type": "GIF", // GIF 类型
-"avatar": "SINGLE", // 单头像
 "pos": [ // pos的元素对应GIF的4帧
     [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
   ],
 ```
 
-如果是 `DOUBLE` 类型，应有2个数组
+如果是`IMG`类型, 可以使用一维数组
 ```
-  "type": "GIF", // GIF 类型
-  "avatar": "DOUBLE", // 双头像
-  "pos": [ // 两个子数组对应两个头像
-    [ // 元素对应GIF的6帧
-      [102, 95, 70, 80], [108, 60, 50, 100], [97, 18, 65, 95],
-      [65, 5, 75, 75], [95, 57, 100, 55], [109, 107, 65, 75]
-    ],
-    [ // 元素对应GIF的6帧
-      [39, 91, 75, 75], [49, 101, 75, 75], [67, 98, 75, 75],
-      [55, 86, 75, 75], [61, 109, 75, 75], [65, 101, 75, 75]
-    ]
-  ]
-```
-发送者头像对应第1个数组, 接收者对应第2个数组, **发送者头像图层在接收者头像之上**
-
-相信你已经明白了坐标的格式规范, 下面还有两个例子
-
-```
-  "type": "IMG", // IMG 类型
-  "avatar": "SINGLE", // 单头像
   "pos": [0, 0, 200, 200]
 ```
+
+#### 头像
+
+`3.0`版本后 提供了更灵活的头像构造方法, 与之前的版本有很大差别
+
 ```
-  "type": "IMG", // IMG 类型
-  "avatar": "DOUBLE", // 双头像
-  "pos": [[0, 0, 200, 200] , [150, 160, 200, 200]]
+"avatar": [
+    {
+      "type": "FROM", //头像类型枚举(enum), 非空
+      "pos": [[92, 64, 40, 40], [135, 40, 40, 40], [84, 105, 40, 40]], // 坐标
+      "round": true, // 值为true时, 头像裁切为圆形, 默认为false
+      "avatarOnTop": true // 值为true时, 头像图层在背景之上, 默认为true
+      "angle": 90, // 初始角度, 目前仅支持整数
+    },
+    {
+      "type": "TO", 
+      "pos": [[58, 90, 50, 50], [62, 95, 50, 50], [42, 100, 50, 50]],
+      "antialias": true, // 抗锯齿, 对头像单独使用抗锯齿算法, 默认为false
+      "rotate": false // 值为true时, GIF类型的头像会旋转, 默认为false
+    }
+  ]
 ```
+
+##### 头像类型枚举
+
+**`type`**
+
+- `FROM`  发送者头像
+- `TO`  接收者头像, 或构造的图片
+- `GROUP`  群头像
+- `BOT`  机器人头像
 
 #### 文字
 
@@ -179,6 +184,11 @@ content:
     "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
     "pos": [20, 150], // 坐标
     "font": "宋体" // 字体, 默认为黑体
+  },
+  {
+    "text": "$txt1[我]超市$txt2[你]!", // 支持关键词变量
+    "pos": [0,200],
+    "font":  "./data/xmmt.dituon.petpet/key/微软雅黑.ttf" // 支持路径
   }
   ]
 ```
@@ -188,6 +198,7 @@ content:
 - `$from` : 发送者, 会被替换为发送者群名片，如果没有群名片就替换为昵称
 - `$to` : 接收者, 被戳或At的对象, 发送图片构造时为"你"
 - `$group` : 群名称
+- `$txt(i)[(xxx)]` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1[我]超市$txt2[你]` 指令为 `pet [key] 我 你`
 
 **需要更多变量请提交 Issue**
 
@@ -202,11 +213,11 @@ content:
 > `Exception in coroutine <unnamed>`?
 >> 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
 
-> `YamlDecodingException`?
->> 配置文件中不能包含注释，最简单的解决方法是删除配置文件让插件自动生成
-
 > 文字构造乱码?
 >> `Linux` 系统 可能缺少中文字体, 使用 `fc-list` 列出已安装的字体; `Windows` 系统 可能是文件编码问题, 更改 `data.json` 编码 或加入`-Dfile.encoding=utf-8` 启动项
+
+> `Could not initialize class java.awt.Toolkit`?
+>> 对于无输入输出设备的服务器 需要启用`headless`
 
 ## 分享你的作品
 
@@ -215,11 +226,9 @@ content:
 ## 依赖share包二次开发
 
 - 方式1. 在本项目内二次开发（非mirai插件形式）：见`xmmt.dituon.example.SimpleUsage`
-- 方式2. 在别的项目二次开发：通过jitpack获得依赖（待补充样例）
+- 方式2. 在别的项目二次开发：[mirai-simplepetpet-plugin](https://github.com/hundun000/mirai-simplepetpet-plugin)
 
 ## 后话
-
-对此插件进行二次开发比你想象的简单很多，我认为这是初学者入门 Mirai 开发的不二选择。
 
 如果此插件和您预期的一样正常工作，请给我一个 `star`
 

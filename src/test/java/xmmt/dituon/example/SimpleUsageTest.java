@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +32,8 @@ public class SimpleUsageTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ConfigDTO configDTO = getConfigFromFile(new File(EXAMPLE_ROOT + "config/petpet.json"));
-        petService.readConfig(configDTO);
+        BaseServiceConfig config = new BaseServiceConfig();
+        petService.readBaseServiceConfig(config);
         petService.readData(new File(EXAMPLE_ROOT + "./data"));
     }
 
@@ -66,6 +65,10 @@ public class SimpleUsageTest {
         );
     }
 
+    @Test
+    public void testOsu() throws IOException {
+        testGeneral("testOsu", "osu", new TextExtraData("", "", "", Arrays.asList("测试！")), null);
+    }
 
     @Test
     public void testPetpet() throws IOException {
@@ -78,19 +81,13 @@ public class SimpleUsageTest {
     }
 
     private void testGeneral(String saveName, String key, TextExtraData textExtraData, List<TextData> additionTextDatas) throws IOException {
-        Pair<InputStream, String> resultStreamAndType = petService.generateImage(avatarImage1, avatarImage2, key, textExtraData, additionTextDatas);
+        Pair<InputStream, String> resultStreamAndType = petService.generateImage(key,
+                new AvatarExtraData(avatarImage1, avatarImage2,
+                        null, null)
+                , textExtraData, additionTextDatas);
         copyInputStreamToFile(resultStreamAndType.getFirst(), new File(OUTPUT_ROOT + saveName + "." + resultStreamAndType.getSecond()));
         System.out.println("test " + key + " done.");
     }
-
-    /** 如果要使用文字构造方法，请在generateImage后接String数组
-     * String[0] 对应 $from
-     * String[1] 对应 $to
-     * String[2] 对应 $group
-     * 使用例:
-     * petService.generateImage(avatarImage1, avatarImage2, "key", new String[]{"$from", "$to", "$group"});
-     */
-
 
     private void copyInputStreamToFile(InputStream inputStream, File file)
             throws IOException {
@@ -101,40 +98,9 @@ public class SimpleUsageTest {
             while ((read = inputStream.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-    }
-
-
-    private static ConfigDTO getConfigFromFile(File configFile) {
-
-            if (configFile.exists()) {
-                try {
-                    return ConfigDTOKt.decode(petService.getFileStr(configFile));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return createConfig(configFile);
-                }
-            } else {
-                return createConfig(configFile);
-            }
-
-    }
-
-    private static ConfigDTO createConfig(File configFile) {
-        ConfigDTO configDTO = new ConfigDTO();
-        try {
-            String defaultConfig = ConfigDTOKt.encode(configDTO);
-            if (!configFile.createNewFile()) {
-                System.out.print("正在写入新版本配置文件");
-            }
-            FileOutputStream defaultConfigOS = new FileOutputStream(configFile);
-            defaultConfigOS.write(defaultConfig.getBytes(StandardCharsets.UTF_8));
-            System.out.println("写入配置文件成功，路径: Mirai/plugins/petpet.json");
-        } catch (IOException ex) {
-            System.out.println("无法写入配置文件，请检查文件路径!");
-        }
-        return configDTO;
     }
 
 

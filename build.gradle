@@ -1,3 +1,5 @@
+import sun.font.EAttribute
+
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.10'
@@ -11,7 +13,7 @@ apply plugin: "java"
 
 
 group = 'xmmt.dituon'
-version = '2.4'
+version = '3.0'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
@@ -46,5 +48,18 @@ publishing {
 
             from components.java
         }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'xmmt.dituon.server.WebServer'
+    }
+}
+
+test {
+    filter {
+        //exclude all tests from a package.
+        excludeTestsMatching "xmmt.dituon.example.*"
     }
 }
