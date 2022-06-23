@@ -1,0 +1,134 @@
+//avatar对象
+function Avatar(qq = 2544193782) {
+    const that = this
+    this.avatarURL = `https://q.qlogo.cn/headimg_dl?dst_uin=${qq}&spec=640&img_type=jpg`
+    fabric.Image.fromURL(this.avatarURL, function (a) {
+        that.avatar = a
+        that.avatar.scale(0.2)
+        that.avatar.setControlsVisibility({
+            mtr: false
+        })
+        that.avatar.uniformScaling = true
+        canvas.add(that.avatar);
+        that.avatar.on('moving', function () {
+            avatarMoving()
+        })
+        that.avatar.on('scaling', function () {
+            avatarMoving()
+        })
+    });
+
+    //监听移动
+    function avatarMoving() {
+        let pos = [Math.round(that.avatar.left), Math.round(that.avatar.top),
+            Math.round(that.avatar.getScaledWidth()), Math.round(that.avatar.getScaledHeight())]
+        $('#avatar_pos').text('坐标: [' + pos + ']')
+        that.setPos(pos)
+    }
+
+    this.isDelete = false
+
+    this.delete = function () {
+        canvas.remove(this.avatar)
+        canvas.renderAll()
+        document.getElementById(that.id.toString()).remove()
+        that.isDelete = true
+    }
+
+    this.type = 'TO';
+
+    //坐标数组
+    this.setPos = function (p) {
+        frameLength === 1 ? that.pos = p : that.pos[backgroundId] = p
+    }
+
+    this.id = avatarList.length
+    $('#avatarBar').append(`<div class="avatar" id="${this.id}"><div class="text">Avatar ${this.id}</div>` +
+        '<div class="check" title="">round<input type="checkbox" class="round"></div>' +
+        '<div class="check">avatarOnTop<input type="checkbox" class="avatarOnTop" checked></div>' +
+        '<select><option>TO</option><option>FROM</option><option>GROUP</option><option>BOT</option></select>' +
+        '<div class="check deleteAvatar">delete</div></div>')
+
+    this.setRound = function (checked) {
+        that.round = checked
+        if (checked) {
+            const roundedCorners = (avatar, radius) => new fabric.Rect({
+                width: avatar.width,
+                height: avatar.height,
+                rx: radius / avatar.scaleX,
+                ry: radius / avatar.scaleY,
+                left: -avatar.width / 2,
+                top: -avatar.height / 2
+            })
+            that.avatar.set("clipPath", roundedCorners(that.avatar,
+                that.avatar.width < that.avatar.height ? (that.avatar.width / 2) : (that.avatar.height / 2)))
+        } else {
+            that.avatar.set("clipPath", null)
+        }
+        canvas.renderAll()
+    }
+
+    this.onTop = true
+    this.round = false
+    this.pos = new Array(frameLength).fill([0, 0, 0, 0])
+
+    this.build = function () {
+        let builtPos = []
+        switch (imageType) {
+            case 'IMG':
+                builtPos = that.pos
+                break
+            case 'GIF':
+                for (const posEle of that.pos) {
+                    builtPos.push(`[${posEle}]`)
+                }
+                break
+        }
+        return `{
+        "type": "${that.type}",
+        "pos": [${builtPos}],
+        "round": ${that.round},
+        "avatarOnTop": ${that.onTop}
+    }`
+    }
+}
+
+//round
+$('#avatarBar').on('change', '.avatar .round', function () {
+    avatarList[this.parentNode.parentNode.id].setRound(this.checked)
+})
+
+//avatarOnTop
+$('#avatarBar').on('change', '.avatar .avatarOnTop', function () {
+    if (avatarList.length !== 1) {
+        const avatarEle = avatarList[this.parentNode.parentNode.id]
+        avatarEle.onTop = this.checked
+        avatarEle.avatar.opacity = this.checked ? 1 : 0.6
+        canvas.renderAll()
+        return
+    }
+    if (this.checked) {
+        canvas.backgroundImage = backGroundImage
+        canvas.overlayImage = null
+    } else {
+        canvas.overlayImage = backGroundImage
+        canvas.backgroundImage = null
+    }
+    canvas.renderAll()
+})
+
+//changeType
+$('#avatarBar').on('change', '.avatar select', function () {
+    avatarList[this.parentNode.id].type = this.value
+})
+
+//deleteAvatar
+$('#avatarBar').on('click', '.avatar .deleteAvatar', function () {
+    avatarList[this.parentNode.id].delete()
+})
+
+let avatarList = [];
+
+function addAvatar() {
+    avatarList.push(new Avatar())
+}
