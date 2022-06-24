@@ -85,6 +85,8 @@ content:
 
 ## 自定义
 
+**[在线编辑器](https://dituon.github.io/petpet/editor)**
+
 ### data.json
 
 `./data/xmmt.dituon.petpet/` 下的目录名为 `key` ，插件启动时会遍历 `./data/xmmt.dituon.petpet/$key/data.json`
@@ -114,8 +116,6 @@ content:
 - `IMG`  静态图片
 
 #### 坐标
-
-**[在线编辑器](https://dituon.github.io/petpet/editor)**
 
 坐标的基本组成单位是 4长度 `int[]` 数组
 
