@@ -27,11 +27,10 @@ function Avatar(qq = 2544193782) {
     }
 
     this.isDelete = false
-
     this.delete = function () {
         canvas.remove(this.avatar)
         canvas.renderAll()
-        document.getElementById(that.id.toString()).remove()
+        document.getElementById('a' + that.id.toString()).remove()
         that.isDelete = true
     }
 
@@ -43,7 +42,7 @@ function Avatar(qq = 2544193782) {
     }
 
     this.id = avatarList.length
-    $('#avatarBar').append(`<div class="avatar" id="${this.id}"><div class="text">Avatar ${this.id}</div>` +
+    $('#elementBar').append(`<div class="element avatar" id="a${this.id}"><div class="typeText">Avatar ${this.id}</div>` +
         '<div class="check" title="">round<input type="checkbox" class="round"></div>' +
         '<div class="check">avatarOnTop<input type="checkbox" class="avatarOnTop" checked></div>' +
         '<select><option>TO</option><option>FROM</option><option>GROUP</option><option>BOT</option></select>' +
@@ -94,12 +93,12 @@ function Avatar(qq = 2544193782) {
 }
 
 //round
-$('#avatarBar').on('change', '.avatar .round', function () {
-    avatarList[this.parentNode.parentNode.id].setRound(this.checked)
+$('#elementBar').on('change', '.avatar .round', function () {
+    avatarList[this.parentNode.parentNode.id.replace('a', '')].setRound(this.checked)
 })
 
 //avatarOnTop
-$('#avatarBar').on('change', '.avatar .avatarOnTop', function () {
+$('#elementBar').on('change', '.avatar .avatarOnTop', function () {
     if (avatarList.length !== 1) {
         const avatarEle = avatarList[this.parentNode.parentNode.id]
         avatarEle.onTop = this.checked
@@ -118,13 +117,13 @@ $('#avatarBar').on('change', '.avatar .avatarOnTop', function () {
 })
 
 //changeType
-$('#avatarBar').on('change', '.avatar select', function () {
-    avatarList[this.parentNode.id].type = this.value
+$('#elementBar').on('change', '.avatar select', function () {
+    avatarList[this.parentNode.id.slice(1)].type = this.value
 })
 
 //deleteAvatar
-$('#avatarBar').on('click', '.avatar .deleteAvatar', function () {
-    avatarList[this.parentNode.id].delete()
+$('#elementBar').on('click', '.avatar .deleteAvatar', function () {
+    avatarList[this.parentNode.id.slice(1)].delete()
 })
 
 let avatarList = [];

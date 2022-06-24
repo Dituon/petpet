@@ -81,7 +81,7 @@ function loadGif(image) {
             }
             frameLength = gif.get_length()
         })
-        $('#set').append('<div class="check" onclick="downloadAllBackground()">下载每一帧</div>')
+        $('#settingsBar').append('<div class="check" onclick="downloadAllBackground()">下载每一帧</div>')
     }
 }
 

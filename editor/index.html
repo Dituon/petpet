@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Petpet Editor</title>
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
     <script src="./libgif.min.js"></script>
     <script src="./rubbable.min.js"></script>
@@ -89,7 +89,7 @@
             width: 6em;
         }
 
-        .avatar {
+        .element {
             display: flex;
             justify-content: flex-start;
             border: 1px dotted #FFB6C1;
@@ -97,7 +97,7 @@
             margin: 0.2em 0;
         }
 
-        .text {
+        .typeText {
             font-size: 0.95rem;
             color: #FFB6C1;
             margin: 0.8em;
@@ -111,7 +111,11 @@
             border-radius: 12px;
             border: 1px solid #FFB6C1;
             padding: 0.4em;
-            font-family: Consolas,sans-serif;
+            font-family: Consolas, sans-serif;
+        }
+
+        input {
+            margin-left: 0.3em;
         }
 
         select {
@@ -120,6 +124,27 @@
             border-radius: 12px;
             margin: 0.8em 0;
             max-width: 5rem;
+        }
+
+        .color {
+            appearance: none;
+            width: 1.4em;
+            height: 1.7em;
+            border: none;
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .color::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+        }
+
+        .typein {
+            border: 1px solid #FFB6C1;
+            border-radius: 12px;
+            max-width: 3em;
+            padding: 0.1em 0.4em;
         }
     </style>
 </head>
@@ -133,14 +158,16 @@
 <canvas id="app" width="0" height="0"></canvas>
 <div class="bar" id="settingsBar">
     <div class="check" onclick="addAvatar()">addAvatar</div>
+    <div class="check" onclick="addText()">addText</div>
     <div class="check" onclick="buildData()">buildData</div>
 </div>
-<div class="bar" id="avatarBar"></div>
+<div class="bar" id="elementBar"></div>
 <div id="gifBar"></div>
 <textarea></textarea>
 <a href="https://github.com/Dituon/petpet">♥ 项目地址 ♥</a>
 <script src="index.js"></script>
 <script src="avatar.js"></script>
+<script src="text.js"></script>
 <script src="dataBuilder.js"></script>
 <script>
     $('textarea').hide()
