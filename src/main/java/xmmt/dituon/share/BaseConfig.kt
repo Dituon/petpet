@@ -31,7 +31,6 @@ data class KeyData(
 }
 
 
-
 @Serializable
 data class TextData @JvmOverloads constructor(
     val text: String,
@@ -53,10 +52,15 @@ enum class AvatarType {
     FROM, TO, GROUP, BOT
 }
 
+enum class PosType {
+    ZOOM, DEFORM
+}
+
 @Serializable
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     val pos: JsonArray? = null,
+    val posType: PosType? = PosType.ZOOM,
     val angle: Int? = 0,
     val round: Boolean? = false,
     val rotate: Boolean? = false,

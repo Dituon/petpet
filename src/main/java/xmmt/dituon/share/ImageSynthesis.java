@@ -1,13 +1,11 @@
 package xmmt.dituon.share;
 
 
-import org.jetbrains.annotations.Nullable;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -43,11 +41,11 @@ public class ImageSynthesis {
         }
         // 画
         for (AvatarModel avatar : bottomAvatars) {
-            g2dDrawAvatar(g2d, avatar.getImage(), avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle());
+            drawAvatar(g2d, avatar);
         }
         g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
         for (AvatarModel avatar : topAvatars) {
-            g2dDrawAvatar(g2d, avatar.getImage(), avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle());
+            drawAvatar(g2d, avatar);
         }
 
         g2dDrawTexts(g2d, textList);
@@ -55,13 +53,23 @@ public class ImageSynthesis {
         return output;
     }
 
-    private static void g2dDrawAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos, int rotateIndex, int angle) {
+    private static void drawAvatar(Graphics2D g2d, AvatarModel avatar) {
+        switch (avatar.getPosType()) {
+            case ZOOM:
+                g2dDrawZoomAvatar(g2d, avatar.getImage(), avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle());
+                break;
+            case DEFORM:
+                g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformPos());
+        }
+    }
+
+    private static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos, int rotateIndex, int angle) {
         if (avatarImage == null) {
             return;
         }
         BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
 
-        if (rotateIndex == 0 && angle == 0){
+        if (rotateIndex == 0 && angle == 0) {
             newAvatarImage = avatarImage;
         } else {
             Graphics2D rotateG2d1 = newAvatarImage.createGraphics();
@@ -76,6 +84,10 @@ public class ImageSynthesis {
         int w = pos[2];
         int h = pos[3];
         g2d.drawImage(newAvatarImage, x, y, w, h, null);
+    }
+
+    private static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage, Point2D[] pos) {
+        g2d.drawImage(ImageDeformer.computeImage(avatarImage, pos), 0, 0, null);
     }
 
     private static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {

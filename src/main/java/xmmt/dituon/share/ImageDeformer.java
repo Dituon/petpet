@@ -1,5 +1,6 @@
 package xmmt.dituon.share;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -7,7 +8,7 @@ import java.awt.image.BufferedImage;
 // 应该用3D库进行3D运算...伪3D效率比较低... 欢迎Pr!
 // From https://math.stackexchange.com/questions/296794
 class ImageDeformer {
-    static BufferedImage computeImage(BufferedImage image, Point2D p0, Point2D p1, Point2D p2, Point2D p3) {
+    static BufferedImage computeImage(BufferedImage image, Point2D[] point) {
         int w = image.getWidth();
         int h = image.getHeight();
 
@@ -19,7 +20,7 @@ class ImageDeformer {
         Point2D ip3 = new Point2D.Double(w, 0);
 
         Matrix3D m = computeProjectionMatrix(
-                new Point2D[]{p0, p1, p2, p3},
+                new Point2D[]{point[0], point[1], point[2], point[3]},
                 new Point2D[]{ip0, ip1, ip2, ip3});
         Matrix3D mInv = new Matrix3D(m);
         mInv.invert();
@@ -36,6 +37,7 @@ class ImageDeformer {
                 }
             }
         }
+
         return result;
     }
 
