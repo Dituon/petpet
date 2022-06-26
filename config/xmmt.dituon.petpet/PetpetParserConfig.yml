@@ -1,0 +1,20 @@
+content: 
+  mainCommand: pet
+  drawSyntaxList: 
+    - - MAIN_COMMAND_NAME
+      - AT
+    - - SUB_COMMAND_NAME
+      - AT
+    - - MAIN_COMMAND_NAME
+      - AT
+      - SUB_COMMAND_NAME
+    - - MAIN_COMMAND_NAME
+      - AT
+      - SUB_COMMAND_NAME
+      - LITERAL_VALUE
+    - - MAIN_COMMAND_NAME
+      - SUB_COMMAND_NAME
+      - IMAGE
+    - - MAIN_COMMAND_NAME
+      - IMAGE
+      - SUB_COMMAND_NAME
