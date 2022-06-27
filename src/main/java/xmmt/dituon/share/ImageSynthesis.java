@@ -25,9 +25,14 @@ public class ImageSynthesis {
         }
 
         // 背景
-        g2d.setColor(Color.WHITE);
-        g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
+        output = g2d.getDeviceConfiguration().createCompatibleImage(
+                sticker.getWidth(), sticker.getHeight(), Transparency.TRANSLUCENT);
+        g2d.dispose();
+        g2d = output.createGraphics();
+
+//        g2d.setColor(Color.WHITE);
+//        g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
+//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
 
         // 按照图层分类
         ArrayList<AvatarModel> topAvatars = new ArrayList<>();
@@ -56,34 +61,37 @@ public class ImageSynthesis {
     private static void drawAvatar(Graphics2D g2d, AvatarModel avatar) {
         switch (avatar.getPosType()) {
             case ZOOM:
-                g2dDrawZoomAvatar(g2d, avatar.getImage(), avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle());
+                g2dDrawZoomAvatar(g2d, avatar.getImage(),
+                        avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle(), avatar.isRound());
                 break;
             case DEFORM:
                 g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformPos());
         }
     }
 
-    private static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos, int rotateIndex, int angle) {
+    private static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
+                                          int rotateIndex, int angle, boolean isRound) {
         if (avatarImage == null) {
             return;
-        }
-        BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
-
-        if (rotateIndex == 0 && angle == 0) {
-            newAvatarImage = avatarImage;
-        } else {
-            Graphics2D rotateG2d1 = newAvatarImage.createGraphics();
-            //TODO 旋转时会有黑边 应当使用AffineTransform
-            rotateG2d1.rotate(Math.toRadians((float) ((360 / pos.length) * (rotateIndex)) + angle),
-                    avatarImage.getWidth() / 2, avatarImage.getHeight() / 2);
-            rotateG2d1.drawImage(avatarImage, null, 0, 0);
         }
 
         int x = pos[0];
         int y = pos[1];
         int w = pos[2];
         int h = pos[3];
-        g2d.drawImage(newAvatarImage, x, y, w, h, null);
+        if (rotateIndex == 0 && angle == 0) {
+            g2d.drawImage(avatarImage, x, y, w, h, null);
+            return;
+        }
+
+        if (isRound || angle % 90 == 0) {
+            Graphics2D rotateG2d = avatarImage.createGraphics();
+            rotateG2d.rotate(angle);
+            g2d.drawImage(avatarImage, x, y, w, h, null);
+            return;
+        }
+        
+        g2d.drawImage(rotateImage(avatarImage, angle), x, y, w, h, null);
     }
 
     private static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage, Point2D[] pos) {
@@ -113,6 +121,27 @@ public class ImageSynthesis {
         g2.drawImage(input, 0, 0, null);
         g2.dispose();
         return output;
+    }
+
+    public static BufferedImage rotateImage(BufferedImage avatarImage, int angle) {
+        double sin = Math.abs(Math.sin(Math.toRadians(angle))),
+                cos = Math.abs(Math.cos(Math.toRadians(angle)));
+        int w = avatarImage.getWidth();
+        int h = avatarImage.getHeight();
+        int neww = (int) Math.floor(w * cos + h * sin),
+                newh = (int) Math.floor(h * cos + w * sin);
+        BufferedImage rotated = new BufferedImage(neww, newh, avatarImage.getType());
+        Graphics2D g2d = rotated.createGraphics();
+        rotated = g2d.getDeviceConfiguration().createCompatibleImage(
+                rotated.getWidth(), rotated.getHeight(), Transparency.TRANSLUCENT);
+        g2d.dispose();
+        g2d = rotated.createGraphics();
+
+        g2d.translate((neww - w) / 2, (newh - h) / 2);
+        g2d.rotate(Math.toRadians(angle), w / 2, h / 2);
+        g2d.drawRenderedImage(avatarImage, null);
+        g2d.dispose();
+        return rotated;
     }
 
     public static BufferedImage getAvatarImage(String URL) {

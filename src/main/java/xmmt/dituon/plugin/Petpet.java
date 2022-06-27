@@ -9,7 +9,6 @@ import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.*;
-import xmmt.dituon.share.AvatarExtraData;
 import xmmt.dituon.share.BaseConfigFactory;
 import xmmt.dituon.share.TextExtraData;
 
@@ -19,7 +18,7 @@ import java.util.Objects;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.0F;
+    public static final float VERSION = 3.1F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     PluginPetService pluginPetService;
@@ -98,7 +97,8 @@ public final class Petpet extends JavaPlugin {
                     key = firstWord;
                     otherText = m.contentToString().replace(key, "").trim();
 
-                    if (!pluginPetService.commandMustAt && notContainsAt(e.getMessage())) {
+                    if (!pluginPetService.commandMustAt &&
+                            notContainsAt(e.getMessage()) && !e.getMessage().contains(Image.Key)) {
                         pluginPetService.sendImage(e.getGroup(), e.getGroup().getBotAsMember(),
                                 e.getSender(), key, otherText);
                         return;
