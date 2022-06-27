@@ -37,7 +37,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 3.0 #配置文件版本
+  version: 3.1 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: true #抗锯齿
