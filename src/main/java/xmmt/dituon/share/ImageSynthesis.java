@@ -1,12 +1,9 @@
 package xmmt.dituon.share;
 
 
-import kotlin.Pair;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -29,7 +26,6 @@ public class ImageSynthesis {
 
         if (antialias) { //抗锯齿
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         }
 
         // 背景
@@ -115,6 +111,7 @@ public class ImageSynthesis {
     }
 
     private static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         if (texts != null && !texts.isEmpty()) {
             for (TextModel text : texts) {
                 g2d.setColor(text.getColor());
