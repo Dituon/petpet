@@ -10,7 +10,7 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/dituon/petpet)
 [![](https://jitpack.io/v/Dituon/petpet.svg)](https://jitpack.io/#Dituon/petpet)
 
-一个生成摸摸头GIF的 Mirai 插件，灵感/数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
+一个生成摸摸头GIF的 Mirai 插件，灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
 java 编写，**未使用任何第三方库** ：轻量，高效。
 
@@ -31,13 +31,15 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 > 启用 `respondImage` 后 可通过发送的图片生成Petpet `pet [图片] kiss`
 
+> 可使用 `pet`指令 获取 `keyList`
+
 ## 配置文件
 
 首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/Petpet.yml` 文件
 
 ```
 content: 
-  version: 3.1 #配置文件版本
+  version: 3.3 #配置文件版本
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: true #抗锯齿
@@ -226,8 +228,8 @@ content:
 > `Exception in coroutine <unnamed>`?
 >> 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
 
-> 文字构造乱码?
->> `Linux` 系统 可能缺少中文字体, 使用 `fc-list` 列出已安装的字体; `Windows` 系统 可能是文件编码问题, 更改 `data.json` 编码 或加入`-Dfile.encoding=utf-8` 启动项
+> 文字乱码?
+>> `Windows` 系统默认为`GBK`编码, 加入`-Dfile.encoding=utf-8` 启动项
 
 > `Could not initialize class java.awt.Toolkit`?
 >> 对于无输入输出设备的服务器 需要启用`headless`
