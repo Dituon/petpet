@@ -1,0 +1,15 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [106,72,305,235],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [{
+        "text": "阿尼亚喜欢这个",
+        "pos": [120,480],
+        "color": "#ffffff",
+        "size": 40
+    }]
+}
