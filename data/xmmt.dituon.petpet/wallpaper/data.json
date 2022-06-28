@@ -1,0 +1,10 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [260,580,775,496],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": []
+}
