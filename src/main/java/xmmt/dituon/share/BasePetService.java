@@ -21,6 +21,8 @@ public class BasePetService {
     protected BaseImageMaker imageMaker;
     protected BaseGifMaker gifMaker;
 
+    protected String keyListString;
+
     public BasePetService() {
         this.imageMaker = new BaseImageMaker();
         this.gifMaker = new BaseGifMaker();
@@ -35,6 +37,7 @@ public class BasePetService {
             return;
         }
 
+        StringBuilder keyListStringBuilder = new StringBuilder();
         for (String path : children) {
             if (path.equals(FONTS_FOLDER)) {
                 // load fonts folder
@@ -46,15 +49,21 @@ public class BasePetService {
                 try {
                     KeyData data = KeyData.getData(getFileStr(dataFile));
                     dataMap.put(path, data);
+                    keyListStringBuilder.append("\n").append(path);
                     if (data.getAlias() != null) {
-                        data.getAlias().forEach((aliasKey) -> aliaMap.put(aliasKey, path));
+                        keyListStringBuilder.append(" ( ");
+                        data.getAlias().forEach((aliasKey) -> {
+                            aliaMap.put(aliasKey, path);
+                            keyListStringBuilder.append(aliasKey).append(" ");
+                        });
+                        keyListStringBuilder.append(")");
                     }
                 } catch (Exception ex) {
                     System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
                 }
             }
         }
-
+        keyListString = keyListStringBuilder.toString();
     }
 
     private void registerFontsToAwt(File fontsFolder) {
@@ -156,6 +165,7 @@ public class BasePetService {
     public HashMap<String, KeyData> getDataMap() {
         return dataMap;
     }
+
     public HashMap<String, String> getAliaMap() {
         return aliaMap;
     }

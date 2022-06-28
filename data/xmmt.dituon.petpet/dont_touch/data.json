@@ -6,5 +6,7 @@
         "round": false,
         "avatarOnTop": true
     }],
-    "text": []
+    "text": [],
+    "alias": ["不要靠近","远离"],
+    "inRandomList": false
 }

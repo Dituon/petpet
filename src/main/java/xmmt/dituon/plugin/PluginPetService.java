@@ -140,4 +140,8 @@ public class PluginPetService extends BasePetService {
             ex.printStackTrace();
         }
     }
+
+    public String getKeyAliasListString(){
+        return super.keyListString;
+    }
 }

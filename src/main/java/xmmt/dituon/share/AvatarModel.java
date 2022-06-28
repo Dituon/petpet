@@ -69,7 +69,6 @@ public class AvatarModel {
                 }
                 break;
             case DEFORM:
-                System.out.println(posElements.toString());
                 point2D = JsonArrayToPoint(posElements);
                 break;
         }
@@ -85,7 +84,6 @@ public class AvatarModel {
     }
 
     private Point2D[] JsonArrayToPoint(JsonArray ja) {
-        System.out.println(ja.get(0).toString());
         Point2D[] point2DList = new Point2D[4];
         for (short i = 0; i < 4; i++) {
             point2DList[i] = new Point2D.Double(

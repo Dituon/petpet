@@ -32,7 +32,7 @@ public class BaseGifMaker {
 
             for (int i = 0; i < imageNumMap.get(path); i++) {
                 BufferedImage sticker = ImageIO.read(new File(path + i + ".png"));
-                gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(sticker, avatarList, textList, antialias));
+                gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(sticker, avatarList, textList, antialias, false));
             }
             gifBuilder.close();
             return gifBuilder.getOutput();

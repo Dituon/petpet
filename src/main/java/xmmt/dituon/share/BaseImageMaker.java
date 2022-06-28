@@ -1,7 +1,5 @@
 package xmmt.dituon.share;
 
-import org.jetbrains.annotations.Nullable;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -14,7 +12,7 @@ public class BaseImageMaker {
         try {
             BufferedImage sticker = ImageIO.read(new File(path + "0.png"));
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(
-                    sticker, avatarList, textList, antialias));
+                    sticker, avatarList, textList, antialias, true));
         } catch (IOException e) {
             System.out.println("构造IMG失败，请检查 PetData");
             e.printStackTrace();

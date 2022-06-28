@@ -11,7 +11,7 @@ class ImageDeformer {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage result = new BufferedImage(10000, 10000, BufferedImage.TYPE_INT_ARGB);
 
         Point2D ip0 = new Point2D.Double(0, 0);
         Point2D ip1 = new Point2D.Double(0, h);

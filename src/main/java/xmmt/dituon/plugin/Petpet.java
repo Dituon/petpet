@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.2F;
+    public static final float VERSION = 3.3F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     PluginPetService pluginPetService;
@@ -120,6 +120,11 @@ public final class Petpet extends JavaPlugin {
         }
 
         if (!isDisabled(e.getGroup()) && e.getMessage().contentToString().startsWith(pluginPetService.command)) {
+            if (e.getMessage().contentToString().replace(" ","").equals(pluginPetService.command)){
+                e.getGroup().sendMessage("Petpet KeyList:\n"+pluginPetService.getKeyAliasListString());
+                return;
+            }
+
             if (pluginPetService.respondImage && e.getMessage().contains(Image.Key)) {
                 String toURL = null;
                 for (Message m : e.getMessage()) {

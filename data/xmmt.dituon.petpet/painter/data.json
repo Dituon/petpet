@@ -6,5 +6,7 @@
         "round": false,
         "avatarOnTop": false
     }],
-    "text": []
+    "text": [],
+    "alias": ["画"],
+    "inRandomList": false
 }

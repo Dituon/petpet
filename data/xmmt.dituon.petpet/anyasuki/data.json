@@ -7,9 +7,10 @@
         "avatarOnTop": false
     }],
     "text": [{
-        "text": "阿尼亚喜欢这个",
+        "text": "阿尼亚喜欢$txt1[这个]",
         "pos": [120,480],
         "color": "#ffffff",
         "size": 40
-    }]
+    }],
+    "alias": ["阿尼亚","喜欢"]
 }
