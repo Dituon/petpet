@@ -1,6 +1,8 @@
 package xmmt.dituon.share;
 
 
+import kotlin.Pair;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
@@ -73,7 +75,7 @@ public class ImageSynthesis {
                         avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle(), avatar.isRound());
                 break;
             case DEFORM:
-                g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformPos());
+                g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformData());
         }
     }
 
@@ -107,8 +109,9 @@ public class ImageSynthesis {
                 ((float) (360 / pos.length) * (rotateIndex + 1)) + angle), x, y, w, h, null);
     }
 
-    private static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage, Point2D[] pos) {
-        g2d.drawImage(ImageDeformer.computeImage(avatarImage, pos), 0, 0, null);
+    private static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage, AvatarModel.DeformData deformData) {
+        BufferedImage result = ImageDeformer.computeImage(avatarImage, deformData.getDeformPos());
+        g2d.drawImage(result, deformData.getAnchor()[0], deformData.getAnchor()[1], null);
     }
 
     private static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {

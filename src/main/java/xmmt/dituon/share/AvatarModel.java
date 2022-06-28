@@ -17,7 +17,7 @@ public class AvatarModel {
     private int posIndex = 0;
     private boolean antialias = false;
     private PosType posType = PosType.ZOOM;
-    private Point2D[] point2D = null;
+    private DeformData deformData = null;
 
     public AvatarModel(AvatarData data, AvatarExtraData extraData, Type imageType) {
         type = data.getType();
@@ -69,7 +69,7 @@ public class AvatarModel {
                 }
                 break;
             case DEFORM:
-                point2D = JsonArrayToPoint(posElements);
+                deformData = DeformData.fromPos(posElements);
                 break;
         }
     }
@@ -83,16 +83,7 @@ public class AvatarModel {
         };
     }
 
-    private Point2D[] JsonArrayToPoint(JsonArray ja) {
-        Point2D[] point2DList = new Point2D[4];
-        for (short i = 0; i < 4; i++) {
-            point2DList[i] = new Point2D.Double(
-                    Integer.parseInt(((JsonArray) ja.get(i)).get(0).toString()),
-                    Integer.parseInt(((JsonArray) ja.get(i)).get(1).toString())
-            );
-        }
-        return point2DList;
-    }
+
 
     public int getAngle() {
         return angle;
@@ -136,11 +127,42 @@ public class AvatarModel {
         return pos[posIndex++];
     }
 
-    public Point2D[] getDeformPos() {
-        return point2D;
-    }
-
     public PosType getPosType() {
         return posType;
     }
+
+    public DeformData getDeformData() {
+        return deformData;
+    }
+
+    public static class DeformData {
+        static final int POS_SIZE = 4;
+        Point2D[] deformPos = new Point2D[POS_SIZE];
+        int[] anchor = new int[2];
+
+        public static DeformData fromPos(JsonArray posElements) {
+            System.out.println("DeformData fromPos by: " + posElements.toString());
+            DeformData deformData = new DeformData();
+            for (short i = 0; i < POS_SIZE; i++) {
+                deformData.deformPos[i] = new Point2D.Double(
+                        Integer.parseInt(((JsonArray) posElements.get(i)).get(0).toString()),
+                        Integer.parseInt(((JsonArray) posElements.get(i)).get(1).toString())
+                );
+            }
+            deformData.anchor[0] = Integer.parseInt(((JsonArray) posElements.get(POS_SIZE)).get(0).toString());
+            deformData.anchor[1] = Integer.parseInt(((JsonArray) posElements.get(POS_SIZE)).get(1).toString());
+
+            return deformData;
+        }
+
+
+        public Point2D[] getDeformPos() {
+            return deformPos;
+        }
+
+        public int[] getAnchor() {
+            return anchor;
+        }
+    }
+
 }

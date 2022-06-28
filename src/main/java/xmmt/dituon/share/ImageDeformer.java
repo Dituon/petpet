@@ -1,5 +1,9 @@
 package xmmt.dituon.share;
 
+import kotlin.Pair;
+
+import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -7,31 +11,56 @@ import java.awt.image.BufferedImage;
 // 应该用3D库进行3D运算...伪3D效率比较低... 欢迎Pr!
 // From https://math.stackexchange.com/questions/296794
 class ImageDeformer {
+
+    private static int min(int v1, int v2, int v3, int v4) {
+        return Math.min(Math.min(v1, v2), Math.min(v3, v4));
+    }
+
+    private static int max(int v1, int v2, int v3, int v4) {
+        return Math.max(Math.max(v1, v2), Math.max(v3, v4));
+    }
+
     static BufferedImage computeImage(BufferedImage image, Point2D[] point) {
         int w = image.getWidth();
         int h = image.getHeight();
-
-        BufferedImage result = new BufferedImage(10000, 10000, BufferedImage.TYPE_INT_ARGB);
 
         Point2D ip0 = new Point2D.Double(0, 0);
         Point2D ip1 = new Point2D.Double(0, h);
         Point2D ip2 = new Point2D.Double(w, h);
         Point2D ip3 = new Point2D.Double(w, 0);
 
-        Matrix3D m = computeProjectionMatrix(
+        Matrix3D originToDeformed = computeProjectionMatrix(
                 new Point2D[]{point[0], point[1], point[2], point[3]},
-                new Point2D[]{ip0, ip1, ip2, ip3});
-        Matrix3D mInv = new Matrix3D(m);
-        mInv.invert();
+                new Point2D[]{ip0, ip1, ip2, ip3}
+        );
+        Matrix3D deformedToOrigin = new Matrix3D(originToDeformed);
+        deformedToOrigin.invert();
 
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                Point2D p = new Point2D.Double(x, y);
-                mInv.transform(p);
-                int ix = (int) p.getX();
-                int iy = (int) p.getY();
-                if (ix >= 0 && ix < w && iy >= 0 && iy < h) {
-                    int rgb = image.getRGB(ix, iy);
+        Point2D deformedip0 = new Point2D.Double(0, 0);
+        Point2D deformedip1 = new Point2D.Double(0, h);
+        Point2D deformedip2 = new Point2D.Double(w, h);
+        Point2D deformedip3 = new Point2D.Double(w, 0);
+        originToDeformed.transform(deformedip0);
+        originToDeformed.transform(deformedip1);
+        originToDeformed.transform(deformedip2);
+        originToDeformed.transform(deformedip3);
+        Polygon deformedArea = new Polygon();
+        deformedArea.addPoint((int)deformedip0.getX(), (int)deformedip0.getY());
+        deformedArea.addPoint((int)deformedip1.getX(), (int)deformedip1.getY());
+        deformedArea.addPoint((int)deformedip2.getX(), (int)deformedip2.getY());
+        deformedArea.addPoint((int)deformedip3.getX(), (int)deformedip3.getY());
+
+        int deformedWidth = deformedArea.getBounds().width;
+        int deformedHeight = deformedArea.getBounds().getBounds().height;
+        BufferedImage result = new BufferedImage(deformedWidth, deformedHeight, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < deformedHeight; y++) {
+            for (int x = 0; x < deformedWidth; x++) {
+                if (deformedArea.contains(x, y)) {
+                    Point2D originPoint = new Point2D.Double(x, y);
+                    deformedToOrigin.transform(originPoint);
+                    int originX = Math.min((int) Math.round(originPoint.getX()), w - 1);
+                    int originY = Math.min((int) Math.round(originPoint.getY()), h - 1);
+                    int rgb = image.getRGB(originX, originY);
                     result.setRGB(x, y, rgb);
                 }
             }
