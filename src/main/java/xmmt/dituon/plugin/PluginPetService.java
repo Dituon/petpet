@@ -62,14 +62,14 @@ public class PluginPetService extends BasePetService {
         dataMap.forEach((path, keyData) -> {
             if (!disabledKey.contains(path)
                     && !disabledKey.contains("Type." + keyData.getType())
-                    && !disabledKey.contains("Avatar." + keyData.getAvatar())) {
+                    && Boolean.TRUE.equals(super.dataMap.get(path).getInRandomList())) {
                 randomableList.add(path);
             }
         });
 
         randomMax = (int) (randomableList.size() / (randomMax * 0.01));
-        System.out.println("Petpet 加载完毕 (共 " + randomableList.size() + " 素材，已排除 " + disabledKey.size() + " )");
-
+        System.out.println("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，已排除 " +
+                (dataMap.size() - randomableList.size()) + " )");
     }
 
 

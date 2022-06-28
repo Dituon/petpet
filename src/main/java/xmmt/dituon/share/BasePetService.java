@@ -1,25 +1,22 @@
 package xmmt.dituon.share;
 
 import kotlin.Pair;
-import kotlinx.serialization.json.JsonArray;
-import kotlinx.serialization.json.JsonElement;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class BasePetService {
     private static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
 
-
     protected File dataRoot;
-
-
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
+    protected HashMap<String, String> aliaMap = new HashMap<>();
 
     protected BaseImageMaker imageMaker;
     protected BaseGifMaker gifMaker;
@@ -49,6 +46,9 @@ public class BasePetService {
                 try {
                     KeyData data = KeyData.getData(getFileStr(dataFile));
                     dataMap.put(path, data);
+                    if (data.getAlias() != null) {
+                        data.getAlias().forEach((aliasKey) -> aliaMap.put(aliasKey, path));
+                    }
                 } catch (Exception ex) {
                     System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
                 }
@@ -65,7 +65,7 @@ public class BasePetService {
 
         List<String> successNames = new ArrayList<>();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        for (File fontFile : fontsFolder.listFiles()) {
+        for (File fontFile : Objects.requireNonNull(fontsFolder.listFiles())) {
             try (InputStream inputStream = new FileInputStream(fontFile)) {
                 Font customFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
                 boolean success = ge.registerFont(customFont);
@@ -83,9 +83,7 @@ public class BasePetService {
 
 
     public void readBaseServiceConfig(BaseServiceConfig config) {
-
         antialias = config.getAntialias();
-
     }
 
     public String getFileStr(File file) throws IOException {
@@ -108,12 +106,13 @@ public class BasePetService {
             TextExtraData textExtraData,
             List<TextData> additionTextDatas
     ) {
-        if (!dataMap.containsKey(key)) {
+        if (!dataMap.containsKey(key) && !aliaMap.containsKey(key)) {
             System.out.println("无效的key: " + key);
             return null;
         }
-        KeyData data = dataMap.get(key);
-        key = dataRoot.getAbsolutePath() + File.separator + key + File.separator;
+        KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key));
+        key = dataRoot.getAbsolutePath() + File.separator +
+                (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
 
         try {
             ArrayList<TextModel> textList = new ArrayList<>();
@@ -154,16 +153,10 @@ public class BasePetService {
         return null;
     }
 
-    private int[] JsonArrayToIntArray(JsonArray ja) {
-        return new int[]{
-                Integer.parseInt(ja.get(0).toString()),
-                Integer.parseInt(ja.get(1).toString()),
-                Integer.parseInt(ja.get(2).toString()),
-                Integer.parseInt(ja.get(3).toString())
-        };
-    }
-
     public HashMap<String, KeyData> getDataMap() {
         return dataMap;
+    }
+    public HashMap<String, String> getAliaMap() {
+        return aliaMap;
     }
 }

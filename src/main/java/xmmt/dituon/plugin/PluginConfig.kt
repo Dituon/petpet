@@ -14,7 +14,7 @@ data class PluginConfig(
     val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
     val keyCommand: Boolean = false,
-    val commandMustAt: Boolean = true,
+    val commandMustAt: Boolean = false,
     val respondImage: Boolean = false,
     val respondSelfNudge: Boolean = false,
     val headless: Boolean = false

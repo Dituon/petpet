@@ -1,12 +1,12 @@
 content: 
-  version: 3.1
+  version: 3.2
   command: pet
   probability: 30
   antialias: true
   disabled: 
     - Avatar.NONE
   keyCommand: false
-  commandMustAt: true
+  commandMustAt: false
   respondImage: false
   respondSelfNudge: false
   headless: false

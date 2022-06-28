@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.1F;
+    public static final float VERSION = 3.2F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     PluginPetService pluginPetService;
@@ -91,7 +91,8 @@ public final class Petpet extends JavaPlugin {
             for (Message m : e.getMessage()) {
                 if (m instanceof PlainText && key == null) {
                     String firstWord = getFirstWord(m.contentToString());
-                    if (!pluginPetService.getDataMap().containsKey(firstWord)) {
+                    if (!pluginPetService.getDataMap().containsKey(firstWord)
+                            && !pluginPetService.getAliaMap().containsKey(firstWord)) {
                         break;
                     }
                     key = firstWord;

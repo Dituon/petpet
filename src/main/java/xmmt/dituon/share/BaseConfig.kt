@@ -20,7 +20,9 @@ data class KeyData(
     val type: Type,
     val avatar: List<AvatarData>,
     val text: List<TextData>,
-    val format: String? = "png"
+    val alias: List<String>? = null,
+    val format: String? = "png",
+    val inRandomList: Boolean? = true
 ) {
     companion object {
         @JvmStatic
