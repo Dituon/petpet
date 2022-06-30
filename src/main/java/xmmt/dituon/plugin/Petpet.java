@@ -74,8 +74,8 @@ public final class Petpet extends JavaPlugin {
 
     private void onGroupMessage(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
-        if (pluginPetService.respondImage && !e.getMessage().contains(Image.Key)) return;
-        if (pluginPetService.commandMustAt && !e.getMessage().contains(At.Key)) return;
+        if (pluginPetService.respondImage && e.getMessage().contains(Image.Key)) return;
+        if (pluginPetService.commandMustAt && e.getMessage().contains(At.Key)) return;
 
         String messageString = e.getMessage().contentToString().trim();
         if (!pluginPetService.keyCommand &&

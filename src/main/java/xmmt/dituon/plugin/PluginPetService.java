@@ -16,7 +16,7 @@ import java.util.Random;
 public class PluginPetService extends BasePetService {
 
     protected String command = "pet";
-    protected int randomMax = 40;
+    private int probability;
     protected boolean keyCommand = false;
     protected boolean commandMustAt = true;
     protected boolean respondImage = false;
@@ -40,7 +40,7 @@ public class PluginPetService extends BasePetService {
 
         command = config.getCommand();
         antialias = config.getAntialias();
-        randomMax = config.getProbability();
+        probability = config.getProbability();
         keyCommand = config.getKeyCommand();
         commandMustAt = config.getCommandMustAt();
         respondImage = config.getRespondImage();
@@ -67,46 +67,47 @@ public class PluginPetService extends BasePetService {
             }
         });
 
-        randomMax = (int) (randomableList.size() / (randomMax * 0.01));
         System.out.println("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，已排除 " +
                 (dataMap.size() - randomableList.size()) + " )");
     }
 
 
+    /**
+     * 发送随机图片
+     */
+    @Deprecated
     public void sendImage(Group group, Member from, Member to) { //发送随机图片
-        try {
-            sendImage(group, from, to, randomableList.get(new Random().nextInt(randomableList.size())));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println("图片素材应位于 Mirai/data/xmmt.dituon.petpet 目录下, 请检查路径");
-        }
+        sendImage(group, from, to, randomableList.get(new Random().nextInt(randomableList.size())));
     }
 
-    public void sendImage(Group group, Member from, Member to, boolean random) { //有概率发送随机图片
+    /**
+     * 有概率发送随机图片
+     */
+    public void sendImage(Group group, Member from, Member to, boolean random) {
         if (!random) {
             sendImage(group, from, to);
             return;
         }
-        int r = new Random().nextInt(randomMax);
-        if (r >= randomableList.size()) {
+        int r = new Random().nextInt(100);
+        if (r >= probability) {
             return;
         }
         sendImage(group, from, to, randomableList.get(r));
     }
 
-    public void sendImage(Group group, Member from, Member to, String key) { //用key发送图片(无otherText)
-        TextExtraData textExtraData = new TextExtraData(
-                from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
-                to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
-                group.getName(), new ArrayList<>()
-        );
-        AvatarExtraData avatarExtraData = BaseConfigFactory.getAvatarExtraDataFromUrls(
-                from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
-        );
-        sendImage(group, key, avatarExtraData, textExtraData);
+    /**
+     * 用key发送图片(无otherText)
+     */
+    @Deprecated
+    public void sendImage(Group group, Member from, Member to, String key) {
+        sendImage(group, from, to, key, null);
     }
 
-    public void sendImage(Group group, Member from, Member to, String key, String otherText) { //用key发送图片，指定otherText
+    /**
+     * 用key发送图片，指定otherText
+     */
+    @Deprecated
+    public void sendImage(Group group, Member from, Member to, String key, String otherText) {
         TextExtraData textExtraData = new TextExtraData(
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
                 to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
@@ -120,7 +121,9 @@ public class PluginPetService extends BasePetService {
         sendImage(group, key, avatarExtraData, textExtraData);
     }
 
-    //发送图片
+    /**
+     * 发送图片
+     */
     public void sendImage(Group group, String key, AvatarExtraData avatarExtraData, TextExtraData textExtraData) {
 
         Pair<InputStream, String> generatedImageAndType = generateImage(key, avatarExtraData,
@@ -141,7 +144,7 @@ public class PluginPetService extends BasePetService {
         }
     }
 
-    public String getKeyAliasListString(){
+    public String getKeyAliasListString() {
         return super.keyListString;
     }
 }
