@@ -18,7 +18,7 @@ import java.util.Random;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.3F;
+    public static final float VERSION = 3.4F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     PluginPetService pluginPetService;
@@ -74,6 +74,8 @@ public final class Petpet extends JavaPlugin {
 
     private void onGroupMessage(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
+        if (pluginPetService.respondImage && !e.getMessage().contains(Image.Key)) return;
+        if (pluginPetService.commandMustAt && !e.getMessage().contains(At.Key)) return;
 
         String messageString = e.getMessage().contentToString().trim();
         if (!pluginPetService.keyCommand &&

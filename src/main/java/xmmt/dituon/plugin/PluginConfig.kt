@@ -15,7 +15,7 @@ data class PluginConfig(
     val disabled: List<String> = emptyList(),
     val keyCommand: Boolean = false,
     val commandMustAt: Boolean = false,
-    val respondImage: Boolean = false,
+    val respondImage: Boolean = true,
     val respondSelfNudge: Boolean = false,
     val headless: Boolean = false
 )
