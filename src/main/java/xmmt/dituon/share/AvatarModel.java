@@ -2,7 +2,6 @@ package xmmt.dituon.share;
 
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
-
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -84,6 +83,12 @@ public class AvatarModel {
         };
     }
 
+
+
+    public int getAngle() {
+        return angle;
+    }
+
     public boolean isRound() {
         return round;
     }
@@ -108,11 +113,11 @@ public class AvatarModel {
         return image;
     }
 
-    public float getNextAngle() {
+    public int getRotateIndex() {
         if (!rotate) {
-            return angle;
+            return 0;
         }
-        return ((float) (360 / pos.length) * posIndex) + angle;
+        return posIndex;
     }
 
     public int[] nextPos() {
@@ -149,6 +154,7 @@ public class AvatarModel {
 
             return deformData;
         }
+
 
         public Point2D[] getDeformPos() {
             return deformPos;

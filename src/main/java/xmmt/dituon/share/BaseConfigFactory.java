@@ -6,7 +6,7 @@ public class BaseConfigFactory {
             String fromAvatarUrl,
             String toAvatarUrl,
             String groupAvatarUrl,
-            String botAvatarUrl)  {
+            String botAvatarUrl) {
         try {
             return new AvatarExtraData(
                     fromAvatarUrl != null ? ImageSynthesis.getAvatarImage(fromAvatarUrl) : null,

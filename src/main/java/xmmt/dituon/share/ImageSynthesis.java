@@ -68,7 +68,7 @@ public class ImageSynthesis {
         switch (avatar.getPosType()) {
             case ZOOM:
                 g2dDrawZoomAvatar(g2d, avatar.getImage(),
-                        avatar.nextPos(), avatar.getNextAngle(), avatar.isRound());
+                        avatar.nextPos(), avatar.getRotateIndex(), avatar.getAngle(), avatar.isRound());
                 break;
             case DEFORM:
                 g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformData());
@@ -76,7 +76,7 @@ public class ImageSynthesis {
     }
 
     private static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
-                                          float angle, boolean isRound) {
+                                          int rotateIndex, int angle, boolean isRound) {
         if (avatarImage == null) {
             return;
         }
@@ -85,7 +85,7 @@ public class ImageSynthesis {
         int y = pos[1];
         int w = pos[2];
         int h = pos[3];
-        if (angle == 0) {
+        if (rotateIndex == 0 && angle == 0) {
             g2d.drawImage(avatarImage, x, y, w, h, null);
             return;
         }
@@ -93,14 +93,16 @@ public class ImageSynthesis {
         if (isRound || angle % 90 == 0) {
             BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
             Graphics2D rotateG2d = newAvatarImage.createGraphics();
-            rotateG2d.rotate(Math.toRadians(angle), avatarImage.getWidth() / 2, avatarImage.getHeight() / 2);
+            rotateG2d.rotate(Math.toRadians(((float) (360 / pos.length) * (rotateIndex + 1)) + angle),
+                    avatarImage.getWidth() / 2, avatarImage.getHeight() / 2);
             rotateG2d.drawImage(avatarImage, null, 0, 0);
             rotateG2d.dispose();
             g2d.drawImage(newAvatarImage, x, y, w, h, null);
             return;
         }
 
-        g2d.drawImage(rotateImage(avatarImage, angle), x, y, w, h, null);
+        g2d.drawImage(rotateImage(avatarImage,
+                ((float) (360 / pos.length) * (rotateIndex + 1)) + angle), x, y, w, h, null);
     }
 
     private static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage, AvatarModel.DeformData deformData) {
