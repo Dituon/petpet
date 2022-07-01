@@ -14,6 +14,7 @@ import xmmt.dituon.share.TextExtraData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public final class Petpet extends JavaPlugin {
@@ -33,6 +34,8 @@ public final class Petpet extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getLogger().info(System.getProperty("sun.jnu.encoding"));
+
         try {
             this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
         } catch (Exception ex) {
@@ -74,8 +77,8 @@ public final class Petpet extends JavaPlugin {
 
     private void onGroupMessage(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
-        if (pluginPetService.respondImage && e.getMessage().contains(Image.Key)) return;
-        if (pluginPetService.commandMustAt && e.getMessage().contains(At.Key)) return;
+        if (!pluginPetService.respondImage && !e.getMessage().contains(Image.Key)) return;
+        if (!pluginPetService.commandMustAt && !e.getMessage().contains(At.Key)) return;
 
         String messageString = e.getMessage().contentToString().trim();
         if (!pluginPetService.keyCommand &&
@@ -130,27 +133,29 @@ public final class Petpet extends JavaPlugin {
             }
         }
 
-        String command = messageText.toString().replace(pluginPetService.command, "").trim();
+        String command = messageText.toString().trim();
 
-        String[] strList = command.contains(" ") ?
-                command.trim().split("\\s+") : new String[]{command};
+        List<String> strList = new ArrayList<>(Arrays.asList(command.contains(" ") ?
+                command.trim().split("\\s+") : new String[]{command})); //空格分割指令
+        if (strList.get(0).equals(pluginPetService.command)) strList = strList.subList(1, strList.size()); //去掉command
+        if (strList.isEmpty()) { //pet @xxx
+            strList.add(pluginPetService.randomableList.get(
+                    new Random().nextInt(pluginPetService.randomableList.size())));
+        }
 
-        if (!pluginPetService.getDataMap().containsKey(strList[0])) { //没有指定key
-            if (messageString.startsWith(pluginPetService.command)) { //pet @xxx(随机
-                strList[0] = pluginPetService.randomableList.get(
-                        new Random().nextInt(pluginPetService.randomableList.size()));
-            } else if (pluginPetService.getAliaMap().containsKey(strList[0])) { //别名
-                strList[0] = pluginPetService.getAliaMap().get(strList[0]);
+        if (!pluginPetService.getDataMap().containsKey(strList.get(0))) { //没有指定key
+            if (pluginPetService.getAliaMap().containsKey(strList.get(0))) { //别名
+                strList.set(0, pluginPetService.getAliaMap().get(strList.get(0)));
             } else {
                 return;
             }
         }
 
-        pluginPetService.sendImage(e.getGroup(), strList[0],
+        pluginPetService.sendImage(e.getGroup(), strList.get(0),
                 BaseConfigFactory.getAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl()
                 ), new TextExtraData(
-                        fromName, toName, groupName, Arrays.asList(strList).subList(1, strList.length)
+                        fromName, toName, groupName, strList.subList(1, strList.size())
                 ));
     }
 

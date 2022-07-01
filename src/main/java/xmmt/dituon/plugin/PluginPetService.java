@@ -75,7 +75,6 @@ public class PluginPetService extends BasePetService {
     /**
      * 发送随机图片
      */
-    @Deprecated
     public void sendImage(Group group, Member from, Member to) { //发送随机图片
         sendImage(group, from, to, randomableList.get(new Random().nextInt(randomableList.size())));
     }
@@ -88,11 +87,11 @@ public class PluginPetService extends BasePetService {
             sendImage(group, from, to);
             return;
         }
-        int r = new Random().nextInt(100);
+        int r = new Random().nextInt(99) + 1; //不能为0
         if (r >= probability) {
             return;
         }
-        sendImage(group, from, to, randomableList.get(r));
+        sendImage(group, from, to);
     }
 
     /**
