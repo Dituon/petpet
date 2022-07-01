@@ -94,14 +94,15 @@ function Avatar(qq = 2544193782) {
 
 //round
 $('#elementBar').on('change', '.avatar .round', function () {
-    avatarList[this.parentNode.parentNode.id.replace('a', '')].setRound(this.checked)
+    avatarList[this.parentNode.parentNode.id.slice(1)].setRound(this.checked)
 })
 
 //avatarOnTop
 $('#elementBar').on('change', '.avatar .avatarOnTop', function () {
+    const avatarEle = avatarList[this.parentNode.parentNode.id.slice(1)]
+    console.log(avatarEle)
+    avatarEle.onTop = this.checked
     if (avatarList.length !== 1) {
-        const avatarEle = avatarList[this.parentNode.parentNode.id]
-        avatarEle.onTop = this.checked
         avatarEle.avatar.opacity = this.checked ? 1 : 0.6
         canvas.renderAll()
         return
