@@ -2,11 +2,11 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [23,231,170,170],
+        "pos": [32,57,323,323],
         "round": false,
-        "avatarOnTop": true
+        "avatarOnTop": false
     }],
     "text": [],
-    "alias": ["不要靠近"],
+    "alias": ["远离"],
     "inRandomList": false
 }
