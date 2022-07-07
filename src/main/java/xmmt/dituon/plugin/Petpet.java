@@ -37,7 +37,7 @@ public final class Petpet extends JavaPlugin {
         try {
             this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
             pluginPetService.readConfigByPluginAutoSave();
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
             getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
         }
 
@@ -62,7 +62,7 @@ public final class Petpet extends JavaPlugin {
             pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
             try {
-                pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), true);
+                pluginPetService.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
             } catch (Exception ignored) { // 如果bot戳了别人
                 if (!pluginPetService.respondSelfNudge) return;
                 pluginPetService.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
