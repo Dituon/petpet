@@ -34,16 +34,13 @@ public final class Petpet extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info(System.getProperty("sun.jnu.encoding"));
-
         try {
             this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            getLogger().info("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n若不想更新可使用本插件 2.0 版本");
+            pluginPetService.readConfigByPluginAutoSave();
+        } catch (Exception ignored){
+            getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
         }
 
-        pluginPetService.readConfigByPluginAutoSave();
         pluginPetService.readData(getDataFolder());
 
         if (pluginPetService.headless) {
@@ -67,9 +64,7 @@ public final class Petpet extends JavaPlugin {
             try {
                 pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), ((Group) e.getSubject()).getBotAsMember(), true);
             } catch (Exception ignored) { // 如果bot戳了别人
-                if (!pluginPetService.respondSelfNudge) {
-                    return;
-                }
+                if (!pluginPetService.respondSelfNudge) return;
                 pluginPetService.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
             }
         }

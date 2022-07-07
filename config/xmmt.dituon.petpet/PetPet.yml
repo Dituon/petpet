@@ -5,8 +5,8 @@ content:
   antialias: true
   disabled: 
     - Avatar.NONE
-  keyCommand: false
+  keyCommand: true
   commandMustAt: false
   respondImage: true
   respondSelfNudge: false
-  headless: false
+  headless: true

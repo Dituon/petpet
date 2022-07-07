@@ -4,6 +4,7 @@ import kotlin.Pair;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +97,7 @@ public class BasePetService {
     }
 
     public String getFileStr(File file) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         StringBuilder sb = new StringBuilder();
         String str;
         while ((str = br.readLine()) != null) {

@@ -17,11 +17,11 @@ public class PluginPetService extends BasePetService {
 
     protected String command = "pet";
     private int probability;
-    protected boolean keyCommand = false;
-    protected boolean commandMustAt = true;
-    protected boolean respondImage = false;
+    protected boolean keyCommand = true;
+    protected boolean commandMustAt = false;
+    protected boolean respondImage = true;
     protected boolean respondSelfNudge = false;
-    protected boolean headless = false;
+    protected boolean headless = true;
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
 

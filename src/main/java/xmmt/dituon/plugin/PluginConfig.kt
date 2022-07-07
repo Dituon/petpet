@@ -13,11 +13,11 @@ data class PluginConfig(
     val probability: Int = 30,
     val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
-    val keyCommand: Boolean = false,
+    val keyCommand: Boolean = true,
     val commandMustAt: Boolean = false,
     val respondImage: Boolean = true,
     val respondSelfNudge: Boolean = false,
-    val headless: Boolean = false
+    val headless: Boolean = true
 )
 
 fun decode(str: String): PluginConfig {
