@@ -3,11 +3,9 @@ package xmmt.dituon.example;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import xmmt.dituon.share.BaseServiceConfig;
-import xmmt.dituon.share.TextExtraData;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class PluginDataTest extends AbstractTest {
 
@@ -20,7 +18,7 @@ public class PluginDataTest extends AbstractTest {
 
     @Test
     public void testThrow() throws IOException {
-        testGeneral("testThrow", "throw", null, null);
+        testGeneral("testThrow", "throw", null);
     }
 
 }

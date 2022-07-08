@@ -114,18 +114,18 @@ public class PluginPetService extends BasePetService {
                 otherText == null || otherText.equals("") ? new ArrayList<>() :
                         new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
         );
-        AvatarExtraData avatarExtraData = BaseConfigFactory.getAvatarExtraDataFromUrls(
+        AvatarExtraDataProvider avatarExtraDataProvider = BaseConfigFactory.getAvatarExtraDataFromUrls(
                 from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
         );
-        sendImage(group, key, avatarExtraData, textExtraData);
+        sendImage(group, key, avatarExtraDataProvider, textExtraData);
     }
 
     /**
      * 发送图片
      */
-    public void sendImage(Group group, String key, AvatarExtraData avatarExtraData, TextExtraData textExtraData) {
+    public void sendImage(Group group, String key, AvatarExtraDataProvider avatarExtraDataProvider, TextExtraData textExtraData) {
 
-        Pair<InputStream, String> generatedImageAndType = generateImage(key, avatarExtraData,
+        Pair<InputStream, String> generatedImageAndType = generateImage(key, avatarExtraDataProvider,
                 textExtraData, null);
 
         try {

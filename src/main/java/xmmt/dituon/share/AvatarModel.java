@@ -6,6 +6,7 @@ import kotlinx.serialization.json.JsonElement;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class AvatarModel {
     protected AvatarType type;
@@ -20,7 +21,7 @@ public class AvatarModel {
     private PosType posType = PosType.ZOOM;
     private DeformData deformData = null;
 
-    public AvatarModel(AvatarData data, AvatarExtraData extraData, Type imageType) {
+    public AvatarModel(AvatarData data, AvatarExtraDataProvider extraData, Type imageType) {
         type = data.getType();
         setImage(type, extraData);
         posType = data.getPosType() != null ? data.getPosType() : PosType.ZOOM;
@@ -32,19 +33,19 @@ public class AvatarModel {
         antialias = Boolean.TRUE.equals(data.getAntialias());
     }
 
-    private void setImage(AvatarType type, AvatarExtraData extraData) {
+    private void setImage(AvatarType type, AvatarExtraDataProvider extraData) {
         switch (type) {
             case FROM:
-                image = extraData.getFromAvatar();
+                image = Objects.requireNonNull(extraData.getFromAvatar()).invoke();
                 break;
             case TO:
-                image = extraData.getToAvatar();
+                image = Objects.requireNonNull(extraData.getToAvatar()).invoke();
                 break;
             case GROUP:
-                image = extraData.getGroupAvatar();
+                image = Objects.requireNonNull(extraData.getGroupAvatar()).invoke();
                 break;
             case BOT:
-                image = extraData.getBotAvatar();
+                image = Objects.requireNonNull(extraData.getBotAvatar()).invoke();
                 break;
         }
     }

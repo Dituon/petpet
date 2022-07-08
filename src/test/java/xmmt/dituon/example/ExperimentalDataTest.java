@@ -20,17 +20,17 @@ public class ExperimentalDataTest extends AbstractTest {
 
     @Test
     public void testPandaFace() throws IOException {
-        testGeneral("testPandaFace", "panda-face", null, Arrays.asList(textDataForPandaFace("。。。")));
+        testGeneral("testPandaFace", "panda-face", Arrays.asList(textDataForPandaFace("。。。")));
     }
 
     @Test
     public void testPandaFace2() throws IOException {
-        testGeneral("testPandaFace2", "panda-face", null, Arrays.asList(textDataForPandaFace("二次元，二次元")));
+        testGeneral("testPandaFace2", "panda-face", Arrays.asList(textDataForPandaFace("二次元，二次元")));
     }
 
     @Test
     public void testAnyasuki() throws IOException {
-        testGeneral("testAnyasuki-deform", "anyasuki-deform", null, null);
+        testGeneral("testAnyasuki-deform", "anyasuki-deform", null);
     }
 
     private TextData textDataForPandaFace(String text) {
