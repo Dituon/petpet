@@ -2,7 +2,6 @@ package xmmt.dituon.example;
 
 import kotlin.Pair;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import xmmt.dituon.share.*;
 
 import javax.imageio.ImageIO;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 public class AbstractTest {
@@ -35,18 +33,17 @@ public class AbstractTest {
         }
     }
 
-    protected void testGeneral(String saveName, String key, TextExtraData textExtraData, List<TextData> additionTextDatas) throws IOException {
+    protected void testGeneral(String saveName, String key, List<TextData> additionTextDatas) {
         Pair<InputStream, String> resultStreamAndType = petService.generateImage(key,
-                new AvatarExtraData(avatarImage1, avatarImage2,
+                new AvatarExtraDataProvider(() -> avatarImage1, () -> avatarImage2,
                         null, null)
-                , textExtraData, additionTextDatas);
+                , null, additionTextDatas);
         String finalSaveName = OUTPUT_ROOT + getClass().getSimpleName() + "-" + saveName + "." + resultStreamAndType.getSecond();
         copyInputStreamToFile(resultStreamAndType.getFirst(), new File(finalSaveName));
         System.out.println("test " + key + " done.");
     }
 
-    private void copyInputStreamToFile(InputStream inputStream, File file)
-            throws IOException {
+    private void copyInputStreamToFile(InputStream inputStream, File file) {
         // append = false
         try (FileOutputStream outputStream = new FileOutputStream(file, false)) {
             int read;

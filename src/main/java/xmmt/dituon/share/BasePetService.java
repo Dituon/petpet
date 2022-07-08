@@ -112,7 +112,7 @@ public class BasePetService {
      * @return InputStream 及其图片格式（值域：["gif", "png"...]）
      */
     public Pair<InputStream, String> generateImage(
-            String key, AvatarExtraData avatarExtraData,
+            String key, AvatarExtraDataProvider avatarExtraDataProvider,
             TextExtraData textExtraData,
             List<TextData> additionTextDatas
     ) {
@@ -143,7 +143,7 @@ public class BasePetService {
 
             if (!data.getAvatar().isEmpty()) {
                 for (AvatarData avatarData : data.getAvatar()) {
-                    avatarList.add(new AvatarModel(avatarData, avatarExtraData, data.getType()));
+                    avatarList.add(new AvatarModel(avatarData, avatarExtraDataProvider, data.getType()));
                 }
             }
 
