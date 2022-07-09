@@ -93,12 +93,13 @@ function Avatar(qq = 2544193782) {
 }
 
 //round
-$('#elementBar').on('change', '.avatar .round', () => {
+$('#elementBar').on('change', '.avatar .round', function () {
+    console.log(this.parentNode.parentNode.id)
     avatarList[this.parentNode.parentNode.id.slice(1)].setRound(this.checked)
 })
 
     //avatarOnTop
-    .on('change', '.avatar .avatarOnTop', () => {
+    .on('change', '.avatar .avatarOnTop', function () {
         const avatarEle = avatarList[this.parentNode.parentNode.id.slice(1)]
         console.log(avatarEle)
         avatarEle.onTop = this.checked
@@ -118,12 +119,12 @@ $('#elementBar').on('change', '.avatar .round', () => {
     })
 
     //changeType
-    .on('change', '.avatar select', () => {
+    .on('change', '.avatar select', function () {
         avatarList[this.parentNode.id.slice(1)].type = this.value
     })
 
     //deleteAvatar
-    .on('click', '.avatar .deleteAvatar', () => {
+    .on('click', '.avatar .deleteAvatar', function () {
         avatarList[this.parentNode.id.slice(1)].delete()
     })
 

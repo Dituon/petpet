@@ -54,17 +54,17 @@ function Text(text) {
         '<div class="check deleteText">delete</div></div>')
 }
 
-$('#elementBar').on('change', '.text .color', () => {
+$('#elementBar').on('change', '.text .color', function ()  {
     textList[this.parentNode.parentNode.id.slice(1)].text.set('fill', this.value)
     canvas.renderAll()
 })
 
-    .on('change', '.text .typein', () => {
+    .on('change', '.text .typein', function ()  {
         textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * 16)
         canvas.renderAll()
     })
 
-    .on('click', '.text .deleteText', () => {
+    .on('click', '.text .deleteText', function ()  {
         textList[this.parentNode.id.slice(1)].delete()
     })
 
