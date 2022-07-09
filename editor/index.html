@@ -13,6 +13,13 @@
         body {
             text-align: center;
             color: #606060;
+            font-family: system-ui, —apple-system, Segoe UI, Rototo, Emoji, Helvetica, Arial, sans-serif;
+        }
+
+        @font-face {
+            font-family: Emoji;
+            src: local("Apple Color Emojiji"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Noto Color Emoji");
+            unicode-range: U+1F000-1F644, U+203C-3299;
         }
 
         a {
@@ -74,6 +81,7 @@
             padding: 0.3em 0.4em;
             border-radius: 12px;
             margin: 0.4em;
+            cursor: pointer;
         }
 
         #gifBar {
@@ -146,6 +154,29 @@
             max-width: 3em;
             padding: 0.1em 0.4em;
         }
+
+        #setup_icon {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.4rem;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        #setup_icon:hover {
+            animation: rotate 2s;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #downloadConfig {
+            width: 50%;
+            margin: 1em auto;
+        }
     </style>
 </head>
 <body>
@@ -159,19 +190,24 @@
 <div class="bar" id="settingsBar">
     <div class="check" onclick="addAvatar()">addAvatar</div>
     <div class="check" onclick="addText()">addText</div>
+    <div class="check" title="多别名用空格分割">别名<input type="text" id="alias" onkeydown="this.onkeyup()"
+                                onkeyup="this.size=(this.value.length>4?this.value.length*1.5:2)" size="2"/></div>
     <div class="check" onclick="buildData()">buildData</div>
 </div>
 <div class="bar" id="elementBar"></div>
 <div id="gifBar"></div>
 <textarea></textarea>
+<div class="check" id="downloadConfig">downloadConfig</div>
+<!--<div id="setup_icon">⚙</div>-->
 <a href="https://github.com/Dituon/petpet">♥ 项目地址 ♥</a>
+<script>
+    $('#downloadConfig').hide()
+    $('textarea').hide()
+    $('.bar').hide()
+</script>
 <script src="index.js"></script>
 <script src="avatar.js"></script>
 <script src="text.js"></script>
 <script src="dataBuilder.js"></script>
-<script>
-    $('textarea').hide()
-    $('.bar').hide()
-</script>
 </body>
 </html>

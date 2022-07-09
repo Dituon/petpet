@@ -11,10 +11,24 @@ function buildData() {
         textBuiltList.push(text.build())
     }
 
+    let alias = [];
+    $('#alias').val().trim().split(' ').forEach(alia => {
+        if (alia) alias.push('"' + alia + '"')
+    })
+    const extra = !alias.length ? '' : `,\n    "alias": [${alias}]`
+
     let out = `{
     "type": "${imageType}",
     "avatar": [${avatarBuiltList}],
-    "text": [${textBuiltList}]\n}`
+    "text": [${textBuiltList}]${extra}\n}`
 
-    $('textarea').slideDown().text(out.toString())
+    $('textarea').slideDown().text(out)
+    $('#downloadConfig').slideDown()
 }
+
+$('#downloadConfig').click(() => {
+    let blob = new Blob([$('textarea').text()], {
+        type: 'text/plain;charset=utf-8'
+    });
+    saveAs(blob, 'data.json')
+})

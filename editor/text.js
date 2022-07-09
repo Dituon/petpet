@@ -10,10 +10,10 @@ function Text(text) {
     })
     canvas.add(this.text);
 
-    this.text.on('moving', function () {
+    this.text.on('moving', () => {
         textMoving()
     })
-    this.text.on('scaling', function (e) {
+    this.text.on('scaling', e =>  {
         if (e.transform.target.scaleX === e.transform.target.scaleY) {
             let size = e.transform.target.scaleX * 200
             that.text.set('fontSize', size)
@@ -31,14 +31,14 @@ function Text(text) {
     }
 
     this.isDelete = false
-    this.delete = function () {
+    this.delete = () => {
         canvas.remove(this.text)
         canvas.renderAll()
         document.getElementById('t' + that.id.toString()).remove()
         that.isDelete = true
     }
 
-    this.build = function () {
+    this.build = () => {
         return `{
         "text": "${that.text.get('text')}",
         "pos": [${that.pos}],
@@ -54,19 +54,19 @@ function Text(text) {
         '<div class="check deleteText">delete</div></div>')
 }
 
-$('#elementBar').on('change', '.text .color', function () {
+$('#elementBar').on('change', '.text .color', () => {
     textList[this.parentNode.parentNode.id.slice(1)].text.set('fill', this.value)
     canvas.renderAll()
 })
 
-$('#elementBar').on('change', '.text .typein', function () {
-    textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * 16)
-    canvas.renderAll()
-})
+    .on('change', '.text .typein', () => {
+        textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * 16)
+        canvas.renderAll()
+    })
 
-$('#elementBar').on('click', '.text .deleteText', function () {
-    textList[this.parentNode.id.slice(1)].delete()
-})
+    .on('click', '.text .deleteText', () => {
+        textList[this.parentNode.id.slice(1)].delete()
+    })
 
 let textList = [];
 

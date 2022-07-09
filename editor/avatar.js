@@ -2,7 +2,7 @@
 function Avatar(qq = 2544193782) {
     const that = this
     this.avatarURL = `https://q.qlogo.cn/headimg_dl?dst_uin=${qq}&spec=640&img_type=jpg`
-    fabric.Image.fromURL(this.avatarURL, function (a) {
+    fabric.Image.fromURL(this.avatarURL, a => {
         that.avatar = a
         that.avatar.scale(0.2)
         that.avatar.setControlsVisibility({
@@ -10,10 +10,10 @@ function Avatar(qq = 2544193782) {
         })
         that.avatar.uniformScaling = true
         canvas.add(that.avatar);
-        that.avatar.on('moving', function () {
+        that.avatar.on('moving', () => {
             avatarMoving()
         })
-        that.avatar.on('scaling', function () {
+        that.avatar.on('scaling', () => {
             avatarMoving()
         })
     });
@@ -27,7 +27,7 @@ function Avatar(qq = 2544193782) {
     }
 
     this.isDelete = false
-    this.delete = function () {
+    this.delete = () => {
         canvas.remove(this.avatar)
         canvas.renderAll()
         document.getElementById('a' + that.id.toString()).remove()
@@ -37,8 +37,8 @@ function Avatar(qq = 2544193782) {
     this.type = 'TO';
 
     //坐标数组
-    this.setPos = function (p) {
-        frameLength === 1 ? that.pos = p : that.pos[backgroundId] = p
+    this.setPos = p => {
+        frameLength === 1 ? that.pos = p : that.pos[backgroundId - 1] = p
     }
 
     this.id = avatarList.length
@@ -48,7 +48,7 @@ function Avatar(qq = 2544193782) {
         '<select><option>TO</option><option>FROM</option><option>GROUP</option><option>BOT</option></select>' +
         '<div class="check deleteAvatar">delete</div></div>')
 
-    this.setRound = function (checked) {
+    this.setRound = checked => {
         that.round = checked
         if (checked) {
             const roundedCorners = (avatar, radius) => new fabric.Rect({
@@ -71,7 +71,7 @@ function Avatar(qq = 2544193782) {
     this.round = false
     this.pos = new Array(frameLength).fill([0, 0, 0, 0])
 
-    this.build = function () {
+    this.build = () => {
         let builtPos = []
         switch (imageType) {
             case 'IMG':
@@ -93,39 +93,39 @@ function Avatar(qq = 2544193782) {
 }
 
 //round
-$('#elementBar').on('change', '.avatar .round', function () {
+$('#elementBar').on('change', '.avatar .round', () => {
     avatarList[this.parentNode.parentNode.id.slice(1)].setRound(this.checked)
 })
 
-//avatarOnTop
-$('#elementBar').on('change', '.avatar .avatarOnTop', function () {
-    const avatarEle = avatarList[this.parentNode.parentNode.id.slice(1)]
-    console.log(avatarEle)
-    avatarEle.onTop = this.checked
-    if (avatarList.length !== 1) {
-        avatarEle.avatar.opacity = this.checked ? 1 : 0.6
+    //avatarOnTop
+    .on('change', '.avatar .avatarOnTop', () => {
+        const avatarEle = avatarList[this.parentNode.parentNode.id.slice(1)]
+        console.log(avatarEle)
+        avatarEle.onTop = this.checked
+        if (avatarList.length !== 1) {
+            avatarEle.avatar.opacity = this.checked ? 1 : 0.6
+            canvas.renderAll()
+            return
+        }
+        if (this.checked) {
+            canvas.backgroundImage = backGroundImage
+            canvas.overlayImage = null
+        } else {
+            canvas.overlayImage = backGroundImage
+            canvas.backgroundImage = null
+        }
         canvas.renderAll()
-        return
-    }
-    if (this.checked) {
-        canvas.backgroundImage = backGroundImage
-        canvas.overlayImage = null
-    } else {
-        canvas.overlayImage = backGroundImage
-        canvas.backgroundImage = null
-    }
-    canvas.renderAll()
-})
+    })
 
-//changeType
-$('#elementBar').on('change', '.avatar select', function () {
-    avatarList[this.parentNode.id.slice(1)].type = this.value
-})
+    //changeType
+    .on('change', '.avatar select', () => {
+        avatarList[this.parentNode.id.slice(1)].type = this.value
+    })
 
-//deleteAvatar
-$('#elementBar').on('click', '.avatar .deleteAvatar', function () {
-    avatarList[this.parentNode.id.slice(1)].delete()
-})
+    //deleteAvatar
+    .on('click', '.avatar .deleteAvatar', () => {
+        avatarList[this.parentNode.id.slice(1)].delete()
+    })
 
 let avatarList = [];
 

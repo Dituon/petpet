@@ -1,21 +1,21 @@
 // 文件上传
 $(function () { //拖拽
     $(document).on({
-        dragleave: function (e) {
+        dragleave: e => {
             e.preventDefault();
         },
-        drop: function (e) {
+        drop: e => {
             e.preventDefault();
         },
-        dragenter: function (e) {
+        dragenter: e => {
             e.preventDefault();
         },
-        dragover: function (e) {
+        dragover: e => {
             e.preventDefault();
         }
     });
     const box = document.getElementById('drop_area');
-    box.addEventListener("drop", function (e) {
+    box.addEventListener("drop", e => {
         e.preventDefault();
         const fileList = e.dataTransfer.files;
         if (fileList.length === 0) {
@@ -26,7 +26,7 @@ $(function () { //拖拽
 });
 
 function chooseFile() { //选择
-    $('#file').click().change(function () {
+    $('#file').click().change(() => {
         const fileList = $('#file').prop('files')
         loadImage(fileList)
     })
@@ -45,7 +45,7 @@ function loadImage(fileList) {
     const reader = new FileReader();
     const image = new Image()
     reader.readAsDataURL(fileList[0]);
-    reader.onload = function () {
+    reader.onload = () => {
         image.src = reader.result.toString()
     }
     if (fileList[0].type === 'image/gif') {
@@ -53,7 +53,7 @@ function loadImage(fileList) {
         loadGif(image);
         return;
     }
-    image.onload = function () {
+    image.onload = () => {
         loadBackGround(image)
     }
 }
@@ -67,9 +67,9 @@ let frameLength = 1
 function loadGif(image) {
     image.id = 'gifLoader'
     $('#gifBar').append(image)
-    document.getElementById('gifLoader').onload = function () {
+    document.getElementById('gifLoader').onload = () => {
         let gif = new RubbableGif({gif: document.getElementById('gifLoader')})
-        gif.load(function () {
+        gif.load(() => {
             $('.jsgif').hide()
             for (let i = 1; i <= gif.get_length(); i++) {
                 gif.move_to(i);
@@ -112,12 +112,11 @@ function downloadAllBackground() {
     const zip = new JSZip()
     const imgs = zip.folder('petpet-gif');
     for (let i = 0; i < imgNum; i++) {
-        let raw = document.getElementsByClassName('frame').item(i).src.split(';base64,')[1];
-        console.log(raw)
-        imgs.file(i + '.png', raw, {base64: true});
+        let raw = document.getElementsByClassName('frame').item(i).src.split(';base64,')[1]
+        imgs.file(i + '.png', raw, {base64: true})
     }
     zip.generateAsync({type: "blob"})
         .then(function (content) {
-            saveAs(content, "petpet.zip");
+            saveAs(content, "petpet.zip")
         });
 }
