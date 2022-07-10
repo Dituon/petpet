@@ -37,7 +37,7 @@ public final class Petpet extends JavaPlugin {
         try {
             this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
             pluginPetService.readConfigByPluginAutoSave();
-        } catch (Exception ignored) {
+        } catch (NoClassDefFoundError ignored) {
             getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
         }
 
