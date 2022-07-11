@@ -18,10 +18,13 @@ public class PluginPetService extends BasePetService {
     protected String command = "pet";
     private int probability;
     protected boolean keyCommand = true;
+    protected String keyCommandHead = "";
     protected boolean commandMustAt = false;
     protected boolean respondImage = true;
     protected boolean respondSelfNudge = false;
+    protected boolean fuzzy = false;
     protected boolean headless = true;
+    protected boolean autoUpdate = true;
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
 
@@ -42,10 +45,13 @@ public class PluginPetService extends BasePetService {
         antialias = config.getAntialias();
         probability = config.getProbability();
         keyCommand = config.getKeyCommand();
+        keyCommandHead = config.getKeyCommandHead();
         commandMustAt = config.getCommandMustAt();
         respondImage = config.getRespondImage();
         respondSelfNudge = config.getRespondSelfNudge();
+        fuzzy = config.getFuzzy();
         headless = config.getHeadless();
+        autoUpdate = config.getAutoUpdate();
 
         for (String path : config.getDisabled()) {
             disabledKey.add(path.replace("\"", ""));
