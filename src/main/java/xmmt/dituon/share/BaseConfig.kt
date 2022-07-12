@@ -32,6 +32,13 @@ data class KeyData(
     }
 }
 
+enum class TextAlign {
+    LEFT, RIGHT, CENTER
+}
+
+enum class TextWrap {
+    NONE, BREAK, ZOOM
+}
 
 @Serializable
 data class TextData @JvmOverloads constructor(
@@ -39,7 +46,9 @@ data class TextData @JvmOverloads constructor(
     val pos: List<Int>? = null,
     val color: JsonElement? = null,
     val font: String? = null,
-    val size: Int? = null
+    val size: Int? = null,
+    val align: TextAlign? = TextAlign.LEFT,
+    val wrap: TextWrap? = TextWrap.NONE
 )
 
 @Serializable

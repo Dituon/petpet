@@ -4,6 +4,7 @@ import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,8 @@ public class TextModel {
     protected int[] pos = {2, 14};
     protected Color color = new Color(25, 25, 25, 255); // #191919
     protected Font font;
+    protected TextAlign align;
+    protected TextWrap wrap;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
         text = extraInfo != null ? buildText(textData.getText(), extraInfo)
@@ -21,6 +24,8 @@ public class TextModel {
         color = textData.getColor() != null ? setColor(textData.getColor()) : color;
         font = loadFont(textData.getFont() != null ? textData.getFont().replace("\"", "") : "黑体",
                 textData.getSize() != null ? textData.getSize() : 12);
+        align = textData.getAlign();
+        wrap = textData.getWrap();
     }
 
     private static String buildText(String text, TextExtraData extraData) {
@@ -48,9 +53,10 @@ public class TextModel {
     }
 
     private int[] setPos(List<Integer> posElements) {
-        int x = Integer.parseInt(posElements.get(0).toString());
-        int y = Integer.parseInt(posElements.get(1).toString());
-        return new int[]{x, y};
+        int x = posElements.get(0);
+        int y = posElements.get(1);
+        int w = posElements.size() == 3 ? posElements.get(2) : 200;
+        return new int[]{x, y, w};
     }
 
     private Color setColor(JsonElement jsonElement) {
@@ -78,10 +84,30 @@ public class TextModel {
     }
 
     public String getText() {
+        if (wrap == TextWrap.BREAK && pos.length >= 3) {
+            int width = this.getWidth();
+            if (width <= pos[2]) return text;
+
+            short lineAp = (short) (width / pos[2]);
+            StringBuilder builder = new StringBuilder(text);
+            short lineWidth = (short) (text.length() / lineAp);
+            short i = 1;
+            while (i <= lineAp) {
+                builder.insert(lineWidth * i++, '\n');
+            }
+
+            return builder.toString();
+        }
         return text;
     }
 
     public int[] getPos() {
+        switch (align) {
+            case CENTER:
+                return new int[]{pos[0] - this.getWidth() / 2, pos[1]};
+            case RIGHT:
+                return new int[]{pos[0] - this.getWidth(), pos[1]};
+        }
         return pos;
     }
 
@@ -90,6 +116,15 @@ public class TextModel {
     }
 
     public Font getFont() {
+        if (wrap == TextWrap.ZOOM) {
+            float multiple = (float) pos[2] / this.getWidth();
+            return new Font(font.getFontName(), Font.PLAIN, (int) (font.getSize() * multiple));
+        }
         return font;
+    }
+
+    public int getWidth() {
+        Graphics2D g2d = new BufferedImage(1, 1, Image.SCALE_DEFAULT).createGraphics();
+        return g2d.getFontMetrics(font).stringWidth(text);
     }
 }
