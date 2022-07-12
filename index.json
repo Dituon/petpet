@@ -29,5 +29,9 @@
         "twist",
         "wallpaper",
         "yoasobi"
+    ],
+    "fontList": [
+        "Aller-Bold.ttf",
+        "MiSans-Bold.ttf"
     ]
 }
