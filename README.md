@@ -41,16 +41,23 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 3.5 #配置文件版本
+  version: 3.6 #配置文件版本
+
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: true #抗锯齿
   disabled: [] #禁用列表
-  keyCommand: false #以 key 作为指令头
-  commandMustAt: true #必须有At对象
-  respondImage: false #使用发送的图片生成 petpet
+
+  keyCommand: true #以 key 作为指令头
+  keyCommandHead: '' #keyCommand前缀
+
+  commandMustAt: false #必须有At对象
+  respondImage: true #使用发送的图片生成 petpet
   respondSelfNudge: false #响应机器人发出的戳一戳
-  headless: false #使用headless模式
+  fuzzy: false #模糊匹配用户名
+
+  headless: true #使用headless模式
+  autoUpdate: true #自动从仓库同步PetData
 ```
 
 修改后重启 Mirai 以重新加载
@@ -192,23 +199,24 @@ content:
 
 ```
 "text": [ // 这是一个数组, 可以添加很多文字
-  {
-    "text": "Petpet!", // 文字内容
-    "color": "#66ccff", // 颜色, 默认为#191919
-    "pos": [100, 100], // 坐标, 默认为 [2,14]
-    "size": 24 // 字号, 默认为12
-  },
-  {
-    "text": "发送者: $from, 接收者: $to", // 支持变量
-    "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
-    "pos": [20, 150], // 坐标
-    "font": "宋体" // 字体, 默认为黑体
-  },
-  {
-    "text": "$txt1[我]超市$txt2[你]!", // 支持关键词变量
-    "pos": [0,200],
-    "font":  "./data/xmmt.dituon.petpet/key/微软雅黑.ttf" // 支持路径
-  }
+    {
+      "text": "Petpet!", // 文字内容
+      "color": "#66ccff", // 颜色, 默认为#191919
+      "pos": [100, 100], // 坐标, 默认为 [2,14]
+      "size": 24 // 字号, 默认为12
+    },
+    {
+      "text": "发送者: $from, 接收者: $to", // 支持变量
+      "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
+      "pos": [20, 150], // 坐标
+      "font": "宋体" // 字体, 默认为黑体
+    },
+    {
+      "text": "$txt1[我]超市$txt2[你]!", // 支持关键词变量
+      "pos": [0,200,300], // 第三个值为文本最大宽度
+      "align": "CENTER", // 对齐方式, 默认为LEFT
+      "wrap": "ZOOM" // 显示设置, 默认为NONE
+    }
   ]
 ```
 
@@ -219,6 +227,23 @@ content:
 - `$group` : 群名称
 - `$txt(i)[(xxx)]` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1[我]超市$txt2[你]` 指令为 `pet [key] 我 你`
 
+**`font`**
+
+在`data/fonts`目录下的字体文件会注册到环境中
+
+**`align`**
+
+- `LEFT`: 左对齐
+- `RIGHT`: 右对齐
+- `CENTER`: 居中对齐
+
+**`wrap`**
+
+- `NONE`: 不换行
+- `BREAK`: 自动换行
+- `ZOOM`: 自动缩放
+>> 使用`BREAK`或`ZOOM`时, `maxWidth` 默认为`200`
+
 **需要更多变量请提交 Issue**
 
 ## 常见问题
@@ -226,14 +251,11 @@ content:
 > 戳一戳无法触发?
 >> 检查 Mirai 登录协议, 仅 `ANDORID_PHONE` 可以收到 戳一戳 消息
 
-> `NoClassDefFoundError`?
->> `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 或使用本插件 `2.0` 及以下版本
+> 没有生成配置文件?
+>> `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 旧版本不支持自定义配置项
 
 > `Exception in coroutine <unnamed>`?
 >> 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
-
-> 文字乱码?
->> `Windows` 系统默认为`GBK`编码, 加入`-Dfile.encoding=utf-8` 启动项
 
 > `Could not initialize class java.awt.Toolkit`?
 >> 对于无输入输出设备的服务器 需要启用`headless`
