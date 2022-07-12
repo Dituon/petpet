@@ -42,7 +42,8 @@ fun PluginConfig.toBaseServiceConfig(): BaseServiceConfig {
 @Serializable
 data class UpdateIndex(
     val version: Float,
-    val dataList: List<String>
+    val dataList: List<String>,
+    val fontList: List<String>,
 ) {
     companion object {
         @JvmStatic

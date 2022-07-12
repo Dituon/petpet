@@ -19,7 +19,7 @@ import java.util.Random;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.5F;
+    public static final float VERSION = 3.6F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     public static PluginPetService pluginPetService;
@@ -48,7 +48,7 @@ public final class Petpet extends JavaPlugin {
 
         getLogger().info("\n             _                _   \n  _ __   ___| |_   _ __   ___| |_ \n" +
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
-                " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             ");
+                " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             \n");
 
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::onGroupMessage);
         GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, this::onNudge);

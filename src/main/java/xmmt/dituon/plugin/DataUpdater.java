@@ -1,9 +1,8 @@
 package xmmt.dituon.plugin;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import xmmt.dituon.share.BasePetService;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -11,7 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class DataUpdater {
     final static String repositoryUrl = "https://dituon.github.io/petpet/";
@@ -21,7 +23,9 @@ public class DataUpdater {
     }
 
     public static void updateData() {
-        List<String> newPetList = UpdateIndex.getUpdate(getUrlText(repositoryUrl + "index.json")).getDataList();
+        System.out.println("开始更新PetData");
+        UpdateIndex index = UpdateIndex.getUpdate(Objects.requireNonNull(getUrlText(repositoryUrl + "index.json")));
+        List<String> newPetList = index.getDataList();
         for (String pet : newPetList) {
             if (Petpet.pluginPetService.getDataMap().containsKey(pet)) continue;
             String petDataPath = "data/xmmt.dituon.petpet/" + pet;
@@ -33,11 +37,25 @@ public class DataUpdater {
             while (saveAs(petDataPath, i + ".png")) i++;
             System.out.println("PetData/" + pet + "下载成功 (length:" + i + ')');
         }
+
+        String fontsPath = "data/xmmt.dituon.petpet/" + BasePetService.FONTS_FOLDER;
+
+        List<String> localFonts = Arrays.stream(Objects.requireNonNull(new File(fontsPath).listFiles()))
+                .map(File::getName).distinct().collect(Collectors.toList());
+        index.getFontList().forEach(font -> {
+            if (localFonts.contains(font)) return;
+            if (!saveAs(fontsPath, font)) {
+                System.out.println("无法从远程仓库下载PetFont: " + fontsPath);
+                return;
+            }
+            System.out.println("PetFont/" + font + "下载成功");
+        });
+
         System.out.println("PetData更新完毕, 请重启Mirai");
     }
 
     public static boolean checkUpdate() {
-        UpdateIndex update = UpdateIndex.getUpdate(getUrlText(repositoryUrl + "index.json"));
+        UpdateIndex update = UpdateIndex.getUpdate(Objects.requireNonNull(getUrlText(repositoryUrl + "index.json")));
         if (Petpet.VERSION != update.getVersion()) System.out.println("PetpetPlugin可更新到最新版本: " + update.getVersion());
         for (String pet : update.getDataList()) {
             if (Petpet.pluginPetService.getDataMap().containsKey(pet)) continue;
@@ -53,7 +71,7 @@ public class DataUpdater {
             connection.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             StringBuilder str = new StringBuilder();
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) str.append(line);
             reader.close();
             connection.disconnect();

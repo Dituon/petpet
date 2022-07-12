@@ -12,7 +12,7 @@ import java.util.Objects;
 
 
 public class BasePetService {
-    private static final String FONTS_FOLDER = "fonts";
+    public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
 
     protected File dataRoot;
