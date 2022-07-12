@@ -13,7 +13,7 @@ function Text(text) {
     this.text.on('moving', () => {
         textMoving()
     })
-    this.text.on('scaling', e =>  {
+    this.text.on('scaling', e => {
         if (e.transform.target.scaleX === e.transform.target.scaleY) {
             let size = e.transform.target.scaleX * 200
             that.text.set('fontSize', size)
@@ -22,12 +22,72 @@ function Text(text) {
         }
         textMoving()
     })
+    this.text.on('changing', () => {
+        textMoving()
+    })
 
     this.pos = [0, 0]
 
     function textMoving() {
-        that.pos = [Math.round(that.text.left), Math.round(that.text.top)]
+        let x = Math.round(that.text.left)
+        switch (that.align) {
+            case 'RIGHT':
+                x += Math.round(that.text.getScaledWidth())
+                break
+            case 'CENTER':
+                x += Math.round(that.text.getScaledWidth() / 2)
+                break
+        }
+
+        that.pos[0] = x
+        that.pos[1] = Math.round(that.text.top)
         $('#avatar_pos').text('坐标: [' + that.pos + ']')
+    }
+
+    this.align = 'LEFT'
+    this.changeAlign = value => {
+        that.align = value
+        switch (value) {
+            case 'LEFT':
+                that.text.textAlign = 'left'
+                break
+            case 'RIGHT':
+                that.text.textAlign = 'right'
+                break
+            case 'CENTER':
+                that.text.textAlign = 'right'
+                break
+        }
+        textMoving()
+    }
+
+    this.wrap = 'NONE'
+    this.changeWrap = value => {
+        console.log(value)
+        that.wrap = value
+        switch (value) {
+            case 'NONE':
+                $(`#t${that.id} .check.setWidth`).slideUp()
+                that.setMaxWidth(0)
+                break
+            default:
+                console.log(0)
+                $(`#t${that.id} .check.setWidth`).slideDown()
+                that.setMaxWidth(Math.round(that.text.getScaledWidth()))
+                break
+        }
+    }
+
+    this.maxWidth = 0
+    this.setMaxWidth = width => {
+        that.maxWidth = width
+        if (width === 0) {
+            that.pos.length = 2
+        } else {
+            $(`#t${that.id} .check.setWidth .typein.width`).val(width)
+            that.pos[2] = width
+        }
+        textMoving()
     }
 
     this.isDelete = false
@@ -39,33 +99,50 @@ function Text(text) {
     }
 
     this.build = () => {
+        let extra = (that.align === 'LEFT' ? '' : `,\n        "align": "${that.align}"`) +
+            (that.wrap === 'NONE' ? '' : `,\n        "wrap": "${that.wrap}"`)
         return `{
         "text": "${that.text.get('text')}",
         "pos": [${that.pos}],
         "color": "${that.text.get('fill')}",
-        "size": ${Math.round(that.text.get('fontSize') / 16)}
+        "size": ${Math.round(that.text.get('fontSize') / 16)}${extra}
     }`
     }
 
     this.id = textList.length
     $('#elementBar').append(`<div class="element text" id="t${this.id}"><div class="typeText">Text ${this.id}</div>` +
         '<div class="check" title="">color<input type="color" class="color"></div>' +
-        '<div class="check">size<input type="number" class="typein" value="8"></div>' +
+        '<div class="check">size<input type="number" class="typein size" value="8"></div>' +
+        '<select class="textAlign"><option value="LEFT">左对齐</option><option value="RIGHT">右对齐</option><option value="CENTER">居中</option></select>' +
+        '<select class="textWrap"><option value="NONE">不换行</option><option value="BREAK">自动换行</option><option value="ZOOM">自动缩放</option></select>' +
+        '<div class="check setWidth" style="display: none">maxWidth<input type="number" class="typein width" value="0"></div>' +
         '<div class="check deleteText">delete</div></div>')
 }
 
-$('#elementBar').on('change', '.text .color', function ()  {
+$('#elementBar').on('change', '.text .color', function () {
     textList[this.parentNode.parentNode.id.slice(1)].text.set('fill', this.value)
     canvas.renderAll()
 })
 
-    .on('change', '.text .typein', function ()  {
+    .on('change', '.text .check .typein.size', function () {
         textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * 16)
         canvas.renderAll()
     })
 
-    .on('click', '.text .deleteText', function ()  {
+    .on('click', '.text .deleteText', function () {
         textList[this.parentNode.id.slice(1)].delete()
+    })
+
+    .on('change', '.text select.textAlign', function () {
+        textList[this.parentNode.id.slice(1)].changeAlign(this.value)
+    })
+
+    .on('change', '.text select.textWrap', function () {
+        textList[this.parentNode.id.slice(1)].changeWrap(this.value)
+    })
+
+    .on('change', '.text .check .typein.width', function () {
+        textList[this.parentNode.parentNode.id.slice(1)].setMaxWidth(this.value)
     })
 
 let textList = [];

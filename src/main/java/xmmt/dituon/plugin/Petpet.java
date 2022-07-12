@@ -97,6 +97,7 @@ public final class Petpet extends JavaPlugin {
             e.getGroup().sendMessage("Petpet KeyList: \n" + pluginPetService.getKeyAliasListString());
             return;
         }
+        boolean lock = false;
 
         String fromName = "我";
         String toName = "你";
@@ -119,12 +120,14 @@ public final class Petpet extends JavaPlugin {
                 toUrl = to.getAvatarUrl();
 
                 groupName = e.getGroup().getName();
+                lock = true;
                 continue;
             }
             if (singleMessage instanceof Image) {
                 fromUrl = e.getSender().getAvatarUrl();
                 toUrl = Image.queryUrl((Image) singleMessage);
                 groupName = e.getGroup().getName();
+                lock = true;
             }
         }
 
@@ -138,9 +141,7 @@ public final class Petpet extends JavaPlugin {
                     new Random().nextInt(pluginPetService.randomableList.size())));
         }
 
-        if (!strList.get(0).startsWith(pluginPetService.keyCommandHead)) {
-            return;
-        }
+        if (!strList.get(0).startsWith(pluginPetService.keyCommandHead)) return;
         strList.set(0, strList.get(0).substring(pluginPetService.keyCommandHead.length()));
 
         if (!pluginPetService.getDataMap().containsKey(strList.get(0))) { //没有指定key
@@ -151,7 +152,7 @@ public final class Petpet extends JavaPlugin {
             }
         }
 
-        if (pluginPetService.fuzzy && strList.size() > 1) {
+        if (pluginPetService.fuzzy && strList.size() > 1 && !lock) {
             for (Member m : e.getGroup().getMembers()) {
                 if (m.getNameCard().contains(strList.get(1)) || m.getNick().contains(strList.get(1))) {
                     toName = getNameOrNick(m);

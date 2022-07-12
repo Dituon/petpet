@@ -19,9 +19,7 @@ public class BaseGifMaker {
             if(!imageNumMap.containsKey(path)){
                 short imageNum = 0;
                 for (File file : Objects.requireNonNull(new File(path).listFiles())) {
-                    if (file.getName().endsWith(".png")) {
-                        imageNum++;
-                    }
+                    if (file.getName().endsWith(".png")) imageNum++;
                 }
                 imageNumMap.put(path, imageNum);
             }

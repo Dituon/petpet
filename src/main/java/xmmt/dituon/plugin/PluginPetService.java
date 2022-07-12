@@ -94,9 +94,7 @@ public class PluginPetService extends BasePetService {
             return;
         }
         int r = new Random().nextInt(99) + 1; //不能为0
-        if (r >= probability) {
-            return;
-        }
+        if (r >= probability) return;
         sendImage(group, from, to);
     }
 
