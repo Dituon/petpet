@@ -8,9 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-/**
- * 处理/myserver路径请求的处理器类
- */
 public class PetHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) {
