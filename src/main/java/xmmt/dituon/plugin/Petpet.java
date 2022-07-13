@@ -19,7 +19,7 @@ import java.util.Random;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.6F;
+    public static final float VERSION = 3.7F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     public static PluginPetService pluginPetService;
@@ -44,7 +44,7 @@ public final class Petpet extends JavaPlugin {
         pluginPetService.readData(getDataFolder());
 
         if (pluginPetService.headless) System.setProperty("java.awt.headless", "true");
-        if (pluginPetService.autoUpdate) DataUpdater.autoUpdate();
+        if (pluginPetService.autoUpdate) new Thread(DataUpdater::autoUpdate).start();
 
         getLogger().info("\n             _                _   \n  _ __   ___| |_   _ __   ___| |_ \n" +
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +

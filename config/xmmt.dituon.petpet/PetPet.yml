@@ -1,5 +1,5 @@
 content: 
-  version: 3.6
+  version: 3.7
   command: pet
   probability: 30
   antialias: true
@@ -12,3 +12,4 @@ content:
   fuzzy: false
   headless: true
   autoUpdate: true
+  repositoryUrl: 'https://dituon.github.io/petpet'

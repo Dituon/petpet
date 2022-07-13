@@ -24,7 +24,8 @@ data class PluginConfig(
     val respondSelfNudge: Boolean = false,
     val fuzzy: Boolean = false,
     val headless: Boolean = true,
-    val autoUpdate: Boolean = true
+    val autoUpdate: Boolean = true,
+    val repositoryUrl: String? = "https://dituon.github.io/petpet"
 )
 
 fun decode(str: String): PluginConfig {

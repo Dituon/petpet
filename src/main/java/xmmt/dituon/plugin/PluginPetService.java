@@ -25,6 +25,7 @@ public class PluginPetService extends BasePetService {
     protected boolean fuzzy = false;
     protected boolean headless = true;
     protected boolean autoUpdate = true;
+    public static String repositoryUrl = "https://dituon.github.io/petpet";
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
 
@@ -52,6 +53,7 @@ public class PluginPetService extends BasePetService {
         fuzzy = config.getFuzzy();
         headless = config.getHeadless();
         autoUpdate = config.getAutoUpdate();
+        repositoryUrl = config.getRepositoryUrl();
 
         for (String path : config.getDisabled()) {
             disabledKey.add(path.replace("\"", ""));

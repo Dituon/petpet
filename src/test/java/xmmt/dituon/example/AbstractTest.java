@@ -2,13 +2,14 @@ package xmmt.dituon.example;
 
 import kotlin.Pair;
 import org.junit.BeforeClass;
-import xmmt.dituon.share.*;
+import xmmt.dituon.share.AvatarExtraDataProvider;
+import xmmt.dituon.share.BasePetService;
+import xmmt.dituon.share.TextData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -55,6 +56,4 @@ public class AbstractTest {
             ex.printStackTrace();
         }
     }
-
-
 }
