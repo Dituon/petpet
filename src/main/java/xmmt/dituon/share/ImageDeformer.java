@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 // TODO 支持图片变形
 // 应该用3D库进行3D运算...伪3D效率比较低... 欢迎Pr!
 // From https://math.stackexchange.com/questions/296794
-class ImageDeformer {
+public class ImageDeformer {
 
     private static int min(int v1, int v2, int v3, int v4) {
         return Math.min(Math.min(v1, v2), Math.min(v3, v4));
@@ -20,7 +20,7 @@ class ImageDeformer {
         return Math.max(Math.max(v1, v2), Math.max(v3, v4));
     }
 
-    static BufferedImage computeImage(BufferedImage image, Point2D[] point) {
+    public static BufferedImage computeImage(BufferedImage image, Point2D[] point) {
         int w = image.getWidth();
         int h = image.getHeight();
 

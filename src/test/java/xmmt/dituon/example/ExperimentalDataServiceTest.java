@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class ExperimentalDataTest extends AbstractTest {
+public class ExperimentalDataServiceTest extends AbstractServiceTest {
 
     @BeforeClass
     public static void init() {
