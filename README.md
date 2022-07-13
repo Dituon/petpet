@@ -248,17 +248,21 @@ content:
 
 ## 常见问题
 
-> 戳一戳无法触发?
->> 检查 Mirai 登录协议, 仅 `ANDORID_PHONE` 可以收到 戳一戳 消息
+- 戳一戳无法触发?
+  > 检查 Mirai 登录协议, 仅 `ANDORID_PHONE` 可以收到 戳一戳 消息
 
-> 没有生成配置文件?
->> `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 旧版本不支持自定义配置项
+- 没有生成配置文件?
+  > `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 旧版本不支持自定义配置项
 
-> `Exception in coroutine <unnamed>`?
->> 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
+- `Exception in coroutine <unnamed>`?
+  > 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
 
-> `Could not initialize class java.awt.Toolkit`?
->> 对于无输入输出设备的服务器 需要启用`headless`
+- `Could not initialize class java.awt.Toolkit`?
+  > 对于无输入输出设备的服务器 需要启用`headless`
+
+- 下载速度太慢?
+  > 首先请确保配置文件`PetPet.yml`版本升级至`3.7`或以上版本(配置文件里第二行写着配置版本号)
+  > 然后修改配置中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`
 
 ## 分享你的作品
 
