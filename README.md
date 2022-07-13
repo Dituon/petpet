@@ -260,9 +260,8 @@ content:
 - `Could not initialize class java.awt.Toolkit`?
   > 对于无输入输出设备的服务器 需要启用`headless`
 
-- 下载速度太慢?
-  > 首先请确保配置文件`PetPet.yml`版本升级至`3.7`或以上版本(配置文件里第二行写着配置版本号)
-  > 然后修改配置中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`
+- 自动更新下载速度慢?
+  > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(国内镜像)
 
 ## 分享你的作品
 
