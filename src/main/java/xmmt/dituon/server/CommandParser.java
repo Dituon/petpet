@@ -38,6 +38,7 @@ public class CommandParser {
     }
 
     public String get(String key) {
+        System.out.println("DEBUG: input: " + key + '=' + parameterList.get(key));
         return parameterList.get(key);
     }
 

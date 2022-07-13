@@ -87,7 +87,7 @@ public class DataUpdater {
 
     private static boolean saveAs(String path, String fileName) {
         try (InputStream ins = new URL(PluginPetService.repositoryUrl + path + '/' + fileName).openStream()) {
-            Path target = Paths.get(path, fileName);
+            Path target = Paths.get(new File(".").getCanonicalPath() + path, fileName);
             Files.createDirectories(target.getParent());
             Files.copy(ins, target, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ignored) {

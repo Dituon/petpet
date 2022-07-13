@@ -1,7 +1,6 @@
 package xmmt.dituon.server;
 
 import com.sun.net.httpserver.HttpServer;
-import xmmt.dituon.share.BasePetService;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,14 +9,20 @@ import java.util.concurrent.Executors;
 
 public class WebServer {
     //TODO 作为网络服务器生成图片，可被其它语言使用
-    public static final BasePetService petService = new BasePetService();
-    public static final short port = 2333;
+    public static final ServerPetService petService = new ServerPetService();
+
     public static void main(String[] args) throws IOException {
+        petService.readConfig();
+        if (petService.headless) System.setProperty("java.awt.headless", "true");
+
         petService.readData(new File("data/xmmt.dituon.petpet"));
 
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
+        HttpServer httpServer = HttpServer.create(new InetSocketAddress(petService.port), 0);
         httpServer.createContext("/petpet", new PetHttpHandler());
-        httpServer.setExecutor(Executors.newFixedThreadPool(10));
+        httpServer.setExecutor(Executors.newFixedThreadPool(petService.threadPoolSize));
         httpServer.start();
+
+        System.out.println("PetpetWebServer started in port " + petService.port);
+        System.out.println("API-URL: 127.0.0.1:" + petService.port + "/petpet");
     }
 }
