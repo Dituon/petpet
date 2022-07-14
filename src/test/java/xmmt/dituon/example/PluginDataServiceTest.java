@@ -7,7 +7,7 @@ import xmmt.dituon.share.BaseServiceConfig;
 import java.io.File;
 import java.io.IOException;
 
-public class PluginDataTest extends AbstractTest {
+public class PluginDataServiceTest extends AbstractServiceTest {
 
     @BeforeClass
     public static void init() {

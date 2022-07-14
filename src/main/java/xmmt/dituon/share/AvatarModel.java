@@ -97,6 +97,10 @@ public class AvatarModel {
         return onTop;
     }
 
+    public boolean isAntialias() {
+        return antialias;
+    }
+
     public BufferedImage getImage() {
         assert image != null;
         if (round) {
