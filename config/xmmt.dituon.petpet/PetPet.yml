@@ -10,6 +10,7 @@ content:
   respondImage: true
   respondSelfNudge: false
   fuzzy: false
+  synchronized: false
   headless: true
   autoUpdate: true
   repositoryUrl: 'https://dituon.github.io/petpet'

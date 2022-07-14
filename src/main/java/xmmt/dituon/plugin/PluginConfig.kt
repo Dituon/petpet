@@ -23,6 +23,7 @@ data class PluginConfig(
     val respondImage: Boolean = true,
     val respondSelfNudge: Boolean = false,
     val fuzzy: Boolean = false,
+    val synchronized: Boolean = false,
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
     val repositoryUrl: String? = "https://dituon.github.io/petpet"

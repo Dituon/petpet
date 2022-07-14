@@ -23,6 +23,7 @@ public class PluginPetService extends BasePetService {
     protected boolean respondImage = true;
     protected boolean respondSelfNudge = false;
     protected boolean fuzzy = false;
+    protected boolean messageSynchronized = false;
     protected boolean headless = true;
     protected boolean autoUpdate = true;
     public static String repositoryUrl = "https://dituon.github.io/petpet";
@@ -51,6 +52,7 @@ public class PluginPetService extends BasePetService {
         respondImage = config.getRespondImage();
         respondSelfNudge = config.getRespondSelfNudge();
         fuzzy = config.getFuzzy();
+        messageSynchronized = config.getSynchronized();
         headless = config.getHeadless();
         autoUpdate = config.getAutoUpdate();
         repositoryUrl = config.getRepositoryUrl();

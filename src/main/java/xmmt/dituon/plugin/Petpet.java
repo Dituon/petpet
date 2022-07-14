@@ -24,6 +24,8 @@ public final class Petpet extends JavaPlugin {
     ArrayList<Group> disabledGroup = new ArrayList<>();
     public static PluginPetService pluginPetService;
 
+    private static MessageSource previous;
+
     private Petpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(VERSION))
                 .name("PetPet")
@@ -50,8 +52,9 @@ public final class Petpet extends JavaPlugin {
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
                 " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             \n");
 
-        GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::onGroupMessage);
         GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, this::onNudge);
+        GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, pluginPetService.messageSynchronized
+                ? this::onGroupMessageSynchronized : this::onGroupMessage);
     }
 
     private void onNudge(NudgeEvent e) {
@@ -70,7 +73,18 @@ public final class Petpet extends JavaPlugin {
         }
     }
 
+    private synchronized void onGroupMessageSynchronized(GroupMessageEvent e) {
+        MessageSource thisMessageSource = e.getMessage().get(MessageSource.Key);
+        if (messageSourceAreEqual(previous, thisMessageSource)) return;
+        previous = thisMessageSource;
+        response(e);
+    }
+
     private void onGroupMessage(GroupMessageEvent e) {
+        response(e);
+    }
+
+    private void response(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
         if (!pluginPetService.respondImage && !e.getMessage().contains(Image.Key)) return;
         if (!pluginPetService.commandMustAt && !e.getMessage().contains(At.Key)) return;
@@ -97,7 +111,7 @@ public final class Petpet extends JavaPlugin {
             e.getGroup().sendMessage("Petpet KeyList: \n" + pluginPetService.getKeyAliasListString());
             return;
         }
-        boolean lock = false;
+        boolean fuzzyLock = false; //锁住模糊匹配
 
         String fromName = "我";
         String toName = "你";
@@ -120,14 +134,14 @@ public final class Petpet extends JavaPlugin {
                 toUrl = to.getAvatarUrl();
 
                 groupName = e.getGroup().getName();
-                lock = true;
+                fuzzyLock = true;
                 continue;
             }
             if (singleMessage instanceof Image) {
                 fromUrl = e.getSender().getAvatarUrl();
                 toUrl = Image.queryUrl((Image) singleMessage);
                 groupName = e.getGroup().getName();
-                lock = true;
+                fuzzyLock = true;
             }
         }
 
@@ -149,13 +163,12 @@ public final class Petpet extends JavaPlugin {
         if (!pluginPetService.getDataMap().containsKey(strList.get(0))) { //没有指定key
             if (pluginPetService.getAliaMap().containsKey(strList.get(0))) { //别名
                 strList.set(0, pluginPetService.getAliaMap().get(strList.get(0)));
-                lock = true;
             } else {
                 return;
             }
         }
 
-        if (pluginPetService.fuzzy && strList.size() > 1 && !lock) {
+        if (pluginPetService.fuzzy && strList.size() > 1 && !fuzzyLock) {
             for (Member m : e.getGroup().getMembers()) {
                 if (m.getNameCard().contains(strList.get(1)) || m.getNick().contains(strList.get(1))) {
                     toName = getNameOrNick(m);
@@ -190,5 +203,10 @@ public final class Petpet extends JavaPlugin {
 
     private void sendReplyMessage(GroupMessageEvent e, String text) {
         e.getGroup().sendMessage(new QuoteReply(e.getMessage()).plus(text));
+    }
+
+    private boolean messageSourceAreEqual(MessageSource source1, MessageSource source2) {
+        if (source1 == null || source2 == null) return false;
+        return source1.getBotId() != source2.getBotId();
     }
 }
