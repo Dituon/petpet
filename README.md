@@ -41,7 +41,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 3.6 #配置文件版本
+  version: 3.7 #配置文件版本
 
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
@@ -58,6 +58,7 @@ content:
 
   headless: true #使用headless模式
   autoUpdate: true #自动从仓库同步PetData
+  repositoryUrl: 'https://dituon.github.io/petpet' #仓库地址, 用于自动更新
 ```
 
 修改后重启 Mirai 以重新加载
@@ -75,21 +76,21 @@ content:
 <details>
 <summary>展开/收起</summary>
 
-| key | 预览 |
-| --- | --- |
-| kiss | ![image](img/0.gif) |
-| rub | ![image](img/1.gif) |
-| throw | ![image](img/2.gif) |
-| petpet | ![image](img/3.gif) |
-| play | ![image](img/4.gif) |
-| roll | ![image](img/5.gif) |
-| bite | ![image](img/6.gif) |
-| twist | ![image](img/7.gif) |
-| pound | ![image](img/8.gif) |
-| thump | ![image](img/9.gif) |
-| knock | ![image](img/10.gif) |
-| suck | ![image](img/11.gif) |
-| hammer | ![image](img/12.gif) |
+| key     | 预览                   |
+|---------|----------------------|
+| kiss    | ![image](img/0.gif)  |
+| rub     | ![image](img/1.gif)  |
+| throw   | ![image](img/2.gif)  |
+| petpet  | ![image](img/3.gif)  |
+| play    | ![image](img/4.gif)  |
+| roll    | ![image](img/5.gif)  |
+| bite    | ![image](img/6.gif)  |
+| twist   | ![image](img/7.gif)  |
+| pound   | ![image](img/8.gif)  |
+| thump   | ![image](img/9.gif)  |
+| knock   | ![image](img/10.gif) |
+| suck    | ![image](img/11.gif) |
+| hammer  | ![image](img/12.gif) |
 | tightly | ![image](img/13.gif) |
 
 </details>
@@ -246,6 +247,40 @@ content:
 
 **需要更多变量请提交 Issue**
 
+## `WebServer`
+  
+除了作为`Mirai`插件, `Petpet` 也可以作为**http服务器**单独运行, 可被其它项目/语言使用
+
+`java -jar petpet.jar`
+
+启动时会生成 `config.json`:
+```
+{
+  "port": 2333, //监听端口
+  "threadPoolSize": 10, //线程池容量
+  "headless": true //使用headless模式
+}
+```
+
+#### `PetServer API`
+
+访问 `127.0.0.1:2333/petpet` 以获取 `PetDataList`
+
+使用 `GET` 传递参数, 例如 `127.0.0.1:2333/petpet?key=petpet&toAvatar=$avatarUrl`
+`127.0.0.1:2333/petpet?key=osu&textList=hso!`
+
+**结构**
+<details>
+<summary>展开/收起</summary>
+
+- `key`(str): 对应`PetData`,例如`kiss``rub`
+- `fromAvatar``toAvatar``groupAvatar``botAvatar`(url): 头像URL地址
+- `fromName``toName``groupName`(str): 昵称, 有默认值
+- `textList`(str): 根据空格分割此字符串, 作为额外数据
+</details>
+
+> 更多示例请参考`example-script`
+
 ## 常见问题
 
 - 戳一戳无法触发?
@@ -261,7 +296,7 @@ content:
   > 对于无输入输出设备的服务器 需要启用`headless`
 
 - 自动更新下载速度慢?
-  > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(国内镜像)
+  > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(高速镜像)
 
 ## 分享你的作品
 

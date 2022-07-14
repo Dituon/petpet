@@ -141,12 +141,15 @@ public final class Petpet extends JavaPlugin {
                     new Random().nextInt(pluginPetService.randomableList.size())));
         }
 
-        if (!strList.get(0).startsWith(pluginPetService.keyCommandHead)) return;
-        strList.set(0, strList.get(0).substring(pluginPetService.keyCommandHead.length()));
+        if (!strList.get(0).startsWith(pluginPetService.keyCommandHead)
+                && !messageString.startsWith(pluginPetService.command)) return;
+
+        strList.set(0, strList.get(0).replace(pluginPetService.keyCommandHead, ""));
 
         if (!pluginPetService.getDataMap().containsKey(strList.get(0))) { //没有指定key
             if (pluginPetService.getAliaMap().containsKey(strList.get(0))) { //别名
                 strList.set(0, pluginPetService.getAliaMap().get(strList.get(0)));
+                lock = true;
             } else {
                 return;
             }
