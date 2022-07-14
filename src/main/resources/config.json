@@ -1,0 +1,5 @@
+{
+  "port": 2333,
+  "threadPoolSize": 10,
+  "headless": true
+}

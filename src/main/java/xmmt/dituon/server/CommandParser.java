@@ -32,7 +32,10 @@ public class CommandParser {
                 BaseConfigFactory.getAvatarExtraDataFromUrls(
                         get("fromAvatar"), get("toAvatar"), get("groupAvatar"), get("botAvatar")
                 ), new TextExtraData(
-                        get("fromName"), get("toName"), get("groupName"), textList
+                        get("fromName") != null ? get("fromName") : "from",
+                        get("toName") != null ? get("toName") : "to",
+                        get("groupName") != null ? get("groupName") : "group",
+                        textList
                 ), null
         );
     }

@@ -9,7 +9,6 @@ apply plugin: "maven-publish"
 apply plugin: "java"
 
 
-
 group = 'xmmt.dituon'
 version = '3.7-M1'
 
@@ -29,7 +28,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
-mirai { jvmTarget = JavaVersion.VERSION_11}
+mirai { jvmTarget = JavaVersion.VERSION_11 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier.set("sources")
@@ -53,8 +52,14 @@ publishing {
 }
 
 jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
         attributes 'Main-Class': 'xmmt.dituon.server.WebServer'
+    }
+    from {
+        (configurations.runtimeClasspath).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }
 
