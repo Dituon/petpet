@@ -12,6 +12,7 @@ import net.mamoe.mirai.message.data.*;
 import xmmt.dituon.share.BaseConfigFactory;
 import xmmt.dituon.share.TextExtraData;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ public final class Petpet extends JavaPlugin {
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     public static PluginPetService pluginPetService;
+    public static File dataFolder;
 
     private static MessageSource previous;
 
@@ -43,7 +45,8 @@ public final class Petpet extends JavaPlugin {
             getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
         }
 
-        pluginPetService.readData(getDataFolder());
+        dataFolder = getDataFolder();
+        pluginPetService.readData(dataFolder);
 
         if (pluginPetService.headless) System.setProperty("java.awt.headless", "true");
         if (pluginPetService.autoUpdate) new Thread(DataUpdater::autoUpdate).start();
