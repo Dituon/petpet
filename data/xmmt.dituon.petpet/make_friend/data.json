@@ -2,21 +2,21 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
+        "pos": [0,0,1003,1003],
+        "round": false,
+        "avatarOnTop": true
+    },{
+        "type": "TO",
         "pos": [743,792,258,258],
         "round": false,
         "angle": -10,
         "avatarOnTop": false
     },{
-        "type": "FROM",
+        "type": "TO",
         "pos": [841,723,56,56],
         "round": false,
         "angle": -10,
-        "avatarOnTop": true
-    },{
-        "type": "TO",
-        "pos": [46,92,538,538],
-        "round": false,
-        "avatarOnTop": true
+        "avatarOnTop": false
     }],
     "text": [],
     "alias": ["加好友"],
