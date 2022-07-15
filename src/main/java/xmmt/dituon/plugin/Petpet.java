@@ -20,7 +20,7 @@ import java.util.Random;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 3.7F;
+    public static final float VERSION = 3.8F;
 
     ArrayList<Group> disabledGroup = new ArrayList<>();
     public static PluginPetService pluginPetService;

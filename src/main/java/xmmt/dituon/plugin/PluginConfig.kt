@@ -14,7 +14,7 @@ import xmmt.dituon.share.Type
 data class PluginConfig(
     val version: Float = Petpet.VERSION,
     val command: String = "pet",
-    val probability: Int = 30,
+    val probability: Short = 30,
     val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
     val keyCommand: Boolean = true,

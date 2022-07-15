@@ -16,7 +16,7 @@ import java.util.Random;
 public class PluginPetService extends BasePetService {
 
     protected String command = "pet";
-    private int probability;
+    private short probability;
     protected boolean keyCommand = true;
     protected String keyCommandHead = "";
     protected boolean commandMustAt = false;
