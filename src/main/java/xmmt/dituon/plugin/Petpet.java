@@ -1,5 +1,6 @@
 package xmmt.dituon.plugin;
 
+import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.contact.Group;
@@ -26,7 +27,8 @@ public final class Petpet extends JavaPlugin {
     public static PluginPetService pluginPetService;
     public static File dataFolder;
 
-    private static MessageSource previous;
+    private static MessageSource previousMessage;
+    private static NudgeEvent previousNudge;
 
     private Petpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(VERSION))
@@ -55,15 +57,27 @@ public final class Petpet extends JavaPlugin {
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
                 " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             \n");
 
-        GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, this::onNudge);
-        GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, pluginPetService.messageSynchronized
-                ? this::onGroupMessageSynchronized : this::onGroupMessage);
+        GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class,
+                pluginPetService.messageSynchronized ? this::onNudgeSynchronized : this::onNudge);
+        GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
+                pluginPetService.messageSynchronized ? this::onGroupMessageSynchronized : this::onGroupMessage);
+    }
+
+    private void onNudgeSynchronized(NudgeEvent e) {
+        synchronized (this){
+            if (nudgeEventAreEqual(previousNudge, e)) return;
+            previousNudge = e;
+        }
+        responseNudge(e);
     }
 
     private void onNudge(NudgeEvent e) {
-        if (!(e.getSubject() instanceof Group) || isDisabled((Group) e.getSubject())) {
-            return; // 如果禁用了petpet就返回
-        }
+        responseNudge(e);
+    }
+
+    private void responseNudge(NudgeEvent e) {
+        // 如果禁用了petpet就返回
+        if (!(e.getSubject() instanceof Group) || isDisabled((Group) e.getSubject())) return;
         try {
             pluginPetService.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
@@ -76,18 +90,23 @@ public final class Petpet extends JavaPlugin {
         }
     }
 
-    private synchronized void onGroupMessageSynchronized(GroupMessageEvent e) {
-        MessageSource thisMessageSource = e.getMessage().get(MessageSource.Key);
-        if (messageSourceAreEqual(previous, thisMessageSource)) return;
-        previous = thisMessageSource;
-        response(e);
+    private void onGroupMessageSynchronized(GroupMessageEvent e) {
+        synchronized (this) {
+            MessageSource thisMessageSource = e.getMessage().get(MessageSource.Key);
+            for (Bot bot : Bot.getInstances()) { // 过滤其它bot发出的消息
+                if (previousMessage != null && thisMessageSource.getFromId() == bot.getId()) return;
+            }
+            if (messageSourceAreEqual(previousMessage, thisMessageSource)) return;
+            previousMessage = thisMessageSource;
+        }
+        responseMessage(e);
     }
 
     private void onGroupMessage(GroupMessageEvent e) {
-        response(e);
+        responseMessage(e);
     }
 
-    private void response(GroupMessageEvent e) {
+    private void responseMessage(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
         if (!pluginPetService.respondImage && !e.getMessage().contains(Image.Key)) return;
         if (!pluginPetService.commandMustAt && !e.getMessage().contains(At.Key)) return;
@@ -173,7 +192,8 @@ public final class Petpet extends JavaPlugin {
 
         if (pluginPetService.fuzzy && strList.size() > 1 && !fuzzyLock) {
             for (Member m : e.getGroup().getMembers()) {
-                if (m.getNameCard().contains(strList.get(1)) || m.getNick().contains(strList.get(1))) {
+                if (m.getNameCard().toLowerCase().contains(strList.get(1).toLowerCase())
+                        || m.getNick().toLowerCase().contains(strList.get(1).toLowerCase())) {
                     toName = getNameOrNick(m);
                     toUrl = m.getAvatarUrl();
                     fromUrl = e.getSender().getAvatarUrl();
@@ -208,8 +228,18 @@ public final class Petpet extends JavaPlugin {
         e.getGroup().sendMessage(new QuoteReply(e.getMessage()).plus(text));
     }
 
+    private boolean nudgeEventAreEqual(NudgeEvent nudge1, NudgeEvent nudge2) {
+        if (nudge1 == null || nudge2 == null) return false;
+        return !nudge1.getBot().equals(nudge2.getBot()) //bot不能相同
+                && nudge1.getFrom().getId() == nudge2.getFrom().getId()
+                && nudge1.getTarget().getId() == nudge2.getTarget().getId()
+                && nudge1.getSubject().getId() == nudge2.getSubject().getId();
+    }
+
     private boolean messageSourceAreEqual(MessageSource source1, MessageSource source2) {
         if (source1 == null || source2 == null) return false;
-        return source1.getBotId() != source2.getBotId();
+        System.out.println(Arrays.toString(source1.getIds()) + Arrays.toString(source2.getIds()));
+        return source1.getTargetId() == source2.getTargetId()
+                && Arrays.equals(source1.getIds(), source2.getIds());
     }
 }
