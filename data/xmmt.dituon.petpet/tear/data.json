@@ -1,0 +1,18 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [-34,336,540,540],
+        "round": false,
+        "angle": -25,
+        "avatarOnTop": false
+    },{
+        "type": "TO",
+        "pos": [585,250,540,540],
+        "round": false,
+        "angle": 13,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["撕"]
+}

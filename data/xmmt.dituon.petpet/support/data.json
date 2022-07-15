@@ -2,11 +2,12 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [260,580,775,496],
+        "pos": [-185,-58,1187,1187],
         "round": false,
+        "angle": -24,
         "avatarOnTop": false
     }],
     "text": [],
-    "alias": ["壁纸"],
+    "alias": ["精神支柱"],
     "inRandomList": false
 }

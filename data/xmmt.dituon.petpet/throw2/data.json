@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [21,193,116,118],
+        "round": true,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["丢"],
+    "inRandomList": false
+}

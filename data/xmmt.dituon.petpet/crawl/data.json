@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [13,413,78,78],
+        "round": true,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["爬"],
+    "inRandomList": false
+}
