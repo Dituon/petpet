@@ -1,0 +1,11 @@
+{
+    "type": "GIF",
+    "avatar": [{
+        "type": "TO",
+        "pos": [[0,38,32,32],[0,38,32,32],[0,38,32,32]],
+        "round": false,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["吃"]
+}

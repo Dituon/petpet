@@ -1,0 +1,18 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [204,132,228,305],
+        "round": false,
+        "avatarOnTop": true
+    }],
+    "text": [{
+        "text": "你给我的安全感不及$txt1[他]的万分之一",
+        "pos": [207,55],
+        "color": "#191919",
+        "size": 20,
+        "align": "CENTER"
+    }],
+    "alias": ["安全感"],
+    "inRandomList": false
+}

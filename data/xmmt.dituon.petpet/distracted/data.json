@@ -2,11 +2,11 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [260,580,775,496],
+        "pos": [3,1,493,493],
         "round": false,
         "avatarOnTop": false
     }],
     "text": [],
-    "alias": ["壁纸"],
+    "alias": ["注意力"],
     "inRandomList": false
 }
