@@ -67,83 +67,97 @@ content:
 <details>
 
 <summary>展开/收起</summary>
+<br/>
 
-> **command**: `pet`
-> 
+- **command**: `pet`
+
 > 触发petpet指令, 默认为`pet`
 > 
 > 例: `pet @xxx` `pet kiss @xxx`
 > 
 > 仅发送`pet`时会返回`keyList`
+<br/>
 
-> **probability**: `30`
-> 
+- **probability**: `30`
+
 > 戳一戳 触发概率, `0-100`整数, 默认为 `30%`
+<br/>
 
-> **antialias**: `true`
-> 
+- **antialias**: `true`
+
 > 画布抗锯齿, 默认为`true`
+<br/>
 
-> **disabled**: `[]`
-> 
+- **disabled**: `[]`
+
 > 禁用表列, 默认为空, 在此数组中的`key`不会被随机触发 (会覆盖`data.json`中的配置)
+<br/>
 
-> **keyCommand**: `true`
-> 
+- **keyCommand**: `true`
+
 > `key`作为指令头, 默认为`true`
 > 
 > 例: `kiss @xxx` `osu hso!`
+<br/>
 
-> **keyCommandHead**: `''`
-> 
+- **keyCommandHead**: `''`
+
 > `key`作为指令头时的前缀, 默认为空
 > 
 > 例 (配置项为`'#'`时): `#kiss @xxx` `osu hso!`
+<br/>
 
-> **commandMustAt**: `false`
-> 
+- **commandMustAt**: `false`
+
 > 指令中必须有At对象, 默认为`false`
 > 
 > 例 (配置项为`true`时): `kiss @xxx`(响应) `kiss me`(不响应)
+<br/>
 
-> **respondImage**: `true`
-> 
+- **respondImage**: `true`
+
 > 将发送的图片作为头像构造, 默认为`true`
 > 
 > 例 (配置项为`false`时): `kiss [图片]`(不响应) `kiss @xxx`(响应)
+<br/>
 
-> **respondSelfNudge**: `false`
->
+- **respondSelfNudge**: `false`
+
 > 某些情况下, 机器人会主动戳其他成员, 响应机器人自己发出的戳一戳, 默认为`false`
+<br/>
 
-> **fuzzy**: `false`
-> 
+- **fuzzy**: `false`
+
 > 模糊匹配用户名, 默认为`false`
 > 
 > 例 (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
+<br/>
 
-> **synchronized**: `false`
-> 
+- **synchronized**: `false`
+
 > 消息事件同步锁, 会锁住相同的消息事件, 默认为`false`
 > 
 > ~~人话: 多机器人对于同一条指令只有一个会响应~~
+<br/>
 
-> **headless**: `true`
-> 
+- **headless**: `true`
+
 > 启用`hradless`模式, 默认为`true`
 > 
 > ~~人话: 有些服务器没有输入输出设备, 画图库无法正常运行, 启用这个配置项可以修复, 因为总是有人不看常见问题, 干脆默认启用了(~~
+<br/>
 
-> **autoUpdate**: `true`
-> 
+- **autoUpdate**: `true`
+
 > 自动更新`PetData`, 每次启动时都会检查并自动下载船新pet, 默认为`true`
 > 
 > 注: 仅更新`PetData`, 不会更新插件版本, 请放心食用
 > 
 > ~~人话: 每次启动都会自动下载新的超赞梗图, 墙裂推荐~~
+<br/>
 
-> **repositoryUrl**: `'https://dituon.github.io/petpet'`
-> 
+- **repositoryUrl**: `'https://dituon.github.io/petpet'`
+
 > 仓库地址, 用于自动更新, 默认为此仓库的`github page`
 
 </details>
