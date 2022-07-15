@@ -4,7 +4,7 @@
         "type": "TO",
         "pos": [0,0,1003,1003],
         "round": false,
-        "avatarOnTop": true
+        "avatarOnTop": false
     },{
         "type": "TO",
         "pos": [743,792,258,258],
