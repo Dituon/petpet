@@ -1,0 +1,14 @@
+{
+    "type": "GIF",
+    "avatar": [
+      {
+        "type": "TO",
+        "pos": [[2,-9],[2,138],[82,143],[83, 16],[50, 0]],
+        "posType": "DEFORM",
+        "round": false,
+        "avatarOnTop": false
+    }
+    ],
+    "text": [],
+    "alias": ["膜拜"]
+  }
