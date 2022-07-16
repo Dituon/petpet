@@ -67,11 +67,17 @@ enum class PosType {
     ZOOM, DEFORM
 }
 
+enum class CropType {
+    NONE, PIXEL, PERCENT
+}
+
 @Serializable
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     val pos: JsonArray? = null,
     val posType: PosType? = PosType.ZOOM,
+    val crop: List<Int>? = null,
+    val cropType: CropType? = CropType.NONE,
     val angle: Int? = 0,
     val round: Boolean? = false,
     val rotate: Boolean? = false,
