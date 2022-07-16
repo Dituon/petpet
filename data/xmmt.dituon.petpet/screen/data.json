@@ -2,10 +2,11 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [166,118,235,196],
+        "pos": [[5,44],[30,210],[245,155],[240,0],[155,110]],
         "round": false,
+        "posType": "DEFORM",
         "avatarOnTop": false
     }],
     "text": [],
-    "alias": ["游戏"]
+    "alias": ["屏幕"]
 }
