@@ -3,7 +3,6 @@ package xmmt.dituon.share;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -24,6 +23,7 @@ public class AvatarModel {
     private DeformData deformData = null;
     private CropType cropType = CropType.NONE;
     private int[] cropPos;
+    private List<Style> styleList;
 
     public AvatarModel(AvatarData data, AvatarExtraDataProvider extraData, Type imageType) {
         type = data.getType();
@@ -32,11 +32,13 @@ public class AvatarModel {
         setPos(data.getPos(), imageType);
         cropType = data.getCropType();
         setCrop(data.getCrop());
+        styleList = data.getStyle();
         angle = data.getAngle() != null ? data.getAngle() : 0;
         round = Boolean.TRUE.equals(data.getRound());
         rotate = Boolean.TRUE.equals(data.getRotate());
         onTop = Boolean.TRUE.equals(data.getAvatarOnTop());
         antialias = Boolean.TRUE.equals(data.getAntialias());
+        buildImage();
     }
 
     private void setImage(AvatarType type, AvatarExtraDataProvider extraData) {
@@ -97,6 +99,35 @@ public class AvatarModel {
         };
     }
 
+    private void buildImage() {
+        if (cropType != CropType.NONE) image = ImageSynthesis.cropImage(image, cropType, cropPos);
+
+        for (Style style : styleList) {
+            switch (style) {
+                case FLIP:
+                    image = ImageSynthesis.flipImage(image);
+                    break;
+                case MIRROR:
+                    image = ImageSynthesis.mirrorImage(image);
+                    break;
+                case GRAY:
+                    image = ImageSynthesis.grayImage(image);
+                    break;
+                case BINARIZATION:
+                    image = ImageSynthesis.BinarizeImage(image);
+                    break;
+            }
+        }
+
+        if (round) {
+            try {
+                image = ImageSynthesis.convertCircular(image, antialias);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public boolean isRound() {
         return round;
     }
@@ -114,40 +145,6 @@ public class AvatarModel {
     }
 
     public BufferedImage getImage() {
-        assert image != null;
-        if (cropType != CropType.NONE) {
-            int width = cropPos[2] - cropPos[0];
-            int height = cropPos[3] - cropPos[1];
-            if (cropType == CropType.PERCENT) {
-                width = (int) ((float) width / 100 * image.getWidth());
-                height = (int) ((float) height / 100 * image.getHeight());
-            }
-            BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
-            Graphics2D g2d = croppedImage.createGraphics();
-            switch (cropType) {
-                case PIXEL:
-                    g2d.drawImage(image, 0, 0, width, height
-                            , cropPos[0], cropPos[1], cropPos[2], cropPos[3], null);
-                    break;
-                case PERCENT:
-                    g2d.drawImage(image, 0, 0, width, height,
-                            (int) ((float) cropPos[0] / 100 * image.getWidth()),
-                            (int) ((float) cropPos[1] / 100 * image.getHeight()),
-                            (int) ((float) cropPos[2] / 100 * image.getWidth()),
-                            (int) ((float) cropPos[3] / 100 * image.getHeight()), null);
-                    break;
-            }
-            g2d.dispose();
-            image = croppedImage;
-        }
-
-        if (round) {
-            try {
-                return ImageSynthesis.convertCircular(image, antialias);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         return image;
     }
 
