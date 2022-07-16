@@ -1,0 +1,12 @@
+{
+    "type": "GIF",
+    "avatar": [{
+        "type": "TO",
+        "pos": [[31,0,49,49],[31,0,49,49],[31,0,49,49],[31,0,49,49],[31,0,49,49],[31,0,49,49],[31,0,49,49]],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["么么"],
+    "inRandomList": false
+}

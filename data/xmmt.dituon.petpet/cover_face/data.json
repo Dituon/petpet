@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [124,154,460,460],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["挡"],
+    "inRandomList": false
+}

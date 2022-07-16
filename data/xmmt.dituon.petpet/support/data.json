@@ -1,0 +1,13 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [-185,-58,1187,1187],
+        "round": false,
+        "angle": -24,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["精神支柱"],
+    "inRandomList": false
+}

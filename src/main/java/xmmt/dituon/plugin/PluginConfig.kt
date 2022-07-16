@@ -14,7 +14,7 @@ import xmmt.dituon.share.Type
 data class PluginConfig(
     val version: Float = Petpet.VERSION,
     val command: String = "pet",
-    val probability: Int = 30,
+    val probability: Short = 30,
     val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
     val keyCommand: Boolean = true,
@@ -23,6 +23,7 @@ data class PluginConfig(
     val respondImage: Boolean = true,
     val respondSelfNudge: Boolean = false,
     val fuzzy: Boolean = false,
+    val synchronized: Boolean = false,
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
     val repositoryUrl: String? = "https://dituon.github.io/petpet"

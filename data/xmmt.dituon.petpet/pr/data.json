@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [[1,18],[65,352],[326,275],[326,-1],[52,285]],
+        "round": false,
+        "posType": "DEFORM",
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["舔屏"]
+}

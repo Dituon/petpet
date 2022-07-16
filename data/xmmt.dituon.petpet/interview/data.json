@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [67,35,125,128],
+        "round": true,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["采访"],
+    "inRandomList": false
+}

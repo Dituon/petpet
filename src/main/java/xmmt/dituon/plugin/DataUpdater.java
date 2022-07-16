@@ -53,7 +53,8 @@ public class DataUpdater {
             System.out.println("PetFont/" + font + "下载成功");
         }
 
-        System.out.println("PetData更新完毕, 请重启Mirai");
+        System.out.println("PetData更新完毕, 正在重新加载");
+        Petpet.pluginPetService.readData(Petpet.dataFolder);
     }
 
     public static boolean checkUpdate() {

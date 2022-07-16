@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [1,2,589,448],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["抱歉"],
+    "inRandomList": false
+}

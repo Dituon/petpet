@@ -8,7 +8,6 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 public class WebServer {
-    //TODO 作为网络服务器生成图片，可被其它语言使用
     public static final ServerPetService petService = new ServerPetService();
 
     public static void main(String[] args) throws IOException {

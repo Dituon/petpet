@@ -1,0 +1,19 @@
+{
+  "type": "IMG",
+  "avatar": [{
+    "type": "TO",
+    "pos": [[250, 0],[250,420],[-250,420],[-250, 0],[250, 0]],
+    "posType": "DEFORM",
+    "round": false,
+    "avatarOnTop": true
+},{
+  "type": "TO",
+  "pos": [[0, 0],[0,420],[500,420],[500, 0],[0, 0]],
+  "posType": "DEFORM",
+  "round": false,
+  "avatarOnTop": false
+}],
+  "text": [],
+  "alias": ["对称", "左对称"],
+  "inRandomList": false
+}

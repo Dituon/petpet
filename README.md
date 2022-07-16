@@ -41,7 +41,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 3.6 #配置文件版本
+  version: 3.8 #配置文件版本
 
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
@@ -56,15 +56,117 @@ content:
   respondSelfNudge: false #响应机器人发出的戳一戳
   fuzzy: false #模糊匹配用户名
 
+  synchronized: false #消息事件同步锁
   headless: true #使用headless模式
   autoUpdate: true #自动从仓库同步PetData
+  repositoryUrl: 'https://dituon.github.io/petpet' #仓库地址, 用于自动更新
 ```
+
+#### 配置项说明
+
+<details>
+
+<summary>展开/收起</summary>
+<br/>
+
+- **command**: `pet`
+
+> 触发petpet指令, 默认为`pet`
+> 
+> 例: `pet @xxx` `pet kiss @xxx`
+> 
+> 仅发送`pet`时会返回`keyList`
+<br/>
+
+- **probability**: `30`
+
+> 戳一戳 触发概率, `0-100`整数, 默认为 `30%`
+<br/>
+
+- **antialias**: `true`
+
+> 画布抗锯齿, 默认为`true`
+<br/>
+
+- **disabled**: `[]`
+
+> 禁用表列, 默认为空, 在此数组中的`key`不会被随机触发 (会覆盖`data.json`中的配置)
+<br/>
+
+- **keyCommand**: `true`
+
+> `key`作为指令头, 默认为`true`
+> 
+> 例: `kiss @xxx` `osu hso!`
+<br/>
+
+- **keyCommandHead**: `''`
+
+> `key`作为指令头时的前缀, 默认为空
+> 
+> 例 (配置项为`'#'`时): `#kiss @xxx` `osu hso!`
+<br/>
+
+- **commandMustAt**: `false`
+
+> 指令中必须有At对象, 默认为`false`
+> 
+> 例 (配置项为`true`时): `kiss @xxx`(响应) `kiss me`(不响应)
+<br/>
+
+- **respondImage**: `true`
+
+> 将发送的图片作为头像构造, 默认为`true`
+> 
+> 例 (配置项为`false`时): `kiss [图片]`(不响应) `kiss @xxx`(响应)
+<br/>
+
+- **respondSelfNudge**: `false`
+
+> 某些情况下, 机器人会主动戳其他成员, 响应机器人自己发出的戳一戳, 默认为`false`
+<br/>
+
+- **fuzzy**: `false`
+
+> 模糊匹配用户名, 默认为`false`
+> 
+> 例 (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
+<br/>
+
+- **synchronized**: `false`
+
+> 消息事件同步锁, 会锁住相同的消息事件, 默认为`false`
+> 
+> ~~人话: 多机器人对于同一条指令只有一个会响应~~
+<br/>
+
+- **headless**: `true`
+
+> 启用`hradless`模式, 默认为`true`
+> 
+> ~~人话: 有些服务器没有输入输出设备, 画图库无法正常运行, 启用这个配置项可以修复, 因为总是有人不看常见问题, 干脆默认启用了(~~
+<br/>
+
+- **autoUpdate**: `true`
+
+> 自动更新`PetData`, 每次启动时都会检查并自动下载船新pet, 默认为`true`
+> 
+> 注: 仅更新`PetData`, 不会更新插件版本, 请放心食用
+> 
+> ~~人话: 每次启动都会自动下载新的超赞梗图, 墙裂推荐~~
+<br/>
+
+- **repositoryUrl**: `'https://dituon.github.io/petpet'`
+
+> 仓库地址, 用于自动更新, 默认为此仓库的`github page`
+
+</details>
 
 修改后重启 Mirai 以重新加载
 
 ## 权限管理
 
-> 群主或管理员使用 `pet on` `pet off` 以 启用/禁用 插件
+> 群主或管理员使用 `pet on` `pet off` 以 启用/禁用 戳一戳
 
 > 可在配置文件中禁用指定key, 被禁用的key不会随机触发, 但仍可以通过指令使用
 
@@ -75,22 +177,24 @@ content:
 <details>
 <summary>展开/收起</summary>
 
-| key | 预览 |
-| --- | --- |
-| kiss | ![image](img/0.gif) |
-| rub | ![image](img/1.gif) |
-| throw | ![image](img/2.gif) |
-| petpet | ![image](img/3.gif) |
-| play | ![image](img/4.gif) |
-| roll | ![image](img/5.gif) |
-| bite | ![image](img/6.gif) |
-| twist | ![image](img/7.gif) |
-| pound | ![image](img/8.gif) |
-| thump | ![image](img/9.gif) |
-| knock | ![image](img/10.gif) |
-| suck | ![image](img/11.gif) |
-| hammer | ![image](img/12.gif) |
+| key     | 预览                   |
+|---------|----------------------|
+| kiss    | ![image](img/0.gif)  |
+| rub     | ![image](img/1.gif)  |
+| throw   | ![image](img/2.gif)  |
+| petpet  | ![image](img/3.gif)  |
+| play    | ![image](img/4.gif)  |
+| roll    | ![image](img/5.gif)  |
+| bite    | ![image](img/6.gif)  |
+| twist   | ![image](img/7.gif)  |
+| pound   | ![image](img/8.gif)  |
+| thump   | ![image](img/9.gif)  |
+| knock   | ![image](img/10.gif) |
+| suck    | ![image](img/11.gif) |
+| hammer  | ![image](img/12.gif) |
 | tightly | ![image](img/13.gif) |
+
+**..more&more**
 
 </details>
 
@@ -246,6 +350,40 @@ content:
 
 **需要更多变量请提交 Issue**
 
+## `WebServer`
+  
+除了作为`Mirai`插件, `Petpet` 也可以作为**http服务器**单独运行, 可被其它项目/语言使用
+
+`java -jar petpet.jar`
+
+启动时会生成 `config.json`:
+```
+{
+  "port": 2333, //监听端口
+  "threadPoolSize": 10, //线程池容量
+  "headless": true //使用headless模式
+}
+```
+
+#### `PetServer API`
+
+访问 `127.0.0.1:2333/petpet` 以获取 `PetDataList`
+
+使用 `GET` 传递参数, 例如 `127.0.0.1:2333/petpet?key=petpet&toAvatar=$avatarUrl`
+`127.0.0.1:2333/petpet?key=osu&textList=hso!`
+
+**结构**
+<details>
+<summary>展开/收起</summary>
+
+- `key`(str): 对应`PetData`,例如`kiss``rub`
+- `fromAvatar``toAvatar``groupAvatar``botAvatar`(url): 头像URL地址
+- `fromName``toName``groupName`(str): 昵称, 有默认值
+- `textList`(str): 根据空格分割此字符串, 作为额外数据
+</details>
+
+> 更多示例请参考`example-script`
+
 ## 常见问题
 
 - 戳一戳无法触发?
@@ -261,7 +399,7 @@ content:
   > 对于无输入输出设备的服务器 需要启用`headless`
 
 - 自动更新下载速度慢?
-  > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(国内镜像)
+  > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(高速镜像)
 
 ## 分享你的作品
 
