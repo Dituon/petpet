@@ -14,5 +14,6 @@
   "avatarOnTop": false
 }],
   "text": [],
-  "alias": ["对称", "左对称"]
+  "alias": ["对称", "左对称"],
+  "inRandomList": false
 }

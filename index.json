@@ -1,6 +1,8 @@
 {
     "version": 3.8,
     "dataList": [
+        "symmetry",
+        "right_symmetry",
         "anyasuki",
         "bite",
         "breast",
