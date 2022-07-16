@@ -2,11 +2,11 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [260,580,775,496],
+        "pos": [[1,18],[65,352],[326,275],[326,-1],[52,285]],
         "round": false,
+        "posType": "DEFORM",
         "avatarOnTop": false
     }],
     "text": [],
-    "alias": ["壁纸"],
-    "inRandomList": false
+    "alias": ["舔屏"]
 }

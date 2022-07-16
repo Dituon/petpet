@@ -1,0 +1,14 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [110,183,59,59],
+        "round": true,
+        "avatarOnTop": true,
+        "angle": -30
+        
+    }],
+    "text": [],
+    "alias": ["陪睡"],
+    "inRandomList": false
+}

@@ -1,0 +1,24 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [0,0,1003,1003],
+        "round": false,
+        "avatarOnTop": false
+    },{
+        "type": "TO",
+        "pos": [746,802,264,264],
+        "round": false,
+        "angle": -10,
+        "avatarOnTop": false
+    },{
+        "type": "TO",
+        "pos": [838,724,62,62],
+        "round": false,
+        "angle": -10,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["加好友"],
+    "inRandomList": false
+}
