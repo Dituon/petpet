@@ -59,6 +59,7 @@ content:
   synchronized: false #消息事件同步锁
   headless: true #使用headless模式
   autoUpdate: true #自动从仓库同步PetData
+  updateIgnore: [] #更新忽略表列
   repositoryUrl: 'https://dituon.github.io/petpet' #仓库地址, 用于自动更新
 ```
 
@@ -154,6 +155,11 @@ content:
 > 注: 仅更新`PetData`, 不会更新插件版本, 请放心食用
 > 
 > ~~人话: 每次启动都会自动下载新的超赞梗图, 墙裂推荐~~
+<br/>
+
+- **updateIgnore**: `[]`
+
+> 忽略表列, 默认为空, 在此数组中的`key`不会被自动更新
 <br/>
 
 - **repositoryUrl**: `'https://dituon.github.io/petpet'`
@@ -280,22 +286,43 @@ content:
     },
     {
       "type": "TO", 
-      "pos": [[5, 8],[60,90],[50,90],[50, 0],[60, 120]],
-      "posType": "DEFORM", //图像变形 坐标格式, 默认为ZOOM
+      "pos": [[5, 8], [60, 90], [50, 90], [50, 0], [60, 120]],
+      "posType": "DEFORM", // 图像变形 坐标格式, 默认为ZOOM
       "antialias": true, // 抗锯齿, 对头像单独使用抗锯齿算法, 默认为false
       "rotate": false // 值为true时, GIF类型的头像会旋转, 默认为false
+    },
+    {
+      "type": "GROUP", 
+      "pos": [[182, 64, 40, 40], [225, 40, 40, 40], [174, 105, 40, 40]],
+      "crop": [0, 0, 50, 100], // 图片裁切坐标[x1, y1, x2, y2], 可简写为 [50, 100]
+      "cropType": "PERCENT", // 裁切格式, 默认为NONE
+      "style": [ // 风格化
+        "MIRROR",
+        "GRAY"
+      ]
     }
   ]
 ```
 
-##### 头像类型枚举
-
-**`type`**
+**头像类型枚举 `type`**
 
 - `FROM`  发送者头像
 - `TO`  接收者头像, 或构造的图片
 - `GROUP`  群头像
 - `BOT`  机器人头像
+
+**裁切格式枚举 `cropType`**
+
+- `NONE`  不裁切
+- `PIXEL`  按像素裁切
+- `PERCENT`  按百分比裁切
+
+**风格化枚举 `style`**
+
+- `MIRROR`  水平镜像
+- `FLIP`  上下翻转
+- `GRAY`  灰度化
+- `BINARIZATION`  二值化
 
 #### 文字
 
