@@ -1,9 +1,6 @@
 package xmmt.dituon.share;
 
-import kotlin.Pair;
-
 import java.awt.*;
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -45,10 +42,10 @@ public class ImageDeformer {
         originToDeformed.transform(deformedip2);
         originToDeformed.transform(deformedip3);
         Polygon deformedArea = new Polygon();
-        deformedArea.addPoint((int)deformedip0.getX(), (int)deformedip0.getY());
-        deformedArea.addPoint((int)deformedip1.getX(), (int)deformedip1.getY());
-        deformedArea.addPoint((int)deformedip2.getX(), (int)deformedip2.getY());
-        deformedArea.addPoint((int)deformedip3.getX(), (int)deformedip3.getY());
+        deformedArea.addPoint((int) deformedip0.getX(), (int) deformedip0.getY());
+        deformedArea.addPoint((int) deformedip1.getX(), (int) deformedip1.getY());
+        deformedArea.addPoint((int) deformedip2.getX(), (int) deformedip2.getY());
+        deformedArea.addPoint((int) deformedip3.getX(), (int) deformedip3.getY());
 
         int deformedWidth = deformedArea.getBounds().width;
         int deformedHeight = deformedArea.getBounds().getBounds().height;
@@ -60,7 +57,7 @@ public class ImageDeformer {
                     deformedToOrigin.transform(originPoint);
                     int originX = Math.min((int) Math.round(originPoint.getX()), w - 1);
                     int originY = Math.min((int) Math.round(originPoint.getY()), h - 1);
-                    int rgb = image.getRGB(originX, originY);
+                    int rgb = image.getRGB(originX, Math.max(originY, 0));
                     result.setRGB(x, y, rgb);
                 }
             }
