@@ -26,6 +26,7 @@ data class PluginConfig(
     val synchronized: Boolean = false,
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
+    val updateIgnore: List<String> = emptyList(),
     val repositoryUrl: String? = "https://dituon.github.io/petpet"
 )
 

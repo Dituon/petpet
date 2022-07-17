@@ -24,10 +24,11 @@ public class DataUpdater {
     public static void updateData() {
         System.out.println("开始更新PetData");
         UpdateIndex index = UpdateIndex.getUpdate(
-                Objects.requireNonNull(getUrlText(PluginPetService.repositoryUrl + "/index.json")));
+                Objects.requireNonNull(getUrlText(Petpet.pluginPetService.repositoryUrl + "/index.json")));
         List<String> newPetList = index.getDataList();
         for (String pet : newPetList) {
-            if (Petpet.pluginPetService.getDataMap().containsKey(pet)) continue;
+            if (Petpet.pluginPetService.getDataMap().containsKey(pet)
+                    || Petpet.pluginPetService.updateIgnore.contains(pet)) continue;
             String petDataPath = "/data/xmmt.dituon.petpet/" + pet;
             if (!saveAs(petDataPath, "data.json")) {
                 System.out.println("无法从远程仓库下载PetData: " + petDataPath);
@@ -59,8 +60,9 @@ public class DataUpdater {
 
     public static boolean checkUpdate() {
         UpdateIndex update = UpdateIndex.getUpdate(
-                Objects.requireNonNull(getUrlText(PluginPetService.repositoryUrl + "/index.json")));
-        if (Petpet.VERSION != update.getVersion()) System.out.println("PetpetPlugin可更新到最新版本: " + update.getVersion());
+                Objects.requireNonNull(getUrlText(Petpet.pluginPetService.repositoryUrl + "/index.json")));
+        if (Petpet.VERSION != update.getVersion())
+            System.out.println("PetpetPlugin可更新到最新版本: " + update.getVersion() + " (当前版本 " + Petpet.VERSION + ")");
         for (String pet : update.getDataList()) {
             if (Petpet.pluginPetService.getDataMap().containsKey(pet)) continue;
             System.out.println("发现新增PetData");
@@ -87,7 +89,7 @@ public class DataUpdater {
     }
 
     private static boolean saveAs(String path, String fileName) {
-        try (InputStream ins = new URL(PluginPetService.repositoryUrl + path + '/' + fileName).openStream()) {
+        try (InputStream ins = new URL(Petpet.pluginPetService.repositoryUrl + path + '/' + fileName).openStream()) {
             Path target = Paths.get(new File(".").getCanonicalPath() + path, fileName);
             Files.createDirectories(target.getParent());
             Files.copy(ins, target, StandardCopyOption.REPLACE_EXISTING);

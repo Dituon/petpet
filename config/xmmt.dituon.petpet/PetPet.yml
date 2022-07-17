@@ -13,4 +13,5 @@ content:
   synchronized: false
   headless: true
   autoUpdate: true
+  updateIgnore: []
   repositoryUrl: 'https://dituon.github.io/petpet'
