@@ -1,18 +1,24 @@
 {
   "type": "IMG",
   "avatar": [{
-    "type": "TO",
-    "pos": [[250, 0],[250,420],[-250,420],[-250, 0],[250, 0]],
-    "posType": "DEFORM",
-    "round": false,
-    "avatarOnTop": true
-},{
   "type": "TO",
-  "pos": [[0, 0],[0,420],[500,420],[500, 0],[0, 0]],
-  "posType": "DEFORM",
+  "pos": [250, 0,250,450],
+
+  "crop":[0,0,50,100],
+  "cropType":"PERCENT",
+  "style":["MIRROR"],
   "round": false,
   "avatarOnTop": false
-}],
+},{
+  "type": "TO",
+  "pos": [0, 0,250,450],
+
+  "crop":[0,0,50,100],
+  "cropType":"PERCENT",
+  "round": false,
+  "avatarOnTop": false
+}
+],
   "text": [],
   "alias": ["对称", "左对称"],
   "inRandomList": false
