@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class ImageSynthesis extends ImageSynthesisCore {
+public class ImageSynthesis extends ImageSynthesisCore{
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
                                                ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
@@ -58,28 +58,4 @@ public class ImageSynthesis extends ImageSynthesisCore {
         g2d.dispose();
         return output;
     }
-
-    private static void drawAvatar(Graphics2D g2d, AvatarModel avatar) {
-        switch (avatar.getPosType()) {
-            case ZOOM:
-                g2dDrawZoomAvatar(g2d, avatar.getImage(),
-                        avatar.nextPos(), avatar.getNextAngle(), avatar.isAntialias());
-                break;
-            case DEFORM:
-                g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformData().getDeformPos(), avatar.getDeformData().getAnchor());
-        }
-    }
-
-    private static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        if (texts == null || texts.isEmpty()) {
-            return;
-        }
-        for (TextModel text : texts) {
-            g2d.setColor(text.getColor());
-            g2d.setFont(text.getFont());
-            g2d.drawString(text.getText(), text.getPos()[0], text.getPos()[1]);
-        }
-    }
-
 }

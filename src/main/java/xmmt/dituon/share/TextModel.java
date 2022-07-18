@@ -105,6 +105,8 @@ public class TextModel {
     public int[] getPos() {
         switch (align) {
             case CENTER:
+                System.out.println(this.getWidth());
+                System.out.println(pos[0] - this.getWidth() / 2);
                 return new int[]{pos[0] - this.getWidth() / 2, pos[1]};
             case RIGHT:
                 return new int[]{pos[0] - this.getWidth(), pos[1]};
@@ -118,6 +120,7 @@ public class TextModel {
 
     public Font getFont() {
         if (wrap == TextWrap.ZOOM) {
+//            float multiple = Math.min(1.0F, (float) pos[2] / this.getWidth());
             float multiple = (float) pos[2] / this.getWidth();
             return new Font(font.getFontName(), Font.PLAIN, (int) (font.getSize() * multiple));
         }
@@ -127,6 +130,13 @@ public class TextModel {
     public int getWidth() {
         if (width != 0) return width;
         Graphics2D g2d = new BufferedImage(1, 1, Image.SCALE_DEFAULT).createGraphics();
-        return width = g2d.getFontMetrics(font).stringWidth(text);
+//        return width = g2d.getFontMetrics(font).stringWidth(text);
+//        return width = SwingUtilities.computeStringWidth(g2d.getFontMetrics(font),text);
+//        return width = (int) font.getStringBounds(text, g2d.getFontRenderContext()).getWidth();
+//        return width = (int) font.getStringBounds(text, new FontRenderContext(
+//                font.getTransform(), true, true)).getBounds().getWidth();
+//        return width = (int) new TextLayout(text, font,
+//                g2d.getFontRenderContext()).getBounds().getWidth();
+        return width = (int) font.createGlyphVector(g2d.getFontRenderContext(), text).getOutline().getBounds().getWidth();
     }
 }
