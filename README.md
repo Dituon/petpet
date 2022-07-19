@@ -41,7 +41,7 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 3.8 #配置文件版本
+  version: 4.0 #配置文件版本
 
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
@@ -54,6 +54,7 @@ content:
   commandMustAt: false #必须有At对象
   respondImage: true #使用发送的图片生成 petpet
   respondSelfNudge: false #响应机器人发出的戳一戳
+  keyListFormat: MESSAGE #keyList响应格式
   fuzzy: false #模糊匹配用户名
 
   synchronized: false #消息事件同步锁
@@ -125,6 +126,13 @@ content:
 - **respondSelfNudge**: `false`
 
 > 某些情况下, 机器人会主动戳其他成员, 响应机器人自己发出的戳一戳, 默认为`false`
+<br/>
+
+- **keyListFormat**: `MESSAGE`
+
+> 发送`pet`时 `keyList`响应格式, 默认为`MESSAGE`
+>
+> 枚举: `MESSAGE`(发送普通消息)  `FORWARD`(发送转发消息)
 <br/>
 
 - **fuzzy**: `false`
@@ -259,7 +267,7 @@ content:
   "pos": [0, 0, 200, 200]
 ```
 
-> `4.0`版本后, 坐标支持变量运算, 例如[100,100,"width/2","height*1.5^2"]
+> `4.0`版本后, 坐标支持变量运算, 例如 `[100,100,"width/2","height*1.5^2"]`
 
 ###### 仿射变换/图像变形
 
