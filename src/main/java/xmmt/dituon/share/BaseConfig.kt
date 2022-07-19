@@ -20,6 +20,7 @@ data class KeyData(
     val type: Type,
     val avatar: List<AvatarData>,
     val text: List<TextData>,
+    val background: BackgroundData? = null,
     val alias: List<String>? = null,
     val format: String? = "png",
     val inRandomList: Boolean? = true
@@ -80,7 +81,7 @@ data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     val pos: JsonArray? = null,
     val posType: PosType? = PosType.ZOOM,
-    val crop: List<Int>? = null,
+    val crop: JsonArray? = null,
     val cropType: CropType? = CropType.NONE,
     val style: List<Style>? = emptyList(),
     val angle: Int? = 0,
@@ -95,4 +96,9 @@ data class AvatarExtraDataProvider(
     val toAvatar: (() -> BufferedImage)? = null,
     val groupAvatar: (() -> BufferedImage)? = null,
     val botAvatar: (() -> BufferedImage)? = null
+)
+
+@Serializable
+data class BackgroundData @JvmOverloads constructor(
+    val size: JsonArray
 )

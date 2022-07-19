@@ -18,12 +18,12 @@ public class AvatarModel {
     protected boolean onTop;
     protected BufferedImage image = null;
     private int posIndex = 0;
-    private boolean antialias = false;
-    private PosType posType = PosType.ZOOM;
+    private final boolean antialias;
+    private final PosType posType;
     private DeformData deformData = null;
-    private CropType cropType = CropType.NONE;
+    private final CropType cropType;
     private int[] cropPos;
-    private List<Style> styleList;
+    private final List<Style> styleList;
 
     public AvatarModel(AvatarData data, AvatarExtraDataProvider extraData, Type imageType) {
         type = data.getType();
@@ -84,19 +84,28 @@ public class AvatarModel {
         }
     }
 
-    private void setCrop(List<Integer> crop) {
+    private void setCrop(JsonArray crop) {
         if (crop == null || crop.isEmpty()) return;
-        if (crop.size() == 2) cropPos = new int[]{0, 0, crop.get(0), crop.get(1)};
-        if (crop.size() == 4) cropPos = new int[]{crop.get(0), crop.get(1), crop.get(2), crop.get(3)};
+        int[] result = JsonArrayToIntArray(crop);
+        cropPos = result.length == 2 ? new int[]{0, 0, result[0], result[1]} : result;
     }
 
     private int[] JsonArrayToIntArray(JsonArray ja) {
-        return new int[]{
-                Integer.parseInt(ja.get(0).toString()),
-                Integer.parseInt(ja.get(1).toString()),
-                Integer.parseInt(ja.get(2).toString()),
-                Integer.parseInt(ja.get(3).toString())
-        };
+        int[] result = new int[ja.size()];
+        short i = 0;
+        for (JsonElement je : ja) {
+            String str = je.toString().replace("\"", "");
+            try {
+                result[i] = Integer.parseInt(str);
+            } catch (NumberFormatException ignored) {
+                ArithmeticParser parser = new ArithmeticParser(str);
+                parser.put("width", image.getWidth());
+                parser.put("height", image.getHeight());
+                result[i] = (int) parser.eval();
+            }
+            i++;
+        }
+        return result;
     }
 
     private void buildImage() {
@@ -199,4 +208,11 @@ public class AvatarModel {
         }
     }
 
+    public int getImageWidth() {
+        return image.getWidth();
+    }
+
+    public int getImageHeight() {
+        return image.getHeight();
+    }
 }
