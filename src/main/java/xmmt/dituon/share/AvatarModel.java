@@ -8,8 +8,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class AvatarModel {
+    private final Type imageType;
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
     protected int angle;
@@ -29,7 +31,7 @@ public class AvatarModel {
         type = data.getType();
         setImage(type, extraData);
         posType = data.getPosType() != null ? data.getPosType() : PosType.ZOOM;
-        setPos(data.getPos(), imageType);
+        setPos(data.getPos(), this.imageType = imageType);
         cropType = data.getCropType();
         setCrop(data.getCrop());
         styleList = data.getStyle();
@@ -158,14 +160,13 @@ public class AvatarModel {
     }
 
     public float getNextAngle() {
-        if (!rotate) {
-            return angle;
-        }
-        return ((float) (360 / pos.length) * posIndex) + angle;
+        if (!rotate) return angle; //不旋转
+        if (imageType == Type.IMG) return new Random().nextInt(angle); //IMG随机旋转
+        return ((float) (360 / pos.length) * posIndex) + angle; //GIF自动旋转
     }
 
     public int[] nextPos() {
-        if (posIndex > pos.length) {
+        if (posIndex >= pos.length) {
             return new int[]{0, 0, 0, 0};
         }
         return pos[posIndex++];
