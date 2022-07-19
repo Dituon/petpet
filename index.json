@@ -2,7 +2,7 @@
     "version": 4.0,
     "dataList": [
         "up_symmetry",
-        "down_right_symmetry",
+        "down_symmetry",
         "center_symmetry",
         "left_down_symmetry",
         "right_up_symmetry",
