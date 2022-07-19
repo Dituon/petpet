@@ -3,6 +3,7 @@ package xmmt.dituon.share;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -14,7 +15,12 @@ public class BackgroundModel {
     }
 
     public BufferedImage getImage() {
-        return new BufferedImage(size[0], size[1], 1);
+        BufferedImage output = new BufferedImage(size[0], size[1], 1);
+        Graphics2D g2d = output.createGraphics();
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, size[0], size[1]);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
+        return output;
     }
 
     private int[] JsonArrayToIntArray(JsonArray ja, ArrayList<AvatarModel> avatarList) {
