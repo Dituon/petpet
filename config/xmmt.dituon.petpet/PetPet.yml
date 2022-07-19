@@ -1,5 +1,5 @@
 content: 
-  version: 3.8
+  version: 4.0
   command: pet
   probability: 30
   antialias: true
