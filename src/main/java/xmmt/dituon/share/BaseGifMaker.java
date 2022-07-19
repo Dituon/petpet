@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class BaseGifMaker {
 
-    public InputStream makeAvatarGIF(String path, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+    public InputStream makeAvatarGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                      HashMap<Short, BufferedImage> stickerMap, boolean antialias) {
         try {
             //遍历获取GIF长度(图片文件数量)

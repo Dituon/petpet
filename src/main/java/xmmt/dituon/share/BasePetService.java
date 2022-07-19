@@ -167,7 +167,7 @@ public class BasePetService {
                         stickerMap.put(i, sticker);
                     }
                 }
-                InputStream inputStream = gifMaker.makeAvatarGIF(key, avatarList, textList, stickerMap, antialias);
+                InputStream inputStream = gifMaker.makeAvatarGIF(avatarList, textList, stickerMap, antialias);
                 return new Pair<>(inputStream, "gif");
             }
 
@@ -175,9 +175,10 @@ public class BasePetService {
                 File stickerFile = new File(key + "0.png");
                 BufferedImage sticker = null;
                 if (stickerFile.exists()) sticker = ImageIO.read(stickerFile);
-                if (data.getBackground() != null) sticker = new BackgroundModel(data.getBackground(), avatarList).getImage();
+                if (data.getBackground() != null)
+                    sticker = new BackgroundModel(data.getBackground(), avatarList).getImage();
                 assert sticker != null;
-                InputStream inputStream = imageMaker.makeImage(key, avatarList, textList, sticker, antialias);
+                InputStream inputStream = imageMaker.makeImage(avatarList, textList, sticker, antialias);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {

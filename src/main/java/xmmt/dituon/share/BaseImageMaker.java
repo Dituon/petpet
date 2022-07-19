@@ -6,8 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class BaseImageMaker {
-    public InputStream makeImage(String path,
-                                 ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+    public InputStream makeImage(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                  BufferedImage sticker ,boolean antialias) {
         try {
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(
