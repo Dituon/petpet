@@ -1,24 +1,25 @@
 {
   "type": "IMG",
   "avatar": [{
-  "type": "TO",
-  "pos": [0, 0,500,225],
-  "crop":[0,0,100,50],
-  "cropType":"PERCENT",
-  "round": false,
-  "avatarOnTop": false
-},{
-  "type": "TO",
-  "pos": [0, 225,500,225],
-
-  "crop":[0,0,100,50],
-  "cropType":"PERCENT",
-  "style":["FLIP"],
-  "round": false,
-  "avatarOnTop": false
-}
-],
+    "type": "TO",
+    "pos": [0,0,"width","height/2"],
+    "crop":[0,0,100,50],
+    "cropType":"PERCENT",
+    "round": false,
+    "avatarOnTop": true
+  },{
+    "type": "TO",
+    "pos": [0, "height/2","width","height/2"],
+    "crop":[0,0,100,50],
+    "cropType":"PERCENT",
+    "style":["FLIP"],
+    "round": false,
+    "avatarOnTop": true
+  }],
   "text": [],
-  "alias": [ "上对称"],
+  "background": {
+    "size": ["avatar0Width","avatar0Height*2"]
+  },
+  "alias": ["对称","上对称"],
   "inRandomList": false
 }
