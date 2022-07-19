@@ -259,6 +259,8 @@ content:
   "pos": [0, 0, 200, 200]
 ```
 
+> `4.0`版本后, 坐标支持变量运算, 例如[100,100,"width/2","height*1.5^2"]
+
 ###### 仿射变换/图像变形
 
 **坐标格式枚举`posType`**
@@ -293,7 +295,7 @@ content:
     },
     {
       "type": "GROUP", 
-      "pos": [[182, 64, 40, 40], [225, 40, 40, 40], [174, 105, 40, 40]],
+      "pos": [[182, 64, "width/2", "height*1.5^2"], [225, 40, "40", 40], [174, 105, 40, "height+width"]], // 支持变量运算
       "crop": [0, 0, 50, 100], // 图片裁切坐标[x1, y1, x2, y2], 可简写为 [50, 100]
       "cropType": "PERCENT", // 裁切格式, 默认为NONE
       "style": [ // 风格化
@@ -303,6 +305,8 @@ content:
     }
   ]
 ```
+
+> 在`IMG`中, 当`rotate = true`时, 头像会随机旋转角度, `angle`为最大值(`angle = 0`时, 随机范围为`0-359`)
 
 **头像类型枚举 `type`**
 
@@ -323,6 +327,11 @@ content:
 - `FLIP`  上下翻转
 - `GRAY`  灰度化
 - `BINARIZATION`  二值化
+
+**坐标变量**
+
+- `width`  原图宽度
+- `height`  原图高度
 
 #### 文字
 
@@ -376,6 +385,21 @@ content:
 >> 使用`BREAK`或`ZOOM`时, `maxWidth` 默认为`200`
 
 **需要更多变量请提交 Issue**
+
+#### `background`
+
+`4.0`版本后, 支持动态创建画布
+
+```
+"background": {
+    "size": ["avatar0Width*2","avatar0Height"] //支持变量运算
+  }
+```
+
+**坐标变量**
+
+- `avatar(i)Width`  `i`号头像(`i`为定义头像时的顺序, 从`0`开始)处理后的宽度
+- `avatar(i)Height`  `i`号头像处理后的高度
 
 ## `WebServer`
   

@@ -161,7 +161,7 @@ public class AvatarModel {
 
     public float getNextAngle() {
         if (!rotate) return angle; //不旋转
-        if (imageType == Type.IMG) return new Random().nextInt(angle); //IMG随机旋转
+        if (imageType == Type.IMG) return new Random().nextInt(angle != 0 ? angle : 360); //IMG随机旋转
         return ((float) (360 / pos.length) * posIndex) + angle; //GIF自动旋转
     }
 
