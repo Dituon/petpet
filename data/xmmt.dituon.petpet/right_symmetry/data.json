@@ -20,6 +20,6 @@
   "background": {
     "size": ["avatar0Width*2","avatar0Height"]
   },
-  "alias": ["对称","右对称"],
+  "alias": ["对称","右对称","左右对称"],
   "inRandomList": false
 }
