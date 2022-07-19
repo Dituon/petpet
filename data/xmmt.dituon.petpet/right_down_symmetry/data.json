@@ -1,0 +1,42 @@
+{
+  "type": "IMG",
+  "avatar": [{
+    "type": "TO",
+    "pos": [0, 0,"width/2","height/2"],
+    "crop":[50,50,100,100],
+    "cropType":"PERCENT",
+    "style":["MIRROR","FLIP"],
+    "round": false,
+    "avatarOnTop": true
+  },{
+    "type": "TO",
+    "pos": ["width/2", 0,"width/2","height/2"],
+    "crop":[50,50,100,100],
+    "cropType":"PERCENT",
+    "style":["FLIP"],
+    "round": false,
+    "avatarOnTop": true
+  },{
+  "type": "TO",
+  "pos": [0, "height/2","width/2","height/2"],
+  "crop":[50,50,100,100],
+  "cropType":"PERCENT",
+  "style":["MIRROR"],
+  "round": false,
+  "avatarOnTop": true
+},{
+  "type": "TO",
+  "pos": ["width/2", "height/2","width/2","height/2"],
+  "crop":[50,50,100,100],
+  "cropType":"PERCENT",
+  "round": false,
+  "avatarOnTop": true
+}
+],
+  "text": [],
+  "background": {
+    "size": ["avatar0Width*2","avatar0Height*2"]
+  },
+  "alias": [ "中心对称","右下对称"],
+  "inRandomList": false
+}
