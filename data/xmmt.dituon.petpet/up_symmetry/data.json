@@ -2,24 +2,23 @@
   "type": "IMG",
   "avatar": [{
   "type": "TO",
-  "pos": [250, 0,250,450],
-
-  "crop":[50,0,100,100],
+  "pos": [0, 0,500,225],
+  "crop":[0,0,100,50],
   "cropType":"PERCENT",
   "round": false,
   "avatarOnTop": false
 },{
   "type": "TO",
-  "pos": [0, 0,250,450],
+  "pos": [0, 225,500,225],
 
-  "crop":[50,0,100,100],
+  "crop":[0,0,100,50],
   "cropType":"PERCENT",
-  "style":["MIRROR"],
+  "style":["FLIP"],
   "round": false,
   "avatarOnTop": false
 }
 ],
   "text": [],
-  "alias": [ "右对称"],
+  "alias": [ "上对称"],
   "inRandomList": false
 }
