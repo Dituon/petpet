@@ -2,9 +2,11 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [15,178,143,143],
+        "pos": [10, 170, 153, 153 ],
         "round": true,
-        "avatarOnTop": true
+        "rotate":true,
+        "angle":360,
+        "avatarOnTop": false
     }],
     "text": [],
     "alias": ["丢"],
