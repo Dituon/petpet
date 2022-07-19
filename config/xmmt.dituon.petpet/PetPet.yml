@@ -9,6 +9,7 @@ content:
   commandMustAt: false
   respondImage: true
   respondSelfNudge: false
+  keyListFormat: MESSAGE
   fuzzy: false
   synchronized: false
   headless: true

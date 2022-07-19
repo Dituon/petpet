@@ -31,7 +31,6 @@ public class BackgroundModel {
                     parser.put("avatar" + in + "Width", avatarList.get(in).getImageWidth());
                     parser.put("avatar" + in + "Height", avatarList.get(in).getImageHeight());
                 }
-                System.out.println(parser.eval());
                 result[i] = (int) parser.eval();
             }
             i++;

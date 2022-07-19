@@ -23,6 +23,7 @@ public class PluginPetService extends BasePetService {
     protected boolean commandMustAt = false;
     protected boolean respondImage = true;
     protected boolean respondSelfNudge = false;
+    protected ReplyFormat replyFormat = ReplyFormat.MESSAGE;
     protected boolean fuzzy = false;
     protected boolean messageSynchronized = false;
     protected boolean headless = true;
@@ -53,6 +54,7 @@ public class PluginPetService extends BasePetService {
         commandMustAt = config.getCommandMustAt();
         respondImage = config.getRespondImage();
         respondSelfNudge = config.getRespondSelfNudge();
+        replyFormat = config.getKeyListFormat();
         fuzzy = config.getFuzzy();
         messageSynchronized = config.getSynchronized();
         headless = config.getHeadless();

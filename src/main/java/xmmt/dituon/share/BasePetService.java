@@ -7,10 +7,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 
 public class BasePetService {
@@ -19,7 +17,7 @@ public class BasePetService {
 
     protected File dataRoot;
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
-    protected HashMap<String, String> aliaMap = new HashMap<>();
+    protected HashMap<String, String[]> aliaMap = new HashMap<>();
 
     protected BaseImageMaker imageMaker;
     protected BaseGifMaker gifMaker;
@@ -57,18 +55,20 @@ public class BasePetService {
                 if (data.getAlias() != null) {
                     keyListStringBuilder.append(" ( ");
                     data.getAlias().forEach((aliasKey) -> {
-                        aliaMap.put(aliasKey, path);
                         keyListStringBuilder.append(aliasKey).append(" ");
+                        if (aliaMap.get(aliasKey)==null) {
+                            aliaMap.put(aliasKey, new String[]{path});
+                            return;
+                        }
+                        String[] oldArray = aliaMap.get(aliasKey);
+                        String[] newArray = Arrays.copyOf(oldArray, oldArray.length+1);
+                        newArray[oldArray.length] = path;
+                        aliaMap.put(aliasKey, newArray);
                     });
                     keyListStringBuilder.append(")");
                 }
             } catch (Exception ex) {
                 System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
-            }
-
-            File scriptFile = new File(dir.getAbsolutePath() + File.separator + path + "/script.js");
-            if (scriptFile.exists()) {
-
             }
         }
         keyListString = keyListStringBuilder.toString();
@@ -127,7 +127,7 @@ public class BasePetService {
             System.out.println("无效的key: “" + key + "”");
             return null;
         }
-        KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key));
+        KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key)[0]);
         key = dataRoot.getAbsolutePath() + File.separator +
                 (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
 
@@ -192,7 +192,7 @@ public class BasePetService {
         return dataMap;
     }
 
-    public HashMap<String, String> getAliaMap() {
+    public HashMap<String, String[]> getAliaMap() {
         return aliaMap;
     }
 }

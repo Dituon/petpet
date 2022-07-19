@@ -130,7 +130,16 @@ public final class Petpet extends JavaPlugin {
         }
 
         if (messageString.equals(pluginPetService.command)) {
-            e.getGroup().sendMessage("Petpet KeyList: \n" + pluginPetService.getKeyAliasListString());
+            switch (pluginPetService.replyFormat){
+                case MESSAGE:
+                    e.getGroup().sendMessage("Petpet KeyList: \n" + pluginPetService.getKeyAliasListString());
+                    break;
+                case FORWARD:
+                    ForwardMessageBuilder builder = new ForwardMessageBuilder(e.getGroup());
+                    builder.add(e.getBot().getId(),"petpet!",
+                            new PlainText("Petpet KeyList: \n" + pluginPetService.getKeyAliasListString()));
+                    e.getGroup().sendMessage(builder.build());
+            }
             return;
         }
         boolean fuzzyLock = false; //锁住模糊匹配
@@ -184,7 +193,8 @@ public final class Petpet extends JavaPlugin {
 
         if (!pluginPetService.getDataMap().containsKey(strList.get(0))) { //没有指定key
             if (!pluginPetService.getAliaMap().containsKey(strList.get(0))) return; //别名
-            strList.set(0, pluginPetService.getAliaMap().get(strList.get(0)));
+            String[] randomArray = pluginPetService.getAliaMap().get(strList.get(0));
+            strList.set(0, randomArray[new Random().nextInt(randomArray.length)]);
         }
 
         if (pluginPetService.fuzzy && strList.size() > 1 && !fuzzyLock) {

@@ -22,6 +22,7 @@ data class PluginConfig(
     val commandMustAt: Boolean = false,
     val respondImage: Boolean = true,
     val respondSelfNudge: Boolean = false,
+    val keyListFormat: ReplyFormat = ReplyFormat.MESSAGE,
     val fuzzy: Boolean = false,
     val synchronized: Boolean = false,
     val headless: Boolean = true,
@@ -29,6 +30,10 @@ data class PluginConfig(
     val updateIgnore: List<String> = emptyList(),
     val repositoryUrl: String? = "https://dituon.github.io/petpet"
 )
+
+enum class ReplyFormat {
+    MESSAGE, FORWARD
+}
 
 fun decode(str: String): PluginConfig {
     return Json.decodeFromString(str)
