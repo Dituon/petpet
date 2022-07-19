@@ -2,14 +2,14 @@
   "type": "IMG",
   "avatar": [{
     "type": "TO",
-    "pos": [0, 0,"width/2","height"],
+    "pos": ["width/2", 0,"width/2","height"],
     "crop":[50,0,100,100],
     "cropType":"PERCENT",
     "round": false,
     "avatarOnTop": true
   },{
     "type": "TO",
-    "pos": ["width/2", 0,"width/2","height"],
+    "pos": [0, 0,"width/2","height"],
     "crop":[50,0,100,100],
     "cropType":"PERCENT",
     "style":["MIRROR"],
