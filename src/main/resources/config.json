@@ -1,5 +1,6 @@
 {
   "port": 2333,
   "threadPoolSize": 10,
+  "dataPath": "data/xmmt.dituon.petpet",
   "headless": true
 }

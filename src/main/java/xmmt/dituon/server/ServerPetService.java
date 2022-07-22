@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 
 public class ServerPetService extends BasePetService {
     public int port = 2333;
+    public String path = "data/xmmt.dituon.petpet";
     public int threadPoolSize = 10;
     public boolean headless = true;
 
@@ -24,6 +25,7 @@ public class ServerPetService extends BasePetService {
 
             ServerConfig config = ServerConfig.getConfig(getFileStr(configFile));
             port = config.getPort();
+            path = config.getDataPath();
             threadPoolSize = config.getThreadPoolSize();
             headless = config.getHeadless();
         } catch (IOException ex) {
