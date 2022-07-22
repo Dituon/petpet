@@ -46,7 +46,7 @@ public class DataUpdater {
                     .map(File::getName).distinct().collect(Collectors.toList());
 
         for (String font : index.getFontList()) {
-            if (localFonts.contains(font)) return;
+            if (localFonts.contains(font)) continue;
             if (!saveAs(fontsPath, font)) {
                 System.out.println("无法从远程仓库下载PetFont: " + fontsPath);
                 return;

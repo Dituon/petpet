@@ -15,7 +15,6 @@ public class BaseGifMaker {
             GifBuilder gifBuilder = new GifBuilder(stickerMap.get((short) 0).getType(), 65, true);
 
             for (short key: stickerMap.keySet()) {
-                System.out.println(key);
                 gifBuilder.writeToSequence(ImageSynthesis.synthesisImage(
                         stickerMap.get(key), avatarList, textList, antialias, false));
             }
