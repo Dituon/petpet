@@ -152,6 +152,16 @@ public final class Petpet extends JavaPlugin {
         String fromUrl = e.getBot().getAvatarUrl();
         String toUrl = e.getSender().getAvatarUrl();
         for (SingleMessage singleMessage : e.getMessage()) {
+            if (singleMessage instanceof QuoteReply){
+                MessageSource source = ((QuoteReply) singleMessage).getSource();
+                for (SingleMessage sourceSingleMessage : source.getOriginalMessage()){
+                    if (sourceSingleMessage instanceof Image) {
+                        toUrl = Image.queryUrl((Image) sourceSingleMessage);
+                        fuzzyLock = true;
+                    }
+                }
+                continue;
+            }
             if (singleMessage instanceof PlainText) {
                 messageText.append(singleMessage.contentToString()).append(' ');
                 continue;
