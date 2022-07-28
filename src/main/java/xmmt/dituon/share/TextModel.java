@@ -16,7 +16,7 @@ public class TextModel {
     protected Font font;
     protected TextAlign align;
     protected TextWrap wrap;
-    private Graphics2D container = null;
+    private static Graphics2D container = null;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
         text = extraInfo != null ? buildText(textData.getText(), extraInfo)
@@ -84,6 +84,9 @@ public class TextModel {
         return new Color(rgba[0], rgba[1], rgba[2], rgba[3]);
     }
 
+    /**
+     * 获取构建后的文本数据
+     */
     public String getText() {
         if (wrap == TextWrap.BREAK && pos.length >= 3) {
             int width = this.getWidth(font);
@@ -102,6 +105,10 @@ public class TextModel {
         return text;
     }
 
+    /**
+     * 获取构建后的坐标
+     * @return int[2]{x, y}
+     */
     public int[] getPos() {
         switch (align) {
             case CENTER:
@@ -112,10 +119,16 @@ public class TextModel {
         return pos;
     }
 
+    /**
+     * 获取颜色 (默认为 #191919)
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * 获取构建后的字体
+     */
     public Font getFont() {
         if (wrap == TextWrap.ZOOM) {
             float multiple = Math.min(1.0F, (float) pos[2] / this.getWidth(font));
@@ -124,8 +137,12 @@ public class TextModel {
         return font;
     }
 
-    public int getWidth(Font f) {
+    /**
+     * 获取文字渲染后的宽度
+     * @param font 渲染字体
+     */
+    public int getWidth(Font font) {
         if (container == null) container = new BufferedImage(1, 1, 1).createGraphics();
-        return container.getFontMetrics(f).stringWidth(text);
+        return container.getFontMetrics(font).stringWidth(text);
     }
 }

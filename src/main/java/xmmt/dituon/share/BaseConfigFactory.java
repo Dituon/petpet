@@ -9,10 +9,10 @@ public class BaseConfigFactory {
             String botAvatarUrl) {
         try {
             return new AvatarExtraDataProvider(
-                    fromAvatarUrl != null ? () -> ImageSynthesis.getAvatarImage(fromAvatarUrl) : null,
-                    toAvatarUrl != null ? () -> ImageSynthesis.getAvatarImage(toAvatarUrl) : null,
-                    groupAvatarUrl != null ? () -> ImageSynthesis.getAvatarImage(groupAvatarUrl) : null,
-                    botAvatarUrl != null ? () -> ImageSynthesis.getAvatarImage(botAvatarUrl) : null
+                    fromAvatarUrl != null ? () -> ImageSynthesis.getWebImage(fromAvatarUrl) : null,
+                    toAvatarUrl != null ? () -> ImageSynthesis.getWebImage(toAvatarUrl) : null,
+                    groupAvatarUrl != null ? () -> ImageSynthesis.getWebImage(groupAvatarUrl) : null,
+                    botAvatarUrl != null ? () -> ImageSynthesis.getWebImage(botAvatarUrl) : null
             );
         } catch (Exception e) {
             return null;

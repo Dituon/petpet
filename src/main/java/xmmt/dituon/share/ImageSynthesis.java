@@ -15,6 +15,16 @@ public class ImageSynthesis extends ImageSynthesisCore {
             case DEFORM:
                 AvatarModel.DeformData deformData = avatar.getDeformData();
                 g2dDrawDeformAvatar(g2d, avatar.getImage(), deformData.getDeformPos(), deformData.getAnchor());
+                break;
+        }
+    }
+
+    protected static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
+        if (texts == null || texts.isEmpty()) {
+            return;
+        }
+        for (TextModel text : texts) {
+            ImageSynthesisCore.g2dDrawText(g2d, text.getText(), text.getPos(), text.getColor(), text.getFont());
         }
     }
 

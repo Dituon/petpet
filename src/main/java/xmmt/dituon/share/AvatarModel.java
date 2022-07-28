@@ -5,7 +5,6 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -131,11 +130,7 @@ public class AvatarModel {
         }
 
         if (round) {
-            try {
-                image = ImageSynthesis.convertCircular(image, antialias);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            image = ImageSynthesis.convertCircular(image, antialias);
         }
     }
 
@@ -155,16 +150,28 @@ public class AvatarModel {
         return antialias;
     }
 
+    /**
+     * 获取已经构建好的图像, 请放心食用
+     */
     public BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * 获取旋转角度
+     * <li>不旋转时 返回初始角度</li>
+     * <li>IMG格式 返回随机角度</li>
+     * <li>GIF 返回下一个旋转角度</li>
+     */
     public float getNextAngle() {
         if (!rotate) return angle; //不旋转
         if (imageType == Type.IMG) return new Random().nextInt(angle != 0 ? angle : 360); //IMG随机旋转
         return ((float) (360 / pos.length) * posIndex) + angle; //GIF自动旋转
     }
 
+    /**
+     * 获取下一个坐标
+     */
     public int[] nextPos() {
         if (posIndex >= pos.length) {
             return new int[]{0, 0, 0, 0};
@@ -176,6 +183,9 @@ public class AvatarModel {
         return posType;
     }
 
+    /**
+     * 获取坐标数组实际长度
+     */
     public short getPosLength(){
         return (short) pos.length;
     }
