@@ -176,6 +176,10 @@ public class AvatarModel {
         return posType;
     }
 
+    public short getPosLength(){
+        return (short) pos.length;
+    }
+
     public DeformData getDeformData() {
         return deformData;
     }
