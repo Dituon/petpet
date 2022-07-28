@@ -4,26 +4,17 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ImageSynthesisCore {
-    protected static void drawAvatar(Graphics2D g2d, AvatarModel avatar) {
-        switch (avatar.getPosType()) {
-            case ZOOM:
-                g2dDrawZoomAvatar(g2d, avatar.getImage(),
-                        avatar.nextPos(), avatar.getNextAngle(), avatar.isRound());
-                break;
-            case DEFORM:
-                g2dDrawDeformAvatar(g2d, avatar.getImage(), avatar.getDeformData());
-        }
-    }
+public abstract class ImageSynthesisCore {
 
     protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
-                                          float angle, boolean isRound) {
+                                            float angle, boolean isRound) {
         if (avatarImage == null) {
             return;
         }
@@ -50,9 +41,10 @@ public class ImageSynthesisCore {
         g2d.drawImage(rotateImage(avatarImage, angle), x, y, w, h, null);
     }
 
-    protected static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage, AvatarModel.DeformData deformData) {
-        BufferedImage result = ImageDeformer.computeImage(avatarImage, deformData.getDeformPos());
-        g2d.drawImage(result, deformData.getAnchor()[0], deformData.getAnchor()[1], null);
+    protected static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage,
+                                              Point2D[] point, int[] anchorPos) {
+        BufferedImage result = ImageDeformer.computeImage(avatarImage, point);
+        g2d.drawImage(result, anchorPos[0], anchorPos[1], null);
     }
 
     protected static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
@@ -122,27 +114,27 @@ public class ImageSynthesisCore {
         return image;
     }
 
-    public static BufferedImage cropImage(BufferedImage image, CropType type, int[] cropPos) {
+    public static BufferedImage cropImage(BufferedImage image, int[] cropPos){
+        return cropImage(image, cropPos, false);
+    }
+    public static BufferedImage cropImage(BufferedImage image, int[] cropPos, boolean isPercent) {
         int width = cropPos[2] - cropPos[0];
         int height = cropPos[3] - cropPos[1];
-        if (type == CropType.PERCENT) {
+        if (isPercent) {
             width = (int) ((float) width / 100 * image.getWidth());
             height = (int) ((float) height / 100 * image.getHeight());
         }
         BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
         Graphics2D g2d = croppedImage.createGraphics();
-        switch (type) {
-            case PIXEL:
-                g2d.drawImage(image, 0, 0, width, height
-                        , cropPos[0], cropPos[1], cropPos[2], cropPos[3], null);
-                break;
-            case PERCENT:
-                g2d.drawImage(image, 0, 0, width, height,
-                        (int) ((float) cropPos[0] / 100 * image.getWidth()),
-                        (int) ((float) cropPos[1] / 100 * image.getHeight()),
-                        (int) ((float) cropPos[2] / 100 * image.getWidth()),
-                        (int) ((float) cropPos[3] / 100 * image.getHeight()), null);
-                break;
+        if (isPercent) { //百分比
+            g2d.drawImage(image, 0, 0, width, height,
+                    (int) ((float) cropPos[0] / 100 * image.getWidth()),
+                    (int) ((float) cropPos[1] / 100 * image.getHeight()),
+                    (int) ((float) cropPos[2] / 100 * image.getWidth()),
+                    (int) ((float) cropPos[3] / 100 * image.getHeight()), null);
+        } else { //像素
+            g2d.drawImage(image, 0, 0, width, height
+                    , cropPos[0], cropPos[1], cropPos[2], cropPos[3], null);
         }
         g2d.dispose();
         return croppedImage;
