@@ -10,6 +10,10 @@ function Avatar(qq = 2544193782) {
         })
         that.avatar.uniformScaling = true
         canvas.add(that.avatar);
+        let pos = [0, 0,
+            Math.round(that.avatar.getScaledWidth()), Math.round(that.avatar.getScaledHeight())]
+        $('#avatar_pos').text('坐标: [' + pos + ']')
+        that.setPos(pos)
         that.avatar.on('moving', () => {
             avatarMoving()
         })
