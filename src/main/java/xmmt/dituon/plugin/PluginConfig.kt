@@ -12,18 +12,17 @@ import xmmt.dituon.share.Type
 
 @Serializable
 data class PluginConfig(
-    val version: Float = Petpet.VERSION,
     val command: String = "pet",
     val probability: Short = 30,
     val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
-    val keyCommand: Boolean = true,
-    val keyCommandHead: String = "",
-    val commandMustAt: Boolean = false,
-    val respondImage: Boolean = true,
+    val commandHead: String = "",
     val respondSelfNudge: Boolean = false,
+    val respondReply: Boolean = true,
+    val cachePoolSize: Int? = 10000,
     val keyListFormat: ReplyFormat = ReplyFormat.MESSAGE,
     val fuzzy: Boolean = false,
+    val strictCommand: Boolean = true,
     val synchronized: Boolean = false,
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,

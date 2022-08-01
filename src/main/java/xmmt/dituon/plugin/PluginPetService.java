@@ -18,13 +18,13 @@ public class PluginPetService extends BasePetService {
 
     protected String command = "pet";
     private short probability;
-    protected boolean keyCommand = true;
-    protected String keyCommandHead = "";
-    protected boolean commandMustAt = false;
-    protected boolean respondImage = true;
+    protected String commandHead = "";
     protected boolean respondSelfNudge = false;
+    protected boolean respondReply = true;
+    protected int cachePoolSize = 10000;
     protected ReplyFormat replyFormat = ReplyFormat.MESSAGE;
     protected boolean fuzzy = false;
+    protected boolean strictCommand = true;
     protected boolean messageSynchronized = false;
     protected boolean headless = true;
     protected boolean autoUpdate = true;
@@ -40,22 +40,18 @@ public class PluginPetService extends BasePetService {
     }
 
     private void readPluginConfig(PluginConfig config) {
-        if (config.getVersion() != Petpet.VERSION) {
-            System.out.println("配置文件可能已经过时，当前版本: " + Petpet.VERSION);
-        }
-
         readBaseServiceConfig(PluginConfigKt.toBaseServiceConfig(config));
 
         command = config.getCommand();
         antialias = config.getAntialias();
         probability = config.getProbability();
-        keyCommand = config.getKeyCommand();
-        keyCommandHead = config.getKeyCommandHead();
-        commandMustAt = config.getCommandMustAt();
-        respondImage = config.getRespondImage();
+        commandHead = config.getCommandHead();
         respondSelfNudge = config.getRespondSelfNudge();
+        respondReply = config.getRespondReply();
+        cachePoolSize = config.getCachePoolSize() != null ? config.getCachePoolSize() : 10000;
         replyFormat = config.getKeyListFormat();
         fuzzy = config.getFuzzy();
+        strictCommand = config.getStrictCommand();
         messageSynchronized = config.getSynchronized();
         headless = config.getHeadless();
         autoUpdate = config.getAutoUpdate();

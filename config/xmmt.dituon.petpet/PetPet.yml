@@ -1,16 +1,15 @@
-content: 
-  version: 4.0
+content:
   command: pet
   probability: 30
   antialias: true
   disabled: []
-  keyCommand: true
-  keyCommandHead: ''
-  commandMustAt: false
-  respondImage: true
+  commandHead: ''
   respondSelfNudge: false
+  respondReply: true
+  cachePoolSize: 10000
   keyListFormat: MESSAGE
   fuzzy: false
+  strictCommand: true
   synchronized: false
   headless: true
   autoUpdate: true

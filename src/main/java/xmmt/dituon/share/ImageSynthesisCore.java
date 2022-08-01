@@ -1,23 +1,35 @@
 package xmmt.dituon.share;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ImageSynthesisCore {
 
     /**
      * 在Graphics2D画布上 绘制缩放头像
-     * @param g2d Graphics2D 画布
+     *
+     * @param g2d         Graphics2D 画布
      * @param avatarImage 处理后的头像
-     * @param pos 处理后的坐标 (int[4]{x, y, w, h})
-     * @param angle 旋转角, 对特殊角度有特殊处理分支
-     * @param isRound 裁切为圆形
+     * @param pos         处理后的坐标 (int[4]{x, y, w, h})
+     * @param angle       旋转角, 对特殊角度有特殊处理分支
+     * @param isRound     裁切为圆形
      */
     protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
                                             float angle, boolean isRound) {
@@ -49,10 +61,11 @@ public abstract class ImageSynthesisCore {
 
     /**
      * 在Graphics2D画布上 绘制变形头像
-     * @param g2d Graphics2D 画布
+     *
+     * @param g2d         Graphics2D 画布
      * @param avatarImage 处理后的头像
-     * @param DeformPos 头像四角坐标 (Point2D[4]{左上角, 左下角, 右下角, 右上角})
-     * @param anchorPos 锚点坐标
+     * @param DeformPos   头像四角坐标 (Point2D[4]{左上角, 左下角, 右下角, 右上角})
+     * @param anchorPos   锚点坐标
      */
     protected static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage,
                                               Point2D[] DeformPos, int[] anchorPos) {
@@ -62,22 +75,24 @@ public abstract class ImageSynthesisCore {
 
     /**
      * 在Graphics2D画布上 绘制文字
-     * @param g2d Graphics2D 画布
-     * @param text 文本数据
-     * @param pos 坐标 (int[2]{x, y})
+     *
+     * @param g2d   Graphics2D 画布
+     * @param text  文本数据
+     * @param pos   坐标 (int[2]{x, y})
      * @param color 颜色
-     * @param font 字体
+     * @param font  字体
      */
     protected static void g2dDrawText(Graphics2D g2d, String text, int[] pos, Color color, Font font) {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-            g2d.setColor(color);
-            g2d.setFont(font);
-            g2d.drawString(text, pos[0], pos[1]);
+        g2d.setColor(color);
+        g2d.setFont(font);
+        g2d.drawString(text, pos[0], pos[1]);
     }
 
     /**
      * 将图像裁切为圆形
-     * @param input 输入图像
+     *
+     * @param input     输入图像
      * @param antialias 抗锯齿
      * @return 裁切后的图像
      */
@@ -98,8 +113,9 @@ public abstract class ImageSynthesisCore {
 
     /**
      * 完整旋转图像 (旋转时缩放以保持图像完整性)
+     *
      * @param avatarImage 输入图像
-     * @param angle 旋转角度
+     * @param angle       旋转角度
      * @return 旋转后的图像
      */
     public static BufferedImage rotateImage(BufferedImage avatarImage, float angle) {
@@ -125,41 +141,116 @@ public abstract class ImageSynthesisCore {
 
     /**
      * 从URL获取网络图像
-     * @param avatarUrl 图像URL
+     *
+     * @param imageUrl 图像URL
      */
-    public static BufferedImage getWebImage(String avatarUrl) {
+//    @Deprecated
+    public static BufferedImage getWebImage(String imageUrl) {
         HttpURLConnection conn = null;
         BufferedImage image = null;
         try {
-            URL url = new URL(avatarUrl);
+            URL url = new URL(imageUrl);
             conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             image = ImageIO.read(conn.getInputStream());
             conn.disconnect();
         } catch (Exception e) {
-            System.out.println("获取头像失败\nHttpURLConnection: " + conn + "\nURL: " + avatarUrl);
+            System.out.println("获取图像失败\nHttpURLConnection: " + conn + "\nURL: " + imageUrl);
             e.printStackTrace();
-        } finally {
-            assert conn != null;
-            conn.disconnect();
         }
         return image;
     }
 
     /**
+     * 从URL获取网络图像 (支持GIF)
+     *
+     * @param imageUrl 图像URL
+     * @return GIF全部帧 或一张静态图像
+     */
+    public static List<BufferedImage> getWebImageAsList(String imageUrl) {
+        InputStream input = null;
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.connect();
+            input = conn.getInputStream();
+            conn.disconnect();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        try {
+            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
+            ImageInputStream ciis = ImageIO.createImageInputStream(input);
+            ArrayList<BufferedImage> output = new ArrayList<>();
+
+            reader.setInput(ciis, false);
+            int noi = reader.getNumImages(true);
+            BufferedImage master = null;
+
+            for (int i = 0; i < noi; i++) {
+                BufferedImage image = reader.read(i);
+                IIOMetadata metadata = reader.getImageMetadata(i);
+                Node tree = metadata.getAsTree("javax_imageio_gif_image_1.0");
+                NodeList children = tree.getChildNodes();
+
+                for (int j = 0; j < children.getLength(); j++) {
+                    Node nodeItem = children.item(j);
+
+                    if (nodeItem.getNodeName().equals("ImageDescriptor")) {
+                        int width;
+                        int height;
+                        int leftPosition;
+                        int topPosition;
+
+                        NamedNodeMap attr = nodeItem.getAttributes();
+                        width = Integer.parseInt(attr.getNamedItem("imageWidth").getNodeValue());
+                        height = Integer.parseInt(attr.getNamedItem("imageHeight").getNodeValue());
+                        leftPosition = Integer.parseInt(attr.getNamedItem("imageLeftPosition").getNodeValue());
+                        topPosition = Integer.parseInt(attr.getNamedItem("imageTopPosition").getNodeValue());
+
+                        if (i == 0) {
+                            master = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                        }
+                        master.getGraphics().drawImage(image, leftPosition, topPosition, null);
+                    }
+                }
+                assert master != null;
+                output.add(master);
+            }
+            return output;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        } catch (Exception ex) {
+            try {
+                List<BufferedImage> output = new ArrayList<>();
+                output.add(ImageIO.read(input));
+                return output;
+            } catch (IOException ioex) {
+                ioex.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    /**
      * 裁切图像
-     * @param image 输入图像
+     *
+     * @param image   输入图像
      * @param cropPos 裁切坐标 (int[4]{x1, y1, x2, y2})
      * @return 裁切后的图像
      */
-    public static BufferedImage cropImage(BufferedImage image, int[] cropPos){
+    public static BufferedImage cropImage(BufferedImage image, int[] cropPos) {
         return cropImage(image, cropPos, false);
     }
 
     /**
      * 裁切图像
-     * @param image 输入图像
-     * @param cropPos 裁切坐标 (int[4]{x1, y1, x2, y2})
+     *
+     * @param image     输入图像
+     * @param cropPos   裁切坐标 (int[4]{x1, y1, x2, y2})
      * @param isPercent 按照百分比处理坐标
      * @return 裁切后的图像
      */
