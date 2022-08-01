@@ -41,21 +41,19 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 ```
 content: 
-  version: 4.0 #配置文件版本
-
   command: pet #触发 petpet 的指令
   probability: 30 #使用 戳一戳 的触发概率
   antialias: true #抗锯齿
   disabled: [] #禁用列表
 
-  keyCommand: true #以 key 作为指令头
   keyCommandHead: '' #keyCommand前缀
+  respondReply: true #响应回复
+  cachePoolSize: 10000 #消息缓存池容量
 
-  commandMustAt: false #必须有At对象
-  respondImage: true #使用发送的图片生成 petpet
   respondSelfNudge: false #响应机器人发出的戳一戳
   keyListFormat: MESSAGE #keyList响应格式
   fuzzy: false #模糊匹配用户名
+  strictCommand: true #严格匹配模式
 
   synchronized: false #消息事件同步锁
   headless: true #使用headless模式
@@ -95,13 +93,6 @@ content:
 > 禁用表列, 默认为空, 在此数组中的`key`不会被随机触发 (会覆盖`data.json`中的配置)
 <br/>
 
-- **keyCommand**: `true`
-
-> `key`作为指令头, 默认为`true`
-> 
-> 例: `kiss @xxx` `osu hso!`
-<br/>
-
 - **keyCommandHead**: `''`
 
 > `key`作为指令头时的前缀, 默认为空
@@ -109,18 +100,22 @@ content:
 > 例 (配置项为`'#'`时): `#kiss @xxx` `osu hso!`
 <br/>
 
-- **commandMustAt**: `false`
+- **respondReply**: `true`
 
-> 指令中必须有At对象, 默认为`false`
+> 响应回复的消息, 默认为`true`
 > 
-> 例 (配置项为`true`时): `kiss @xxx`(响应) `kiss me`(不响应)
+> 可通过回复消息 定位到之前发送的图片并构造petpet
+> 
+> 启用后 会缓存接收到的图片(见`cachePoolSize`)
+> 
+> 例 : `[回复[图片]]kiss`(等价于 `kiss [图片]`)
 <br/>
 
-- **respondImage**: `true`
+- **cachePoolSize**: `10000`
 
-> 将发送的图片作为头像构造, 默认为`true`
+> `respondReply=true`时, 图片消息缓存池大小, 默认为`10000`
 > 
-> 例 (配置项为`false`时): `kiss [图片]`(不响应) `kiss @xxx`(响应)
+> 本质为`HashMap<imageId(long), imageUrl(String)>`, 超过此限制会清空Map
 <br/>
 
 - **respondSelfNudge**: `false`
@@ -140,6 +135,15 @@ content:
 > 模糊匹配用户名, 默认为`false`
 > 
 > 例 (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
+<br/>
+
+- **strictCommand**: `true`
+
+> 严格匹配指令, 默认为`true`
+> 
+> ~~人话: 可以省略key后的空格~~
+> 
+> 例 (配置项为`false`时): `kiss 田所`(响应) `kiss田所`(响应)
 <br/>
 
 - **synchronized**: `false`
@@ -435,9 +439,9 @@ content:
 <details>
 <summary>展开/收起</summary>
 
-- `key`(str): 对应`PetData`,例如`kiss``rub`
-- `fromAvatar``toAvatar``groupAvatar``botAvatar`(url): 头像URL地址
-- `fromName``toName``groupName`(str): 昵称, 有默认值
+- `key`(str): 对应`PetData`,例如`kiss` `rub`
+- `fromAvatar` `toAvatar` `groupAvatar` `botAvatar`(url): 头像URL地址
+- `fromName` `toName` `groupName`(str): 昵称, 有默认值
 - `textList`(str): 根据空格分割此字符串, 作为额外数据
 </details>
 
