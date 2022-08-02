@@ -51,7 +51,7 @@ content:
   cachePoolSize: 10000 #消息缓存池容量
 
   respondSelfNudge: false #响应机器人发出的戳一戳
-  keyListFormat: MESSAGE #keyList响应格式
+  keyListFormat: FORWARD #keyList响应格式
   fuzzy: false #模糊匹配用户名
   strictCommand: true #严格匹配模式
 
@@ -123,9 +123,9 @@ content:
 > 某些情况下, 机器人会主动戳其他成员, 响应机器人自己发出的戳一戳, 默认为`false`
 <br/>
 
-- **keyListFormat**: `MESSAGE`
+- **keyListFormat**: `FORWARD`
 
-> 发送`pet`时 `keyList`响应格式, 默认为`MESSAGE`
+> 发送`pet`时 `keyList`响应格式, 默认为`FORWARD`
 >
 > 枚举: `MESSAGE`(发送普通消息)  `FORWARD`(发送转发消息)
 <br/>

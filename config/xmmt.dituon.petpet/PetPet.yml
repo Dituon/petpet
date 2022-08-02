@@ -7,7 +7,7 @@ content:
   respondSelfNudge: false
   respondReply: true
   cachePoolSize: 10000
-  keyListFormat: MESSAGE
+  keyListFormat: FORWARD
   fuzzy: false
   strictCommand: true
   synchronized: false

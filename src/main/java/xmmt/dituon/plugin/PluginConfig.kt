@@ -20,7 +20,7 @@ data class PluginConfig(
     val respondSelfNudge: Boolean = false,
     val respondReply: Boolean = true,
     val cachePoolSize: Int? = 10000,
-    val keyListFormat: ReplyFormat = ReplyFormat.MESSAGE,
+    val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
     val fuzzy: Boolean = false,
     val strictCommand: Boolean = true,
     val synchronized: Boolean = false,
