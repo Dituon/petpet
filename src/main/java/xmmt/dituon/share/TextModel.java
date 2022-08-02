@@ -17,6 +17,9 @@ public class TextModel {
     protected TextAlign align;
     protected TextWrap wrap;
     private static Graphics2D container = null;
+    private int width = 0;
+    private int height = 0;
+    private short line = 1;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
         text = extraInfo != null ? buildText(textData.getText(), extraInfo)
@@ -29,11 +32,12 @@ public class TextModel {
         wrap = textData.getWrap();
     }
 
-    private static String buildText(String text, TextExtraData extraData) {
+    private String buildText(String text, TextExtraData extraData) {
         text = text.replace("\"", "")
                 .replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
-                .replace("$group", extraData.getGroupReplacement());
+                .replace("$group", extraData.getGroupReplacement())
+                .replace("$keyList", BasePetService.keyListString);
 
         String regex = "\\$txt([1-9])\\[(.*)]"; //$txt(num)[(xxx)]
         Matcher m = Pattern.compile(regex).matcher(text);
@@ -45,6 +49,9 @@ public class TextModel {
             } catch (IndexOutOfBoundsException ignored) {
             }
             text = text.replaceAll(regex, replaceText);
+        }
+        for (char t : text.toCharArray()) {
+            if (t == '\n') line += 1;
         }
         return text;
     }
@@ -107,6 +114,7 @@ public class TextModel {
 
     /**
      * 获取构建后的坐标
+     *
      * @return int[2]{x, y}
      */
     public int[] getPos() {
@@ -138,11 +146,44 @@ public class TextModel {
     }
 
     /**
-     * 获取文字渲染后的宽度
+     * 获取文字渲染后的宽度 (包含 \n)
+     *
      * @param font 渲染字体
      */
     public int getWidth(Font font) {
+        if (width == 0) for (String p : this.getText().split("\n")) {
+            width = Math.max(width, getTextWidth(p, font));
+        }
+        return width;
+    }
+
+    /**
+     * 获取字体渲染后的高度 (包含 \n)
+     *
+     * @param font 渲染字体
+     */
+    public int getHeight(Font font) {
+        if (height == 0) height = getFontHeight(font);
+        return height * line;
+    }
+
+    /**
+     * 获取文字渲染后的宽度 (不渲染 \n)
+     *
+     * @param font 渲染字体
+     */
+    public static int getTextWidth(String text, Font font) {
         if (container == null) container = new BufferedImage(1, 1, 1).createGraphics();
         return container.getFontMetrics(font).stringWidth(text);
+    }
+
+    /**
+     * 获取字体渲染后的高度 (不渲染 \n)
+     *
+     * @param font 渲染字体
+     */
+    public static int getFontHeight(Font font) {
+        if (container == null) container = new BufferedImage(1, 1, 1).createGraphics();
+        return container.getFontMetrics(font).getHeight();
     }
 }

@@ -86,6 +86,16 @@ public abstract class ImageSynthesisCore {
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(color);
         g2d.setFont(font);
+        if (text.contains("\n")) {
+            String[] texts = text.split("\n");
+            int y = pos[1];
+            short height = (short) TextModel.getFontHeight(font);
+            for (String txt : texts) {
+                g2d.drawString(txt, pos[0], y);
+                y += height;
+            }
+            return;
+        }
         g2d.drawString(text, pos[0], pos[1]);
     }
 

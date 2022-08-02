@@ -9,9 +9,16 @@ import java.util.ArrayList;
 
 public class BackgroundModel {
     private final int[] size;
+    private BufferedImage image = null;
 
-    public BackgroundModel(BackgroundData data, ArrayList<AvatarModel> avatarList) {
-        size = JsonArrayToIntArray(data.getSize(), avatarList);
+    public BackgroundModel(BackgroundData data, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) {
+        size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
+    }
+
+    public BackgroundModel(BackgroundData data,
+                           ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList, BufferedImage img) {
+        size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
+        image = img;
     }
 
     public BufferedImage getImage() {
@@ -20,10 +27,11 @@ public class BackgroundModel {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, size[0], size[1]);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
+        if (image != null) g2d.drawImage(image, 0, 0, null);
         return output;
     }
 
-    private int[] JsonArrayToIntArray(JsonArray ja, ArrayList<AvatarModel> avatarList) {
+    private int[] JsonArrayToIntArray(JsonArray ja, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) {
         int[] result = new int[ja.size()];
         short i = 0;
         for (JsonElement je : ja) {
@@ -31,11 +39,14 @@ public class BackgroundModel {
             try {
                 result[i] = Integer.parseInt(str);
             } catch (NumberFormatException ignored) {
-                short avatarSize = (short) avatarList.size();
                 ArithmeticParser parser = new ArithmeticParser(str);
-                for (short in = 0; in < avatarSize; in++) {
+                for (short in = 0; in < avatarList.size(); in++) {
                     parser.put("avatar" + in + "Width", avatarList.get(in).getImageWidth());
                     parser.put("avatar" + in + "Height", avatarList.get(in).getImageHeight());
+                }
+                for (short in = 0; in < textList.size(); in++) {
+                    parser.put("text" + in + "Width", textList.get(in).getWidth(textList.get(in).getFont()));
+                    parser.put("text" + in + "Height", textList.get(in).getHeight(textList.get(in).getFont()));
                 }
                 result[i] = (int) parser.eval();
             }

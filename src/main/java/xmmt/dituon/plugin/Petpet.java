@@ -152,7 +152,8 @@ public final class Petpet extends JavaPlugin {
         String originKey = null; //解析前的key(可能为alia), 包含keyCommandHead
         for (String commandKey : pluginPetService.getDataMap().keySet()) { //key
             if (messageString.startsWith(pluginPetService.commandHead + commandKey
-                    + (pluginPetService.strictCommand ? ' ' : ""))) {
+                    + (pluginPetService.strictCommand ? ' ' : "")) ||
+                    messageString.equals(pluginPetService.commandHead + commandKey)) {
                 originKey = commandKey;
                 key = commandKey.replace(pluginPetService.commandHead, "");
                 ignore = false;
@@ -161,7 +162,8 @@ public final class Petpet extends JavaPlugin {
         }
         if (ignore) for (String alia : pluginPetService.getAliaMap().keySet()) { //别名
             if (messageString.startsWith(pluginPetService.commandHead + alia
-                    + (pluginPetService.strictCommand ? ' ' : ""))) {
+                    + (pluginPetService.strictCommand ? ' ' : "")) ||
+                    messageString.equals(pluginPetService.commandHead + alia)) {
                 originKey = alia;
                 String[] randomArray = pluginPetService.getAliaMap().get(
                         alia.replace(pluginPetService.commandHead, ""));
@@ -190,8 +192,8 @@ public final class Petpet extends JavaPlugin {
             if (singleMessage instanceof PlainText) {
                 String text = singleMessage.contentToString();
                 //过滤原始文本 只留下data
-                if (text.startsWith(pluginPetService.command))
-                    text = text.substring(pluginPetService.command.length()).trim();
+                if (text.startsWith(pluginPetService.commandHead + pluginPetService.command))
+                    text = text.substring(pluginPetService.commandHead.length() + pluginPetService.command.length()).trim();
                 if (text.startsWith(originKey)) text = text.substring(originKey.length());
                 messageText.append(text).append(' ');
                 continue;
