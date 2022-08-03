@@ -127,7 +127,7 @@ content:
 
 > 发送`pet`时 `keyList`响应格式, 默认为`FORWARD`
 >
-> 枚举: `MESSAGE`(发送普通消息)  `FORWARD`(发送转发消息)
+> 枚举: `MESSAGE`(发送普通消息)  `FORWARD`(发送转发消息)  `IMAGE`(发送图片)
 <br/>
 
 - **fuzzy**: `false`
@@ -412,6 +412,8 @@ content:
 
 - `avatar(i)Width`  `i`号头像(`i`为定义头像时的顺序, 从`0`开始)处理后的宽度
 - `avatar(i)Height`  `i`号头像处理后的高度
+- `text(i)Width`  `i`号文本渲染后的宽度
+- `text(i)Height`  `i`号文本渲染后的高度
 
 ## `WebServer`
   
