@@ -22,8 +22,9 @@ data class KeyData(
     val text: List<TextData>,
     val background: BackgroundData? = null,
     val alias: List<String>? = null,
-    val format: String? = "png",
-    val inRandomList: Boolean? = true
+    val format: String? = "png", //未实装
+    val inRandomList: Boolean? = true,
+    val hidden: Boolean? = false
 ) {
     companion object {
         @JvmStatic
@@ -99,6 +100,6 @@ data class AvatarExtraDataProvider(
 )
 
 @Serializable
-data class BackgroundData @JvmOverloads constructor(
+data class BackgroundData constructor(
     val size: JsonArray
 )

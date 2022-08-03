@@ -37,7 +37,8 @@ public class TextModel {
                 .replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
                 .replace("$group", extraData.getGroupReplacement())
-                .replace("$keyList", BasePetService.keyListString);
+                .replace("\\n","\n")
+                .replace("\\s"," ");
 
         String regex = "\\$txt([1-9])\\[(.*)]"; //$txt(num)[(xxx)]
         Matcher m = Pattern.compile(regex).matcher(text);

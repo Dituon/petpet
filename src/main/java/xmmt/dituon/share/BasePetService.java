@@ -52,6 +52,8 @@ public class BasePetService {
             try {
                 KeyData data = KeyData.getData(getFileStr(dataFile));
                 dataMap.put(path, data);
+                if (Boolean.TRUE.equals(data.getHidden())) continue;
+
                 keyListStringBuilder.append("\n").append(path);
                 if (data.getAlias() != null) {
                     keyListStringBuilder.append(" ( ");

@@ -1,0 +1,17 @@
+{
+    "type": "IMG",
+    "avatar":[],
+    "text":[
+        {
+            "pos": [20, 0],
+            "text": "$txt1[未知错误, 请检查控制台]",
+            "font": "MiSans Bold",
+            "color": "ffc0cb",
+            "size": 24
+        }
+    ],
+    "background": {
+            "size": ["text0Width+40","text0Height+15"]
+        },
+    "hidden": true
+}

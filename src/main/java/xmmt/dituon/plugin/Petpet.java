@@ -138,6 +138,19 @@ public final class Petpet extends JavaPlugin {
                     builder.add(e.getBot().getId(), "petpet!",
                             new PlainText("Petpet KeyList: \n" + pluginPetService.getKeyAliasListString()));
                     e.getGroup().sendMessage(builder.build());
+                    break;
+                case IMAGE:
+                    if (pluginPetService.getDataMap().get("key_list") == null) {
+                        getLogger().error("未找到PetData/key_list, 无法进行图片构造");
+                        e.getGroup().sendMessage("[ERROR]未找到PetData/key_list\n" + pluginPetService.getKeyAliasListString());
+                        return;
+                    }
+                    List<String> keyList = new ArrayList<>();
+                    keyList.add(pluginPetService.getKeyAliasListString());
+                    pluginPetService.sendImage(e.getGroup(), "key_list",
+                            BaseConfigFactory.getAvatarExtraDataFromUrls(null, null, null, null),
+                            new TextExtraData("", "", "", keyList));
+                    break;
             }
             return;
         }

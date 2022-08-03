@@ -31,7 +31,7 @@ data class PluginConfig(
 )
 
 enum class ReplyFormat {
-    MESSAGE, FORWARD
+    MESSAGE, FORWARD, IMAGE
 }
 
 fun decode(str: String): PluginConfig {
