@@ -29,7 +29,7 @@ public class CommandParser {
 
         imagePair = WebServer.petService.generateImage(
                 get("key"),
-                BaseConfigFactory.getAvatarExtraDataFromUrls(
+                BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         get("fromAvatar"), get("toAvatar"), get("groupAvatar"), get("botAvatar")
                 ), new TextExtraData(
                         get("fromName") != null ? get("fromName") : "from",

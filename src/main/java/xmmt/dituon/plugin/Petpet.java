@@ -148,15 +148,25 @@ public final class Petpet extends JavaPlugin {
                     List<String> keyList = new ArrayList<>();
                     keyList.add(pluginPetService.getKeyAliasListString());
                     pluginPetService.sendImage(e.getGroup(), "key_list",
-                            BaseConfigFactory.getAvatarExtraDataFromUrls(null, null, null, null),
+                            BaseConfigFactory.getGifAvatarExtraDataFromUrls(null, null, null, null),
                             new TextExtraData("", "", "", keyList));
                     break;
             }
             return;
         }
 
-        if (messageString.startsWith(pluginPetService.command)) {
+        if (messageString.startsWith(pluginPetService.command)) { //pet xxx key xxx
             messageString = messageString.substring(pluginPetService.command.length()).trim();
+            boolean ignore = true;
+            for (String commandKey : pluginPetService.getDataMap().keySet()) {
+                if (messageString.contains(commandKey)) {
+                    messageString = commandKey + messageString.replace(commandKey, "");
+                    ignore = false;
+                }
+            }
+            if (ignore) for (String alia : pluginPetService.getAliaMap().keySet()) {
+                if (messageString.contains(alia)) messageString = alia + messageString.replace(alia, "");
+            }
         }
 
         boolean ignore = true;
@@ -179,7 +189,7 @@ public final class Petpet extends JavaPlugin {
                     messageString.equals(pluginPetService.commandHead + alia)) {
                 originKey = alia;
                 String[] randomArray = pluginPetService.getAliaMap().get(
-                        alia.replace(pluginPetService.commandHead, ""));
+                        alia.substring(pluginPetService.commandHead.length()));
                 key = randomArray[new Random().nextInt(randomArray.length)];
                 ignore = false;
                 break;
@@ -249,7 +259,7 @@ public final class Petpet extends JavaPlugin {
         }
 
         pluginPetService.sendImage(e.getGroup(), key,
-                BaseConfigFactory.getAvatarExtraDataFromUrls(
+                BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl()
                 ), new TextExtraData(
                         fromName, toName, groupName, strList

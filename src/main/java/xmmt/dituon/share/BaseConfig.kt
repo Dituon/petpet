@@ -92,11 +92,19 @@ data class AvatarData @JvmOverloads constructor(
     val antialias: Boolean? = false
 )
 
+@Deprecated("使用GifAvatarExtraDataProvider以保证对GIF格式的解析")
 data class AvatarExtraDataProvider(
     val fromAvatar: (() -> BufferedImage)? = null,
     val toAvatar: (() -> BufferedImage)? = null,
     val groupAvatar: (() -> BufferedImage)? = null,
     val botAvatar: (() -> BufferedImage)? = null
+)
+
+data class GifAvatarExtraDataProvider(
+    val fromAvatar: (() -> List<BufferedImage>)? = null,
+    val toAvatar: (() -> List<BufferedImage>)? = null,
+    val groupAvatar: (() -> List<BufferedImage>)? = null,
+    val botAvatar: (() -> List<BufferedImage>)? = null
 )
 
 @Serializable

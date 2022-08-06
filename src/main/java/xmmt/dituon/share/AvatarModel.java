@@ -5,30 +5,42 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 public class AvatarModel {
-    private final Type imageType;
+    private Type imageType;
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
     protected int angle;
     protected boolean round;
     protected boolean rotate;
     protected boolean onTop;
-    protected BufferedImage image = null;
+    protected List<BufferedImage> imageList = null;
     private int posIndex = 0;
-    private final boolean antialias;
-    private final PosType posType;
+    private boolean antialias;
+    private PosType posType;
     private DeformData deformData = null;
-    private final CropType cropType;
+    private CropType cropType;
     private int[] cropPos;
-    private final List<Style> styleList;
+    private List<Style> styleList;
+    private short frameIndex = 0;
 
+    @Deprecated
     public AvatarModel(AvatarData data, AvatarExtraDataProvider extraData, Type imageType) {
+        setImage(data.getType(), extraData);
+        buildData(data, imageType);
+    }
+
+    public AvatarModel(AvatarData data, GifAvatarExtraDataProvider extraData, Type imageType) {
+        setImage(data.getType(), extraData);
+        buildData(data, imageType);
+    }
+
+    private void buildData(AvatarData data, Type imageType) {
         type = data.getType();
-        setImage(type, extraData);
         posType = data.getPosType() != null ? data.getPosType() : PosType.ZOOM;
         setPos(data.getPos(), this.imageType = imageType);
         cropType = data.getCropType();
@@ -43,18 +55,36 @@ public class AvatarModel {
     }
 
     private void setImage(AvatarType type, AvatarExtraDataProvider extraData) {
+        imageList = new ArrayList<>();
         switch (type) {
             case FROM:
-                image = Objects.requireNonNull(extraData.getFromAvatar()).invoke();
+                imageList.add(Objects.requireNonNull(extraData.getFromAvatar()).invoke());
                 break;
             case TO:
-                image = Objects.requireNonNull(extraData.getToAvatar()).invoke();
+                imageList.add(Objects.requireNonNull(extraData.getToAvatar()).invoke());
                 break;
             case GROUP:
-                image = Objects.requireNonNull(extraData.getGroupAvatar()).invoke();
+                imageList.add(Objects.requireNonNull(extraData.getGroupAvatar()).invoke());
                 break;
             case BOT:
-                image = Objects.requireNonNull(extraData.getBotAvatar()).invoke();
+                imageList.add(Objects.requireNonNull(extraData.getBotAvatar()).invoke());
+                break;
+        }
+    }
+
+    private void setImage(AvatarType type, GifAvatarExtraDataProvider extraData) {
+        switch (type) {
+            case FROM:
+                imageList = Objects.requireNonNull(extraData.getFromAvatar()).invoke();
+                break;
+            case TO:
+                imageList = Objects.requireNonNull(extraData.getToAvatar()).invoke();
+                break;
+            case GROUP:
+                imageList = Objects.requireNonNull(extraData.getGroupAvatar()).invoke();
+                break;
+            case BOT:
+                imageList = Objects.requireNonNull(extraData.getBotAvatar()).invoke();
                 break;
         }
     }
@@ -100,8 +130,8 @@ public class AvatarModel {
                 result[i] = Integer.parseInt(str);
             } catch (NumberFormatException ignored) {
                 ArithmeticParser parser = new ArithmeticParser(str);
-                parser.put("width", image.getWidth());
-                parser.put("height", image.getHeight());
+                parser.put("width", this.getImageWidth());
+                parser.put("height", this.getImageHeight());
                 result[i] = (int) parser.eval();
             }
             i++;
@@ -110,27 +140,27 @@ public class AvatarModel {
     }
 
     private void buildImage() {
-        if (cropType != CropType.NONE) image = ImageSynthesis.cropImage(image, cropType, cropPos);
+        if (cropType != CropType.NONE) imageList = ImageSynthesis.cropImage(imageList, cropType, cropPos);
 
         for (Style style : styleList) {
             switch (style) {
                 case FLIP:
-                    image = ImageSynthesis.flipImage(image);
+                    imageList = ImageSynthesis.flipImage(imageList);
                     break;
                 case MIRROR:
-                    image = ImageSynthesis.mirrorImage(image);
+                    imageList = ImageSynthesis.mirrorImage(imageList);
                     break;
                 case GRAY:
-                    image = ImageSynthesis.grayImage(image);
+                    imageList = ImageSynthesis.grayImage(imageList);
                     break;
                 case BINARIZATION:
-                    image = ImageSynthesis.BinarizeImage(image);
+                    imageList = ImageSynthesis.binarizeImage(imageList);
                     break;
             }
         }
 
         if (round) {
-            image = ImageSynthesis.convertCircular(image, antialias);
+            imageList = ImageSynthesis.convertCircular(imageList, antialias);
         }
     }
 
@@ -153,8 +183,12 @@ public class AvatarModel {
     /**
      * 获取已经构建好的图像, 请放心食用
      */
-    public BufferedImage getImage() {
-        return image;
+    public List<BufferedImage> getImageList() {
+        return imageList;
+    }
+
+    public BufferedImage getFirstImage() {
+        return imageList.get(0);
     }
 
     /**
@@ -174,7 +208,7 @@ public class AvatarModel {
      */
     public int[] nextPos() {
         if (posIndex >= pos.length) {
-            return new int[]{0, 0, 0, 0};
+            return pos[pos.length - 1];
         }
         return pos[posIndex++];
     }
@@ -186,7 +220,7 @@ public class AvatarModel {
     /**
      * 获取坐标数组实际长度
      */
-    public short getPosLength(){
+    public short getPosLength() {
         return (short) pos.length;
     }
 
@@ -224,10 +258,22 @@ public class AvatarModel {
     }
 
     public int getImageWidth() {
-        return image.getWidth();
+        return this.getFirstImage().getWidth();
     }
 
     public int getImageHeight() {
-        return image.getHeight();
+        return this.getFirstImage().getHeight();
+    }
+
+    public boolean isGif() {
+        return imageList.size() > 1;
+    }
+
+    /**
+     * 获取头像下一帧, 超过索引长度会重新开始循环 (线程不安全)
+     */
+    public BufferedImage nextFrame() {
+        if (frameIndex >= imageList.size()) frameIndex = 0;
+        return imageList.get(frameIndex++);
     }
 }

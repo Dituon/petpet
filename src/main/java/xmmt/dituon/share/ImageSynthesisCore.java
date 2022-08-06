@@ -1,24 +1,16 @@
 package xmmt.dituon.share;
 
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.io.BufferedInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class ImageSynthesisCore {
 
@@ -64,12 +56,12 @@ public abstract class ImageSynthesisCore {
      *
      * @param g2d         Graphics2D 画布
      * @param avatarImage 处理后的头像
-     * @param DeformPos   头像四角坐标 (Point2D[4]{左上角, 左下角, 右下角, 右上角})
+     * @param deformPos   头像四角坐标 (Point2D[4]{左上角, 左下角, 右下角, 右上角})
      * @param anchorPos   锚点坐标
      */
     protected static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage,
-                                              Point2D[] DeformPos, int[] anchorPos) {
-        BufferedImage result = ImageDeformer.computeImage(avatarImage, DeformPos);
+                                              Point2D[] deformPos, int[] anchorPos) {
+        BufferedImage result = ImageDeformer.computeImage(avatarImage, deformPos);
         g2d.drawImage(result, anchorPos[0], anchorPos[1], null);
     }
 
@@ -122,6 +114,19 @@ public abstract class ImageSynthesisCore {
     }
 
     /**
+     * 将图像裁切为圆形
+     *
+     * @param inputList 输入图像数组
+     * @param antialias 抗锯齿
+     * @return 裁切后的图像
+     */
+    public static List<BufferedImage> convertCircular(List<BufferedImage> inputList, boolean antialias) {
+        return inputList.stream()
+                .map(input -> convertCircular(input, antialias))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 完整旋转图像 (旋转时缩放以保持图像完整性)
      *
      * @param avatarImage 输入图像
@@ -154,18 +159,12 @@ public abstract class ImageSynthesisCore {
      *
      * @param imageUrl 图像URL
      */
-//    @Deprecated
     public static BufferedImage getWebImage(String imageUrl) {
-        HttpURLConnection conn = null;
         BufferedImage image = null;
         try {
-            URL url = new URL(imageUrl);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.connect();
-            image = ImageIO.read(conn.getInputStream());
-            conn.disconnect();
+            image = ImageIO.read(new URL(imageUrl));
         } catch (Exception e) {
-            System.out.println("获取图像失败\nHttpURLConnection: " + conn + "\nURL: " + imageUrl);
+            System.out.println("[获取图像失败]  URL: " + imageUrl);
             e.printStackTrace();
         }
         return image;
@@ -178,72 +177,97 @@ public abstract class ImageSynthesisCore {
      * @return GIF全部帧 或一张静态图像
      */
     public static List<BufferedImage> getWebImageAsList(String imageUrl) {
-        InputStream input = null;
+        ArrayList<BufferedImage> output = new ArrayList<>();
         try {
             URL url = new URL(imageUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.connect();
-            input = conn.getInputStream();
-            conn.disconnect();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-        try {
-            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-            ImageInputStream ciis = ImageIO.createImageInputStream(input);
-            ArrayList<BufferedImage> output = new ArrayList<>();
-
-            reader.setInput(ciis, false);
-            int noi = reader.getNumImages(true);
-            BufferedImage master = null;
-
-            for (int i = 0; i < noi; i++) {
-                BufferedImage image = reader.read(i);
-                IIOMetadata metadata = reader.getImageMetadata(i);
-                Node tree = metadata.getAsTree("javax_imageio_gif_image_1.0");
-                NodeList children = tree.getChildNodes();
-
-                for (int j = 0; j < children.getLength(); j++) {
-                    Node nodeItem = children.item(j);
-
-                    if (nodeItem.getNodeName().equals("ImageDescriptor")) {
-                        int width;
-                        int height;
-                        int leftPosition;
-                        int topPosition;
-
-                        NamedNodeMap attr = nodeItem.getAttributes();
-                        width = Integer.parseInt(attr.getNamedItem("imageWidth").getNodeValue());
-                        height = Integer.parseInt(attr.getNamedItem("imageHeight").getNodeValue());
-                        leftPosition = Integer.parseInt(attr.getNamedItem("imageLeftPosition").getNodeValue());
-                        topPosition = Integer.parseInt(attr.getNamedItem("imageTopPosition").getNodeValue());
-
-                        if (i == 0) {
-                            master = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-                        }
-                        master.getGraphics().drawImage(image, leftPosition, topPosition, null);
-                    }
-                }
-                assert master != null;
-                output.add(master);
-            }
-            return output;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        } catch (Exception ex) {
-            try {
-                List<BufferedImage> output = new ArrayList<>();
-                output.add(ImageIO.read(input));
+            GifDecoder decoder = new GifDecoder();
+            BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
+            inputStream.mark(0); //循环利用inputStream, 避免重复获取
+            decoder.read(inputStream);
+            if (decoder.err()) {
+                inputStream.reset();
+                output.add(ImageIO.read(ImageIO.createImageInputStream(inputStream)));
+                inputStream.close();
                 return output;
-            } catch (IOException ioex) {
-                ioex.printStackTrace();
-                return null;
             }
+            inputStream.close();
+            for (short i = 0; i < decoder.getFrameCount(); i++) {
+                output.add(decoder.getFrame(i));
+            }
+        } catch (Exception ex) {
+            System.out.println("[获取/解析 图像失败]  URL: " + imageUrl);
+            ex.printStackTrace();
         }
+        return output;
     }
+
+//    public static List<BufferedImage> getWebImageAsList(String imageUrl) {
+//        InputStream input = null;
+//        try {
+//            URL url = new URL(imageUrl);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.connect();
+//            input = conn.getInputStream();
+//            conn.disconnect();
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            return null;
+//        }
+//
+//        try {
+//            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
+//            ImageInputStream ciis = ImageIO.createImageInputStream(input);
+//            ArrayList<BufferedImage> output = new ArrayList<>();
+//
+//            reader.setInput(ciis, false);
+//            int noi = reader.getNumImages(true);
+//            BufferedImage master = null;
+//
+//            for (int i = 0; i < noi; i++) {
+//                BufferedImage image = reader.read(i);
+//                IIOMetadata metadata = reader.getImageMetadata(i);
+//                Node tree = metadata.getAsTree("javax_imageio_gif_image_1.0");
+//                NodeList children = tree.getChildNodes();
+//
+//                for (int j = 0; j < children.getLength(); j++) {
+//                    Node nodeItem = children.item(j);
+//
+//                    if (nodeItem.getNodeName().equals("ImageDescriptor")) {
+//                        int width;
+//                        int height;
+//                        int leftPosition;
+//                        int topPosition;
+//
+//                        NamedNodeMap attr = nodeItem.getAttributes();
+//                        width = Integer.parseInt(attr.getNamedItem("imageWidth").getNodeValue());
+//                        height = Integer.parseInt(attr.getNamedItem("imageHeight").getNodeValue());
+//                        leftPosition = Integer.parseInt(attr.getNamedItem("imageLeftPosition").getNodeValue());
+//                        topPosition = Integer.parseInt(attr.getNamedItem("imageTopPosition").getNodeValue());
+//
+//                        if (i == 0) {
+//                            master = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//                        }
+//                        master.getGraphics().drawImage(image, leftPosition, topPosition, null);
+//                    }
+//                }
+//                assert master != null;
+//                output.add(master);
+//            }
+//            return output;
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            return null;
+//        } catch (Exception ex) {
+//            try {
+//                List<BufferedImage> output = new ArrayList<>();
+//                output.add(ImageIO.read(input));
+//                return output;
+//            } catch (IOException ioex) {
+//                ioex.printStackTrace();
+//                return null;
+//            }
+//        }
+//    }
 
     /**
      * 裁切图像
@@ -261,7 +285,7 @@ public abstract class ImageSynthesisCore {
      *
      * @param image     输入图像
      * @param cropPos   裁切坐标 (int[4]{x1, y1, x2, y2})
-     * @param isPercent 按照百分比处理坐标
+     * @param isPercent 按百分比处理坐标
      * @return 裁切后的图像
      */
     public static BufferedImage cropImage(BufferedImage image, int[] cropPos, boolean isPercent) {
@@ -288,6 +312,21 @@ public abstract class ImageSynthesisCore {
     }
 
     /**
+     * 裁切图像
+     *
+     * @param imageList 输入图像数组
+     * @param cropPos   裁切坐标 (int[4]{x1, y1, x2, y2})
+     * @param isPercent 按百分比处理坐标
+     * @return 裁切后的图像
+     */
+    public static List<BufferedImage> cropImage(List<BufferedImage> imageList,
+                                                int[] cropPos, boolean isPercent) {
+        return imageList.stream()
+                .map(image -> cropImage(image, cropPos, isPercent))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 镜像翻转图像
      */
     public static BufferedImage mirrorImage(BufferedImage image) {
@@ -300,6 +339,13 @@ public abstract class ImageSynthesisCore {
                 .drawImage(image, 0, 0, width, height, width, 0, 0, height, null);
         g2d.dispose();
         return mirroredImage;
+    }
+
+    /**
+     * 镜像翻转图像数组
+     */
+    public static List<BufferedImage> mirrorImage(List<BufferedImage> imageList) {
+        return imageList.stream().map(ImageSynthesisCore::mirrorImage).collect(Collectors.toList());
     }
 
     /**
@@ -317,6 +363,15 @@ public abstract class ImageSynthesisCore {
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return flipped;
+    }
+
+    /**
+     * 竖直翻转图像数组
+     */
+    public static List<BufferedImage> flipImage(List<BufferedImage> imageList) {
+        return imageList.stream()
+                .map(ImageSynthesisCore::flipImage)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -338,9 +393,16 @@ public abstract class ImageSynthesisCore {
     }
 
     /**
+     * 灰度化图像数组
+     */
+    public static List<BufferedImage> grayImage(List<BufferedImage> imageList) {
+        return imageList.stream().map(ImageSynthesisCore::grayImage).collect(Collectors.toList());
+    }
+
+    /**
      * 图像二值化
      */
-    public static BufferedImage BinarizeImage(BufferedImage image) {
+    public static BufferedImage binarizeImage(BufferedImage image) {
         int h = image.getHeight();
         int w = image.getWidth();
         BufferedImage binarizeImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -359,5 +421,12 @@ public abstract class ImageSynthesisCore {
             }
         }
         return binarizeImage;
+    }
+
+    /**
+     * 二值化图像数组
+     */
+    public static List<BufferedImage> binarizeImage(List<BufferedImage> imageList) {
+        return imageList.stream().map(ImageSynthesisCore::binarizeImage).collect(Collectors.toList());
     }
 }

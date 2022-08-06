@@ -6,8 +6,14 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class BaseImageMaker {
-    public InputStream makeImage(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+    public static InputStream makeImage(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                  BufferedImage sticker ,boolean antialias) {
+        for (AvatarModel avatar : avatarList) {
+            if (avatar.isGif()) {
+                System.out.println("isGif");
+                return BaseGifMaker.makeGIF(avatarList, textList, sticker, antialias);
+            }
+        }
         try {
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(
                     sticker, avatarList, textList, antialias, true));
@@ -18,7 +24,7 @@ public class BaseImageMaker {
         return null;
     }
 
-    private InputStream bufferedImageToInputStream(BufferedImage bf) throws IOException {
+    private static InputStream bufferedImageToInputStream(BufferedImage bf) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(bf, "png", os);
         return new ByteArrayInputStream(os.toByteArray());

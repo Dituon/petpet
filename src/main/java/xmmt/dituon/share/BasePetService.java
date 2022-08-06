@@ -25,11 +25,6 @@ public class BasePetService {
 
     public static String keyListString;
 
-    public BasePetService() {
-        this.imageMaker = new BaseImageMaker();
-        this.gifMaker = new BaseGifMaker();
-    }
-
     public void readData(File dir) {
         this.dataRoot = dir;
         String[] children = dir.list();
@@ -121,6 +116,7 @@ public class BasePetService {
     /**
      * @return InputStream 及其图片格式（值域：["gif", "png"...]）
      */
+    @Deprecated
     public Pair<InputStream, String> generateImage(
             String key, AvatarExtraDataProvider avatarExtraDataProvider,
             TextExtraData textExtraData,
@@ -170,14 +166,83 @@ public class BasePetService {
                         stickerMap.put(i, sticker);
                     }
                 }
-                InputStream inputStream = gifMaker.makeAvatarGIF(avatarList, textList, stickerMap, antialias);
+                InputStream inputStream = BaseGifMaker.makeGIF(avatarList, textList, stickerMap, antialias);
                 return new Pair<>(inputStream, "gif");
             }
 
             if (data.getType() == Type.IMG) {
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
-                InputStream inputStream = imageMaker.makeImage(avatarList, textList, sticker, antialias);
+                InputStream inputStream = BaseImageMaker.makeImage(avatarList, textList, sticker, antialias);
+                return new Pair<>(inputStream, "png");
+            }
+        } catch (Exception ex) {
+            System.out.println("解析 " + key + "/data.json 出错");
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * @return InputStream 及其图片格式（值域：["gif", "png"...]）
+     */
+    public Pair<InputStream, String> generateImage(
+            String key, GifAvatarExtraDataProvider gifAvatarExtraDataProvider,
+            TextExtraData textExtraData,
+            List<TextData> additionTextDatas
+    ) {
+        if (!dataMap.containsKey(key) && !aliaMap.containsKey(key)) {
+            System.out.println("无效的key: “" + key + "”");
+            return null;
+        }
+        KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key)[0]);
+        key = dataRoot.getAbsolutePath() + File.separator +
+                (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
+
+        try {
+            ArrayList<TextModel> textList = new ArrayList<>();
+            // add from KeyData
+            if (!data.getText().isEmpty()) {
+                for (TextData textElement : data.getText()) {
+                    textList.add(new TextModel(textElement, textExtraData));
+                }
+            }
+            // add from params
+            if (additionTextDatas != null) {
+                for (TextData textElement : additionTextDatas) {
+                    textList.add(new TextModel(textElement, textExtraData));
+                }
+            }
+
+            ArrayList<AvatarModel> avatarList = new ArrayList<>();
+
+            if (!data.getAvatar().isEmpty()) {
+                for (AvatarData avatarData : data.getAvatar()) {
+                    avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()));
+                }
+            }
+
+            if (data.getType() == Type.GIF) {
+                HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
+                short imageNum = 0;
+                for (File file : Objects.requireNonNull(new File(key).listFiles())) {
+                    if (!file.getName().endsWith(".png")) continue;
+                    stickerMap.put(imageNum, ImageIO.read(new File(key + imageNum++ + ".png")));
+                }
+                if (data.getBackground() != null) { //从配置文件读背景
+                    BufferedImage sticker = new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
+                    for (short i = 0; i < avatarList.get(0).getPosLength(); i++) {
+                        stickerMap.put(i, sticker);
+                    }
+                }
+                InputStream inputStream = BaseGifMaker.makeGIF(avatarList, textList, stickerMap, antialias);
+                return new Pair<>(inputStream, "gif");
+            }
+
+            if (data.getType() == Type.IMG) {
+                BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
+                assert sticker != null;
+                InputStream inputStream = BaseImageMaker.makeImage(avatarList, textList, sticker, antialias);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {

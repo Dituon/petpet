@@ -123,16 +123,19 @@ public class PluginPetService extends BasePetService {
                 otherText == null || otherText.equals("") ? new ArrayList<>() :
                         new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
         );
-        AvatarExtraDataProvider avatarExtraDataProvider = BaseConfigFactory.getAvatarExtraDataFromUrls(
+        GifAvatarExtraDataProvider gifAvatarExtraDataProvider = BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                 from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
         );
-        sendImage(group, key, avatarExtraDataProvider, textExtraData);
+        sendImage(group, key, gifAvatarExtraDataProvider, textExtraData);
     }
 
     /**
      * 发送图片
+     * @deprecated 使用GifAvatarExtraDataProvider以保证对Gif格式的解析
      */
-    public void sendImage(Group group, String key, AvatarExtraDataProvider avatarExtraDataProvider, TextExtraData textExtraData) {
+    @Deprecated
+    public void sendImage(Group group, String key,
+                          AvatarExtraDataProvider avatarExtraDataProvider, TextExtraData textExtraData) {
 
         Pair<InputStream, String> generatedImageAndType = generateImage(key, avatarExtraDataProvider,
                 textExtraData, null);
@@ -152,7 +155,27 @@ public class PluginPetService extends BasePetService {
         }
     }
 
+    public void sendImage(Group group, String key,
+                          GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData){
+        Pair<InputStream, String> generatedImageAndType = generateImage(key, gifAvatarExtraDataProvider,
+                textExtraData, null);
+
+        try {
+            if (generatedImageAndType != null) {
+                ExternalResource resource = ExternalResource.create(generatedImageAndType.getFirst());
+                Image image = group.uploadImage(resource);
+                resource.close();
+                group.sendMessage(image);
+            } else {
+                System.out.println("生成图片失败");
+            }
+        } catch (Exception ex) {
+            System.out.println("发送图片时出错：" + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
     public String getKeyAliasListString() {
-        return super.keyListString;
+        return keyListString;
     }
 }

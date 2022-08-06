@@ -4,17 +4,18 @@ package xmmt.dituon.share;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageSynthesis extends ImageSynthesisCore {
-    protected static void drawAvatar(Graphics2D g2d, AvatarModel avatar) {
+    protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar) {
         switch (avatar.getPosType()) {
             case ZOOM:
-                g2dDrawZoomAvatar(g2d, avatar.getImage(),
+                g2dDrawZoomAvatar(g2d, avatar.nextFrame(),
                         avatar.nextPos(), avatar.getNextAngle(), avatar.isRound());
                 break;
             case DEFORM:
                 AvatarModel.DeformData deformData = avatar.getDeformData();
-                g2dDrawDeformAvatar(g2d, avatar.getImage(), deformData.getDeformPos(), deformData.getAnchor());
+                g2dDrawDeformAvatar(g2d, avatar.nextFrame(), deformData.getDeformPos(), deformData.getAnchor());
                 break;
         }
     }
@@ -68,11 +69,11 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
         // 画
         for (AvatarModel avatar : bottomAvatars) {
-            drawAvatar(g2d, avatar);
+            g2dDrawAvatar(g2d, avatar);
         }
         g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
         for (AvatarModel avatar : topAvatars) {
-            drawAvatar(g2d, avatar);
+            g2dDrawAvatar(g2d, avatar);
         }
 
         g2dDrawTexts(g2d, textList);
@@ -82,5 +83,9 @@ public class ImageSynthesis extends ImageSynthesisCore {
 
     public static BufferedImage cropImage(BufferedImage image, CropType type, int[] cropPos) {
         return ImageSynthesisCore.cropImage(image, cropPos, type == CropType.PERCENT);
+    }
+
+    public static List<BufferedImage> cropImage(List<BufferedImage> imageList, CropType type, int[] cropPos) {
+        return ImageSynthesisCore.cropImage(imageList, cropPos, type == CropType.PERCENT);
     }
 }
