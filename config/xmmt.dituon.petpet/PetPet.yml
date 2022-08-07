@@ -9,7 +9,6 @@ content:
   cachePoolSize: 10000
   keyListFormat: FORWARD
   fuzzy: false
-  strictCommand: true
   synchronized: false
   headless: true
   autoUpdate: true

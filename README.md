@@ -28,9 +28,9 @@ java 编写，**未使用任何第三方库** ：轻量，高效。
 
 5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
 
-> `key @xxx` 可返回指定图片 例如 `kiss @xxx`
+> `pet key @xxx` 或 `key @xxx` 可返回指定图片 例如 `pet kiss @xxx` `kiss @xxx`
 
-> 可通过发送的图片生成Petpet `kiss [图片]`
+> 可通过发送的图片生成Petpet `kiss [图片]`, **支持GIF**
 
 > 可使用 `pet`指令 获取 `keyList`
 
@@ -52,7 +52,6 @@ content:
   respondSelfNudge: false #响应机器人发出的戳一戳
   keyListFormat: FORWARD #keyList响应格式
   fuzzy: false #模糊匹配用户名
-  strictCommand: true #严格匹配模式
 
   synchronized: false #消息事件同步锁
   headless: true #使用headless模式
@@ -136,14 +135,20 @@ content:
 > 例 (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
 <br/>
 
-- **strictCommand**: `true`
+[//]: # (- **strictCommand**: `true`)
 
-> 严格匹配指令, 默认为`true`
-> 
-> ~~人话: 可以省略key后的空格~~
-> 
-> 例 (配置项为`false`时): `kiss 田所`(响应) `kiss田所`(响应)
-<br/>
+[//]: # ()
+[//]: # (> 严格匹配指令, 默认为`true`)
+
+[//]: # (> )
+
+[//]: # (> ~~人话: 可以省略key后的空格~~)
+
+[//]: # (> )
+
+[//]: # (> 例 &#40;配置项为`false`时&#41;: `kiss 田所`&#40;响应&#41; `kiss田所`&#40;响应&#41;)
+
+[//]: # (<br/>)
 
 - **synchronized**: `false`
 
@@ -464,6 +469,9 @@ content:
 
 - 自动更新下载速度慢?
   > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(高速镜像)
+
+- 自动更新后 读取`data.json`出错?
+  > 自动更新时网络出错导致, 删除出错的文件 重新获取即可
 
 ## 分享你的作品
 
