@@ -62,7 +62,7 @@ public final class Petpet extends JavaPlugin {
         if (service.respondReply) {
             imageCachePool = new HashMap<>();
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
-            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
+//            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
         }
     }
 
@@ -248,17 +248,17 @@ public final class Petpet extends JavaPlugin {
     }
 
 
-    private void cacheMessageImage(GroupMessagePostSendEvent e) {
-        for (SingleMessage singleMessage : e.getMessage()) {
-            if (singleMessage instanceof Image) {
-                if (imageCachePool.size() >= service.cachePoolSize) imageCachePool.clear();
-                //GroupMessagePostSendEvent获取的MessageChain不包含MessageSource
-                long id = e.getTarget().getId() + e.getMessage().get(MessageSource.Key).getIds()[0];
-                imageCachePool.put(id, Image.queryUrl((Image) singleMessage));
-                return;
-            }
-        }
-    }
+//    private void cacheMessageImage(GroupMessagePostSendEvent e) {
+//        for (SingleMessage singleMessage : e.getMessage()) {
+//            if (singleMessage instanceof Image) {
+//                if (imageCachePool.size() >= service.cachePoolSize) imageCachePool.clear();
+//                //GroupMessagePostSendEvent获取的MessageChain不包含MessageSource
+//                long id = e.getTarget().getId() + e.getMessage().get(MessageSource.Key).getIds()[0];
+//                imageCachePool.put(id, Image.queryUrl((Image) singleMessage));
+//                return;
+//            }
+//        }
+//    }
 
 
     private boolean isDisabled(Group group) {
