@@ -255,10 +255,12 @@ public final class Petpet extends JavaPlugin {
             for (Member m : e.getGroup().getMembers()) {
                 if (m.getNameCard().toLowerCase().contains(spanList.get(0).toLowerCase())
                         || m.getNick().toLowerCase().contains(spanList.get(0).toLowerCase())) {
-                    fromName = getNameOrNick(e.getSender());
-                    fromUrl = e.getSender().getAvatarUrl();
                     toName = getNameOrNick(m);
                     toUrl = m.getAvatarUrl();
+                    if (m.getId() == e.getSender().getId()) break;
+                    fromName = getNameOrNick(e.getSender());
+                    fromUrl = e.getSender().getAvatarUrl();
+                    break;
                 }
             }
         }
