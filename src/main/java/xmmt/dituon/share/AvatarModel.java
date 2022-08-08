@@ -41,7 +41,7 @@ public class AvatarModel {
 
     private void buildData(AvatarData data, Type imageType) {
         type = data.getType();
-        posType = data.getAvatarPosType() != null ? data.getAvatarPosType() : AvatarPosType.ZOOM;
+        posType = data.getPosType() != null ? data.getPosType() : AvatarPosType.ZOOM;
         setPos(data.getPos(), this.imageType = imageType);
         cropType = data.getCropType();
         setCrop(data.getCrop());

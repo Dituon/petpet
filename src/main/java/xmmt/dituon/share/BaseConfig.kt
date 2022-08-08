@@ -86,7 +86,7 @@ enum class Style {
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     val pos: JsonArray? = null,
-    val avatarPosType: AvatarPosType? = AvatarPosType.ZOOM,
+    val posType: AvatarPosType? = AvatarPosType.ZOOM,
     val crop: JsonArray? = null,
     val cropType: CropType? = CropType.NONE,
     val style: List<Style>? = emptyList(),
