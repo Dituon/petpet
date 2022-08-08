@@ -36,6 +36,8 @@ public class PluginPetService extends BasePetService {
     public boolean nudgeCanBeDisabled = true;
     public boolean messageCanBeDisabled = false;
 
+    protected List<Long> disabledGroups;
+
     public void readConfigByPluginAutoSave() {
         PluginConfig config = PetPetAutoSaveConfig.INSTANCE.content.get();
 //        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
@@ -60,6 +62,7 @@ public class PluginPetService extends BasePetService {
         autoUpdate = config.getAutoUpdate();
         updateIgnore = config.getUpdateIgnore();
         repositoryUrl = config.getRepositoryUrl();
+        disabledGroups = config.getDisabledGroups();
 
         switch (config.getDisablePolicy()){
             case NONE:
