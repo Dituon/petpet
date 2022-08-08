@@ -59,10 +59,10 @@ public final class Petpet extends JavaPlugin {
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
                 " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             v" + VERSION);
 
-        GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class,
+        if (service.probability > 0) GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class,
                 service.messageSynchronized ? this::onNudgeSynchronized : this::onNudge);
 
-        if (service.probability > 0) GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
+        GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
                 service.messageSynchronized ? this::onGroupMessageSynchronized : this::onGroupMessage);
 
         if (service.respondReply) {
