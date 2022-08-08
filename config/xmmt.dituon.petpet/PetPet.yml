@@ -9,6 +9,7 @@ content:
   cachePoolSize: 10000
   keyListFormat: FORWARD
   disablePolicy: NUDGE
+  disabledGroups: []
   fuzzy: false
   strictCommand: true
   synchronized: false

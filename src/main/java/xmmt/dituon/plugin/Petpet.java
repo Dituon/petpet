@@ -140,7 +140,7 @@ public final class Petpet extends JavaPlugin {
             return;
         }
 
-        if (service.messageCanBeDisabled || isDisabled(e.getGroup())) return;
+        if (service.messageCanBeDisabled && isDisabled(e.getGroup())) return;
 
         if (messageString.equals(service.command)) {
             switch (service.replyFormat) {
@@ -191,14 +191,17 @@ public final class Petpet extends JavaPlugin {
                 continue;
             }
             if (singleMessage instanceof At) {
+                fuzzyLock = true;
+
+                At at = (At) singleMessage;
+                if (at.getTarget() == e.getSender().getId()) continue;
+
                 fromName = getNameOrNick(e.getSender());
                 fromUrl = e.getSender().getAvatarUrl();
 
-                Member to = e.getGroup().get(((At) singleMessage).getTarget());
+                Member to = e.getGroup().get(at.getTarget());
                 toName = getNameOrNick(to);
                 toUrl = to.getAvatarUrl();
-
-                fuzzyLock = true;
                 continue;
             }
             if (singleMessage instanceof Image) {
