@@ -19,7 +19,7 @@ import java.util.*;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 4.2F;
+    public static final float VERSION = 4.3F;
 
     private static final ArrayList<Group> disabledGroup = new ArrayList<>();
     public static PluginPetService service;

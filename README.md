@@ -54,9 +54,11 @@ content:
 
   respondSelfNudge: false #响应机器人发出的戳一戳
   keyListFormat: FORWARD #keyList响应格式
+  disablePolicy: NUDGE #禁用策略
   fuzzy: false #模糊匹配用户名
 
   synchronized: false #消息事件同步锁
+  strictCommand: true #严格匹配模式
   headless: true #使用headless模式
   autoUpdate: true #自动从仓库同步PetData
   updateIgnore: [] #更新忽略表列
@@ -131,6 +133,12 @@ content:
 > 枚举: `MESSAGE`(发送普通消息)  `FORWARD`(发送转发消息)  `IMAGE`(发送图片)
 <br/>
 
+- **disablePolicy**: `NUDGE`
+
+> 发送`pet on/off`时 禁用哪些功能
+> 
+> 枚举: `NONE`(无效)  `NUDGE`(只禁用戳一戳)  `MESSAGE`(只禁用指令)  `FULL`(同时禁用戳一戳和指令)
+
 - **fuzzy**: `false`
 
 > 模糊匹配用户名, 默认为`false`
@@ -138,20 +146,14 @@ content:
 > 例 (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
 <br/>
 
-[//]: # (- **strictCommand**: `true`)
+- **strictCommand**: `true`
 
-[//]: # ()
-[//]: # (> 严格匹配指令, 默认为`true`)
-
-[//]: # (> )
-
-[//]: # (> ~~人话: 可以省略key后的空格~~)
-
-[//]: # (> )
-
-[//]: # (> 例 &#40;配置项为`false`时&#41;: `kiss 田所`&#40;响应&#41; `kiss田所`&#40;响应&#41;)
-
-[//]: # (<br/>)
+> 严格匹配指令, 默认为`true`
+>
+> ~~人话: 可以省略key后的空格~~
+>
+> 例 (配置项为`false`时): `kiss 田所`(响应) `kiss田所`(响应)
+<br/>
 
 - **synchronized**: `false`
 
