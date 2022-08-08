@@ -8,6 +8,7 @@ content:
   respondReply: true
   cachePoolSize: 10000
   keyListFormat: FORWARD
+  disablePolicy: NUDGE
   fuzzy: false
   strictCommand: true
   synchronized: false

@@ -21,6 +21,7 @@ data class PluginConfig(
     val respondReply: Boolean = true,
     val cachePoolSize: Int? = 10000,
     val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
+    val disablePolicy: DisablePolicy = DisablePolicy.NUDGE,
     val fuzzy: Boolean = false,
     val strictCommand: Boolean = true,
     val synchronized: Boolean = false,
@@ -32,6 +33,10 @@ data class PluginConfig(
 
 enum class ReplyFormat {
     MESSAGE, FORWARD, IMAGE
+}
+
+enum class DisablePolicy {
+    NONE, NUDGE, MESSAGE, FULL
 }
 
 fun decode(str: String): PluginConfig {

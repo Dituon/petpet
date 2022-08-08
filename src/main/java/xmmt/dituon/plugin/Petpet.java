@@ -90,7 +90,8 @@ public final class Petpet extends JavaPlugin {
 
     private void responseNudge(NudgeEvent e) {
         // 如果禁用了petpet就返回
-        if (!(e.getSubject() instanceof Group) || isDisabled((Group) e.getSubject())) return;
+        if (!(e.getSubject() instanceof Group)
+                || service.nudgeCanBeDisabled || isDisabled((Group) e.getSubject())) return;
         try {
             service.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
@@ -121,6 +122,8 @@ public final class Petpet extends JavaPlugin {
 
     private void responseMessage(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
+
+        if (service.messageSynchronized || isDisabled(e.getGroup())) return;
 
         String messageString = e.getMessage().contentToString().trim();
 

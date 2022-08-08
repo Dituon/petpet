@@ -33,6 +33,9 @@ public class PluginPetService extends BasePetService {
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
 
+    public boolean nudgeCanBeDisabled = true;
+    public boolean messageCanBeDisabled = false;
+
     public void readConfigByPluginAutoSave() {
         PluginConfig config = PetPetAutoSaveConfig.INSTANCE.content.get();
 //        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
@@ -57,6 +60,25 @@ public class PluginPetService extends BasePetService {
         autoUpdate = config.getAutoUpdate();
         updateIgnore = config.getUpdateIgnore();
         repositoryUrl = config.getRepositoryUrl();
+
+        switch (config.getDisablePolicy()){
+            case NONE:
+                nudgeCanBeDisabled = false;
+                messageSynchronized = false;
+                break;
+            case NUDGE:
+                nudgeCanBeDisabled = true;
+                messageSynchronized = false;
+                break;
+            case MESSAGE:
+                nudgeCanBeDisabled = false;
+                messageSynchronized = true;
+                break;
+            case FULL:
+                nudgeCanBeDisabled = true;
+                messageSynchronized = true;
+                break;
+        }
 
         for (String path : config.getDisabled()) {
             disabledKey.add(path.replace("\"", ""));
