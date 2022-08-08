@@ -21,9 +21,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
     }
 
     protected static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
-        if (texts == null || texts.isEmpty()) {
-            return;
-        }
+        if (texts == null || texts.isEmpty()) return;
         for (TextModel text : texts) {
             ImageSynthesisCore.g2dDrawText(g2d, text.getText(), text.getPos(), text.getColor(), text.getFont());
         }

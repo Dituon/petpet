@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 public class TextModel {
     protected String text;
     protected int[] pos = {2, 14};
-    protected TextPosType posType;
     protected Color color = new Color(25, 25, 25, 255); // #191919
     protected Font font;
     protected TextAlign align;
@@ -21,7 +20,6 @@ public class TextModel {
         text = extraInfo != null ? buildText(textData.getText(), extraInfo)
                 : textData.getText().replace("\"", "");
         pos = textData.getPos() != null ? setPos(textData.getPos()) : pos;
-        posType = textData.getPosType() != null ? textData.getPosType() : TextPosType.ABSOLUTE;
         color = textData.getColor() != null ?
                 BasePetService.decodeColor(textData.getColor(), new short[]{25, 25, 25, 255}) : color;
         font = loadFont(textData.getFont() != null ? textData.getFont().replace("\"", "") : "黑体",

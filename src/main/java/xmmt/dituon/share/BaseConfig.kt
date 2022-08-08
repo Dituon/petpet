@@ -34,10 +34,6 @@ data class KeyData(
     }
 }
 
-enum class TextPosType {
-    ABSOLUTE, RELATIVE
-}
-
 enum class TextAlign {
     LEFT, RIGHT, CENTER
 }
@@ -54,7 +50,6 @@ enum class TextStyle{
 data class TextData @JvmOverloads constructor(
     val text: String,
     val pos: List<Int>? = null,
-    val posType: TextPosType? = TextPosType.ABSOLUTE,
     val color: JsonElement? = null,
     val font: String? = null,
     val size: Int? = null,
