@@ -8,23 +8,25 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class BackgroundModel {
-    private final int[] size;
+    private int[] size;
     private BufferedImage image = null;
+    private Color color;
 
     public BackgroundModel(BackgroundData data, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) {
-        size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
+        new BackgroundModel(data, avatarList, textList, null);
     }
 
     public BackgroundModel(BackgroundData data,
-                           ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList, BufferedImage img) {
-        size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
-        image = img;
+                           ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList, BufferedImage image) {
+        this.size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
+        this.image = image;
+        this.color = BasePetService.decodeColor(data.getColor(), new short[]{255, 255, 255, 255});
     }
 
     public BufferedImage getImage() {
         BufferedImage output = new BufferedImage(size[0], size[1], 1);
         Graphics2D g2d = output.createGraphics();
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(color);
         g2d.fillRect(0, 0, size[0], size[1]);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
         if (image != null) g2d.drawImage(image, 0, 0, null);

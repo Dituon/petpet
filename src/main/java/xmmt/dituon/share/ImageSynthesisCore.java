@@ -81,7 +81,7 @@ public abstract class ImageSynthesisCore {
         if (text.contains("\n")) {
             String[] texts = text.split("\n");
             int y = pos[1];
-            short height = (short) TextModel.getFontHeight(font);
+            short height = (short) TextModel.getTextHeight(text, font);
             for (String txt : texts) {
                 g2d.drawString(txt, pos[0], y);
                 y += height;
@@ -200,74 +200,6 @@ public abstract class ImageSynthesisCore {
         }
         return output;
     }
-
-//    public static List<BufferedImage> getWebImageAsList(String imageUrl) {
-//        InputStream input = null;
-//        try {
-//            URL url = new URL(imageUrl);
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.connect();
-//            input = conn.getInputStream();
-//            conn.disconnect();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return null;
-//        }
-//
-//        try {
-//            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-//            ImageInputStream ciis = ImageIO.createImageInputStream(input);
-//            ArrayList<BufferedImage> output = new ArrayList<>();
-//
-//            reader.setInput(ciis, false);
-//            int noi = reader.getNumImages(true);
-//            BufferedImage master = null;
-//
-//            for (int i = 0; i < noi; i++) {
-//                BufferedImage image = reader.read(i);
-//                IIOMetadata metadata = reader.getImageMetadata(i);
-//                Node tree = metadata.getAsTree("javax_imageio_gif_image_1.0");
-//                NodeList children = tree.getChildNodes();
-//
-//                for (int j = 0; j < children.getLength(); j++) {
-//                    Node nodeItem = children.item(j);
-//
-//                    if (nodeItem.getNodeName().equals("ImageDescriptor")) {
-//                        int width;
-//                        int height;
-//                        int leftPosition;
-//                        int topPosition;
-//
-//                        NamedNodeMap attr = nodeItem.getAttributes();
-//                        width = Integer.parseInt(attr.getNamedItem("imageWidth").getNodeValue());
-//                        height = Integer.parseInt(attr.getNamedItem("imageHeight").getNodeValue());
-//                        leftPosition = Integer.parseInt(attr.getNamedItem("imageLeftPosition").getNodeValue());
-//                        topPosition = Integer.parseInt(attr.getNamedItem("imageTopPosition").getNodeValue());
-//
-//                        if (i == 0) {
-//                            master = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-//                        }
-//                        master.getGraphics().drawImage(image, leftPosition, topPosition, null);
-//                    }
-//                }
-//                assert master != null;
-//                output.add(master);
-//            }
-//            return output;
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//            return null;
-//        } catch (Exception ex) {
-//            try {
-//                List<BufferedImage> output = new ArrayList<>();
-//                output.add(ImageIO.read(input));
-//                return output;
-//            } catch (IOException ioex) {
-//                ioex.printStackTrace();
-//                return null;
-//            }
-//        }
-//    }
 
     /**
      * 裁切图像

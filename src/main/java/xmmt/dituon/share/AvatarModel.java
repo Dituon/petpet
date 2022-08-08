@@ -21,7 +21,7 @@ public class AvatarModel {
     protected List<BufferedImage> imageList = null;
     private int posIndex = 0;
     private boolean antialias;
-    private PosType posType;
+    private AvatarPosType posType;
     private DeformData deformData = null;
     private CropType cropType;
     private int[] cropPos;
@@ -41,7 +41,7 @@ public class AvatarModel {
 
     private void buildData(AvatarData data, Type imageType) {
         type = data.getType();
-        posType = data.getPosType() != null ? data.getPosType() : PosType.ZOOM;
+        posType = data.getAvatarPosType() != null ? data.getAvatarPosType() : AvatarPosType.ZOOM;
         setPos(data.getPos(), this.imageType = imageType);
         cropType = data.getCropType();
         setCrop(data.getCrop());
@@ -213,7 +213,7 @@ public class AvatarModel {
         return pos[posIndex++];
     }
 
-    public PosType getPosType() {
+    public AvatarPosType getPosType() {
         return posType;
     }
 

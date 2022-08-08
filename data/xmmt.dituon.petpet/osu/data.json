@@ -5,10 +5,11 @@
         {
             "text": "$txt1[osu!]",
             "color": "ffffff",
-            "pos": [60,210,230],
+            "pos": [175,175,230],
             "size": 104,
             "font": "MiSans Bold",
-            "wrap": "ZOOM"
+            "wrap": "ZOOM",
+            "align": "CENTER"
         }
     ],
     "inRandomList": false

@@ -1,6 +1,8 @@
 package xmmt.dituon.share;
 
 import kotlin.Pair;
+import kotlinx.serialization.json.JsonArray;
+import kotlinx.serialization.json.JsonElement;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -270,6 +272,33 @@ public class BasePetService {
         //有配置项和图片
         return new BackgroundModel(data.getBackground(), avatarList, textList,
                 ImageIO.read(fileList.get(new Random().nextInt(fileList.size())))).getImage();
+    }
+
+    public static Color decodeColor(JsonElement jsonElement){
+        return decodeColor(jsonElement, new short[]{255, 255, 255, 255}); //#fff
+    }
+    public static Color decodeColor(JsonElement jsonElement, short[] defaultRgba){
+        assert defaultRgba.length == 4;
+        try { //rgb or rgba
+            JsonArray jsonArray = (JsonArray) jsonElement;
+            if (jsonArray.getSize() == 3 || jsonArray.getSize() == 4) {
+                defaultRgba[0] = Short.parseShort(jsonArray.get(0).toString());
+                defaultRgba[1] = Short.parseShort(jsonArray.get(1).toString());
+                defaultRgba[2] = Short.parseShort(jsonArray.get(2).toString());
+                defaultRgba[3] = jsonArray.getSize() == 4 ? Short.parseShort(jsonArray.get(3).toString()) : 255;
+            }
+        } catch (Exception ignored) { //hex
+            String hex = jsonElement.toString().replace("#", "").replace("\"", "");
+            if (hex.length() != 6 && hex.length() != 8) {
+                System.out.println("颜色格式有误，请输入正确的16进制颜色\n输入: " + hex);
+                return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
+            }
+            defaultRgba[0] = Short.parseShort(hex.substring(0, 2), 16);
+            defaultRgba[1] = Short.parseShort(hex.substring(2, 4), 16);
+            defaultRgba[2] = Short.parseShort(hex.substring(4, 6), 16);
+            defaultRgba[3] = hex.length() == 8 ? Short.parseShort(hex.substring(6, 8), 16) : 255;
+        }
+        return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
     }
 
     public HashMap<String, KeyData> getDataMap() {

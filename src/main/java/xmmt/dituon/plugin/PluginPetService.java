@@ -17,7 +17,7 @@ import java.util.Random;
 public class PluginPetService extends BasePetService {
 
     protected String command = "pet";
-    private short probability;
+    public short probability = 30;
     protected String commandHead = "";
     protected boolean respondSelfNudge = false;
     protected boolean respondReply = true;
@@ -51,7 +51,7 @@ public class PluginPetService extends BasePetService {
         cachePoolSize = config.getCachePoolSize() != null ? config.getCachePoolSize() : 10000;
         replyFormat = config.getKeyListFormat();
         fuzzy = config.getFuzzy();
-//        strictCommand = config.getStrictCommand();
+        strictCommand = config.getStrictCommand();
         messageSynchronized = config.getSynchronized();
         headless = config.getHeadless();
         autoUpdate = config.getAutoUpdate();
