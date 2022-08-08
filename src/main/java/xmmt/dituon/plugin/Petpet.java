@@ -21,7 +21,7 @@ public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
     public static final float VERSION = 4.3F;
 
-    private static final ArrayList<Group> disabledGroup = new ArrayList<>();
+    private static List<Long> disabledGroup;
     public static PluginPetService service;
     public static File dataFolder;
 
@@ -53,6 +53,7 @@ public final class Petpet extends JavaPlugin {
 
         if (service.headless) System.setProperty("java.awt.headless", "true");
         if (service.autoUpdate) new Thread(DataUpdater::autoUpdate).start();
+        disabledGroup = service.disabledGroups;
 
         getLogger().info("\n             _                _   \n  _ __   ___| |_   _ __   ___| |_ \n" +
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
@@ -127,14 +128,14 @@ public final class Petpet extends JavaPlugin {
 
         if (messageString.equals(service.command + " off") &&
                 !isDisabled(e.getGroup()) && isPermission(e)) {
-            disabledGroup.add(e.getGroup());
+            disabledGroup.add(e.getGroup().getId());
             sendReplyMessage(e, "已禁用 " + service.command);
             return;
         }
 
         if (messageString.equals(service.command + " on") &&
                 isDisabled(e.getGroup()) && isPermission(e)) {
-            disabledGroup.remove(e.getGroup());
+            disabledGroup.remove(e.getGroup().getId());
             sendReplyMessage(e, "已启用 " + service.command);
             return;
         }
@@ -290,7 +291,7 @@ public final class Petpet extends JavaPlugin {
 
     private boolean isDisabled(Group group) {
         if (disabledGroup != null && !disabledGroup.isEmpty()) {
-            return disabledGroup.contains(group);
+            return disabledGroup.contains(group.getId());
         }
         return false;
     }
