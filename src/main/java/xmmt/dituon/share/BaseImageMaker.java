@@ -7,12 +7,9 @@ import java.util.ArrayList;
 
 public class BaseImageMaker {
     public static InputStream makeImage(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                 BufferedImage sticker ,boolean antialias) {
+                                        BufferedImage sticker, boolean antialias) {
         for (AvatarModel avatar : avatarList) {
-            if (avatar.isGif()) {
-                System.out.println("isGif");
-                return BaseGifMaker.makeGIF(avatarList, textList, sticker, antialias);
-            }
+            if (avatar.isGif()) return BaseGifMaker.makeGIF(avatarList, textList, sticker, antialias);
         }
         try {
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(

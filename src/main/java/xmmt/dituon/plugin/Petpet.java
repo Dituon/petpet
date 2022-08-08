@@ -123,8 +123,6 @@ public final class Petpet extends JavaPlugin {
     private void responseMessage(GroupMessageEvent e) {
         if (!e.getMessage().contains(PlainText.Key)) return;
 
-        if (service.messageSynchronized || isDisabled(e.getGroup())) return;
-
         String messageString = e.getMessage().contentToString().trim();
 
         if (messageString.equals(service.command + " off") &&
@@ -140,6 +138,8 @@ public final class Petpet extends JavaPlugin {
             sendReplyMessage(e, "已启用 " + service.command);
             return;
         }
+
+        if (service.messageCanBeDisabled || isDisabled(e.getGroup())) return;
 
         if (messageString.equals(service.command)) {
             switch (service.replyFormat) {

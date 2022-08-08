@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class BackgroundModel {
-    private int[] size;
+    private final int[] size;
     private BufferedImage image = null;
-    private Color color;
+    private final Color color;
 
     public BackgroundModel(BackgroundData data, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) {
-        new BackgroundModel(data, avatarList, textList, null);
+        this(data, avatarList, textList, null);
     }
 
     public BackgroundModel(BackgroundData data,

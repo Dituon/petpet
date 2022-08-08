@@ -274,10 +274,12 @@ public class BasePetService {
                 ImageIO.read(fileList.get(new Random().nextInt(fileList.size())))).getImage();
     }
 
-    public static Color decodeColor(JsonElement jsonElement){
+    public static Color decodeColor(JsonElement jsonElement) {
         return decodeColor(jsonElement, new short[]{255, 255, 255, 255}); //#fff
     }
-    public static Color decodeColor(JsonElement jsonElement, short[] defaultRgba){
+
+    public static Color decodeColor(JsonElement jsonElement, short[] defaultRgba) {
+        if (jsonElement == null) return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
         assert defaultRgba.length == 4;
         try { //rgb or rgba
             JsonArray jsonArray = (JsonArray) jsonElement;
