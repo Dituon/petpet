@@ -64,19 +64,19 @@ public class PluginPetService extends BasePetService {
         switch (config.getDisablePolicy()){
             case NONE:
                 nudgeCanBeDisabled = false;
-                messageSynchronized = false;
+                messageCanBeDisabled = false;
                 break;
             case NUDGE:
                 nudgeCanBeDisabled = true;
-                messageSynchronized = false;
+                messageCanBeDisabled = false;
                 break;
             case MESSAGE:
                 nudgeCanBeDisabled = false;
-                messageSynchronized = true;
+                messageCanBeDisabled = true;
                 break;
             case FULL:
                 nudgeCanBeDisabled = true;
-                messageSynchronized = true;
+                messageCanBeDisabled = true;
                 break;
         }
 

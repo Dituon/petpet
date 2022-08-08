@@ -376,7 +376,8 @@ content:
       "text": "$txt1[我]超市$txt2[你]!", // 支持关键词变量
       "pos": [0,200,300], // 第三个值为文本最大宽度
       "align": "CENTER", // 对齐方式, 默认为LEFT
-      "wrap": "ZOOM" // 显示设置, 默认为NONE
+      "wrap": "ZOOM", // 显示设置, 默认为NONE
+      "style": "BLOD" // 字体样式, 默认为PLAIN
     }
   ]
 ```
@@ -405,6 +406,12 @@ content:
 - `ZOOM`: 自动缩放
 >> 使用`BREAK`或`ZOOM`时, `maxWidth` 默认为`200`
 
+**`style`**
+
+- `PLAIN`: 默认
+- `BLOD`: 粗体
+- `ITALIC`: 斜体
+
 **需要更多变量请提交 Issue**
 
 #### `background`
@@ -413,7 +420,8 @@ content:
 
 ```
 "background": {
-    "size": ["avatar0Width*2","avatar0Height"] //支持变量运算
+    "size": ["avatar0Width*2","avatar0Height"], //支持变量运算
+    "color": "#f0f0f0" //支持hex或rgba数组
   }
 ```
 
