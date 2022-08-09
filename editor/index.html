@@ -81,7 +81,12 @@
             padding: 0.3em 0.4em;
             border-radius: 12px;
             margin: 0.4em;
+            font-size: 0.9em;
             cursor: pointer;
+        }
+
+        .check > * {
+            margin: 0 0.2em;
         }
 
         #gifBar {
@@ -190,7 +195,7 @@
 <div class="bar" id="settingsBar">
     <div class="check" onclick="addAvatar()">addAvatar</div>
     <div class="check" onclick="addText()">addText</div>
-    <div class="check" title="多别名用空格分割">别名<input type="text" id="alias" onkeydown="this.onkeyup()"
+    <div class="check" title="多别名用空格分割">别名<input type="text" id="alias" onkeydown="this.onkeyup(null)"
                                 onkeyup="this.size=(this.value.length>4?this.value.length*1.5:2)" size="2"/></div>
     <div class="check" onclick="buildData()">buildData</div>
 </div>

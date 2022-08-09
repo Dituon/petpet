@@ -30,17 +30,19 @@ function Text(text) {
 
     function textMoving() {
         let x = Math.round(that.text.left)
+        let y = Math.round(that.text.top)
         switch (that.align) {
             case 'RIGHT':
                 x += Math.round(that.text.getScaledWidth())
                 break
             case 'CENTER':
                 x += Math.round(that.text.getScaledWidth() / 2)
+                y += Math.round(that.text.getScaledHeight() / 2)
                 break
         }
 
         that.pos[0] = x
-        that.pos[1] = Math.round(that.text.top)
+        that.pos[1] = y
         $('#avatar_pos').text('坐标: [' + that.pos + ']')
     }
 
