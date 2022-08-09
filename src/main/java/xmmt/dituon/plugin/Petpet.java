@@ -255,6 +255,7 @@ public final class Petpet extends JavaPlugin {
             for (Member m : e.getGroup().getMembers()) {
                 if (m.getNameCard().toLowerCase().contains(spanList.get(0).toLowerCase())
                         || m.getNick().toLowerCase().contains(spanList.get(0).toLowerCase())) {
+                    if (e.getSender().getId() == m.getId()) break;
                     fromName = getNameOrNick(e.getSender());
                     fromUrl = e.getSender().getAvatarUrl();
                     toName = getNameOrNick(m);
