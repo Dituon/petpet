@@ -180,9 +180,10 @@ public abstract class ImageSynthesisCore {
         ArrayList<BufferedImage> output = new ArrayList<>();
         try {
             URL url = new URL(imageUrl);
-            GifDecoder decoder = new GifDecoder();
+            ReusableGifDecoder decoder = new ReusableGifDecoder();
             BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
             inputStream.mark(0); //循环利用inputStream, 避免重复获取
+            long time = System.currentTimeMillis();
             decoder.read(inputStream);
             if (decoder.err()) {
                 inputStream.reset();
@@ -194,6 +195,7 @@ public abstract class ImageSynthesisCore {
             for (short i = 0; i < decoder.getFrameCount(); i++) {
                 output.add(decoder.getFrame(i));
             }
+            System.out.println("解析gif用时: " + (System.currentTimeMillis() - time));
         } catch (Exception ex) {
             System.out.println("[获取/解析 图像失败]  URL: " + imageUrl);
             ex.printStackTrace();

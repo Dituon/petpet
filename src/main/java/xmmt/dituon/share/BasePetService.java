@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 
@@ -201,18 +202,28 @@ public class BasePetService {
         key = dataRoot.getAbsolutePath() + File.separator +
                 (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
 
+        CountDownLatch latch = new CountDownLatch(
+                data.getText().size() + data.getAvatar().size()
+                        + (additionTextDatas != null ? additionTextDatas.size() : 0));
+
         try {
             ArrayList<TextModel> textList = new ArrayList<>();
             // add from KeyData
             if (!data.getText().isEmpty()) {
                 for (TextData textElement : data.getText()) {
-                    textList.add(new TextModel(textElement, textExtraData));
+                    new Thread(() -> {
+                        textList.add(new TextModel(textElement, textExtraData));
+                        latch.countDown();
+                    }).start();
                 }
             }
             // add from params
             if (additionTextDatas != null) {
                 for (TextData textElement : additionTextDatas) {
-                    textList.add(new TextModel(textElement, textExtraData));
+                    new Thread(() -> {
+                        textList.add(new TextModel(textElement, textExtraData));
+                        latch.countDown();
+                    }).start();
                 }
             }
 
@@ -220,7 +231,10 @@ public class BasePetService {
 
             if (!data.getAvatar().isEmpty()) {
                 for (AvatarData avatarData : data.getAvatar()) {
-                    avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()));
+                    new Thread(() -> {
+                        avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()));
+                        latch.countDown();
+                    }).start();
                 }
             }
 
@@ -231,6 +245,8 @@ public class BasePetService {
                     if (!file.getName().endsWith(".png")) continue;
                     stickerMap.put(imageNum, ImageIO.read(new File(key + imageNum++ + ".png")));
                 }
+
+                latch.await();
                 if (data.getBackground() != null) { //从配置文件读背景
                     BufferedImage sticker = new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
                     for (short i = 0; i < avatarList.get(0).getPosLength(); i++) {
@@ -242,6 +258,7 @@ public class BasePetService {
             }
 
             if (data.getType() == Type.IMG) {
+                latch.await();
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
                 InputStream inputStream = BaseImageMaker.makeImage(avatarList, textList, sticker, antialias);

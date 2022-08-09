@@ -183,6 +183,7 @@ public final class Petpet extends JavaPlugin {
             if (singleMessage instanceof QuoteReply && service.respondReply) {
                 long id = e.getGroup().getId() + ((QuoteReply) singleMessage).getSource().getIds()[0];
                 toUrl = imageCachePool.get(id) != null ? imageCachePool.get(id) : toUrl;
+                fuzzyLock = true;
                 continue;
             }
             if (singleMessage instanceof PlainText) {
@@ -190,7 +191,7 @@ public final class Petpet extends JavaPlugin {
                 messageText.append(text).append(' ');
                 continue;
             }
-            if (singleMessage instanceof At) {
+            if (singleMessage instanceof At && !fuzzyLock) {
                 fuzzyLock = true;
 
                 At at = (At) singleMessage;
@@ -240,12 +241,10 @@ public final class Petpet extends JavaPlugin {
 
         if (!spanList.isEmpty()) {
             if (service.getDataMap().containsKey(spanList.get(0))) { //key
-                key = spanList.get(0);
-                spanList.remove(0);
+                key = spanList.remove(0);
             } else if (service.getAliaMap().containsKey(spanList.get(0))) { //别名
-                String[] keys = service.getAliaMap().get(spanList.get(0));
+                String[] keys = service.getAliaMap().get(spanList.remove(0));
                 key = keys[new Random().nextInt(keys.length)];
-                spanList.remove(0);
             }
         }
 
@@ -260,6 +259,7 @@ public final class Petpet extends JavaPlugin {
                     fromUrl = e.getSender().getAvatarUrl();
                     toName = getNameOrNick(m);
                     toUrl = m.getAvatarUrl();
+                    break;
                 }
             }
         }

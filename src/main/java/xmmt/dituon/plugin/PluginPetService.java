@@ -154,32 +154,6 @@ public class PluginPetService extends BasePetService {
         sendImage(group, key, gifAvatarExtraDataProvider, textExtraData);
     }
 
-    /**
-     * 发送图片
-     * @deprecated 使用GifAvatarExtraDataProvider以保证对Gif格式的解析
-     */
-    @Deprecated
-    public void sendImage(Group group, String key,
-                          AvatarExtraDataProvider avatarExtraDataProvider, TextExtraData textExtraData) {
-
-        Pair<InputStream, String> generatedImageAndType = generateImage(key, avatarExtraDataProvider,
-                textExtraData, null);
-
-        try {
-            if (generatedImageAndType != null) {
-                ExternalResource resource = ExternalResource.create(generatedImageAndType.getFirst());
-                Image image = group.uploadImage(resource);
-                resource.close();
-                group.sendMessage(image);
-            } else {
-                System.out.println("生成图片失败");
-            }
-        } catch (Exception ex) {
-            System.out.println("发送图片时出错：" + ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
-
     public void sendImage(Group group, String key,
                           GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData){
         Pair<InputStream, String> generatedImageAndType = generateImage(key, gifAvatarExtraDataProvider,

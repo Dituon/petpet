@@ -90,7 +90,7 @@ data class AvatarData @JvmOverloads constructor(
     val crop: JsonArray? = null,
     val cropType: CropType? = CropType.NONE,
     val style: List<Style>? = emptyList(),
-    val angle: Int? = 0,
+    val angle: Short? = 0,
     val round: Boolean? = false,
     val rotate: Boolean? = false,
     val avatarOnTop: Boolean? = true,

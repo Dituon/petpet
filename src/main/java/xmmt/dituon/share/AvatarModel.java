@@ -14,12 +14,12 @@ public class AvatarModel {
     private Type imageType;
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
-    protected int angle;
+    protected short angle;
     protected boolean round;
     protected boolean rotate;
     protected boolean onTop;
     protected List<BufferedImage> imageList = null;
-    private int posIndex = 0;
+    private short posIndex = 0;
     private boolean antialias;
     private AvatarPosType posType;
     private DeformData deformData = null;
@@ -192,11 +192,14 @@ public class AvatarModel {
     }
 
     /**
-     * 获取旋转角度
+     * 获取下一个旋转角度
      * <li>不旋转时 返回初始角度</li>
      * <li>IMG格式 返回随机角度</li>
      * <li>GIF 返回下一个旋转角度</li>
+     *
+     * @deprecated 应当使用index直接获取角度, 之后的版本将不再维护posIndex
      */
+    @Deprecated
     public float getNextAngle() {
         if (!rotate) return angle; //不旋转
         if (imageType == Type.IMG) return new Random().nextInt(angle != 0 ? angle : 360); //IMG随机旋转
@@ -204,13 +207,33 @@ public class AvatarModel {
     }
 
     /**
-     * 获取下一个坐标
+     * 获取旋转角度
+     * <li>不旋转时 返回初始角度</li>
+     * <li>IMG格式 返回随机角度</li>
+     * <li>GIF 返回旋转角度</li>
      */
+    public float getAngle(short index) {
+        if (!rotate) return angle; //不旋转
+        if (imageType == Type.IMG) return new Random().nextInt(angle != 0 ? angle : 360); //IMG随机旋转
+        return ((float) (360 / pos.length) * index) + angle; //GIF自动旋转
+    }
+
+    /**
+     * 获取下一个坐标
+     *
+     * @deprecated 应当使用index直接获取坐标, 之后的版本将不再维护posIndex
+     */
+    @Deprecated
     public int[] nextPos() {
-        if (posIndex >= pos.length) {
-            return pos[pos.length - 1];
-        }
-        return pos[posIndex++];
+        return getPos(posIndex++);
+    }
+
+    /**
+     * 获取坐标(索引越界会返回最后的坐标)
+     */
+    public int[] getPos(short i) {
+        if (i >= pos.length) return pos[pos.length - 1];
+        return pos[i];
     }
 
     public AvatarPosType getPosType() {
@@ -270,10 +293,20 @@ public class AvatarModel {
     }
 
     /**
-     * 获取头像下一帧, 超过索引长度会重新开始循环 (线程不安全)
+     * 获取头像下一帧, 超过索引长度会重新开始循环 <b>(线程不安全)</b>
+     * <b>应当使用index直接获取帧</b>
      */
     public BufferedImage nextFrame() {
         if (frameIndex >= imageList.size()) frameIndex = 0;
         return imageList.get(frameIndex++);
+    }
+
+    /**
+     * 获取指定帧数, 超过索引长度会从头计数
+     * 例如: length: 8 index: 10 return: list[1]
+     */
+    public BufferedImage getFrame(short i) {
+        i = (short) (i % imageList.size());
+        return imageList.get(i);
     }
 }

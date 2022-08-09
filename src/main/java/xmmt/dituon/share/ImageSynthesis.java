@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageSynthesis extends ImageSynthesisCore {
-    protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar) {
+    protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar, short index) {
         switch (avatar.getPosType()) {
             case ZOOM:
-                g2dDrawZoomAvatar(g2d, avatar.nextFrame(),
-                        avatar.nextPos(), avatar.getNextAngle(), avatar.isRound());
+                g2dDrawZoomAvatar(g2d, avatar.getFrame(index),
+                        avatar.getPos(index), avatar.getAngle(index), avatar.isRound());
                 break;
             case DEFORM:
                 AvatarModel.DeformData deformData = avatar.getDeformData();
-                g2dDrawDeformAvatar(g2d, avatar.nextFrame(), deformData.getDeformPos(), deformData.getAnchor());
+                g2dDrawDeformAvatar(g2d, avatar.getFrame(index),
+                        deformData.getDeformPos(), deformData.getAnchor());
                 break;
         }
     }
@@ -35,7 +36,13 @@ public class ImageSynthesis extends ImageSynthesisCore {
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
                                                ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                               boolean antialias, boolean transparent) {
+                                               boolean antialias, boolean transparent){
+        return synthesisImage(sticker, avatarList, textList, antialias, transparent, (short) 0);
+    }
+
+    public static BufferedImage synthesisImage(BufferedImage sticker,
+                                               ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+                                               boolean antialias, boolean transparent, short index) {
         BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
         Graphics2D g2d = output.createGraphics();
 
@@ -67,11 +74,11 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
         // 画
         for (AvatarModel avatar : bottomAvatars) {
-            g2dDrawAvatar(g2d, avatar);
+            g2dDrawAvatar(g2d, avatar, index);
         }
         g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
         for (AvatarModel avatar : topAvatars) {
-            g2dDrawAvatar(g2d, avatar);
+            g2dDrawAvatar(g2d, avatar, index);
         }
 
         g2dDrawTexts(g2d, textList);
