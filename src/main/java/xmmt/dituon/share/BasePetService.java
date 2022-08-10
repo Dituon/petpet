@@ -336,7 +336,7 @@ public class BasePetService {
             System.out.println("GifMaxSize无效: Length Must <= 3");
             return;
         }
-        if (maxSize.size() == 1) maxSize.add(null);
+        if (maxSize.size() == 1) maxSize.add(maxSize.get(0));
         if (maxSize.size() == 2) maxSize.add(null);
         gifMaxSize = maxSize.stream()
                 .map(i -> i = i != null && i <= 0 ? null : i)
