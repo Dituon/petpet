@@ -16,6 +16,7 @@ import xmmt.dituon.share.TextExtraData;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
@@ -228,6 +229,9 @@ public final class Petpet extends JavaPlugin {
             if (keyAliaSet == null) { //按需初始化
                 keyAliaSet = new HashSet<>(service.getDataMap().keySet());
                 keyAliaSet.addAll(service.getAliaMap().keySet());
+                keyAliaSet = keyAliaSet.stream()
+                        .map(str -> str = service.commandHead + str)
+                        .collect(Collectors.toSet());
             }
             for (String k : keyAliaSet) {
                 if (spanList.get(0).startsWith(k)) {
@@ -240,9 +244,16 @@ public final class Petpet extends JavaPlugin {
         }
 
         if (!spanList.isEmpty()) {
-            if (service.getDataMap().containsKey(spanList.get(0))) { //key
+            String firstSpan = spanList.get(0);
+            if (firstSpan.startsWith(service.commandHead)) {
+                spanList.set(0, firstSpan = firstSpan.substring(service.commandHead.length()));
+            } else {
+                return;
+            }
+
+            if (service.getDataMap().containsKey(firstSpan)) { //key
                 key = spanList.remove(0);
-            } else if (service.getAliaMap().containsKey(spanList.get(0))) { //别名
+            } else if (service.getAliaMap().containsKey(firstSpan)) { //别名
                 String[] keys = service.getAliaMap().get(spanList.remove(0));
                 key = keys[new Random().nextInt(keys.length)];
             }

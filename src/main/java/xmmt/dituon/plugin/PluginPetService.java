@@ -9,10 +9,7 @@ import xmmt.dituon.share.*;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class PluginPetService extends BasePetService {
 
@@ -67,7 +64,7 @@ public class PluginPetService extends BasePetService {
         super.setGifMaxSize(config.getGifMaxSize());
         super.encoder = config.getGifEncoder();
 
-        switch (config.getDisablePolicy()){
+        switch (config.getDisablePolicy()) {
             case NONE:
                 nudgeCanBeDisabled = false;
                 messageCanBeDisabled = false;
@@ -158,7 +155,7 @@ public class PluginPetService extends BasePetService {
     }
 
     public void sendImage(Group group, String key,
-                          GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData){
+                          GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData) {
         Pair<InputStream, String> generatedImageAndType = generateImage(key, gifAvatarExtraDataProvider,
                 textExtraData, null);
 
