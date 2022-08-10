@@ -82,8 +82,8 @@ public class BasePetService {
         List<String> successNames = new ArrayList<>();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         for (File fontFile : Objects.requireNonNull(fontsFolder.listFiles())) {
-            try (InputStream inputStream = new FileInputStream(fontFile)) {
-                Font customFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+            try {
+                Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
                 boolean success = ge.registerFont(customFont);
                 if (success) {
                     successNames.add(fontFile.getName());
