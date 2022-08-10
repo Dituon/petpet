@@ -171,15 +171,15 @@ content:
 > GIF编码器, 默认为`BUFFERED_STREAM`
 > 
 > 枚举: 
-> - `BUFFERED_STREAM`:
+> **`BUFFERED_STREAM`**:
 > 基于缓存的`STREAM`流, 在编码过程中对Gif进行压缩;
 > 
-> 编码速度较慢, 所需堆内存小, 生成Gif体积小
+> - 编码速度较慢, 所需堆内存小, 生成Gif体积小
 >
-> - `ANIMATED_LIB`
+> **`ANIMATED_LIB`**:
 > 基于`Byte[]`序列, Gif压缩比极低;
 > 
-> 编码速度极快, 所需堆内存较多, 生成Gif体积大
+> - 编码速度极快, 所需堆内存较多, 生成Gif体积大
 <br/>
 
 - **gifMaxSize**: `[]`
