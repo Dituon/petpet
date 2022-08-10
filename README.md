@@ -58,8 +58,12 @@ content:
   fuzzy: false #模糊匹配用户名
 
   synchronized: false #消息事件同步锁
+  gifEncoder: BUFFERED_STREAM #GIF编码器
+  gifMaxSize: [] #GIF缩放阈值/尺寸
+  
   strictCommand: true #严格匹配模式
   headless: true #使用headless模式
+  
   autoUpdate: true #自动从仓库同步PetData
   updateIgnore: [] #更新忽略表列
   repositoryUrl: 'https://dituon.github.io/petpet' #仓库地址, 用于自动更新
@@ -143,7 +147,7 @@ content:
 
 > 模糊匹配用户名, 默认为`false`
 > 
-> 例 (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
+> 例 : (配置项为`true`时): `kiss @田所浩二`(响应) `kiss 浩二`(响应)
 <br/>
 
 - **strictCommand**: `true`
@@ -152,7 +156,7 @@ content:
 >
 > ~~人话: 可以省略key后的空格~~
 >
-> 例 (配置项为`false`时): `kiss 田所`(响应) `kiss田所`(响应)
+> 例 : (配置项为`false`时): `kiss 田所`(响应) `kiss田所`(响应)
 <br/>
 
 - **synchronized**: `false`
@@ -161,6 +165,36 @@ content:
 > 
 > ~~人话: 多机器人对于同一条指令只有一个会响应~~
 <br/>
+ 
+- **gifEncoder**: `BUFFERED_STREAM`
+
+> GIF编码器, 默认为`BUFFERED_STREAM`
+> 
+> 枚举: 
+> - `BUFFERED_STREAM`:
+> 基于缓存的`STREAM`流, 在编码过程中对Gif进行压缩;
+> 
+> 编码速度较慢, 所需堆内存小, 生成Gif体积小
+>
+> - `ANIMATED_LIB`
+> 基于`Byte[]`序列, Gif压缩比极低;
+> 
+> 编码速度极快, 所需堆内存较多, 生成Gif体积大
+<br/>
+
+- **gifMaxSize**: `[]`
+> GIF缩放阈值/尺寸, 默认为空 (不限制)
+> 
+> `[width, height, frameLength]`:
+> 
+> 当Gif长度超过`frameLength`时, 会对Gif进行等比例缩放
+> 
+> 例 : (配置项为`[200, 200, 32]`时) 
+> - 当Gif长度超过`32`帧时, 检查Gif尺寸
+> - 当Gif尺寸大于`200*200`时, 对Gif进行等比例缩放
+> - Gif缩放后 最长边不会超过设定值
+> (当Gif中包含`40`帧, 尺寸为`300*500`时)
+> - 输出的Gif长度不变, 尺寸为`120*200`
 
 - **headless**: `true`
 
