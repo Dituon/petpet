@@ -2,7 +2,7 @@
 function Avatar(qq = 2544193782) {
     const that = this
     // this.avatarURL = `https://q.qlogo.cn/headimg_dl?dst_uin=${qq}&spec=640&img_type=jpg`
-    this.avatarURL = `/avatar.jpg`
+    this.avatarURL = `./avatar.jpg`
     fabric.Image.fromURL(this.avatarURL, a => {
         that.avatar = a
         that.avatar.scale(0.2)
