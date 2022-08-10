@@ -28,6 +28,9 @@ public class ServerPetService extends BasePetService {
             path = config.getDataPath();
             threadPoolSize = config.getThreadPoolSize();
             headless = config.getHeadless();
+
+            super.setGifMaxSize(config.getGifMaxSize());
+            super.encoder = config.getGifEncoder();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

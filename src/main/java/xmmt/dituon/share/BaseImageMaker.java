@@ -4,12 +4,20 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BaseImageMaker {
     public static InputStream makeImage(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                        BufferedImage sticker, boolean antialias) {
+                                        BufferedImage sticker, boolean antialias, Encoder encoder) {
+        return makeImage(avatarList, textList, sticker, antialias, null, encoder);
+    }
+
+    public static InputStream makeImage(
+            ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+            BufferedImage sticker, boolean antialias, List<Integer> maxSize, Encoder encoder) {
         for (AvatarModel avatar : avatarList) {
-            if (avatar.isGif()) return BaseGifMaker.makeGIF(avatarList, textList, sticker, antialias);
+            if (avatar.isGif()) return BaseGifMaker.makeGIF(
+                    avatarList, textList, sticker, antialias, maxSize, encoder);
         }
         try {
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(

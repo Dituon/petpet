@@ -13,6 +13,8 @@ content:
   fuzzy: false
   strictCommand: true
   synchronized: false
+  gifEncoder: BUFFERED_STREAM
+  gifMaxSize: []
   headless: true
   autoUpdate: true
   updateIgnore: []

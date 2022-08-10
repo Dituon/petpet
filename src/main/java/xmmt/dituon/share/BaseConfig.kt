@@ -8,8 +8,14 @@ import java.awt.image.BufferedImage
 
 @Serializable
 data class BaseServiceConfig(
-    val antialias: Boolean = true
+    val antialias: Boolean = true,
+    val gifMaxSize: List<Int> = emptyList(),
+    val gifEncoder: Encoder = Encoder.BUFFERED_STREAM
 )
+
+enum class Encoder {
+    ANIMATED_LIB, BUFFERED_STREAM
+}
 
 enum class Type {
     GIF, IMG

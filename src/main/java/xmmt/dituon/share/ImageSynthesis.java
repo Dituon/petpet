@@ -8,10 +8,15 @@ import java.util.List;
 
 public class ImageSynthesis extends ImageSynthesisCore {
     protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar, short index) {
+        g2dDrawAvatar(g2d, avatar, index, 1.0F);
+    }
+
+    protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar,
+                                        short index, float multiple) {
         switch (avatar.getPosType()) {
             case ZOOM:
-                g2dDrawZoomAvatar(g2d, avatar.getFrame(index),
-                        avatar.getPos(index), avatar.getAngle(index), avatar.isRound());
+                g2dDrawZoomAvatar(g2d, avatar.getFrame(index), avatar.getPos(index),
+                        avatar.getAngle(index), avatar.isRound(), multiple);
                 break;
             case DEFORM:
                 AvatarModel.DeformData deformData = avatar.getDeformData();
@@ -31,19 +36,51 @@ public class ImageSynthesis extends ImageSynthesisCore {
     public static BufferedImage synthesisImage(BufferedImage sticker,
                                                ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                                boolean antialias) {
-        return synthesisImage(sticker, avatarList, textList, antialias, false);
+        return synthesisImage(sticker, avatarList, textList, antialias, false, (short) 0, null);
     }
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
                                                ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                               boolean antialias, boolean transparent){
-        return synthesisImage(sticker, avatarList, textList, antialias, transparent, (short) 0);
+                                               boolean antialias, boolean transparent) {
+        return synthesisImage(sticker, avatarList, textList, antialias, transparent, (short) 0, null);
     }
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
                                                ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                                boolean antialias, boolean transparent, short index) {
-        BufferedImage output = new BufferedImage(sticker.getWidth(), sticker.getHeight(), sticker.getType());
+        return synthesisImage(sticker, avatarList, textList, antialias, transparent, index, null);
+    }
+
+    public static BufferedImage synthesisImage
+            (BufferedImage sticker, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+             boolean antialias, boolean transparent, short index, List<Integer> maxSize) {
+        int stickerWidth = sticker.getWidth();
+        int stickerHeight = sticker.getHeight();
+
+        float multiple = 1.0F;
+        if (maxSize != null && !maxSize.isEmpty()) {
+            boolean zoom = false;
+            if (maxSize.get(2) != null) {
+                for (AvatarModel avatar : avatarList) {
+                    if (avatar.getImageList().size() >= maxSize.get(2)) {
+                        zoom = true;
+                        break;
+                    }
+                }
+            }
+
+            if (zoom) {
+                if (stickerWidth > maxSize.get(0))
+                    multiple = (float) maxSize.get(0) / sticker.getWidth();
+                if (stickerHeight > maxSize.get(1))
+                    multiple = Math.min(multiple, (float) maxSize.get(1) / sticker.getHeight());
+                System.out.println("m: " + multiple);
+                stickerWidth = (int) (stickerWidth * multiple);
+                stickerHeight = (int) (stickerHeight * multiple);
+            }
+        }
+
+        BufferedImage output = new BufferedImage(stickerWidth, stickerHeight, sticker.getType());
         Graphics2D g2d = output.createGraphics();
 
         if (antialias) { //抗锯齿
@@ -53,12 +90,12 @@ public class ImageSynthesis extends ImageSynthesisCore {
         // 背景
         if (transparent) {
             output = g2d.getDeviceConfiguration().createCompatibleImage(
-                    sticker.getWidth(), sticker.getHeight(), Transparency.TRANSLUCENT);
+                    stickerWidth, stickerHeight, Transparency.TRANSLUCENT);
             g2d.dispose();
             g2d = output.createGraphics();
         } else {
             g2d.setColor(Color.WHITE);
-            g2d.fillRect(0, 0, sticker.getWidth(), sticker.getHeight());
+            g2d.fillRect(0, 0, stickerWidth, stickerHeight);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0F));
         }
 
@@ -74,11 +111,11 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
         // 画
         for (AvatarModel avatar : bottomAvatars) {
-            g2dDrawAvatar(g2d, avatar, index);
+            g2dDrawAvatar(g2d, avatar, index, multiple);
         }
-        g2d.drawImage(sticker, 0, 0, sticker.getWidth(), sticker.getHeight(), null);
+        g2d.drawImage(sticker, 0, 0, stickerWidth, stickerHeight, null);
         for (AvatarModel avatar : topAvatars) {
-            g2dDrawAvatar(g2d, avatar, index);
+            g2dDrawAvatar(g2d, avatar, index, multiple);
         }
 
         g2dDrawTexts(g2d, textList);

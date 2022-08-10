@@ -18,14 +18,12 @@ import java.util.stream.Collectors;
 public class BasePetService {
     public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
+    private List<Integer> gifMaxSize = null;
+    public Encoder encoder = Encoder.BUFFERED_STREAM;
 
     protected File dataRoot;
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
-
-    protected BaseImageMaker imageMaker;
-    protected BaseGifMaker gifMaker;
-
     public static String keyListString;
 
     public void readData(File dir) {
@@ -169,14 +167,16 @@ public class BasePetService {
                         stickerMap.put(i, sticker);
                     }
                 }
-                InputStream inputStream = BaseGifMaker.makeGIF(avatarList, textList, stickerMap, antialias);
+                InputStream inputStream = BaseGifMaker.makeGIF(
+                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder);
                 return new Pair<>(inputStream, "gif");
             }
 
             if (data.getType() == Type.IMG) {
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
-                InputStream inputStream = BaseImageMaker.makeImage(avatarList, textList, sticker, antialias);
+                InputStream inputStream = BaseImageMaker.makeImage(
+                        avatarList, textList, sticker, antialias, gifMaxSize, encoder);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {
@@ -253,7 +253,8 @@ public class BasePetService {
                         stickerMap.put(i, sticker);
                     }
                 }
-                InputStream inputStream = BaseGifMaker.makeGIF(avatarList, textList, stickerMap, antialias);
+                InputStream inputStream = BaseGifMaker.makeGIF(
+                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder);
                 return new Pair<>(inputStream, "gif");
             }
 
@@ -261,7 +262,8 @@ public class BasePetService {
                 latch.await();
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
-                InputStream inputStream = BaseImageMaker.makeImage(avatarList, textList, sticker, antialias);
+                InputStream inputStream = BaseImageMaker.makeImage(
+                        avatarList, textList, sticker, antialias, gifMaxSize, encoder);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {
@@ -326,5 +328,22 @@ public class BasePetService {
 
     public HashMap<String, String[]> getAliaMap() {
         return aliaMap;
+    }
+
+    public void setGifMaxSize(List<Integer> maxSize) {
+        if (maxSize == null || maxSize.isEmpty()) return;
+        if (maxSize.size() > 3) {
+            System.out.println("GifMaxSize无效: Length Must <= 3");
+            return;
+        }
+        if (maxSize.size() == 1) maxSize.add(null);
+        if (maxSize.size() == 2) maxSize.add(null);
+        gifMaxSize = maxSize.stream()
+                .map(i -> i = i != null && i <= 0 ? null : i)
+                .collect(Collectors.toList());
+    }
+
+    public List<Integer> getGifMaxSize() {
+        return gifMaxSize;
     }
 }

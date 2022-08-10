@@ -25,14 +25,29 @@ public abstract class ImageSynthesisCore {
      */
     protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
                                             float angle, boolean isRound) {
+        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, isRound, 1.0F);
+    }
+
+    /**
+     * 在Graphics2D画布上 绘制缩放头像
+     *
+     * @param g2d         Graphics2D 画布
+     * @param avatarImage 处理后的头像
+     * @param pos         处理后的坐标 (int[4]{x, y, w, h})
+     * @param angle       旋转角, 对特殊角度有特殊处理分支
+     * @param isRound     裁切为圆形
+     * @param multiple    缩放倍数
+     */
+    protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
+                                            float angle, boolean isRound, float multiple) {
         if (avatarImage == null) {
             return;
         }
 
-        int x = pos[0];
-        int y = pos[1];
-        int w = pos[2];
-        int h = pos[3];
+        int x = (int) (pos[0] * multiple);
+        int y = (int) (pos[1] * multiple);
+        int w = (int) (pos[2] * multiple);
+        int h = (int) (pos[3] * multiple);
         if (angle == 0) {
             g2d.drawImage(avatarImage, x, y, w, h, null);
             return;
@@ -63,6 +78,25 @@ public abstract class ImageSynthesisCore {
                                               Point2D[] deformPos, int[] anchorPos) {
         BufferedImage result = ImageDeformer.computeImage(avatarImage, deformPos);
         g2d.drawImage(result, anchorPos[0], anchorPos[1], null);
+    }
+
+    /**
+     * 在Graphics2D画布上 绘制变形头像
+     *
+     * @param g2d         Graphics2D 画布
+     * @param avatarImage 处理后的头像
+     * @param deformPos   头像四角坐标 (Point2D[4]{左上角, 左下角, 右下角, 右上角})
+     * @param anchorPos   锚点坐标
+     * @param multiple    缩放倍数
+     */
+    protected static void g2dDrawDeformAvatar(Graphics2D g2d, BufferedImage avatarImage,
+                                              Point2D[] deformPos, int[] anchorPos, float multiple) {
+        for (Point2D point : deformPos) {
+            point.setLocation(point.getX() * multiple, point.getY() * multiple);
+        }
+        BufferedImage result = ImageDeformer.computeImage(avatarImage, deformPos);
+        g2d.drawImage(result,
+                (int) (anchorPos[0] * multiple), (int) (anchorPos[1] * multiple), null);
     }
 
     /**

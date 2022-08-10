@@ -5,10 +5,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import xmmt.dituon.share.AvatarData
-import xmmt.dituon.share.BaseServiceConfig
-import xmmt.dituon.share.TextData
-import xmmt.dituon.share.Type
+import xmmt.dituon.share.*
 
 @Serializable
 data class PluginConfig(
@@ -26,6 +23,8 @@ data class PluginConfig(
     val fuzzy: Boolean = false,
     val strictCommand: Boolean = true,
     val synchronized: Boolean = false,
+    val gifEncoder: Encoder = Encoder.BUFFERED_STREAM,
+    val gifMaxSize: List<Int> = emptyList(),
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
     val updateIgnore: List<String> = emptyList(),

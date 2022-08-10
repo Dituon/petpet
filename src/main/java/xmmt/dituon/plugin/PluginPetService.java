@@ -64,6 +64,9 @@ public class PluginPetService extends BasePetService {
         repositoryUrl = config.getRepositoryUrl();
         disabledGroups = config.getDisabledGroups();
 
+        super.setGifMaxSize(config.getGifMaxSize());
+        super.encoder = config.getGifEncoder();
+
         switch (config.getDisablePolicy()){
             case NONE:
                 nudgeCanBeDisabled = false;
