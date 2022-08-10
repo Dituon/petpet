@@ -139,7 +139,7 @@ content:
 
 - **disablePolicy**: `NUDGE`
 
-> 发送`pet on/off`时 禁用哪些功能
+> 发送`pet on/off`时 禁用哪些功能, 默认为`NUDGE`
 > 
 > 枚举: `NONE`(无效)  `NUDGE`(只禁用戳一戳)  `MESSAGE`(只禁用指令)  `FULL`(同时禁用戳一戳和指令)
 
