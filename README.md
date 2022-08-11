@@ -240,22 +240,67 @@ content:
 <details>
 <summary>展开/收起</summary>
 
-| key     | 预览                   |
-|---------|----------------------|
-| kiss    | ![image](img/0.gif)  |
-| rub     | ![image](img/1.gif)  |
-| throw   | ![image](img/2.gif)  |
-| petpet  | ![image](img/3.gif)  |
-| play    | ![image](img/4.gif)  |
-| roll    | ![image](img/5.gif)  |
-| bite    | ![image](img/6.gif)  |
-| twist   | ![image](img/7.gif)  |
-| pound   | ![image](img/8.gif)  |
-| thump   | ![image](img/9.gif)  |
-| knock   | ![image](img/10.gif) |
-| suck    | ![image](img/11.gif) |
-| hammer  | ![image](img/12.gif) |
-| tightly | ![image](img/13.gif) |
+| key                                    | 预览                                                                                 |
+|----------------------------------------|------------------------------------------------------------------------------------|
+| **anyasuki** <br/>阿尼亚 喜欢               | <image alt="anyasuki" src="./img/anyasuki.gif" width="320"/>                       |
+| **bite** <br/>啃 咬                      | <image alt="bite" src="./img/bite.gif" width="320"/>                               |
+| **breast** <br/>胸 凶                    | <image alt="breast" src="./img/breast.gif" width="320"/>                           |
+| **cast** <br/>丢                        | <image alt="cast" src="./img/cast.gif" width="320"/>                               |
+| **center_symmetry** <br/>中心对称 左上对称     | <image alt="center_symmetry" src="./img/center_symmetry.gif" width="320"/>         |
+| **coupon** <br/>陪睡                     | <image alt="coupon" src="./img/coupon.gif" width="320"/>                           |
+| **cover_face** <br/>挡                  | <image alt="cover_face" src="./img/cover_face.gif" width="320"/>                   |
+| **crawl** <br/>爬                       | <image alt="crawl" src="./img/crawl.gif" width="320"/>                             |
+| **decent_kiss** <br/>抱歉                | <image alt="decent_kiss" src="./img/decent_kiss.gif" width="320"/>                 |
+| **distracted** <br/>注意力                | <image alt="distracted" src="./img/distracted.gif" width="320"/>                   |
+| **dont_touch** <br/>不要靠近               | <image alt="dont_touch" src="./img/dont_touch.gif" width="320"/>                   |
+| **down_symmetry** <br/>对称 下对称 上下对称     | <image alt="down_symmetry" src="./img/down_symmetry.gif" width="320"/>             |
+| **eat** <br/>吃                         | <image alt="eat" src="./img/eat.gif" width="320"/>                                 |
+| **fencing** <br/>击剑 🤺                 | <image alt="fencing" src="./img/fencing.gif" width="320"/>                         |
+| **garbage** <br/>垃圾桶 垃圾 探头             | <image alt="garbage" src="./img/garbage.gif" width="320"/>                         |
+| **hammer** <br/>锤                      | <image alt="hammer" src="./img/hammer.gif" width="320"/>                           |
+| **interview** <br/>采访                  | <image alt="interview" src="./img/interview.gif" width="320"/>                     |
+| **jiujiu** <br/>么么                     | <image alt="jiujiu" src="./img/jiujiu.gif" width="320"/>                           |
+| **keep_away** <br/>远离                  | <image alt="keep_away" src="./img/keep_away.gif" width="320"/>                     |
+| **kiss** <br/>亲 热吻                     | <image alt="kiss" src="./img/kiss.gif" width="320"/>                               |
+| **knock** <br/>敲 打                     | <image alt="knock" src="./img/knock.gif" width="320"/>                             |
+| **left_down_symmetry** <br/>中心对称 左下对称  | <image alt="left_down_symmetry" src="./img/left_down_symmetry.gif" width="320"/>   |
+| **leg** <br/>蹭                         | <image alt="leg" src="./img/leg.gif" width="320"/>                                 |
+| **like** <br/>永远喜欢                     | <image alt="like" src="./img/like.gif" width="320"/>                               |
+| **loading** <br/>加载 加载中                | <image alt="loading" src="./img/loading.gif" width="320"/>                         |
+| **make_friend** <br/>加好友               | <image alt="make_friend" src="./img/make_friend.gif" width="320"/>                 |
+| **marry** <br/>结婚                      | <image alt="marry" src="./img/marry.gif" width="320"/>                             |
+| **nano** <br/>纳米科技                     | <image alt="nano" src="./img/nano.gif" width="320"/>                               |
+| **need** <br/>需要                       | <image alt="need" src="./img/need.gif" width="320"/>                               |
+| **osu**                                | <image alt="osu" src="./img/osu.png" width="320"/>                                 |
+| **painter** <br/>画                     | <image alt="painter" src="./img/painter.gif" width="320"/>                         |
+| **pat** <br/>拍                         | <image alt="pat" src="./img/pat.gif" width="320"/>                                 |
+| **perfect** <br/>完美                    | <image alt="perfect" src="./img/perfect.gif" width="320"/>                         |
+| **petpet** <br/>摸 摸头                   | <image alt="petpet" src="./img/petpet.gif" width="320"/>                           |
+| **play** <br/>玩 顶                      | <image alt="play" src="./img/play.gif" width="320"/>                               |
+| **police** <br/>警察                     | <image alt="police" src="./img/police.gif" width="320"/>                           |
+| **pound** <br/>捣                       | <image alt="pound" src="./img/pound.gif" width="320"/>                             |
+| **pr** <br/>舔屏                         | <image alt="pr" src="./img/pr.gif" width="320"/>                                   |
+| **punch** <br/>打拳                      | <image alt="punch" src="./img/punch.gif" width="320"/>                             |
+| **record** <br/>唱片                     | <image alt="record" src="./img/record.gif" width="320"/>                           |
+| **right_down_symmetry** <br/>中心对称 右下对称 | <image alt="right_down_symmetry" src="./img/right_down_symmetry.gif" width="320"/> |
+| **right_symmetry** <br/>对称 右对称 左右对称    | <image alt="right_symmetry" src="./img/right_symmetry.gif" width="320"/>           |
+| **right_up_symmetry** <br/>中心对称 右上对称   | <image alt="right_up_symmetry" src="./img/right_up_symmetry.gif" width="320"/>     |
+| **roll** <br/>滚 推                      | <image alt="roll" src="./img/roll.gif" width="320"/>                               |
+| **rub** <br/>舔 prpr                    | <image alt="rub" src="./img/rub.gif" width="320"/>                                 |
+| **safe_sense** <br/>安全感                | <image alt="safe_sense" src="./img/safe_sense.gif" width="320"/>                   |
+| **suck** <br/>吸                        | <image alt="suck" src="./img/suck.gif" width="320"/>                               |
+| **support** <br/>精神支柱                  | <image alt="support" src="./img/support.gif" width="320"/>                         |
+| **symmetry** <br/>对称 左对称 左右对称          | <image alt="symmetry" src="./img/symmetry.gif" width="320"/>                       |
+| **tear** <br/>撕                        | <image alt="tear" src="./img/tear.gif" width="320"/>                               |
+| **thinkwhat** <br/>想                   | <image alt="thinkwhat" src="./img/thinkwhat.gif" width="320"/>                     |
+| **throw** <br/>扔                       | <image alt="throw" src="./img/throw.gif" width="320"/>                             |
+| **thump** <br/>锤                       | <image alt="thump" src="./img/thump.gif" width="320"/>                             |
+| **tightly** <br/>黏                     | <image alt="tightly" src="./img/tightly.gif" width="320"/>                         |
+| **twist** <br/>抱                       | <image alt="twist" src="./img/twist.gif" width="320"/>                             |
+| **up_symmetry** <br/>对称 上对称 上下对称       | <image alt="up_symmetry" src="./img/up_symmetry.gif" width="320"/>                 |
+| **wallpaper** <br/>壁纸                  | <image alt="wallpaper" src="./img/wallpaper.gif" width="320"/>                     |
+| **worship** <br/>膜拜                    | <image alt="worship" src="./img/worship.gif" width="320"/>                         |
+| **yoasobi** <br/>群青                    | <image alt="yoasobi" src="./img/yoasobi.gif" width="320"/>                         |
 
 **..more&more**
 

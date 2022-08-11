@@ -74,7 +74,6 @@ public class ImageSynthesis extends ImageSynthesisCore {
                     multiple = (float) maxSize.get(0) / sticker.getWidth();
                 if (stickerHeight > maxSize.get(1))
                     multiple = Math.min(multiple, (float) maxSize.get(1) / sticker.getHeight());
-                System.out.println("m: " + multiple);
                 stickerWidth = (int) (stickerWidth * multiple);
                 stickerHeight = (int) (stickerHeight * multiple);
             }
