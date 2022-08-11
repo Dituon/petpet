@@ -127,7 +127,7 @@ public class BaseGifMaker {
             CountDownLatch latch = new CountDownLatch(maxFrameLength);
             HashMap<Short, BufferedImage> imageMap = new HashMap<>();
             for (short i = 0; i < maxFrameLength; i++) {
-                short fi = i++;
+                short fi = i;
                 new Thread(() -> {
                     imageMap.put(fi, ImageSynthesis.synthesisImage(
                             sticker, avatarList, textList,
@@ -162,7 +162,8 @@ public class BaseGifMaker {
                 short fi = i;
                 new Thread(() -> {
                     imageMap.put(fi, ImageSynthesis.synthesisImage(
-                            sticker, avatarList, textList, antialias, false, fi, maxSize
+                            sticker, avatarList, textList,
+                            antialias, false, fi, maxSize
                     ));
                     latch.countDown();
                 }).start();

@@ -1,13 +1,18 @@
 package xmmt.dituon.example;
 
+import kotlin.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import xmmt.dituon.share.BaseConfigFactory;
 import xmmt.dituon.share.BaseServiceConfig;
 import xmmt.dituon.share.TextData;
+import xmmt.dituon.share.TextExtraData;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 
 public class ExperimentalDataServiceTest extends AbstractServiceTest {
 
@@ -15,7 +20,7 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
     public static void init() {
         BaseServiceConfig config = new BaseServiceConfig();
         petService.readBaseServiceConfig(config);
-        petService.readData(new File("./example-data/data"));
+        petService.readData(new File("./data/xmmt.dituon.petpet"));
     }
 
     @Test
@@ -31,6 +36,27 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
     @Test
     public void testAnyasuki() throws IOException {
         testGeneral("testAnyasuki-deform", "anyasuki-deform", null);
+    }
+
+    @Test
+    public void testAll() {
+        TextExtraData textExtraData = new TextExtraData(
+                "恋恋", "绝绝", "幻想乡",
+                List.of("petpet!")
+        );
+        petService.getDataMap().keySet().forEach(key -> {
+            Pair<InputStream, String> resultStreamAndType = petService.generateImage(
+                    key,
+                    BaseConfigFactory.getGifAvatarExtraDataFromUrls(
+                            "file:/example-data/input/from.gif",
+                            "file:/example-data/input/to.gif",
+                            null, null
+                    )
+                    , textExtraData, null
+            );
+            final String saveName = OUTPUT_ROOT + key + '.' + resultStreamAndType.getSecond();
+            copyInputStreamToFile(resultStreamAndType.getFirst(), new File(saveName));
+        });
     }
 
     private TextData textDataForPandaFace(String text) {
