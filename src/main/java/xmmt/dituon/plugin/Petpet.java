@@ -296,9 +296,12 @@ public final class Petpet extends JavaPlugin {
     private void cacheMessageImage(GroupMessagePostSendEvent e) {
         for (SingleMessage singleMessage : e.getMessage()) {
             if (singleMessage instanceof Image) {
-                long id = e.getTarget().getId() + e.getReceipt().getSource().getIds()[0];
-                imageCachePool.put(id, Image.queryUrl((Image) singleMessage));
-                return;
+                try {
+                    long id = e.getTarget().getId() + e.getReceipt().getSource().getIds()[0];
+                    imageCachePool.put(id, Image.queryUrl((Image) singleMessage));
+                    return;
+                } catch (Exception ignore) {
+                }
             }
         }
     }
