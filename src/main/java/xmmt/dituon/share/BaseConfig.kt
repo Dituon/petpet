@@ -14,7 +14,7 @@ data class BaseServiceConfig(
 )
 
 enum class Encoder {
-    ANIMATED_LIB, BUFFERED_STREAM
+    BUFFERED_STREAM, ANIMATED_LIB, SQUAREUP_LIB
 }
 
 enum class Type {
@@ -48,7 +48,7 @@ enum class TextWrap {
     NONE, BREAK, ZOOM
 }
 
-enum class TextStyle{
+enum class TextStyle {
     PLAIN, BOLD, ITALIC
 }
 

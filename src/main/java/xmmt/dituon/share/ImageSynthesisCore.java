@@ -395,4 +395,18 @@ public abstract class ImageSynthesisCore {
     public static List<BufferedImage> binarizeImage(List<BufferedImage> imageList) {
         return imageList.stream().map(ImageSynthesisCore::binarizeImage).collect(Collectors.toList());
     }
+
+    /**
+     * BufferedImage转为int[][]数组
+     */
+    public static int[][] convertImageToArray(BufferedImage bf) {
+        int width = bf.getWidth();
+        int height = bf.getHeight();
+        int[] data = new int[width*height];
+        bf.getRGB(0, 0, width, height, data, 0, width);
+        int[][] rgbArray = new int[height][width];
+        for(int i = 0; i < height; i++)
+            System.arraycopy(data, i * width, rgbArray[i], 0, width);
+        return rgbArray;
+    }
 }
