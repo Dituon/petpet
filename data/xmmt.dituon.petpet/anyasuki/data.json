@@ -8,9 +8,11 @@
     }],
     "text": [{
         "text": "阿尼亚喜欢$txt1[这个]",
-        "pos": [120,480],
+        "pos": [237,460],
         "color": "#ffffff",
-        "size": 40
+        "font": "MiSans Bold",
+        "size": 40,
+        "align": "CENTER"
     }],
     "alias": ["阿尼亚","喜欢"]
 }
