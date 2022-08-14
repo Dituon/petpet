@@ -13,6 +13,7 @@ public class TextModel {
     protected Font font;
     protected TextAlign align;
     protected TextWrap wrap;
+    protected List<Position> position;
     private static Graphics2D container = null;
     private short line = 1;
 
@@ -27,6 +28,8 @@ public class TextModel {
                 textData.getStyle() != null ? textData.getStyle() : TextStyle.PLAIN);
         align = textData.getAlign();
         wrap = textData.getWrap();
+        position = textData.getPosition();
+        if (position == null || position.size() != 2) position = null;
     }
 
     private String buildText(String text, TextExtraData extraData) {
@@ -41,15 +44,13 @@ public class TextModel {
         Matcher m = Pattern.compile(regex).matcher(text);
         while (m.find()) {
             short i = Short.parseShort(m.group(1));
-            String replaceText = m.group(2);
-            try {
-                replaceText = extraData.getTextList().get(i - 1);
-            } catch (IndexOutOfBoundsException ignored) {
-            }
-            text = text.replaceAll(regex, replaceText);
+            String replaceText = i <= extraData.getTextList().size() ?
+                    extraData.getTextList().get(i - 1) : m.group(2);
+            text = text.replace(m.group(0), replaceText);
         }
-        for (char t : text.toCharArray()) {
-            if (t == '\n') line += 1;
+        char[] chars = text.toCharArray();
+        for (char t : chars) {
+            if (t == '\n' && chars[chars.length - 1] != '\n') line += 1;
         }
         return text;
     }
@@ -87,7 +88,7 @@ public class TextModel {
     }
 
     /**
-     * 获取构建后的坐标
+     * 获取构建后的坐标(深拷贝)
      *
      * @return int[2]{x, y}
      */
@@ -99,7 +100,7 @@ public class TextModel {
             case RIGHT:
                 return new int[]{pos[0] - this.getWidth(this.getFont()), pos[1]};
         }
-        return pos;
+        return pos.clone();
     }
 
     /**
@@ -107,6 +108,14 @@ public class TextModel {
      */
     public Color getColor() {
         return color;
+    }
+
+    public void zoomFont(float multiple) {
+        font = new Font(font.getFontName(), font.getStyle(), Math.round(font.getSize() * multiple));
+    }
+
+    public List<Position> getPosition() {
+        return position;
     }
 
     /**
@@ -118,6 +127,38 @@ public class TextModel {
             return new Font(font.getFontName(), font.getStyle(), Math.round(font.getSize() * multiple));
         }
         return font;
+    }
+
+    /**
+     * 在Graphics2D对象上绘制TextModel
+     *
+     * @param g2d           画布
+     * @param stickerWidth  画布宽度, 用于计算坐标
+     * @param stickerHeight 画布高度, 用于计算坐标
+     */
+    public void drawAsG2d(Graphics2D g2d, int stickerWidth, int stickerHeight) {
+        if (position == null) {
+            ImageSynthesisCore.g2dDrawText(g2d, getText(), getPos(), this.color, getFont());
+            return;
+        }
+        int[] pos = getPos();
+        switch (position.get(0)) {
+            case RIGHT:
+                pos[0] = stickerWidth - pos[0];
+                break;
+            case CENTER:
+                pos[0] = stickerWidth / 2 + pos[0];
+                break;
+        }
+        switch (position.get(1)) {
+            case BOTTOM:
+                pos[1] = stickerHeight - pos[1];
+                break;
+            case CENTER:
+                pos[1] = stickerHeight / 2 + pos[1];
+                break;
+        }
+        ImageSynthesisCore.g2dDrawText(g2d, getText(), pos, this.color, getFont());
     }
 
     /**

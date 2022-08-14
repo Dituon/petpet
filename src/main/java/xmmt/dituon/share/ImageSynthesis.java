@@ -26,11 +26,10 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
     }
 
-    protected static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts) {
+    protected static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts,
+                                       int stickerWidth, int stickerHeight) {
         if (texts == null || texts.isEmpty()) return;
-        for (TextModel text : texts) {
-            ImageSynthesisCore.g2dDrawText(g2d, text.getText(), text.getPos(), text.getColor(), text.getFont());
-        }
+        texts.forEach(text -> text.drawAsG2d(g2d, stickerWidth, stickerHeight));
     }
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
@@ -117,7 +116,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
             g2dDrawAvatar(g2d, avatar, index, multiple);
         }
 
-        g2dDrawTexts(g2d, textList);
+        g2dDrawTexts(g2d, textList, stickerWidth, stickerHeight);
         g2d.dispose();
         return output;
     }

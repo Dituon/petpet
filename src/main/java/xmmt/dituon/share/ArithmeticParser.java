@@ -2,11 +2,12 @@ package xmmt.dituon.share;
 
 public class ArithmeticParser {
     private String str;
-    public ArithmeticParser(String str){
+
+    public ArithmeticParser(String str) {
         this.str = str;
     }
 
-    public void put(String r, int num){
+    public void put(String r, int num) {
         str = str.replace(r, String.valueOf(num));
     }
 

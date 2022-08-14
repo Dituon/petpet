@@ -457,6 +457,7 @@ content:
       "text": "发送者: $from, 接收者: $to", // 支持变量
       "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
       "pos": [20, 150], // 坐标
+      "position": ["CENTER", "BOTTOM"], //坐标计算基准([x, y])
       "font": "宋体" // 字体, 默认为黑体
     },
     {
@@ -475,6 +476,8 @@ content:
 - `$to` : 接收者, 被戳或At的对象, 发送图片构造时为"你"
 - `$group` : 群名称
 - `$txt(i)[(xxx)]` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1[我]超市$txt2[你]` 指令为 `pet [key] 我 你`
+
+**需要更多变量请提交 Issue**
 
 **`font`**
 
@@ -499,7 +502,14 @@ content:
 - `BLOD`: 粗体
 - `ITALIC`: 斜体
 
-**需要更多变量请提交 Issue**
+**`position`**
+
+- `LEFT`: 左定位(默认)
+- `RIGHT`: 右定位
+- `TOP`: 上定位(默认)
+- `BOTTOM`: 下定位
+- `CENTER`: 居中定位
+
 
 #### `background`
 

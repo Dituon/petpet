@@ -25,7 +25,7 @@ public class AvatarModel {
     private DeformData deformData = null;
     private CropType cropType;
     private int[] cropPos;
-    private List<Style> styleList;
+    private List<AvatarStyle> styleList;
     private short frameIndex = 0;
 
     @Deprecated
@@ -142,7 +142,7 @@ public class AvatarModel {
     private void buildImage() {
         if (cropType != CropType.NONE) imageList = ImageSynthesis.cropImage(imageList, cropType, cropPos);
 
-        for (Style style : styleList) {
+        for (AvatarStyle style : styleList) {
             switch (style) {
                 case FLIP:
                     imageList = ImageSynthesis.flipImage(imageList);

@@ -52,6 +52,10 @@ enum class TextStyle {
     PLAIN, BOLD, ITALIC
 }
 
+enum class Position {
+    LEFT, RIGHT, TOP, BOTTOM, CENTER
+}
+
 @Serializable
 data class TextData @JvmOverloads constructor(
     val text: String,
@@ -61,7 +65,8 @@ data class TextData @JvmOverloads constructor(
     val size: Int? = null,
     val align: TextAlign? = TextAlign.LEFT,
     val wrap: TextWrap? = TextWrap.NONE,
-    val style: TextStyle? = TextStyle.PLAIN
+    val style: TextStyle? = TextStyle.PLAIN,
+    val position: List<Position>? = listOf(Position.LEFT, Position.TOP)
 )
 
 @Serializable
@@ -84,7 +89,7 @@ enum class CropType {
     NONE, PIXEL, PERCENT
 }
 
-enum class Style {
+enum class AvatarStyle {
     MIRROR, FLIP, GRAY, BINARIZATION
 }
 
@@ -95,7 +100,7 @@ data class AvatarData @JvmOverloads constructor(
     val posType: AvatarPosType? = AvatarPosType.ZOOM,
     val crop: JsonArray? = null,
     val cropType: CropType? = CropType.NONE,
-    val style: List<Style>? = emptyList(),
+    val style: List<AvatarStyle>? = emptyList(),
     val angle: Short? = 0,
     val round: Boolean? = false,
     val rotate: Boolean? = false,
