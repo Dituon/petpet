@@ -54,7 +54,7 @@ content:
 
   respondSelfNudge: false #响应机器人发出的戳一戳
   keyListFormat: FORWARD #keyList响应格式
-  disablePolicy: NUDGE #禁用策略
+  disablePolicy: FULL #禁用策略
   fuzzy: false #模糊匹配用户名
 
   synchronized: false #消息事件同步锁
@@ -137,9 +137,9 @@ content:
 > 枚举: `MESSAGE`(发送普通消息)  `FORWARD`(发送转发消息)  `IMAGE`(发送图片)
 <br/>
 
-- **disablePolicy**: `NUDGE`
+- **disablePolicy**: `FULL`
 
-> 发送`pet on/off`时 禁用哪些功能, 默认为`NUDGE`
+> 发送`pet on/off`时 禁用哪些功能, 默认为`FULL`
 > 
 > 枚举: `NONE`(无效)  `NUDGE`(只禁用戳一戳)  `MESSAGE`(只禁用指令)  `FULL`(同时禁用戳一戳和指令)
 

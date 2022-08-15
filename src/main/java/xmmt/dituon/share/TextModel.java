@@ -43,8 +43,8 @@ public class TextModel {
         Matcher m = Pattern.compile(regex).matcher(text);
         while (m.find()) {
             short i = Short.parseShort(m.group(1));
-            String replaceText = i <= extraData.getTextList().size() ?
-                    extraData.getTextList().get(i - 1) : m.group(2)
+            String replaceText = i > extraData.getTextList().size() ?
+                    m.group(2) : extraData.getTextList().get(i - 1)
                     .replace("\\n", "\n").replace("\\s", " ");
             text = text.replace(m.group(0), replaceText);
         }
