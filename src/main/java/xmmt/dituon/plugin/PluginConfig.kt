@@ -18,7 +18,7 @@ data class PluginConfig(
     val respondReply: Boolean = true,
     val cachePoolSize: Int? = 10000,
     val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
-    val disablePolicy: DisablePolicy = DisablePolicy.NUDGE,
+    val disablePolicy: DisablePolicy = DisablePolicy.FULL,
     val disabledGroups: List<Long> = ArrayList(),
     val fuzzy: Boolean = false,
     val strictCommand: Boolean = true,

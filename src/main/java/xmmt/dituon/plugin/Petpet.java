@@ -297,6 +297,7 @@ public final class Petpet extends JavaPlugin {
         for (SingleMessage singleMessage : e.getMessage()) {
             if (singleMessage instanceof Image) {
                 try {
+                    assert e.getReceipt() != null;
                     long id = e.getTarget().getId() + e.getReceipt().getSource().getIds()[0];
                     imageCachePool.put(id, Image.queryUrl((Image) singleMessage));
                     return;
@@ -315,7 +316,7 @@ public final class Petpet extends JavaPlugin {
     }
 
     private String getNameOrNick(Member m) {
-        return "".equals(m.getNameCard()) ? m.getNick() : m.getNameCard();
+        return m.getNameCard().isEmpty() ? m.getNick() : m.getNameCard();
     }
 
     public boolean isPermission(GroupMessageEvent e) {

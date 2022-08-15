@@ -168,7 +168,7 @@ public class TextModel {
      */
     public int getWidth(Font font) {
         int width = 0;
-        for (String p : this.getText().split("\n")) {
+        for (String p : this.text.split("\n")) {
             width = Math.max(width, getTextWidth(p, font));
         }
         return width;
