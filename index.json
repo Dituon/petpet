@@ -1,6 +1,7 @@
 {
-    "version": 4.4,
+    "version": 4.5,
     "dataList": [
+        "bible",
         "certificate",
         "key_list",
         "up_symmetry",

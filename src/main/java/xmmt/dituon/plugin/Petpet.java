@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 4.4F;
+    public static final float VERSION = 4.5F;
 
     private static List<Long> disabledGroup;
     public static PluginPetService service;
