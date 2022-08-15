@@ -96,7 +96,7 @@ public class TextModel {
         switch (align) {
             case CENTER:
                 return new int[]{pos[0] - this.getWidth(this.getFont()) / 2,
-                        pos[1] + this.getHeight(this.getFont()) / 2};
+                        pos[1] - this.getHeight(this.getFont()) / 2};
             case RIGHT:
                 return new int[]{pos[0] - this.getWidth(this.getFont()), pos[1]};
         }

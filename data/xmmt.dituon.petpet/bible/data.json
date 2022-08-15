@@ -6,12 +6,13 @@
         "style": ["GRAY"]
     }],
     "text": [{
-        "text": "$txt1[典中典]\n$txt2[]",
+        "text": "$txt1[典中典]",
         "size": 68,
         "font": "MiSans Bold",
         "color": "#ffffff",
-        "pos": [0, 0],
+        "pos": [0, 50, 640],
         "align": "CENTER",
+        "wrap": "ZOOM",
         "position": ["CENTER", "BOTTOM"]
     }],
     "background": {
