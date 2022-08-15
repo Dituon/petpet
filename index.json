@@ -1,6 +1,7 @@
 {
     "version": 4.4,
     "dataList": [
+        "certificate",
         "key_list",
         "up_symmetry",
         "down_symmetry",
