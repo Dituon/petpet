@@ -37,15 +37,15 @@ public class TextModel {
                 .replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
                 .replace("$group", extraData.getGroupReplacement())
-                .replace("\\n", "\n")
-                .replace("\\s", " ");
+                .replace("\\n", "\n");
 
         String regex = "\\$txt([1-9])\\[(.*)]"; //$txt(num)[(xxx)]
         Matcher m = Pattern.compile(regex).matcher(text);
         while (m.find()) {
             short i = Short.parseShort(m.group(1));
             String replaceText = i <= extraData.getTextList().size() ?
-                    extraData.getTextList().get(i - 1) : m.group(2);
+                    extraData.getTextList().get(i - 1) : m.group(2)
+                    .replace("\\n", "\n").replace("\\s", " ");
             text = text.replace(m.group(0), replaceText);
         }
         char[] chars = text.toCharArray();
