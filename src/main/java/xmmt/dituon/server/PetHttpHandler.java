@@ -12,7 +12,7 @@ public class PetHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) {
         try {
-            String query = httpExchange.getRequestURI().getQuery();
+            String query = httpExchange.getRequestURI().getRawQuery();
             if (query == null) {
                 StringBuilder json = new StringBuilder("{\"petData\": [");
                 WebServer.petService.getDataMap().forEach((key, data) -> {
