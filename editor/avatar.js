@@ -109,6 +109,7 @@ function Avatar(qq = 2544193782) {
         }
         canvas.renderAll();
 
+        style = `"${style}"`
         status ? that.styleList.push(style) :
             that.styleList = that.styleList.filter(s => s !== style)
     }
