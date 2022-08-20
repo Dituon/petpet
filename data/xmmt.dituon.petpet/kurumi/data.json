@@ -16,5 +16,6 @@
         "antialias": true
     }],
     "text": [],
-    "delay": 200
+    "delay": 200,
+    "alias": ["胡桃", "放大"]
 }
