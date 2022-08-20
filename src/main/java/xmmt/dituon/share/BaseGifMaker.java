@@ -19,26 +19,27 @@ import java.util.concurrent.TimeUnit;
 public class BaseGifMaker {
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       HashMap<Short, BufferedImage> stickerMap, boolean antialias) {
-        return makeGifUseBufferedStream(avatarList, textList, stickerMap, antialias, null);
+        return makeGifUseBufferedStream(avatarList, textList, stickerMap, antialias, null, 65);
     }
 
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       HashMap<Short, BufferedImage> stickerMap,
-                                      boolean antialias, Encoder encoder) {
-        return makeGIF(avatarList, textList, stickerMap, antialias, null, encoder);
+                                      boolean antialias, Encoder encoder, int delay) {
+        return makeGIF(avatarList, textList, stickerMap, antialias, null, encoder, delay);
     }
 
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       HashMap<Short, BufferedImage> stickerMap,
-                                      boolean antialias, List<Integer> maxSize, Encoder encoder) {
+                                      boolean antialias, List<Integer> maxSize,
+                                      Encoder encoder, int delay) {
         if (encoder == Encoder.BUFFERED_STREAM) {
-            return makeGifUseBufferedStream(avatarList, textList, stickerMap, antialias, maxSize);
+            return makeGifUseBufferedStream(avatarList, textList, stickerMap, antialias, maxSize, delay);
         }
         if (encoder == Encoder.ANIMATED_LIB) {
-            return makeGifUseAnimatedLib(avatarList, textList, stickerMap, antialias, maxSize);
+            return makeGifUseAnimatedLib(avatarList, textList, stickerMap, antialias, maxSize, delay);
         }
         if (encoder == Encoder.SQUAREUP_LIB) {
-            return makeGifUseSquareupLib(avatarList, textList, stickerMap, antialias, maxSize);
+            return makeGifUseSquareupLib(avatarList, textList, stickerMap, antialias, maxSize, delay);
         }
         return null;
     }
@@ -46,7 +47,7 @@ public class BaseGifMaker {
     public static InputStream makeGifUseBufferedStream
             (ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
              HashMap<Short, BufferedImage> stickerMap,
-             boolean antialias, List<Integer> maxSize) {
+             boolean antialias, List<Integer> maxSize, int delay) {
         try {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
@@ -63,7 +64,7 @@ public class BaseGifMaker {
             }
 
             BufferedGifEncoder gifEncoder =
-                    new BufferedGifEncoder(stickerMap.get((short) 0).getType(), 65, true);
+                    new BufferedGifEncoder(stickerMap.get((short) 0).getType(), delay, true);
             latch.await();
             for (i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
             gifEncoder.finish();
@@ -76,7 +77,7 @@ public class BaseGifMaker {
     public static InputStream makeGifUseAnimatedLib
             (ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
              HashMap<Short, BufferedImage> stickerMap,
-             boolean antialias, List<Integer> maxSize) {
+             boolean antialias, List<Integer> maxSize, int delay) {
         try {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
@@ -96,7 +97,7 @@ public class BaseGifMaker {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             gifEncoder.start(output);
             gifEncoder.setRepeat(0);
-            gifEncoder.setDelay(65);
+            gifEncoder.setDelay(delay);
 
             latch.await();
             imageMap.forEach((in, image) -> gifEncoder.addFrame(image));
@@ -109,7 +110,7 @@ public class BaseGifMaker {
 
     public static InputStream makeGifUseSquareupLib(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                                     HashMap<Short, BufferedImage> stickerMap,
-                                                    boolean antialias, List<Integer> maxSize) {
+                                                    boolean antialias, List<Integer> maxSize, int delay) {
         try {
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
@@ -132,7 +133,7 @@ public class BaseGifMaker {
             }
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageOptions options = new ImageOptions().setDelay(65, TimeUnit.MILLISECONDS);
+            ImageOptions options = new ImageOptions().setDelay(delay, TimeUnit.MILLISECONDS);
 
             latch.await();
             GifEncoder gifEncoder = new GifEncoder(output, size[0], size[1], 0);
@@ -151,28 +152,28 @@ public class BaseGifMaker {
     }
 
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                      BufferedImage sticker, boolean antialias) {
-        return makeGifUseBufferedStream(avatarList, textList, sticker, antialias, null);
+                                      BufferedImage sticker, boolean antialias, int delay) {
+        return makeGifUseBufferedStream(avatarList, textList, sticker, antialias, null, delay);
     }
 
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       BufferedImage sticker,
-                                      boolean antialias, List<Integer> maxSize, Encoder encoder) {
+                                      boolean antialias, List<Integer> maxSize, Encoder encoder, int delay) {
         if (encoder == Encoder.BUFFERED_STREAM) {
-            return makeGifUseBufferedStream(avatarList, textList, sticker, antialias, maxSize);
+            return makeGifUseBufferedStream(avatarList, textList, sticker, antialias, maxSize, delay);
         }
         if (encoder == Encoder.ANIMATED_LIB) {
-            return makeGifUseAnimatedLib(avatarList, textList, sticker, antialias, maxSize);
+            return makeGifUseAnimatedLib(avatarList, textList, sticker, antialias, maxSize, delay);
         }
         if (encoder == Encoder.SQUAREUP_LIB) {
-            return makeGifUseSquareupLib(avatarList, textList, sticker, antialias, maxSize);
+            return makeGifUseSquareupLib(avatarList, textList, sticker, antialias, maxSize, delay);
         }
         return null;
     }
 
     private static InputStream makeGifUseBufferedStream(
             ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-            BufferedImage sticker, boolean antialias, List<Integer> maxSize) {
+            BufferedImage sticker, boolean antialias, List<Integer> maxSize, int delay) {
         try {
             short maxFrameLength = 1;
             for (AvatarModel avatar : avatarList) {
@@ -192,7 +193,7 @@ public class BaseGifMaker {
             }
 
             BufferedGifEncoder gifEncoder =
-                    new BufferedGifEncoder(sticker.getType(), 65, true);
+                    new BufferedGifEncoder(sticker.getType(), delay, true);
             latch.await();
             for (short i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
             gifEncoder.finish();
@@ -204,7 +205,7 @@ public class BaseGifMaker {
 
     public static InputStream makeGifUseAnimatedLib(
             ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-            BufferedImage sticker, boolean antialias, List<Integer> maxSize) {
+            BufferedImage sticker, boolean antialias, List<Integer> maxSize, int delay) {
         try {
             short maxFrameLength = 1;
             for (AvatarModel avatar : avatarList) {
@@ -227,7 +228,7 @@ public class BaseGifMaker {
             AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             gifEncoder.start(output);
-            gifEncoder.setDelay(65);
+            gifEncoder.setDelay(delay);
             gifEncoder.setRepeat(0);
 
             latch.await();
@@ -241,7 +242,7 @@ public class BaseGifMaker {
 
     public static InputStream makeGifUseSquareupLib(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                                     BufferedImage sticker,
-                                                    boolean antialias, List<Integer> maxSize) {
+                                                    boolean antialias, List<Integer> maxSize, int delay) {
         try {
             short i = 0;
             short maxFrameLength = 1;
@@ -268,7 +269,7 @@ public class BaseGifMaker {
             }
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageOptions options = new ImageOptions().setDelay(65, TimeUnit.MILLISECONDS);
+            ImageOptions options = new ImageOptions().setDelay(delay, TimeUnit.MILLISECONDS);
 
             latch.await();
             GifEncoder gifEncoder = new GifEncoder(output,

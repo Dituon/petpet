@@ -14,10 +14,11 @@ public class BaseImageMaker {
 
     public static InputStream makeImage(
             ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-            BufferedImage sticker, boolean antialias, List<Integer> maxSize, Encoder encoder) {
+            BufferedImage sticker, boolean antialias, List<Integer> maxSize,
+            Encoder encoder) {
         for (AvatarModel avatar : avatarList) {
             if (avatar.isGif()) return BaseGifMaker.makeGIF(
-                    avatarList, textList, sticker, antialias, maxSize, encoder);
+                    avatarList, textList, sticker, antialias, maxSize, encoder, 65);
         }
         try {
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(

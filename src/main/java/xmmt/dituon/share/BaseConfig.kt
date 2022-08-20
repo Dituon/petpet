@@ -27,6 +27,7 @@ data class KeyData(
     val avatar: List<AvatarData>,
     val text: List<TextData>,
     val background: BackgroundData? = null,
+    val delay: Int? = 65,
     val alias: List<String>? = null,
     val format: String? = "png", //未实装
     val inRandomList: Boolean? = true,

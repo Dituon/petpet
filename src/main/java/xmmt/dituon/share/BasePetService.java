@@ -116,6 +116,7 @@ public class BasePetService {
 
     /**
      * @return InputStream 及其图片格式（值域：["gif", "png"...]）
+     * @deprecated 不支持gif, 没有改用多线程, 不建议使用
      */
     @Deprecated
     public Pair<InputStream, String> generateImage(
@@ -154,6 +155,8 @@ public class BasePetService {
                 }
             }
 
+            int delay = data.getDelay() != null ? data.getDelay() : 65;
+
             if (data.getType() == Type.GIF) {
                 HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
                 short imageNum = 0;
@@ -168,7 +171,7 @@ public class BasePetService {
                     }
                 }
                 InputStream inputStream = BaseGifMaker.makeGIF(
-                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder);
+                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder, delay);
                 return new Pair<>(inputStream, "gif");
             }
 
@@ -238,6 +241,8 @@ public class BasePetService {
                 }
             }
 
+            int delay = data.getDelay() != null ? data.getDelay() : 65;
+
             if (data.getType() == Type.GIF) {
                 HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
                 short imageNum = 0;
@@ -254,7 +259,7 @@ public class BasePetService {
                     }
                 }
                 InputStream inputStream = BaseGifMaker.makeGIF(
-                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder);
+                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder, delay);
                 return new Pair<>(inputStream, "gif");
             }
 
