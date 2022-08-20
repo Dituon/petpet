@@ -333,7 +333,9 @@ content:
       "round": true,
       "avatarOnTop": false
     }],
-  "text": [] //文字(objArr), 参考下文
+  "text": [], //文字(objArr), 参考下文
+  "inRandomList": false, //在随机列表中(bolean)
+  "delay": 50 //帧间延时(ms/int), 默认为65
 }
 ```
 

@@ -1,6 +1,7 @@
 {
-    "version": 4.5,
+    "version": 4.6,
     "dataList": [
+        "kurumi",
         "bible",
         "certificate",
         "key_list",
