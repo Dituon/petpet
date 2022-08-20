@@ -5,6 +5,8 @@ import xmmt.dituon.share.BaseConfigFactory;
 import xmmt.dituon.share.TextExtraData;
 
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +20,7 @@ public class CommandParser {
         String[] queryList = command.split("&");
         for (String query : queryList) {
             String[] parameter = query.split("=");
-            parameterList.put(parameter[0], parameter[1]);
+            parameterList.put(parameter[0], URLDecoder.decode(parameter[1], StandardCharsets.UTF_8));
         }
         parser();
     }
