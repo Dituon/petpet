@@ -15,7 +15,9 @@ function buildData() {
     $('#alias').val().trim().split(' ').forEach(alia => {
         if (alia) alias.push('"' + alia + '"')
     })
-    const extra = !alias.length ? '' : `,\n    "alias": [${alias}]`
+    let extra = !alias.length ? '' : `,\n    "alias": [${alias}]`
+
+    if (imageType === 'GIF') extra += `,\n    "delay": ${Math.round(1000 / $('#fps').val())}`
 
     let out = `{
     "type": "${imageType}",
