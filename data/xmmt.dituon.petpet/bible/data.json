@@ -10,7 +10,7 @@
         "size": 68,
         "font": "MiSans Bold",
         "color": "#ffffff",
-        "pos": [0, 50, 640],
+        "pos": [0, 0, 640],
         "align": "CENTER",
         "wrap": "ZOOM",
         "position": ["CENTER", "BOTTOM"]
