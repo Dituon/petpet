@@ -13,5 +13,6 @@
     "background": {
             "size": ["text0Width+40","text0Height+15"]
         },
+    "inRandomList": false,
     "hidden": true
 }
