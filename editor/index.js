@@ -104,6 +104,11 @@ $('#gifBar').on('click', '.frame', function () {
     backgroundImage.src = this.src
     backgroundId = parseInt(this.id.replace('f', ''))
     loadBackGround(backgroundImage)
+    try {
+        document.querySelector('#clicked').id = ''
+    } catch (e) {
+    }
+    this.id = 'clicked'
 })
 
 //下载

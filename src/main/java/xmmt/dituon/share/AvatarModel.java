@@ -110,8 +110,17 @@ public class AvatarModel {
                 }
                 break;
             case DEFORM:
-                deformData = DeformData.fromPos(posElements);
-                break;
+                switch (imageType) {
+                    case GIF:
+                        try {
+                            deformData = DeformData.fromGifPos(posElements);
+                            break;
+                        } catch (Exception ignored){
+                        }
+                    case IMG:
+                        deformData = DeformData.fromImgPos(posElements);
+                        break;
+                }
         }
     }
 
@@ -253,30 +262,58 @@ public class AvatarModel {
 
     public static class DeformData {
         static final int POS_SIZE = 4;
-        Point2D[] deformPos = new Point2D[POS_SIZE];
-        int[] anchor = new int[2];
+        Point2D[][] deformPos;
+        int[][] anchor;
 
-        public static DeformData fromPos(JsonArray posElements) {
+        public static DeformData fromGifPos(JsonArray posElements) {
 //            System.out.println("DeformData fromPos by: " + posElements.toString());
+
             DeformData deformData = new DeformData();
+            deformData.deformPos = new Point2D[posElements.size()][POS_SIZE];
+            deformData.anchor = new int[posElements.size()][2];
+            short f = 0;
+            for (JsonElement frame : posElements) {
+                for (short i = 0; i < POS_SIZE; i++) {
+                    deformData.deformPos[f][i] = new Point2D.Double(
+                            Integer.parseInt(((JsonArray) ((JsonArray) frame).get(i)).get(0).toString()),
+                            Integer.parseInt(((JsonArray) ((JsonArray) frame).get(i)).get(1).toString())
+                    );
+                }
+                deformData.anchor[f][0] = Integer.parseInt(((JsonArray) ((JsonArray) frame).get(POS_SIZE)).get(0).toString());
+                deformData.anchor[f][1] = Integer.parseInt(((JsonArray) ((JsonArray) frame).get(POS_SIZE)).get(1).toString());
+                f++;
+            }
+            return deformData;
+        }
+
+        public static DeformData fromImgPos(JsonArray posElements) {
+            DeformData deformData = new DeformData();
+            deformData.deformPos = new Point2D[1][POS_SIZE];
+            deformData.anchor = new int[1][2];
             for (short i = 0; i < POS_SIZE; i++) {
-                deformData.deformPos[i] = new Point2D.Double(
+                deformData.deformPos[0][i] = new Point2D.Double(
                         Integer.parseInt(((JsonArray) posElements.get(i)).get(0).toString()),
                         Integer.parseInt(((JsonArray) posElements.get(i)).get(1).toString())
                 );
             }
-            deformData.anchor[0] = Integer.parseInt(((JsonArray) posElements.get(POS_SIZE)).get(0).toString());
-            deformData.anchor[1] = Integer.parseInt(((JsonArray) posElements.get(POS_SIZE)).get(1).toString());
+            deformData.anchor[0][0] = Integer.parseInt(((JsonArray) posElements.get(POS_SIZE)).get(0).toString());
+            deformData.anchor[0][1] = Integer.parseInt(((JsonArray) posElements.get(POS_SIZE)).get(1).toString());
 
             return deformData;
         }
 
-        public Point2D[] getDeformPos() {
-            return deformPos;
+        public short getLength(){
+            return (short) deformPos.length;
         }
 
-        public int[] getAnchor() {
-            return anchor;
+        public Point2D[] getDeformPos(short i) {
+            i = (short) (i % deformPos.length);
+            return deformPos[i];
+        }
+
+        public int[] getAnchor(short i) {
+            i = (short) (i % anchor.length);
+            return anchor[i];
         }
     }
 

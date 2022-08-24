@@ -2,6 +2,7 @@ package xmmt.dituon.share;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,8 @@ public class TextModel {
     protected TextAlign align;
     protected TextWrap wrap;
     protected List<Position> position;
+    protected Short strokeSize = null;
+    protected Color strokeColor = null;
     private static Graphics2D container = null;
     private short line = 1;
 
@@ -30,6 +33,11 @@ public class TextModel {
         wrap = textData.getWrap();
         position = textData.getPosition();
         if (position == null || position.size() != 2) position = null;
+        if (textData.getStrokeSize() != null || textData.getStrokeColor() != null) {
+            strokeSize = textData.getStrokeSize() != null ? textData.getStrokeSize() : 2;
+            strokeColor = textData.getStrokeColor() != null ?
+                    BasePetService.decodeColor(textData.getStrokeColor()) : color;
+        }
     }
 
     private String buildText(String text, TextExtraData extraData) {
@@ -88,7 +96,7 @@ public class TextModel {
     }
 
     /**
-     * 获取构建后的坐标(深拷贝)
+     * 获取构建后的坐标(返回新对象)
      *
      * @return int[2]{x, y}
      */
@@ -96,7 +104,7 @@ public class TextModel {
         switch (align) {
             case CENTER:
                 return new int[]{pos[0] - this.getWidth(this.getFont()) / 2,
-                        pos[1] + this.getHeight(this.getFont()) / 2};
+                        pos[1] + getTextHeight(text, getFont()) * (line - 1) / 2};
             case RIGHT:
                 return new int[]{pos[0] - this.getWidth(this.getFont()), pos[1]};
         }
@@ -158,6 +166,15 @@ public class TextModel {
                 pos[1] = stickerHeight / 2 + pos[1];
                 break;
         }
+
+        if (strokeSize != null && strokeColor != null) {
+            System.out.println(Arrays.toString(pos));
+            System.out.println(line);
+            ImageSynthesisCore.g2dDrawStrokeText(
+                    g2d, getText(), pos, this.color, getFont(), strokeSize, strokeColor);
+            return;
+        }
+
         ImageSynthesisCore.g2dDrawText(g2d, getText(), pos, this.color, getFont());
     }
 

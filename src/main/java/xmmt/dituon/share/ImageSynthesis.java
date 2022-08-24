@@ -21,7 +21,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
             case DEFORM:
                 AvatarModel.DeformData deformData = avatar.getDeformData();
                 g2dDrawDeformAvatar(g2d, avatar.getFrame(index),
-                        deformData.getDeformPos(), deformData.getAnchor());
+                        deformData.getDeformPos(index), deformData.getAnchor(index));
                 break;
         }
     }

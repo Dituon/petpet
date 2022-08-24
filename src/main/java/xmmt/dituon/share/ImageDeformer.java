@@ -49,7 +49,8 @@ public class ImageDeformer {
 
         int deformedWidth = deformedArea.getBounds().width;
         int deformedHeight = deformedArea.getBounds().getBounds().height;
-        BufferedImage result = new BufferedImage(deformedWidth, deformedHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage result = new BufferedImage(
+                Math.max(deformedWidth, 1), Math.max(deformedHeight, 1), BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < deformedHeight; y++) {
             for (int x = 0; x < deformedWidth; x++) {
                 if (deformedArea.contains(x, y)) {
@@ -57,7 +58,7 @@ public class ImageDeformer {
                     deformedToOrigin.transform(originPoint);
                     int originX = Math.min((int) Math.round(originPoint.getX()), w - 1);
                     int originY = Math.min((int) Math.round(originPoint.getY()), h - 1);
-                    int rgb = image.getRGB(originX, Math.max(originY, 0));
+                    int rgb = image.getRGB(Math.max(originX, 0), Math.max(originY, 0));
                     result.setRGB(x, y, rgb);
                 }
             }

@@ -17,8 +17,7 @@ function Avatar(qq = 2544193782) {
         that.setPos(pos)
         that.avatar.on('moving', () => {
             avatarMoving()
-        })
-        that.avatar.on('scaling', () => {
+        }).on('scaling', () => {
             avatarMoving()
         })
     });
@@ -51,8 +50,9 @@ function Avatar(qq = 2544193782) {
         `
         <div class="element avatar" id="a${this.id}">
             <div class="typeText">Avatar ${this.id}</div>
+            <div class="check" title="">deform<input type="checkbox" class="deform"></div>
             <div class="check" title="">round<input type="checkbox" class="round"></div>
-            <div class="check">avatarOnTop<input type="checkbox" class="avatarOnTop" checked></div>
+            <div class="check">onTop<input type="checkbox" class="avatarOnTop" checked></div>
             <select><option>TO</option><option>FROM</option><option>GROUP</option><option>BOT</option></select>
             <div class="check">
                 <label><input name="style" type="checkbox" value="MIRROR">镜像</label>
@@ -63,6 +63,96 @@ function Avatar(qq = 2544193782) {
             <div class="check deleteAvatar">delete</div>
         </div>
 `)
+
+    this.setDeform = checked => {
+        that.deformState = checked
+        if (checked) {
+            const a = that.avatar
+            const points = [{
+                x: a.left, y: a.top
+            }, {
+                x: a.left, y: a.getScaledHeight()
+            }, {
+                x: a.getScaledWidth(), y: a.getScaledHeight()
+            }, {
+                x: a.getScaledWidth(), y: a.top
+            }]
+            that.polygon = new fabric.Polygon(points, {
+                fill: '#FFF0F5',
+                strokeWidth: 2,
+                stroke: '#FFB6C1',
+                objectCaching: false,
+                transparentCorners: false,
+                absolutePositioned: true
+            });
+            canvas.remove(a)
+            const polygon = that.polygon
+            canvas.add(polygon)
+
+            canvas.setActiveObject(polygon);
+            const lastControl = polygon.points.length - 1;
+            polygon.cornerStyle = 'circle';
+            polygon.cornerColor = 'rgba(40,40,255,0.5)';
+            polygon.controls = polygon.points.reduce(function (acc, point, index) {
+                acc['p' + index] = new fabric.Control({
+                    positionHandler: polygonPositionHandler,
+                    actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
+                    actionName: 'modifyPolygon',
+                    pointIndex: index
+                });
+                return acc;
+            }, {});
+            polygon.hasBorders = false
+
+            that.polygon.on('moved', () => {
+                polygonMoving(that.polygon)
+            }).on('modified', () => {
+                polygonMoving(that.polygon)
+            })
+
+            if (frameLength === 1) that.pos = [that.pos]
+            for (let p in that.pos) { //把xywh转换为deform格式
+                const v = that.pos[p]
+                that.pos[p] = `[${
+                    [v[0], v[1]]
+                }],[${
+                    [v[0], v[1] + v[3]]
+                }],[${
+                    [v[0] + v[2], v[1] + v[3]]
+                }],[${
+                    [v[0] + v[2], v[1]]
+                }],[0, 0]`
+            }
+            console.log(that.pos)
+        } else {
+            const a = that.avatar
+            for (let p of that.pos) { //不可逆, 退而求其次
+                const v = that.pos[p]
+                that.pos[p] = v.toString() === [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]].toString() ?
+                    [0, 0, 0, 0] : [a.left, a.top, a.getScaledWidth(), a.getScaledHeight()]
+            }
+            canvas.remove(that.polygon)
+            canvas.add(that.avatar)
+        }
+        canvas.renderAll()
+    }
+
+    //监听移动
+    function polygonMoving(polygon) {
+        const newPosArr = []
+        const x = Math.round(polygon.left)
+        const y = Math.round(polygon.top)
+        for (let i = 0; i < 4; i++) {
+            const absolutePoint = fabric.util.transformPoint({
+                x: (polygon.points[i].x - polygon.pathOffset.x),
+                y: (polygon.points[i].y - polygon.pathOffset.y)
+            }, polygon.calcTransformMatrix());
+            newPosArr[i] = `[${Math.round(absolutePoint.x - x)}, ${Math.round(absolutePoint.y - y)}]`
+        }
+        newPosArr[4] = `[${x}, ${y}]`
+        $('#avatar_pos').text('坐标: [' + newPosArr + ']')
+        that.setPos(newPosArr)
+    }
 
     this.setRound = checked => {
         that.round = checked
@@ -83,6 +173,7 @@ function Avatar(qq = 2544193782) {
         canvas.renderAll()
     }
 
+    this.deformState = false
     this.onTop = true
     this.round = false
     this.pos = new Array(frameLength).fill([0, 0, 0, 0])
@@ -138,14 +229,19 @@ function Avatar(qq = 2544193782) {
 
 //round
 $('#elementBar').on('change', '.avatar .round', function () {
-    console.log(this.parentNode.parentNode.id)
     avatarList[this.parentNode.parentNode.id.slice(1)].setRound(this.checked)
 })
+    //deform
+    .on('change', '.avatar .deform', function () {
+        const avatarNode = this.parentNode.parentNode
+        $(`#${avatarNode.id} .check .round`).parent().slideToggle()
+        const avatarEle = avatarList[avatarNode.id.slice(1)]
+        avatarEle.setDeform(this.checked)
+    })
 
     //avatarOnTop
     .on('change', '.avatar .avatarOnTop', function () {
         const avatarEle = avatarList[this.parentNode.parentNode.id.slice(1)]
-        console.log(avatarEle)
         avatarEle.onTop = this.checked
         if (avatarList.length !== 1) {
             avatarEle.avatar.opacity = this.checked ? 1 : 0.6

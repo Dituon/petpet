@@ -2,6 +2,7 @@ package xmmt.dituon.share;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -118,11 +119,73 @@ public abstract class ImageSynthesisCore {
             short height = (short) TextModel.getTextHeight(text, font);
             for (String txt : texts) {
                 g2d.drawString(txt, pos[0], y);
-                y += height;
+                y += height + 2;
             }
             return;
         }
         g2d.drawString(text, pos[0], pos[1]);
+    }
+
+    /**
+     * 在Graphics2D画布上 绘制带有描边的文字
+     *
+     * @param g2d         Graphics2D 画布
+     * @param text        文本数据
+     * @param pos         坐标 (int[2]{x, y})
+     * @param color       颜色
+     * @param font        字体
+     * @param strokeSize  描边宽度
+     * @param strokeColor 描边颜色
+     */
+    protected static void g2dDrawStrokeText(Graphics2D g2d, String text, int[] pos,
+                                            Color color, Font font,
+                                            short strokeSize, Color strokeColor) {
+        BasicStroke outlineStroke = new BasicStroke(strokeSize);
+        Color originalColor = g2d.getColor();
+        Stroke originalStroke = g2d.getStroke();
+        RenderingHints originalHints = g2d.getRenderingHints();
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setStroke(outlineStroke);
+
+        if (!text.contains("\n")) {
+            g2d.setColor(strokeColor);
+
+            GlyphVector glyphVector = font.createGlyphVector(g2d.getFontRenderContext(), text);
+            Shape textShape = glyphVector.getOutline();
+            AffineTransform transform = new AffineTransform();
+            transform.translate(pos[0], pos[1]);
+            textShape = transform.createTransformedShape(textShape);
+
+            g2d.draw(textShape);
+            g2d.setColor(color);
+            g2d.fill(textShape);
+        } else {
+            String[] texts = text.split("\n");
+            int y = pos[1];
+
+            short height = (short) TextModel.getTextHeight(text, font);
+            System.out.println(height);
+            for (String txt : texts) {
+                g2d.setColor(strokeColor);
+
+                GlyphVector glyphVector = font.createGlyphVector(g2d.getFontRenderContext(), txt);
+                Shape textShape = glyphVector.getOutline();
+                AffineTransform transform = new AffineTransform();
+                transform.translate(pos[0], y);
+                y += height + strokeSize * 2 + 2;
+                textShape = transform.createTransformedShape(textShape);
+
+                g2d.draw(textShape);
+                g2d.setColor(color);
+                g2d.fill(textShape);
+            }
+        }
+
+        g2d.setColor(originalColor);
+        g2d.setStroke(originalStroke);
+        g2d.setRenderingHints(originalHints);
     }
 
     /**
@@ -402,10 +465,10 @@ public abstract class ImageSynthesisCore {
     public static int[][] convertImageToArray(BufferedImage bf) {
         int width = bf.getWidth();
         int height = bf.getHeight();
-        int[] data = new int[width*height];
+        int[] data = new int[width * height];
         bf.getRGB(0, 0, width, height, data, 0, width);
         int[][] rgbArray = new int[height][width];
-        for(int i = 0; i < height; i++)
+        for (int i = 0; i < height; i++)
             System.arraycopy(data, i * width, rgbArray[i], 0, width);
         return rgbArray;
     }
