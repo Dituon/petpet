@@ -212,14 +212,13 @@ function Avatar(qq = 2544193782) {
                 builtPos = that.pos
                 break
             case 'GIF':
-                for (const posEle of that.pos) {
-                    builtPos.push(`[${posEle}]`)
-                }
+                that.pos.forEach(posEle => builtPos.push(`[${posEle}]`))
                 break
         }
         return `{
         "type": "${that.type}",
         "pos": [${builtPos}],
+        "posType": "${that.deformState ? 'DEFORM' : 'ZOOM'}",
         "style": [${that.styleList}],
         "round": ${that.round},
         "avatarOnTop": ${that.onTop}
