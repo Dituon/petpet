@@ -31,6 +31,7 @@ public final class Petpet extends JavaPlugin {
 
     private static LinkedHashMap<Long, String> imageCachePool;
     private static Set<String> keyAliaSet = null;
+    public static final Random random = new Random();
 
     private Petpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(VERSION))
@@ -222,7 +223,7 @@ public final class Petpet extends JavaPlugin {
         String key = null;
         if (service.command.equals(spanList.get(0))) {
             spanList.remove(0); //去掉指令头
-            key = service.randomableList.get(new Random().nextInt(service.randomableList.size())); //随机key
+            key = service.randomableList.get(random.nextInt(service.randomableList.size())); //随机key
         }
 
         if (!spanList.isEmpty() && !service.strictCommand) { //匹配非标准格式指令
@@ -255,13 +256,35 @@ public final class Petpet extends JavaPlugin {
                 key = spanList.remove(0);
             } else if (service.getAliaMap().containsKey(firstSpan)) { //别名
                 String[] keys = service.getAliaMap().get(spanList.remove(0));
-                key = keys[new Random().nextInt(keys.length)];
+                key = keys[random.nextInt(keys.length)];
             }
         }
 
         if (key == null) return;
 
         if (service.fuzzy && !spanList.isEmpty() && !fuzzyLock) {
+            switch (spanList.get(0)){
+                case "群主":
+                    fromName = getNameOrNick(e.getSender());
+                    fromUrl = e.getSender().getAvatarUrl();
+                    Member owner = e.getGroup().getOwner();
+                    toName = getNameOrNick(owner);
+                    toUrl = owner.getAvatarUrl();
+                    break;
+                case "管理":
+                case "管理员":
+                    fromName = getNameOrNick(e.getSender());
+                    fromUrl = e.getSender().getAvatarUrl();
+                    Member admin = e.getGroup().getOwner();
+                    List<Member> adminList = e.getGroup().getMembers().stream() //随机管理员
+                            .filter(m -> m.getPermission() == MemberPermission.ADMINISTRATOR)
+                            .collect(Collectors.toList());
+                    if (!adminList.isEmpty())
+                        admin = adminList.get(random.nextInt(adminList.size()));
+                    toName = getNameOrNick(admin);
+                    toUrl = admin.getAvatarUrl();
+                    break;
+            }
             for (Member m : e.getGroup().getMembers()) {
                 if (m.getNameCard().toLowerCase().contains(spanList.get(0).toLowerCase())
                         || m.getNick().toLowerCase().contains(spanList.get(0).toLowerCase())) {
