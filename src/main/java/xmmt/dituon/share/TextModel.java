@@ -2,7 +2,7 @@ package xmmt.dituon.share;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,8 +21,10 @@ public class TextModel {
     private short line = 1;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
-        text = extraInfo != null ? buildText(textData.getText(), extraInfo)
-                : textData.getText().replace("\"", "");
+        text = extraInfo != null ? buildText(
+                textData.getText(), extraInfo,
+                textData.getGreedy() != null ? textData.getGreedy() : false
+        ) : textData.getText().replace("\"", "");
         pos = textData.getPos() != null ? setPos(textData.getPos()) : pos;
         color = textData.getColor() != null ?
                 BasePetService.decodeColor(textData.getColor(), new short[]{25, 25, 25, 255}) : color;
@@ -40,7 +42,7 @@ public class TextModel {
         }
     }
 
-    private String buildText(String text, TextExtraData extraData) {
+    private String buildText(String text, TextExtraData extraData, boolean greedy) {
         text = text.replace("\"", "")
                 .replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
@@ -49,12 +51,27 @@ public class TextModel {
 
         String regex = "\\$txt([1-9])\\[(.*)]"; //$txt(num)[(xxx)]
         Matcher m = Pattern.compile(regex).matcher(text);
-        while (m.find()) {
-            short i = Short.parseShort(m.group(1));
-            String replaceText = i > extraData.getTextList().size() ?
-                    m.group(2) : extraData.getTextList().get(i - 1)
-                    .replace("\\n", "\n").replace("\\s", " ");
-            text = text.replace(m.group(0), replaceText);
+        if (greedy) {
+            List<String> textList = new ArrayList<>(extraData.getTextList());
+            short maxIndex = 0;
+            while (m.find()) maxIndex++;
+            m.reset();
+            for (short index = 0; m.find(); index++) {
+                short i = Short.parseShort(m.group(1));
+                String replaceText = i > textList.size() ?
+                        m.group(2) : (index == maxIndex ?
+                                textList.remove(i - 1) : String.join(" ", textList)
+                        ).replace("\\n", "\n").replace("\\s", " ");
+                text = text.replace(m.group(0), replaceText);
+            }
+        } else {
+            while (m.find()) {
+                short i = Short.parseShort(m.group(1));
+                String replaceText = i > extraData.getTextList().size() ?
+                        m.group(2) : extraData.getTextList().get(i - 1)
+                        .replace("\\n", "\n").replace("\\s", " ");
+                text = text.replace(m.group(0), replaceText);
+            }
         }
         char[] chars = text.toCharArray();
         for (char t : chars) {
@@ -168,8 +185,6 @@ public class TextModel {
         }
 
         if (strokeSize != null && strokeColor != null) {
-            System.out.println(Arrays.toString(pos));
-            System.out.println(line);
             ImageSynthesisCore.g2dDrawStrokeText(
                     g2d, getText(), pos, this.color, getFont(), strokeSize, strokeColor);
             return;

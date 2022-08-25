@@ -69,7 +69,8 @@ data class TextData @JvmOverloads constructor(
     val style: TextStyle? = TextStyle.PLAIN,
     val position: List<Position>? = listOf(Position.LEFT, Position.TOP),
     val strokeColor: JsonElement? = null,
-    val strokeSize: Short? = null
+    val strokeSize: Short? = null,
+    val greedy: Boolean? = false
 )
 
 @Serializable
