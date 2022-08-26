@@ -10,16 +10,17 @@
         "size": 68,
         "font": "MiSans Bold",
         "color": "#ffffff",
-        "pos": [0, 0, 640],
+        "pos": [0, 14, 640],
         "align": "CENTER",
         "wrap": "ZOOM",
-        "position": ["CENTER", "BOTTOM"]
+        "position": ["CENTER", "BOTTOM"],
+        "greedy": true
     }],
     "background": {
         "color": "#000000",
         "size": [
             "avatar0Width", 
-            "avatar0Height + text0Height * 1.4"
+            "avatar0Height + text0Height * 1.4 + 12"
         ]
     },
     "alias": ["圣经", "典中典"],
