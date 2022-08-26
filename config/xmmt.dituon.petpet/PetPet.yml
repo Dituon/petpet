@@ -13,9 +13,12 @@ content:
   fuzzy: false
   strictCommand: true
   synchronized: false
-  gifEncoder: BUFFERED_STREAM
-  gifMaxSize: []
+  gifEncoder: ANIMATED_LIB
+  gifMaxSize: 
+    - 200
+    - 200
+    - 32
   headless: true
   autoUpdate: true
   updateIgnore: []
-  repositoryUrl: 'https://dituon.github.io/petpet'
+  repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'

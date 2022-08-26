@@ -20,7 +20,7 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
     public static void init() {
         BaseServiceConfig config = new BaseServiceConfig();
         petService.readBaseServiceConfig(config);
-        petService.readData(new File("./data/xmmt.dituon.petpet"));
+        petService.readData(new File("./data/xmmt.dituon.petpet").listFiles());
     }
 
     @Test

@@ -5,11 +5,17 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
-import xmmt.dituon.share.*;
+import xmmt.dituon.share.BaseConfigFactory;
+import xmmt.dituon.share.BasePetService;
+import xmmt.dituon.share.GifAvatarExtraDataProvider;
+import xmmt.dituon.share.TextExtraData;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class PluginPetService extends BasePetService {
 
@@ -90,21 +96,21 @@ public class PluginPetService extends BasePetService {
         System.out.println("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
     }
 
-    @Override
     public void readData(File dir) {
         // 1. 所有key加载到dataMap
-        super.readData(dir);
+        super.readData(Arrays.stream(Objects.requireNonNull(dir.listFiles()))
+                .filter(file -> !disabledKey.contains(file.getName()))
+                .toArray(File[]::new));
+
         // 2. 其中某些key加入randomableList
         dataMap.forEach((path, keyData) -> {
-            if (!disabledKey.contains(path)
-                    && !disabledKey.contains("Type." + keyData.getType())
-                    && Boolean.TRUE.equals(super.dataMap.get(path).getInRandomList())) {
+            if (Boolean.TRUE.equals(super.dataMap.get(path).getInRandomList())) {
                 randomableList.add(path);
             }
         });
 
-        System.out.println("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，已排除 " +
-                (dataMap.size() - randomableList.size()) + " )");
+        System.out.println("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，随机表列包含 " +
+                randomableList.size() + " 素材，已禁用 " + disabledKey.size() + ")");
     }
 
 

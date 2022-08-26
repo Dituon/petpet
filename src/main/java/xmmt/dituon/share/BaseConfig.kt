@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage
 data class BaseServiceConfig(
     val antialias: Boolean = true,
     val gifMaxSize: List<Int> = emptyList(),
-    val gifEncoder: Encoder = Encoder.BUFFERED_STREAM
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB
 )
 
 enum class Encoder {

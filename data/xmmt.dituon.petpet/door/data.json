@@ -1,0 +1,16 @@
+{
+    "type": "GIF",
+    "avatar": [
+        {
+        "type": "TO",
+        "pos": [[339, 3],[334, 507],[1, 475],[8, 1],[274, 1]],
+        "posType": "DEFORM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": false
+    }
+    ],
+    "text": [],
+    "alias": ["开门"],
+    "delay": 125
+}

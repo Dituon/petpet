@@ -5,6 +5,7 @@ import com.squareup.gifencoder.GifEncoder;
 import com.squareup.gifencoder.Image;
 import com.squareup.gifencoder.ImageOptions;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,11 +33,11 @@ public class BaseGifMaker {
                                       HashMap<Short, BufferedImage> stickerMap,
                                       boolean antialias, List<Integer> maxSize,
                                       Encoder encoder, int delay) {
-        if (encoder == Encoder.BUFFERED_STREAM) {
-            return makeGifUseBufferedStream(avatarList, textList, stickerMap, antialias, maxSize, delay);
-        }
         if (encoder == Encoder.ANIMATED_LIB) {
             return makeGifUseAnimatedLib(avatarList, textList, stickerMap, antialias, maxSize, delay);
+        }
+        if (encoder == Encoder.BUFFERED_STREAM) {
+            return makeGifUseBufferedStream(avatarList, textList, stickerMap, antialias, maxSize, delay);
         }
         if (encoder == Encoder.SQUAREUP_LIB) {
             return makeGifUseSquareupLib(avatarList, textList, stickerMap, antialias, maxSize, delay);
@@ -86,14 +87,21 @@ public class BaseGifMaker {
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
                 new Thread(() -> {
-                    imageMap.put(fi, ImageSynthesis.synthesisImage(
+                    BufferedImage image = ImageSynthesis.synthesisImage(
                             stickerMap.get(key), avatarList, textList,
-                            antialias, false, fi, maxSize));
+                            antialias, false, fi, maxSize
+                    );
+                    BufferedImage temp =
+                            new BufferedImage(image.getWidth(), image.getHeight(),
+                                    BufferedImage.TYPE_3BYTE_BGR);
+                    Graphics2D g = temp.createGraphics();
+                    g.drawImage(image, 0, 0, null);
+                    imageMap.put(fi, temp);
                     latch.countDown();
                 }).start();
             }
 
-            AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();
+            AnimatedGifEncoder gifEncoder = new FastAnimatedGifEncoder();
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             gifEncoder.start(output);
             gifEncoder.setRepeat(0);
@@ -159,11 +167,11 @@ public class BaseGifMaker {
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       BufferedImage sticker,
                                       boolean antialias, List<Integer> maxSize, Encoder encoder, int delay) {
-        if (encoder == Encoder.BUFFERED_STREAM) {
-            return makeGifUseBufferedStream(avatarList, textList, sticker, antialias, maxSize, delay);
-        }
         if (encoder == Encoder.ANIMATED_LIB) {
             return makeGifUseAnimatedLib(avatarList, textList, sticker, antialias, maxSize, delay);
+        }
+        if (encoder == Encoder.BUFFERED_STREAM) {
+            return makeGifUseBufferedStream(avatarList, textList, sticker, antialias, maxSize, delay);
         }
         if (encoder == Encoder.SQUAREUP_LIB) {
             return makeGifUseSquareupLib(avatarList, textList, sticker, antialias, maxSize, delay);
@@ -217,15 +225,21 @@ public class BaseGifMaker {
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
                 new Thread(() -> {
-                    imageMap.put(fi, ImageSynthesis.synthesisImage(
+                    BufferedImage image = ImageSynthesis.synthesisImage(
                             sticker, avatarList, textList,
                             antialias, false, fi, maxSize
-                    ));
+                    );
+                    BufferedImage temp =
+                            new BufferedImage(image.getWidth(), image.getHeight(),
+                                    BufferedImage.TYPE_3BYTE_BGR);
+                    Graphics2D g = temp.createGraphics();
+                    g.drawImage(image, 0, 0, null);
+                    imageMap.put(fi, temp);
                     latch.countDown();
                 }).start();
             }
 
-            AnimatedGifEncoder gifEncoder = new AnimatedGifEncoder();
+            AnimatedGifEncoder gifEncoder = new FastAnimatedGifEncoder();
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             gifEncoder.start(output);
             gifEncoder.setDelay(delay);

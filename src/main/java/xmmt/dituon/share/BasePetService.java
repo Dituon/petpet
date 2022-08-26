@@ -26,48 +26,46 @@ public class BasePetService {
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
     public static String keyListString;
 
-    public void readData(File dir) {
-        this.dataRoot = dir;
-        String[] children = dir.list();
-
-        if (children == null) {
+    public void readData(File[] files) {
+        if (files == null) {
             System.out.println("无法读取文件，请检查data目录");
             return;
         }
+        this.dataRoot = files[0].getParentFile();
 
         StringBuilder keyListStringBuilder = new StringBuilder();
-        for (String path : children) {
-            if (path.equals(FONTS_FOLDER)) {
+        for (File file : files) {
+            if (file.getName().equals(FONTS_FOLDER)) {
                 // load fonts folder
-                registerFontsToAwt(new File(dir.getAbsolutePath() + File.separator + path));
+                registerFontsToAwt(file);
                 continue;
             }
             // load templates folder
             // TODO 模板应放在data/templates而不是直接data
-            File dataFile = new File(dir.getAbsolutePath() + File.separator + path + "/data.json");
+            File dataFile = new File(file.getPath() + File.separator + "/data.json");
             try {
                 KeyData data = KeyData.getData(getFileStr(dataFile));
-                dataMap.put(path, data);
+                dataMap.put(file.getName(), data);
                 if (Boolean.TRUE.equals(data.getHidden())) continue;
 
-                keyListStringBuilder.append("\n").append(path);
+                keyListStringBuilder.append("\n").append(file);
                 if (data.getAlias() != null) {
                     keyListStringBuilder.append(" ( ");
                     data.getAlias().forEach((aliasKey) -> {
                         keyListStringBuilder.append(aliasKey).append(" ");
                         if (aliaMap.get(aliasKey) == null) {
-                            aliaMap.put(aliasKey, new String[]{path});
+                            aliaMap.put(aliasKey, new String[]{file.getName()});
                             return;
                         }
                         String[] oldArray = aliaMap.get(aliasKey);
                         String[] newArray = Arrays.copyOf(oldArray, oldArray.length + 1);
-                        newArray[oldArray.length] = path;
+                        newArray[oldArray.length] = file.getName();
                         aliaMap.put(aliasKey, newArray);
                     });
                     keyListStringBuilder.append(")");
                 }
             } catch (Exception ex) {
-                System.out.println("无法读取 " + path + "/data.json: \n\n" + ex);
+                System.out.println("无法读取 " + file + "/data.json: \n\n" + ex);
             }
         }
         keyListString = keyListStringBuilder.toString();

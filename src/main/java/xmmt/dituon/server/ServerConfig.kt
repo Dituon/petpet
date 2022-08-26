@@ -12,7 +12,7 @@ data class ServerConfig(
     val dataPath: String = "data/xmmt.dituon.petpet",
     val threadPoolSize: Int = 10,
     val gifMaxSize: List<Int> = emptyList(),
-    val gifEncoder: Encoder = Encoder.BUFFERED_STREAM,
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val headless: Boolean = true
 ) {
     companion object {

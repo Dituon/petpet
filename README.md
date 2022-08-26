@@ -166,9 +166,9 @@ content:
 > ~~人话: 多机器人对于同一条指令只有一个会响应~~
 <br/>
  
-- **gifEncoder**: `BUFFERED_STREAM`
+- **gifEncoder**: `ANIMATED_LIB`
 
-> GIF编码器, 默认为`BUFFERED_STREAM`
+> GIF编码器, 默认为`ANIMATED_LIB`
 > 
 > 枚举: 
 > **`BUFFERED_STREAM`**:
@@ -460,14 +460,17 @@ content:
       "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
       "pos": [20, 150], // 坐标
       "position": ["CENTER", "BOTTOM"], //坐标计算基准([x, y])
-      "font": "宋体" // 字体, 默认为黑体
+      "font": "宋体", // 字体, 默认为黑体
+      "strokeColor": "#ffffff", // 描边颜色
+      "strokeSize": 2 // 描边宽度
     },
     {
       "text": "$txt1[我]超市$txt2[你]!", // 支持关键词变量
       "pos": [0,200,300], // 第三个值为文本最大宽度
       "align": "CENTER", // 对齐方式, 默认为LEFT
       "wrap": "ZOOM", // 显示设置, 默认为NONE
-      "style": "BLOD" // 字体样式, 默认为PLAIN
+      "style": "BLOD", // 字体样式, 默认为PLAIN
+      "greedy": true // 贪婪匹配模式, 会匹配多余的关键词
     }
   ]
 ```

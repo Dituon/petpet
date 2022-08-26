@@ -6,6 +6,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import xmmt.dituon.share.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Serializable
 data class PluginConfig(
@@ -23,12 +25,12 @@ data class PluginConfig(
     val fuzzy: Boolean = false,
     val strictCommand: Boolean = true,
     val synchronized: Boolean = false,
-    val gifEncoder: Encoder = Encoder.BUFFERED_STREAM,
-    val gifMaxSize: List<Int> = emptyList(),
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    val gifMaxSize: List<Int> = listOf(200, 200, 32),
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
     val updateIgnore: List<String> = emptyList(),
-    val repositoryUrl: String? = "https://dituon.github.io/petpet"
+    val repositoryUrl: String? = "https://raw.githubusercontent.com/Dituon/petpet/main"
 )
 
 enum class ReplyFormat {

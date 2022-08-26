@@ -14,7 +14,7 @@ public class WebServer {
         petService.readConfig();
         if (petService.headless) System.setProperty("java.awt.headless", "true");
 
-        petService.readData(new File(petService.path));
+        petService.readData(new File(petService.path).listFiles());
 
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(petService.port), 0);
         httpServer.createContext("/petpet", new PetHttpHandler());

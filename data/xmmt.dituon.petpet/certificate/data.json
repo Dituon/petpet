@@ -5,11 +5,15 @@
         {
             "text": "$txt1[好消息! 好消息!]",
             "color": "#dc3023",
-            "pos": [650,487,900],
+            "pos": [0,487,900],
+            "position": ["CENTER", "BOTTOM"],
             "size": 104,
             "font": "MiSans Bold",
             "wrap": "ZOOM",
-            "align": "CENTER"
+            "align": "CENTER",
+            "strokeColor": "#ffd700",
+            "strokeSize": 10,
+            "greedy": true
         }
     ],
     "alias": ["喜报"],
