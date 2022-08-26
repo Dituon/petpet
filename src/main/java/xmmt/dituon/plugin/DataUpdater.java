@@ -28,7 +28,8 @@ public class DataUpdater {
         List<String> newPetList = index.getDataList();
         for (String pet : newPetList) {
             if (Petpet.service.getDataMap().containsKey(pet)
-                    || Petpet.service.updateIgnore.contains(pet)) continue;
+                    || Petpet.service.updateIgnore.contains(pet)
+                    || Petpet.service.disabledKey.contains(pet)) continue;
             String petDataPath = "/data/xmmt.dituon.petpet/" + pet;
             if (!saveAs(petDataPath, "data.json")) {
                 System.out.println("无法从远程仓库下载PetData: " + petDataPath);

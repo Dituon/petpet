@@ -42,7 +42,7 @@ public class BasePetService {
             }
             // load templates folder
             // TODO 模板应放在data/templates而不是直接data
-            File dataFile = new File(file.getPath() + File.separator + "/data.json");
+            File dataFile = new File(file.getPath() + File.separator + "data.json");
             try {
                 KeyData data = KeyData.getData(getFileStr(dataFile));
                 dataMap.put(file.getName(), data);
