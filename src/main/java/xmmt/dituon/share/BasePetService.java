@@ -48,7 +48,7 @@ public class BasePetService {
                 dataMap.put(file.getName(), data);
                 if (Boolean.TRUE.equals(data.getHidden())) continue;
 
-                keyListStringBuilder.append("\n").append(file);
+                keyListStringBuilder.append("\n").append(file.getName());
                 if (data.getAlias() != null) {
                     keyListStringBuilder.append(" ( ");
                     data.getAlias().forEach((aliasKey) -> {
