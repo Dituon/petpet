@@ -3,7 +3,7 @@
     "avatar":[],
     "text":[
         {
-            "pos": [20, 0],
+            "pos": [20, 4],
             "text": "$txt1[未知错误, 请检查控制台]",
             "font": "MiSans Bold",
             "color": "ffc0cb",
@@ -11,7 +11,7 @@
         }
     ],
     "background": {
-            "size": ["text0Width+40","text0Height+15"]
+            "size": ["text0Width+40","text0Height*1.08"]
         },
     "inRandomList": false,
     "hidden": true
