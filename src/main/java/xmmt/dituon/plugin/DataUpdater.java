@@ -62,7 +62,8 @@ public class DataUpdater {
         UpdateIndex update = UpdateIndex.getUpdate(
                 Objects.requireNonNull(getUrlText(Petpet.service.repositoryUrl + "/index.json")));
         if (Petpet.VERSION != update.getVersion())
-            System.out.println("PetpetPlugin可更新到最新版本: " + update.getVersion() + " (当前版本 " + Petpet.VERSION + ")");
+            System.out.println("PetpetPlugin可更新到最新版本: " + update.getVersion() +
+                    " (当前版本 " + Petpet.VERSION + ")  要养成经常更新的好习惯哦 (*/ω＼*)");
         for (String pet : update.getDataList()) {
             if (Petpet.service.getDataMap().containsKey(pet)) continue;
             System.out.println("发现新增PetData");

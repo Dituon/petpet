@@ -93,10 +93,16 @@ public class PluginPetService extends BasePetService {
             disabledKey.add(path.replace("\"", ""));
         }
 
-        System.out.println("Petpet 初始化成功，使用 " + command + " 以生成GIF。");
+        System.out.println("ヾ(≧▽≦*)o Petpet 初始化成功，使用 " + command + " 以获取keyList!");
     }
 
     public void readData(File dir) {
+        if (dir.listFiles() == null){
+            System.out.println( autoUpdate ?
+                    "o((>ω< ))o 你这头懒猪, 没有下载petData!\n\\^o^/ 还好我冰雪聪明, 帮你自动更新了⭐" :
+                    "(ﾟДﾟ*)ﾉ 没有petData! 你自己手动更新吧x\n(☆-ｖ-) 笨蛋! 让你不开自动更新⭐");
+            return;
+        }
         // 1. 所有key加载到dataMap
         super.readData(Arrays.stream(Objects.requireNonNull(dir.listFiles()))
                 .filter(file -> !disabledKey.contains(file.getName()))
