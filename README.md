@@ -248,6 +248,18 @@ content:
 
 | key                                    | 预览                                                                                                      |
 |----------------------------------------|---------------------------------------------------------------------------------------------------------|
+| **acclaim** <br/>喝彩 欢呼                 | <image alt="acclaim" src="https://s2.loli.net/2022/08/26/bcOjp7k3LRXmxMw.gif" width="320"/>             |
+| **bible** <br/>圣经 典中典                  | <image alt="bible" src="https://s2.loli.net/2022/08/26/LKQ9zC4gBtHT83U.gif" width="320"/>               |
+| **breakdown** <br/>惊吓 击穿               | <image alt="breakdown" src="https://s2.loli.net/2022/08/26/ByKvwRtzWDr6I9E.gif" width="320"/>           |
+| **carte** <br/>佩可莉姆 菜单 单页              | <image alt="carte" src="https://s2.loli.net/2022/08/26/ERk4YeFg8mDLrWT.gif" width="320"/>               |
+| **hold_sign** <br/>唐可可 举牌 应援           | <image alt="hold_sign" src="https://s2.loli.net/2022/08/26/pVBXfOmWEsyjauo.gif" width="320"/>           |
+| **kurumi** <br/>胡桃 放大                  | <image alt="kurumi" src="https://s2.loli.net/2022/08/26/Hz12YVh7RxL5FBE.gif" width="320"/>              |
+| **monad** <br/>唐可可 拍 单页                | <image alt="monad" src="https://s2.loli.net/2022/08/26/LcUrv7TBaWd58Zm.gif" width="320"/>               |
+| **point_tv** <br/>康纳 电视                | <image alt="point_tv" src="https://s2.loli.net/2022/08/26/QgY78jvIVZXPAwR.gif" width="320"/>            |
+| **remake** <br/>泥头车 创 重开               | <image alt="remake" src="https://s2.loli.net/2022/08/26/eH4OXZv6qGsaYkr.gif" width="320"/>              |
+| **reward** <br/>伊蕾娜 赏金 报酬              | <image alt="reward" src="https://s2.loli.net/2022/08/26/MWEu4ZRdaYc3ULq.gif" width="320"/>              |
+| **watch_tv** <br/>汤姆 电视                | <image alt="watch_tv" src="https://s2.loli.net/2022/08/26/djMvKnAOkZP6zw7.gif" width="320"/>            |
+| **certificate** <br/>喜报                | <image alt="certificate" src="https://s2.loli.net/2022/08/26/oAetHryJ815Pg96.png" width="320"/>         |
 | **anyasuki** <br/>阿尼亚 喜欢               | <image alt="anyasuki" src="https://s2.loli.net/2022/08/13/X3kBJ4cUqfyZIRV.gif" width="320"/>            |
 | **bite** <br/>啃 咬                      | <image alt="bite" src="https://s2.loli.net/2022/08/13/uvxNBybSCwRIOzM.gif" width="320"/>                |
 | **breast** <br/>胸 凶                    | <image alt="breast" src="https://s2.loli.net/2022/08/13/iFOmVtRSHAk3f7s.gif" width="320"/>              |
@@ -304,7 +316,7 @@ content:
 | **tightly** <br/>黏                     | <image alt="tightly" src="https://s2.loli.net/2022/08/13/P5Wcp6b4d8T9wNL.gif" width="320"/>             |
 | **twist** <br/>抱                       | <image alt="twist" src="https://s2.loli.net/2022/08/13/x1d6QELJ4vybnNY.gif" width="320"/>               |
 | **up_symmetry** <br/>对称 上对称 上下对称       | <image alt="up_symmetry" src="https://s2.loli.net/2022/08/13/oAhQxsiL4IKDVbX.gif" width="320"/>         |
-| **wallpaper** <br/>壁纸                  | <image alt="wallpaper" src="https://s2.loli.net/2022/08/13/9Vw7UdWfQDlcv8B.gif" width="320"/>           |
+| **wallpaper** <br/>瑞克 壁纸               | <image alt="wallpaper" src="https://s2.loli.net/2022/08/26/D5q8cNuIzAlZhis.gif" width="320"/>           |
 | **worship** <br/>膜拜                    | <image alt="worship" src="https://s2.loli.net/2022/08/13/RGZ18HncUxkIrDA.gif" width="320"/>             |
 | **yoasobi** <br/>群青                    | <image alt="yoasobi" src="https://s2.loli.net/2022/08/13/whXKzTeJHYA17Ru.gif" width="320"/>             |
 
