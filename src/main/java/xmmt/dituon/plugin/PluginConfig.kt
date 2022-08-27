@@ -28,11 +28,12 @@ data class PluginConfig(
     val gifQuality: Byte = 90,
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
-    val repositoryUrl: String? = "https://raw.githubusercontent.com/Dituon/petpet/main"
+    val repositoryUrl: String? = "https://raw.githubusercontent.com/Dituon/petpet/main",
+    val devMode: Boolean? = false
 )
 
 enum class ReplyFormat {
-    MESSAGE, FORWARD, IMAGE
+    MESSAGE, FORWARD, IMAGE, URL//TODO
 }
 
 enum class DisablePolicy {

@@ -128,6 +128,13 @@ public final class Petpet extends JavaPlugin {
 
         String messageString = e.getMessage().contentToString().trim();
 
+        if (service.devMode && messageString.equals(service.command + " reload")) {
+            e.getGroup().sendMessage(service.command + "正在重载...");
+            service.readData(dataFolder);
+            e.getGroup().sendMessage(service.command + "重载完成!");
+            return;
+        }
+
         if (messageString.equals(service.command + " off") &&
                 !isDisabled(e.getGroup()) && isPermission(e)) {
             disabledGroup.add(e.getGroup().getId());
@@ -263,7 +270,7 @@ public final class Petpet extends JavaPlugin {
         if (key == null) return;
 
         if (service.fuzzy && !spanList.isEmpty() && !fuzzyLock) {
-            switch (spanList.get(0)){
+            switch (spanList.get(0)) {
                 case "群主":
                     fromName = getNameOrNick(e.getSender());
                     fromUrl = e.getSender().getAvatarUrl();

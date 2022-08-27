@@ -60,8 +60,8 @@ public class TextModel {
                 short i = Short.parseShort(m.group(1));
                 String replaceText = i > textList.size() ?
                         m.group(2) : (index == maxIndex ?
-                                textList.remove(i - 1) : String.join(" ", textList)
-                        ).replace("\\n", "\n").replace("\\s", " ");
+                        textList.remove(i - 1) : String.join(" ", textList)
+                ).replace("\\n", "\n").replace("\\s", " ");
                 text = text.replace(m.group(0), replaceText);
             }
         } else {
@@ -120,8 +120,12 @@ public class TextModel {
     public int[] getPos() {
         switch (align) {
             case CENTER:
-                return new int[]{pos[0] - this.getWidth(this.getFont()) / 2,
-                        pos[1] + getTextHeight(text, getFont()) * (line - 1) / 2};
+                return new int[]{
+                        pos[0] - this.getWidth(this.getFont()) / 2,
+                        line == 1 ? pos[1] + getTextHeight(text, getFont()) / 2
+                                : pos[1] - (getHeight(getFont()) / 2)
+                                + (getTextHeight(text, getFont()) / 2) + 2
+                };
             case RIGHT:
                 return new int[]{pos[0] - this.getWidth(this.getFont()), pos[1]};
         }
@@ -212,7 +216,8 @@ public class TextModel {
      * @param font 渲染字体
      */
     public int getHeight(Font font) {
-        return getTextHeight(text, font) * line;
+        return line == 1 ? getTextHeight(text, font) :
+                (getTextHeight(text, font) + 2) * line;
     }
 
     /**

@@ -32,6 +32,7 @@ public class PluginPetService extends BasePetService {
     protected boolean headless = true;
     protected boolean autoUpdate = true;
     protected String repositoryUrl = "https://dituon.github.io/petpet";
+    protected boolean devMode = false;
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
 
@@ -64,6 +65,8 @@ public class PluginPetService extends BasePetService {
         autoUpdate = config.getAutoUpdate();
         repositoryUrl = config.getRepositoryUrl();
         disabledGroups = config.getDisabledGroups();
+
+        devMode = Boolean.TRUE.equals(config.getDevMode());
 
         super.setGifMaxSize(config.getGifMaxSize());
         super.encoder = config.getGifEncoder();

@@ -166,7 +166,6 @@ public abstract class ImageSynthesisCore {
             int y = pos[1];
 
             short height = (short) TextModel.getTextHeight(text, font);
-            System.out.println(height);
             for (String txt : texts) {
                 g2d.setColor(strokeColor);
 
