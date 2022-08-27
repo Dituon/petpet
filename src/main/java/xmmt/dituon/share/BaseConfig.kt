@@ -10,7 +10,8 @@ import java.awt.image.BufferedImage
 data class BaseServiceConfig(
     val antialias: Boolean = true,
     val gifMaxSize: List<Int> = emptyList(),
-    val gifEncoder: Encoder = Encoder.ANIMATED_LIB
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    val gifQuality: Byte = 90
 )
 
 enum class Encoder {
@@ -131,4 +132,12 @@ data class GifAvatarExtraDataProvider(
 data class BackgroundData @JvmOverloads constructor(
     val size: JsonArray,
     val color: JsonElement? = null
+)
+
+data class GifRenderParams (
+    val encoder: Encoder,
+    val delay: Int = 65,
+    val maxSize: List<Int>?,
+    val antialias: Boolean,
+    val quality: Byte = 90
 )

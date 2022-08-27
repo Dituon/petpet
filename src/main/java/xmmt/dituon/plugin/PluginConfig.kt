@@ -4,15 +4,13 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
 import xmmt.dituon.share.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 @Serializable
 data class PluginConfig(
     val command: String = "pet",
-    val probability: Short = 30,
+    val probability: Byte = 30,
     val antialias: Boolean = true,
     val disabled: List<String> = emptyList(),
     val commandHead: String = "",
@@ -27,9 +25,9 @@ data class PluginConfig(
     val synchronized: Boolean = false,
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifMaxSize: List<Int> = listOf(200, 200, 32),
+    val gifQuality: Byte = 90,
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
-    val updateIgnore: List<String> = emptyList(),
     val repositoryUrl: String? = "https://raw.githubusercontent.com/Dituon/petpet/main"
 )
 

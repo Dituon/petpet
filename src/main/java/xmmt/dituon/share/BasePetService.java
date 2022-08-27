@@ -11,13 +11,13 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 
 public class BasePetService {
     public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
+    protected byte quality = 90;
     private List<Integer> gifMaxSize = null;
     public Encoder encoder = Encoder.BUFFERED_STREAM;
 
@@ -154,6 +154,8 @@ public class BasePetService {
             }
 
             int delay = data.getDelay() != null ? data.getDelay() : 65;
+            GifRenderParams renderParams = new GifRenderParams(
+                    encoder, delay, gifMaxSize, antialias, quality);
 
             if (data.getType() == Type.GIF) {
                 HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
@@ -169,7 +171,7 @@ public class BasePetService {
                     }
                 }
                 InputStream inputStream = BaseGifMaker.makeGIF(
-                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder, delay);
+                        avatarList, textList, stickerMap, renderParams);
                 return new Pair<>(inputStream, "gif");
             }
 
@@ -177,7 +179,7 @@ public class BasePetService {
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
                 InputStream inputStream = BaseImageMaker.makeImage(
-                        avatarList, textList, sticker, antialias, gifMaxSize, encoder);
+                        avatarList, textList, sticker, renderParams);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {
@@ -203,43 +205,32 @@ public class BasePetService {
         key = dataRoot.getAbsolutePath() + File.separator +
                 (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
 
-        CountDownLatch latch = new CountDownLatch(
-                data.getText().size() + data.getAvatar().size()
-                        + (additionTextDatas != null ? additionTextDatas.size() : 0));
-
         try {
             ArrayList<TextModel> textList = new ArrayList<>();
             // add from KeyData
             if (!data.getText().isEmpty()) {
-                for (TextData textElement : data.getText()) {
-                    new Thread(() -> {
-                        textList.add(new TextModel(textElement, textExtraData));
-                        latch.countDown();
-                    }).start();
-                }
+                data.getText().forEach(textElement ->
+                        textList.add(new TextModel(textElement, textExtraData))
+                );
             }
             // add from params
             if (additionTextDatas != null) {
-                for (TextData textElement : additionTextDatas) {
-                    new Thread(() -> {
-                        textList.add(new TextModel(textElement, textExtraData));
-                        latch.countDown();
-                    }).start();
-                }
+                additionTextDatas.forEach(textElement ->
+                        textList.add(new TextModel(textElement, textExtraData))
+                );
             }
 
             ArrayList<AvatarModel> avatarList = new ArrayList<>();
 
             if (!data.getAvatar().isEmpty()) {
-                for (AvatarData avatarData : data.getAvatar()) {
-                    new Thread(() -> {
-                        avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()));
-                        latch.countDown();
-                    }).start();
-                }
+                data.getAvatar().forEach(avatarData ->
+                        avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()))
+                );
             }
 
             int delay = data.getDelay() != null ? data.getDelay() : 65;
+            GifRenderParams renderParams = new GifRenderParams(
+                    encoder, delay, gifMaxSize, antialias, quality);
 
             if (data.getType() == Type.GIF) {
                 HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
@@ -249,7 +240,6 @@ public class BasePetService {
                     stickerMap.put(imageNum, ImageIO.read(new File(key + imageNum++ + ".png")));
                 }
 
-                latch.await();
                 if (data.getBackground() != null) { //从配置文件读背景
                     BufferedImage sticker = new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
                     for (short i = 0; i < avatarList.get(0).getPosLength(); i++) {
@@ -257,16 +247,15 @@ public class BasePetService {
                     }
                 }
                 InputStream inputStream = BaseGifMaker.makeGIF(
-                        avatarList, textList, stickerMap, antialias, gifMaxSize, encoder, delay);
+                        avatarList, textList, stickerMap, renderParams);
                 return new Pair<>(inputStream, "gif");
             }
 
             if (data.getType() == Type.IMG) {
-                latch.await();
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
                 InputStream inputStream = BaseImageMaker.makeImage(
-                        avatarList, textList, sticker, antialias, gifMaxSize, encoder);
+                        avatarList, textList, sticker, renderParams);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {

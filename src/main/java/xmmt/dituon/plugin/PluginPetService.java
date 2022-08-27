@@ -20,7 +20,7 @@ import java.util.Objects;
 public class PluginPetService extends BasePetService {
 
     protected String command = "pet";
-    public short probability = 30;
+    public byte probability = 30;
     protected String commandHead = "";
     protected boolean respondSelfNudge = false;
     protected boolean respondReply = true;
@@ -31,7 +31,6 @@ public class PluginPetService extends BasePetService {
     protected boolean messageSynchronized = false;
     protected boolean headless = true;
     protected boolean autoUpdate = true;
-    protected List<String> updateIgnore = new ArrayList<>();
     protected String repositoryUrl = "https://dituon.github.io/petpet";
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
@@ -63,12 +62,12 @@ public class PluginPetService extends BasePetService {
         messageSynchronized = config.getSynchronized();
         headless = config.getHeadless();
         autoUpdate = config.getAutoUpdate();
-        updateIgnore = config.getUpdateIgnore();
         repositoryUrl = config.getRepositoryUrl();
         disabledGroups = config.getDisabledGroups();
 
         super.setGifMaxSize(config.getGifMaxSize());
         super.encoder = config.getGifEncoder();
+        super.quality = config.getGifQuality();
 
         switch (config.getDisablePolicy()) {
             case NONE:

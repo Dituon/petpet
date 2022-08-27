@@ -78,7 +78,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
             }
         }
 
-        BufferedImage output = new BufferedImage(stickerWidth, stickerHeight, sticker.getType());
+        BufferedImage output = new BufferedImage(stickerWidth, stickerHeight, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g2d = output.createGraphics();
 
         if (antialias) { //抗锯齿
