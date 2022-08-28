@@ -40,6 +40,9 @@ public class FastAnimatedGifEncoder extends AnimatedGifEncoder {
         NeuQuant nq = frame.neuQuant;
         colorTab = frame.colorTab; // create reduced palette
 
+        int p = 0;
+        while (p < colorTab.length / 3) usedEntry[p++] = false;
+
         // map image pixels to new palette
         int k = 0;
         for (int i = 0; i < nPix; i++) {
