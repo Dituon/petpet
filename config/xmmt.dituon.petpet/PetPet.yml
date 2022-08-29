@@ -20,5 +20,5 @@ content:
     - 32
   headless: true
   autoUpdate: true
-  updateIgnore: []
   repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'
+  devMode: false

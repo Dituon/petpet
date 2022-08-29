@@ -1,6 +1,7 @@
 {
-    "version": 4.7,
+    "version": 4.8,
     "dataList": [
+        "peep",
         "watch_tv",
         "monad",
         "hold_sign",
