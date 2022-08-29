@@ -119,7 +119,7 @@ public abstract class ImageSynthesisCore {
             short height = (short) TextModel.getTextHeight(text, font);
             for (String txt : texts) {
                 g2d.drawString(txt, pos[0], y);
-                y += height + 2;
+                y += height + TextModel.LINE_SPACING;
             }
             return;
         }

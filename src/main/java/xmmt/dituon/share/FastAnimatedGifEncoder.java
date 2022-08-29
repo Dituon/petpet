@@ -8,6 +8,18 @@ import java.awt.image.DataBufferByte;
 import java.io.IOException;
 
 public class FastAnimatedGifEncoder extends AnimatedGifEncoder {
+    /**
+     * 等效于父类的addFrame, 单线程处理BufferedImage(构建FrameData)
+     * @deprecated 应当在多线程环境中预构建FrameData
+     */
+    @Deprecated
+    @Override
+    public boolean addFrame(BufferedImage image){
+        FrameData frame = new FrameData(image, (byte) sample);
+        addFrame(frame);
+        return true;
+    }
+
     public void addFrame(FrameData frame) {
         try {
             pixels = frame.pixels;
@@ -29,7 +41,6 @@ public class FastAnimatedGifEncoder extends AnimatedGifEncoder {
             writePixels(); // encode and write pixel data
             firstFrame = false;
         } catch (IOException ignored) {
-            ignored.printStackTrace();
         }
     }
 
@@ -41,7 +52,7 @@ public class FastAnimatedGifEncoder extends AnimatedGifEncoder {
         colorTab = frame.colorTab; // create reduced palette
 
         int p = 0;
-        while (p < colorTab.length / 3) usedEntry[p++] = false;
+        while (p < nPix) usedEntry[p++] = false;
 
         // map image pixels to new palette
         int k = 0;

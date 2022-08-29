@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TextModel {
+    public static final byte LINE_SPACING = 2;
     protected String text;
     protected int[] pos = {2, 14};
     protected Color color = new Color(25, 25, 25, 255); // #191919
@@ -124,7 +125,7 @@ public class TextModel {
                         pos[0] - this.getWidth(this.getFont()) / 2,
                         line == 1 ? pos[1] + getTextHeight(text, getFont()) / 2
                                 : pos[1] - (getHeight(getFont()) / 2)
-                                + (getTextHeight(text, getFont()) / 2) + 2
+                                + (getTextHeight(text, getFont()) / 2) + LINE_SPACING
                 };
             case RIGHT:
                 return new int[]{pos[0] - this.getWidth(this.getFont()), pos[1]};
@@ -217,7 +218,7 @@ public class TextModel {
      */
     public int getHeight(Font font) {
         return line == 1 ? getTextHeight(text, font) :
-                (getTextHeight(text, font) + 2) * line;
+                (getTextHeight(text, font) + LINE_SPACING) * line;
     }
 
     /**
