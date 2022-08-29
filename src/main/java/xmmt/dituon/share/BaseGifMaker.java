@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class BaseGifMaker {
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
-        switch (params.getEncoder()){
+        switch (params.getEncoder()) {
             case ANIMATED_LIB:
                 return makeGifUseAnimatedLib(avatarList, textList, stickerMap, params);
             case BUFFERED_STREAM:
@@ -82,8 +82,8 @@ public class BaseGifMaker {
                     FrameData frameData = new FrameData(temp, params.getQuality());
                     frameMap.put(fi, frameData);
                     if (fi == 0) {
-                        size[0] = image.getWidth();
-                        size[1] = image.getHeight();
+                        size[0] = temp.getWidth();
+                        size[1] = temp.getHeight();
                     }
                     latch.countDown();
                 }).start();
@@ -150,7 +150,7 @@ public class BaseGifMaker {
 
     public static InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
                                       BufferedImage sticker, GifRenderParams params) {
-        switch (params.getEncoder()){
+        switch (params.getEncoder()) {
             case ANIMATED_LIB:
                 return makeGifUseAnimatedLib(avatarList, textList, sticker, params);
             case BUFFERED_STREAM:
@@ -220,8 +220,8 @@ public class BaseGifMaker {
                     FrameData frameData = new FrameData(temp, params.getQuality());
                     frameMap.put(fi, frameData);
                     if (fi == 0) {
-                        size[0] = image.getWidth();
-                        size[1] = image.getHeight();
+                        size[0] = temp.getWidth();
+                        size[1] = temp.getHeight();
                     }
                     latch.countDown();
                 }).start();
