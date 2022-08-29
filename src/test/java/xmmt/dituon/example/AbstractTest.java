@@ -1,9 +1,6 @@
 package xmmt.dituon.example;
 
 import org.junit.BeforeClass;
-import xmmt.dituon.share.AvatarExtraDataProvider;
-import xmmt.dituon.share.BasePetService;
-import xmmt.dituon.share.TextData;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

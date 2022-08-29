@@ -19,7 +19,7 @@ public class BasePetService {
     protected boolean antialias = true;
     protected byte quality = 90;
     private List<Integer> gifMaxSize = null;
-    public Encoder encoder = Encoder.BUFFERED_STREAM;
+    public Encoder encoder = Encoder.ANIMATED_LIB;
 
     protected File dataRoot;
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
