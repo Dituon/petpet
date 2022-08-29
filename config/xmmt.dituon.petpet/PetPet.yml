@@ -18,6 +18,7 @@ content:
     - 200
     - 200
     - 32
+  gifQuality: 90
   headless: true
   autoUpdate: true
   repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'
