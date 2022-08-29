@@ -41,14 +41,21 @@ public class BaseGifMaker {
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
                 new Thread(() -> {
-                    imageMap.put(fi, ImageSynthesis.synthesisImage(
+                    BufferedImage image = ImageSynthesis.synthesisImage(
                             stickerMap.get(key), avatarList, textList,
-                            params.getAntialias(), false, fi, params.getMaxSize()));
+                            params.getAntialias(), false, fi, params.getMaxSize()
+                    );
+                    BufferedImage temp =
+                            new BufferedImage(image.getWidth(), image.getHeight(),
+                                    BufferedImage.TYPE_3BYTE_BGR);
+                    Graphics2D g = temp.createGraphics();
+                    g.drawImage(image, 0, 0, null);
+                    imageMap.put(fi, temp);
                     latch.countDown();
                 }).start();
             }
             BufferedGifEncoder gifEncoder =
-                    new BufferedGifEncoder(stickerMap.get((short) 0).getType(), params.getDelay(), true);
+                    new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
             for (i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
             gifEncoder.finish();
@@ -175,15 +182,22 @@ public class BaseGifMaker {
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
                 new Thread(() -> {
-                    imageMap.put(fi, ImageSynthesis.synthesisImage(
+                    BufferedImage image = ImageSynthesis.synthesisImage(
                             sticker, avatarList, textList,
-                            params.getAntialias(), false, fi, params.getMaxSize()));
+                            params.getAntialias(), false, fi, params.getMaxSize()
+                    );
+                    BufferedImage temp =
+                            new BufferedImage(image.getWidth(), image.getHeight(),
+                                    BufferedImage.TYPE_3BYTE_BGR);
+                    Graphics2D g = temp.createGraphics();
+                    g.drawImage(image, 0, 0, null);
+                    imageMap.put(fi, temp);
                     latch.countDown();
                 }).start();
             }
 
             BufferedGifEncoder gifEncoder =
-                    new BufferedGifEncoder(sticker.getType(), params.getDelay(), true);
+                    new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
             for (short i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
             gifEncoder.finish();

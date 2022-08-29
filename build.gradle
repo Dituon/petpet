@@ -65,13 +65,6 @@ jar {
     }
 }
 
-test {
-    filter {
-        //exclude all tests from a package.
-        excludeTestsMatching "xmmt.dituon.example.*"
-    }
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
