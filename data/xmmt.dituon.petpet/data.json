@@ -1,0 +1,13 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [36,193,247,247],
+        "posType": "ZOOM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["我想上的"]
+}
