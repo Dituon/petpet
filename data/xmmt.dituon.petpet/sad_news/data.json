@@ -1,0 +1,21 @@
+{
+    "type": "IMG",
+    "avatar": [],
+    "text": [
+        {
+            "text": "$txt1[坏消息! 坏消息!]",
+            "color": "#5a5a5a",
+            "pos": [0,487,900],
+            "position": ["CENTER", "BOTTOM"],
+            "size": 104,
+            "font": "MiSans Bold",
+            "wrap": "ZOOM",
+            "align": "CENTER",
+            "strokeColor": "#dddddd",
+            "strokeSize": 10,
+            "greedy": true
+        }
+    ],
+    "alias": ["悲报"],
+    "inRandomList": false
+}
