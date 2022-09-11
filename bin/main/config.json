@@ -1,0 +1,8 @@
+{
+  "port": 2333,
+  "threadPoolSize": 10,
+  "dataPath": "data/xmmt.dituon.petpet",
+  "gifMaxSize": [200, 200, 32],
+  "gifEncoder": "ANIMATED_LIB",
+  "headless": true
+}
