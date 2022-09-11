@@ -1,0 +1,13 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [[1, 237],[160, 732],[832, 508],[826, 1],[-136, -81]],
+        "posType": "DEFORM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["砸", "打碎"]
+}
