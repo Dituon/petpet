@@ -92,10 +92,13 @@ public final class Petpet extends JavaPlugin {
     }
 
     private void responseNudge(NudgeEvent e) {
+        //Cooldown时间
+        if(Cooler.isLocked(e.getFrom().getId())) return;
         // 如果禁用了petpet就返回
         if ((!(e.getSubject() instanceof Group) || isDisabled((Group) e.getSubject()))
                 && service.nudgeCanBeDisabled) return;
         try {
+            Cooler.lock(e.getFrom().getId(),service.coolDown);
             service.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
             try {
@@ -150,6 +153,11 @@ public final class Petpet extends JavaPlugin {
         }
 
         if (service.messageCanBeDisabled && isDisabled(e.getGroup())) return;
+
+        if(Cooler.isLocked(e.getSender().getId())){
+            sendReplyMessage(e,"操作过快，请稍后再试");
+            return;
+        }
 
         if (messageString.equals(service.command)) {
             switch (service.replyFormat) {
@@ -304,6 +312,8 @@ public final class Petpet extends JavaPlugin {
                 }
             }
         }
+
+        Cooler.lock(e.getSender().getId(),service.coolDown);
 
         service.sendImage(e.getGroup(), key,
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(

@@ -41,6 +41,8 @@ public class PluginPetService extends BasePetService {
 
     protected List<Long> disabledGroups;
 
+    protected int coolDown;
+
     public void readConfigByPluginAutoSave() {
         PluginConfig config = PetPetAutoSaveConfig.INSTANCE.content.get();
 //        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
@@ -65,6 +67,7 @@ public class PluginPetService extends BasePetService {
         autoUpdate = config.getAutoUpdate();
         repositoryUrl = config.getRepositoryUrl();
         disabledGroups = config.getDisabledGroups();
+        coolDown = config.getCoolDown();
 
         devMode = Boolean.TRUE.equals(config.getDevMode());
 

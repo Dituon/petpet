@@ -29,7 +29,8 @@ data class PluginConfig(
     val headless: Boolean = true,
     val autoUpdate: Boolean = true,
     val repositoryUrl: String? = "https://raw.githubusercontent.com/Dituon/petpet/main",
-    val devMode: Boolean? = false
+    val devMode: Boolean? = false,
+    val coolDown : Int = 10
 )
 
 enum class ReplyFormat {
