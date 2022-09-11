@@ -154,11 +154,6 @@ public final class Petpet extends JavaPlugin {
 
         if (service.messageCanBeDisabled && isDisabled(e.getGroup())) return;
 
-        if(Cooler.isLocked(e.getSender().getId())){
-            sendReplyMessage(e,"操作过快，请稍后再试");
-            return;
-        }
-
         if (messageString.equals(service.command)) {
             switch (service.replyFormat) {
                 case MESSAGE:
@@ -313,6 +308,10 @@ public final class Petpet extends JavaPlugin {
             }
         }
 
+        if(Cooler.isLocked(e.getSender().getId())){
+            sendReplyMessage(e,"操作过快，请稍后再试");
+            return;
+        }
         Cooler.lock(e.getSender().getId(),service.coolDown);
 
         service.sendImage(e.getGroup(), key,
