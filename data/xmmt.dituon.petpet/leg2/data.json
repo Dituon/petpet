@@ -1,0 +1,20 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "FROM",
+        "pos": [43,276,119,119],
+        "posType": "ZOOM",
+        "style": [],
+        "round": true,
+        "avatarOnTop": true
+    },{
+        "type": "TO",
+        "pos": [101,37,163,163],
+        "posType": "ZOOM",
+        "style": [],
+        "round": true,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["抱大腿"]
+}
