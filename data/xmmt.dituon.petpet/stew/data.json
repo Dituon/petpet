@@ -1,0 +1,20 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [9,-2,181,154],
+        "posType": "ZOOM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [{
+        "text": "生活不易,炖$txt1[群友]出气",
+        "pos": [2,190,190],
+        "wrap": "ZOOM",
+        "color": "#191919",
+        "font": "MiSans Bold",
+        "size": 35
+    }],
+    "alias": ["炖"]
+}
