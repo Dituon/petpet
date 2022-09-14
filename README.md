@@ -42,32 +42,57 @@ java 编写，**支持多线程** ：轻量，高效。
 首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/Petpet.yml` 文件
 
 ```
-content: 
-  command: pet #触发 petpet 的指令
-  probability: 30 #使用 戳一戳 的触发概率
-  antialias: true #抗锯齿
-  disabled: [] #禁用列表
-
-  keyCommandHead: '' #keyCommand前缀
-  respondReply: true #响应回复
-  cachePoolSize: 10000 #消息缓存池容量
-
-  respondSelfNudge: false #响应机器人发出的戳一戳
-  keyListFormat: FORWARD #keyList响应格式
-  disablePolicy: FULL #禁用策略
-  fuzzy: false #模糊匹配用户名
-
-  synchronized: false #消息事件同步锁
-  gifEncoder: ANIMATED_LIB #GIF编码器
-  gifMaxSize: [] #GIF缩放阈值/尺寸
-  gifQuality: 90 #GIF质量, 仅适用于ANIMATED_LIB编码器
-  
-  strictCommand: true #严格匹配模式
-  headless: true #使用headless模式
-  
-  autoUpdate: true #自动从仓库同步PetData
-  repositoryUrl: 'https://dituon.github.io/petpet' #仓库地址, 用于自动更新
-  devMode: false #开发模式, 支持热重载
+# 触发 petpet 的指令
+command: pet
+# 使用 戳一戳 的触发概率
+probability: 30
+# 是否使用抗锯齿
+antialias: true
+# 禁用列表
+disabled: []
+# keyCommand前缀
+commandHead: ''
+# 是否响应机器人发出的戳一戳
+respondSelfNudge: false
+# 是否使用响应回复
+respondReply: true
+# 消息缓存池容量
+cachePoolSize: 10000
+# keyList响应格式
+keyListFormat: FORWARD
+# 禁用策略
+disablePolicy: FULL
+# 禁用群聊列表
+disabledGroups: []
+# 是否使用模糊匹配用户名
+fuzzy: false
+# 是否使用严格匹配模式
+strictCommand: true
+# 是否使用消息事件同步锁
+synchronized: false
+# GIF编码器
+gifEncoder: ANIMATED_LIB
+# GIF缩放阈值/尺寸
+gifMaxSize: 
+  - 200
+  - 200
+  - 32
+# GIF质量, 仅适用于ANIMATED_LIB编码器
+gifQuality: 90
+# 是否使用headless模式
+headless: true
+# 是否自动从仓库同步PetData
+autoUpdate: false
+# 用于自动更新的仓库地址
+repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'
+# 是否启用开发模式（支持热重载）
+devMode: false
+# 触发图片生成后的冷却时长（填入-1则禁用，单位为秒）
+coolDown: 10
+# 在群聊中触发图片生成后的冷却时长
+groupCoolDown: -1
+# 触发冷却后的回复消息
+inCoolDownMessage: 操作过快，请稍后再试
 ```
 
 #### 配置项说明
@@ -213,7 +238,7 @@ content:
 
 - **headless**: `true`
 
-> 启用`hradless`模式, 默认为`true`
+> 启用`headless`模式, 默认为`true`
 > 
 > ~~人话: 有些服务器没有输入输出设备, 画图库无法正常运行, 启用这个配置项可以修复, 因为总是有人不看常见问题, 干脆默认启用了(~~
 <br/>
@@ -234,6 +259,18 @@ content:
 - **devMode**: `false`
 
 > 开发模式, 启用后**任何人都能使用`pet reload`指令热重载`PetData`**
+<br/>
+- **coolDown**: `10`
+
+> 成功触发指令后对该用户的冷却时间，单位为秒，设置为`-1`可禁用冷却
+<br/>
+ - **coolDown**: `-1`
+
+> 成功触发指令后对该群聊的冷却时间，单位为秒，设置为`-1`可禁用冷却
+<br/>
+ - **inCoolDownMessage**: `操作过快，请稍后再试`
+
+> 在冷却时间中触发命令的回复消息
 <br/>
 
 </details>

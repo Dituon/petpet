@@ -44,7 +44,7 @@ public final class Petpet extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            this.reloadPluginConfig(PetPetAutoSaveConfig.INSTANCE);
+            reloadPluginConfig(Config.INSTANCE);
             service.readConfigByPluginAutoSave();
         } catch (NoClassDefFoundError ignored) {
             getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
@@ -308,12 +308,12 @@ public final class Petpet extends JavaPlugin {
             }
         }
 
-        if(Cooler.isLocked(e.getSender().getId())){
-            sendReplyMessage(e,"操作过快，请稍后再试");
+        if(Cooler.isLocked(e.getSender().getId())||Cooler.isLocked(e.getGroup().getId())){
+            sendReplyMessage(e,service.inCoolDownMessage);
             return;
         }
         Cooler.lock(e.getSender().getId(),service.coolDown);
-
+        Cooler.lock(e.getGroup().getId(),service.groupCoolDown);
         service.sendImage(e.getGroup(), key,
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl()

@@ -41,20 +41,22 @@ public class PluginPetService extends BasePetService {
 
     protected List<Long> disabledGroups;
 
-    protected int coolDown;
+    protected int coolDown = 10;
+    protected int groupCoolDown = -1;
+    protected String inCoolDownMessage = "操作过快，请稍后再试";
 
     public void readConfigByPluginAutoSave() {
-        PluginConfig config = PetPetAutoSaveConfig.INSTANCE.content.get();
-//        System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
+        Config config = Config.INSTANCE;
+//      System.out.println("从AutoSaveConfig中读出：" + ConfigDTOKt.encode(config));
         readPluginConfig(config);
     }
 
-    private void readPluginConfig(PluginConfig config) {
+    private void readPluginConfig(Config config) {
         readBaseServiceConfig(PluginConfigKt.toBaseServiceConfig(config));
 
         command = config.getCommand();
         antialias = config.getAntialias();
-        probability = config.getProbability();
+        probability = (byte) config.getProbability();
         commandHead = config.getCommandHead();
         respondSelfNudge = config.getRespondSelfNudge();
         respondReply = config.getRespondReply();
@@ -68,12 +70,14 @@ public class PluginPetService extends BasePetService {
         repositoryUrl = config.getRepositoryUrl();
         disabledGroups = config.getDisabledGroups();
         coolDown = config.getCoolDown();
+        groupCoolDown = config.getGroupCoolDown();
+        inCoolDownMessage = config.getInCoolDownMessage();
 
         devMode = Boolean.TRUE.equals(config.getDevMode());
 
         super.setGifMaxSize(config.getGifMaxSize());
         super.encoder = config.getGifEncoder();
-        super.quality = config.getGifQuality();
+        super.quality = (byte) config.getGifQuality();
 
         switch (config.getDisablePolicy()) {
             case NONE:
