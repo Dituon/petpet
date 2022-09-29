@@ -2,9 +2,9 @@
     "type": "GIF",
     "avatar": [{
         "type": "TO",
-        "pos": [[0,38,32,32],[0,38,32,32],[0,38,32,32]],
+        "pos": [[0,30,37,37],[0,30,37,37],[0,30,37,37]],
         "round": false,
-        "avatarOnTop": true
+        "avatarOnTop": false
     }],
     "text": [],
     "alias": ["吃"]

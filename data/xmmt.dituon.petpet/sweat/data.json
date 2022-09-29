@@ -1,0 +1,13 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [[85, 1],[1, 190],[182, 271],[263, 77],[113, 87]],
+        "posType": "DEFORM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["流汗"]
+}
