@@ -43,7 +43,8 @@ public class PluginPetService extends BasePetService {
 
     protected int coolDown = 10;
     protected int groupCoolDown = -1;
-    protected String inCoolDownMessage = "操作过快，请稍后再试";
+    protected String inCoolDownMessage = "技能冷却中...";
+    protected boolean inCoolDownNudge = false;
 
     public void readConfigByPluginAutoSave() {
         Config config = Config.INSTANCE;
@@ -72,6 +73,7 @@ public class PluginPetService extends BasePetService {
         coolDown = config.getCoolDown();
         groupCoolDown = config.getGroupCoolDown();
         inCoolDownMessage = config.getInCoolDownMessage();
+        if (inCoolDownMessage.equals("[nudge]")) inCoolDownNudge = true;
 
         devMode = Boolean.TRUE.equals(config.getDevMode());
 

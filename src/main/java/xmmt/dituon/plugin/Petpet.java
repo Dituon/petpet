@@ -3,6 +3,7 @@ package xmmt.dituon.plugin;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
+import net.mamoe.mirai.contact.AnonymousMember;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.MemberPermission;
@@ -93,12 +94,12 @@ public final class Petpet extends JavaPlugin {
 
     private void responseNudge(NudgeEvent e) {
         //Cooldown时间
-        if(Cooler.isLocked(e.getFrom().getId())) return;
+        if (Cooler.isLocked(e.getFrom().getId())) return;
         // 如果禁用了petpet就返回
         if ((!(e.getSubject() instanceof Group) || isDisabled((Group) e.getSubject()))
                 && service.nudgeCanBeDisabled) return;
         try {
-            Cooler.lock(e.getFrom().getId(),service.coolDown);
+            Cooler.lock(e.getFrom().getId(), service.coolDown);
             service.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
         } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
             try {
@@ -181,6 +182,16 @@ public final class Petpet extends JavaPlugin {
             return;
         }
 
+        if (Cooler.isLocked(e.getSender().getId()) || Cooler.isLocked(e.getGroup().getId())) {
+            if (service.inCoolDownNudge && !(e.getSender() instanceof AnonymousMember)) {
+                e.getSender().nudge().sendTo(e.getGroup());
+                return;
+            }
+            sendReplyMessage(e, service.inCoolDownMessage);
+            return;
+        }
+        Cooler.lock(e.getSender().getId(), service.coolDown);
+        Cooler.lock(e.getGroup().getId(), service.groupCoolDown);
 
         boolean fuzzyLock = false; //锁住模糊匹配
 
@@ -213,6 +224,7 @@ public final class Petpet extends JavaPlugin {
                 fromUrl = e.getSender().getAvatarUrl();
 
                 Member to = e.getGroup().get(at.getTarget());
+                assert to != null;
                 toName = getNameOrNick(to);
                 toUrl = to.getAvatarUrl();
                 continue;
@@ -308,12 +320,6 @@ public final class Petpet extends JavaPlugin {
             }
         }
 
-        if(Cooler.isLocked(e.getSender().getId())||Cooler.isLocked(e.getGroup().getId())){
-            sendReplyMessage(e,service.inCoolDownMessage);
-            return;
-        }
-        Cooler.lock(e.getSender().getId(),service.coolDown);
-        Cooler.lock(e.getGroup().getId(),service.groupCoolDown);
         service.sendImage(e.getGroup(), key,
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl()
