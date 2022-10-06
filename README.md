@@ -623,8 +623,22 @@ inCoolDownMessage: 技能冷却中...
 
 访问 `127.0.0.1:2333/petpet` 以获取 `PetDataList`
 
+##### `GET`
+
 使用 `GET` 传递参数, 例如 `127.0.0.1:2333/petpet?key=petpet&toAvatar=$avatarUrl`
 `127.0.0.1:2333/petpet?key=osu&textList=hso!`
+
+**结构**
+<details>
+<summary>展开/收起</summary>
+
+- `key`(str): 对应`PetData`,例如`kiss` `rub`
+- `fromAvatar` `toAvatar` `groupAvatar` `botAvatar`(url): 头像URL地址
+- `fromName` `toName` `groupName`(str): 昵称, 有默认值
+- `textList`(str): 根据空格分割此字符串, 作为额外数据
+</details>
+
+##### `POST`
 
 使用 `POST` 传递参数, 例如 `127.0.0.1:2333/petpet`
 ```
@@ -641,16 +655,6 @@ inCoolDownMessage: 技能冷却中...
 ```
 
 可参考`example-script`中的代码实现请求
-
-**结构**
-<details>
-<summary>展开/收起</summary>
-
-- `key`(str): 对应`PetData`,例如`kiss` `rub`
-- `fromAvatar` `toAvatar` `groupAvatar` `botAvatar`(url): 头像URL地址
-- `fromName` `toName` `groupName`(str): 昵称, 有默认值
-- `textList`(str): 根据空格分割此字符串, 作为额外数据
-</details>
 
 > 更多示例请参考`example-script`
 
