@@ -13,6 +13,7 @@ import net.mamoe.mirai.event.events.GroupMessagePostSendEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.*;
 import xmmt.dituon.share.BaseConfigFactory;
+import xmmt.dituon.share.BasePetService;
 import xmmt.dituon.share.TextExtraData;
 
 import java.io.File;
@@ -21,8 +22,6 @@ import java.util.stream.Collectors;
 
 public final class Petpet extends JavaPlugin {
     public static final Petpet INSTANCE = new Petpet();
-    public static final float VERSION = 4.8F;
-
     private static List<Long> disabledGroup;
     public static PluginPetService service;
     public static File dataFolder;
@@ -35,7 +34,7 @@ public final class Petpet extends JavaPlugin {
     public static final Random random = new Random();
 
     private Petpet() {
-        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(VERSION))
+        super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(BasePetService.VERSION))
                 .name("PetPet")
                 .author("Dituon")
                 .build());
@@ -60,7 +59,7 @@ public final class Petpet extends JavaPlugin {
 
         getLogger().info("\n             _                _   \n  _ __   ___| |_   _ __   ___| |_ \n" +
                 " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
-                " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             v" + VERSION + "  (*^▽^*)");
+                " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             v" + BasePetService.VERSION + "  (*^▽^*)");
 
         if (service.probability > 0) GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class,
                 service.messageSynchronized ? this::onNudgeSynchronized : this::onNudge);

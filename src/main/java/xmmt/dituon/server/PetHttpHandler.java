@@ -3,36 +3,43 @@ package xmmt.dituon.server;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class PetHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) {
         try {
-            String query = httpExchange.getRequestURI().getRawQuery();
-            if (query == null) {
-                StringBuilder json = new StringBuilder("{\"petData\": [");
-                WebServer.petService.getDataMap().forEach((key, data) -> {
-                    json.append("{\"key\": \"").append(key).append("\", ").append("\"types\": [");
-                    data.getAvatar().forEach(avatar -> { //necessary data
-                        json.append("\"").append(avatar.getType()).append("\", ");
-                    });
-                    if (!data.getAvatar().isEmpty()) json.delete(json.length() - 2, json.length());
-                    json.append("]}, ");
-                });
-                if (!WebServer.petService.getDataMap().isEmpty()) json.delete(json.length() - 2, json.length());
-                json.append("]}");
-                handleResponse(httpExchange, json.toString());
-                return;
+            RequestParser parser;
+            if (httpExchange.getRequestMethod().equals("GET")) { //GET
+
+                String requestParam = httpExchange.getRequestURI().getRawQuery();
+                if (requestParam == null) {
+                    handleResponse(httpExchange, WebServer.petService.getIndexJson());
+                    return;
+                }
+
+                parser = new GETParser(requestParam);
+            } else {
+                //POST
+                BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(httpExchange.getRequestBody(), StandardCharsets.UTF_8)
+                );
+
+                StringBuilder requestBodyContent = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    requestBodyContent.append(line);
+                }
+
+                parser = new POSTParser(requestBodyContent.toString());
             }
 
-            CommandParser parser = new CommandParser(query);
             handleResponse(httpExchange, parser.getImagePair().getFirst(), parser.getImagePair().getSecond());
             parser.close();
-        } catch (Exception ignored) {
+
+        } catch (Exception e) {
+            e.printStackTrace();
             handleResponse(httpExchange, 400);
         }
     }

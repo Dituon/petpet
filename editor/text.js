@@ -112,13 +112,24 @@ function Text(text) {
     }
 
     this.id = textList.length
-    $('#elementBar').append(`<div class="element text" id="t${this.id}"><div class="typeText">Text ${this.id}</div>` +
-        '<div class="check" title="">color<input type="color" class="color"></div>' +
-        '<div class="check">size<input type="number" class="typein size" value="8"></div>' +
-        '<select class="textAlign"><option value="LEFT">左对齐</option><option value="RIGHT">右对齐</option><option value="CENTER">居中</option></select>' +
-        '<select class="textWrap"><option value="NONE">不换行</option><option value="BREAK">自动换行</option><option value="ZOOM">自动缩放</option></select>' +
-        '<div class="check setWidth" style="display: none">maxWidth<input type="number" class="typein width" value="0"></div>' +
-        '<div class="check deleteText">delete</div></div>')
+    $('#elementBar').append(`
+    <div class="element text" id="t${this.id}">
+        <div class="typeText">Text ${this.id}</div>
+        <div class="check" title="">color<input type="color" class="color"></div>
+        <div class="check">size<input type="number" class="typein size" value="8"></div>
+        <select class="textAlign">
+            <option value="LEFT">左对齐</option>
+            <option value="RIGHT">右对齐</option>
+            <option value="CENTER">居中</option>
+        </select>
+        <select class="textWrap">
+            <option value="NONE">不换行</option>
+            <option value="BREAK">自动换行</option>
+            <option value="ZOOM">自动缩放</option>
+        </select>
+        <div class="check setWidth" style="display: none">maxWidth<input type="number" class="typein width" value="0"></div>
+        <div class="check deleteText">delete</div>
+    </div>`)
 }
 
 $('#elementBar').on('change', '.text .color', function () {

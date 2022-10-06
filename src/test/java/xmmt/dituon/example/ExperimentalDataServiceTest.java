@@ -38,7 +38,6 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
         testGeneral("testAnyasuki-deform", "anyasuki-deform", null);
     }
 
-    @Test
     public void testAll() {
         TextExtraData textExtraData = new TextExtraData(
                 "恋恋", "绝绝", "幻想乡",
