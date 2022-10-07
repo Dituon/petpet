@@ -13,6 +13,7 @@ public class ServerPetService extends BasePetService {
     public String path = "data/xmmt.dituon.petpet";
     public int threadPoolSize = 10;
     public boolean headless = true;
+    private String indexJson;
 
     public void readConfig() {
         File configFile = new File("config.json");
@@ -34,5 +35,16 @@ public class ServerPetService extends BasePetService {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public void readData(File[] files){
+        super.readData(files);
+        indexJson = PetDataDTO.encodeToString(super.dataMap);
+        System.out.println(keyListString);
+    }
+
+    public String getIndexJson(){
+        return indexJson;
     }
 }

@@ -82,17 +82,17 @@ gifQuality: 90
 # 是否使用headless模式
 headless: true
 # 是否自动从仓库同步PetData
-autoUpdate: false
+autoUpdate: true
 # 用于自动更新的仓库地址
 repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'
 # 是否启用开发模式（支持热重载）
 devMode: false
-# 触发图片生成后的冷却时长（填入-1则禁用，单位为秒）
+# 触发图片生成后的用户冷却时长（填入-1则禁用，单位为秒）
 coolDown: 10
-# 在群聊中触发图片生成后的冷却时长
+# 触发图片生成后的群聊冷却时长
 groupCoolDown: -1
-# 触发冷却后的回复消息
-inCoolDownMessage: 操作过快，请稍后再试
+# 触发冷却后的回复消息, '[nudge]'为戳一戳
+inCoolDownMessage: 技能冷却中...
 ```
 
 #### 配置项说明
@@ -258,19 +258,26 @@ inCoolDownMessage: 操作过快，请稍后再试
 
 - **devMode**: `false`
 
-> 开发模式, 启用后**任何人都能使用`pet reload`指令热重载`PetData`**
+> 开发模式, 启用后**任何人都能使用`pet reload`指令热重载`PetData`**, 默认为`false`
 <br/>
+
 - **coolDown**: `10`
 
-> 成功触发指令后对该用户的冷却时间，单位为秒，设置为`-1`可禁用冷却
+> 成功触发指令后对该用户的冷却时间(单位为秒), 默认为 `1`
+>
+> 设置为 `-1` 可禁用冷却
 <br/>
- - **coolDown**: `-1`
 
-> 成功触发指令后对该群聊的冷却时间，单位为秒，设置为`-1`可禁用冷却
+- **groupCoolDown**: `-1`
+
+> 成功触发指令后对该群聊的冷却时间, 默认为 `1`
 <br/>
- - **inCoolDownMessage**: `操作过快，请稍后再试`
+
+- **inCoolDownMessage**: `技能冷却中...`
 
 > 在冷却时间中触发命令的回复消息
+> 
+> 配置项为`[nudge]`时, 会以戳一戳形式回复
 <br/>
 
 </details>
@@ -616,6 +623,8 @@ inCoolDownMessage: 操作过快，请稍后再试
 
 访问 `127.0.0.1:2333/petpet` 以获取 `PetDataList`
 
+##### `GET`
+
 使用 `GET` 传递参数, 例如 `127.0.0.1:2333/petpet?key=petpet&toAvatar=$avatarUrl`
 `127.0.0.1:2333/petpet?key=osu&textList=hso!`
 
@@ -628,6 +637,24 @@ inCoolDownMessage: 操作过快，请稍后再试
 - `fromName` `toName` `groupName`(str): 昵称, 有默认值
 - `textList`(str): 根据空格分割此字符串, 作为额外数据
 </details>
+
+##### `POST`
+
+使用 `POST` 传递参数, 例如 `127.0.0.1:2333/petpet`
+```
+{
+    "key": "petpet",
+    "to": {
+        "name":"d2n",
+        "avatar":"https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"
+    },
+    "textList": [
+        "test"
+    ]
+}
+```
+
+可参考`example-script`中的代码实现请求
 
 > 更多示例请参考`example-script`
 

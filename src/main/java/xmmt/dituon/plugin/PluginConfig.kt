@@ -53,12 +53,12 @@ object Config : AutoSavePluginConfig("PetPet") {
     val repositoryUrl: String? by value("https://raw.githubusercontent.com/Dituon/petpet/main")
     @ValueDescription("是否启用开发模式（支持热重载）")
     val devMode: Boolean? by value(false)
-    @ValueDescription("触发图片生成后的冷却时长（填入-1则禁用，单位为秒）")
+    @ValueDescription("触发图片生成后的用户冷却时长（填入-1则禁用，单位为秒）")
     val coolDown : Int by value(10)
-    @ValueDescription("在群聊中触发图片生成后的冷却时长")
+    @ValueDescription("触发图片生成后的群聊冷却时长")
     val groupCoolDown: Int by value(-1)
-    @ValueDescription("触发冷却后的回复消息")
-    val inCoolDownMessage: String by value("操作过快，请稍后再试")
+    @ValueDescription("触发冷却后的回复消息, '[nudge]'为戳一戳")
+    val inCoolDownMessage: String by value("技能冷却中...")
 }
 
 enum class ReplyFormat {
