@@ -1,0 +1,20 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [39,19,242,242],
+        "posType": "ZOOM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": true
+    },{
+        "type": "TO",
+        "pos": [184,265,66,66],
+        "posType": "ZOOM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": true
+    }],
+    "text": [],
+    "alias": ["要我一直"]
+}
