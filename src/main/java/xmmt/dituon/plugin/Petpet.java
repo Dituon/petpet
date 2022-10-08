@@ -181,17 +181,6 @@ public final class Petpet extends JavaPlugin {
             return;
         }
 
-        if (Cooler.isLocked(e.getSender().getId()) || Cooler.isLocked(e.getGroup().getId())) {
-            if (service.inCoolDownNudge && !(e.getSender() instanceof AnonymousMember)) {
-                e.getSender().nudge().sendTo(e.getGroup());
-                return;
-            }
-            sendReplyMessage(e, service.inCoolDownMessage);
-            return;
-        }
-        Cooler.lock(e.getSender().getId(), service.coolDown);
-        Cooler.lock(e.getGroup().getId(), service.groupCoolDown);
-
         boolean fuzzyLock = false; //锁住模糊匹配
 
         String fromName = getNameOrNick(e.getGroup().getBotAsMember());
@@ -318,6 +307,17 @@ public final class Petpet extends JavaPlugin {
                 }
             }
         }
+
+        if (Cooler.isLocked(e.getSender().getId()) || Cooler.isLocked(e.getGroup().getId())) {
+            if (service.inCoolDownNudge && !(e.getSender() instanceof AnonymousMember)) {
+                e.getSender().nudge().sendTo(e.getGroup());
+                return;
+            }
+            sendReplyMessage(e, service.inCoolDownMessage);
+            return;
+        }
+        Cooler.lock(e.getSender().getId(), service.coolDown);
+        Cooler.lock(e.getGroup().getId(), service.groupCoolDown);
 
         service.sendImage(e.getGroup(), key,
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
