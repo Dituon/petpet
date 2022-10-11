@@ -16,5 +16,6 @@
         "avatarOnTop": true
     }],
     "text": [],
-    "alias": ["要我一直"]
+    "alias": ["要我一直"],
+    "inRandomList": false
 }
