@@ -72,8 +72,9 @@ public class PluginPetService extends BasePetService {
         disabledGroups = config.getDisabledGroups();
         coolDown = config.getCoolDown();
         groupCoolDown = config.getGroupCoolDown();
-        inCoolDownMessage = config.getInCoolDownMessage();
-        if (inCoolDownMessage.equals("[nudge]")) inCoolDownNudge = true;
+        inCoolDownMessage = config.getInCoolDownMessage().isBlank() ?
+                null : config.getInCoolDownMessage();
+        if ("[nudge]".equals(inCoolDownMessage)) inCoolDownNudge = true;
 
         devMode = Boolean.TRUE.equals(config.getDevMode());
 

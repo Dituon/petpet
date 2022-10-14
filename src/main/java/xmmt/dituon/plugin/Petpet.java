@@ -245,11 +245,10 @@ public final class Petpet extends JavaPlugin {
                         .collect(Collectors.toSet());
             }
             for (String k : keyAliaSet) {
-                if (spanList.get(0).startsWith(k)) {
-                    String span = spanList.set(0, k);
-                    if (span.length() != k.length()) {
-                        spanList.add(1, span.substring(k.length()));
-                    }
+                if (!spanList.get(0).startsWith(k)) break;
+                String span = spanList.set(0, k);
+                if (span.length() != k.length()) {
+                    spanList.add(1, span.substring(k.length()));
                 }
             }
         }
@@ -313,6 +312,7 @@ public final class Petpet extends JavaPlugin {
                 e.getSender().nudge().sendTo(e.getGroup());
                 return;
             }
+            if (service.inCoolDownMessage == null) return;
             sendReplyMessage(e, service.inCoolDownMessage);
             return;
         }
