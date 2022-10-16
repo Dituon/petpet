@@ -11,8 +11,11 @@ function Avatar(qq = 2544193782) {
         })
         that.avatar.uniformScaling = true
         canvas.add(that.avatar);
-        let pos = [0, 0,
-            Math.round(that.avatar.getScaledWidth()), Math.round(that.avatar.getScaledHeight())]
+        let pos = [
+            0, 0,
+            Math.round(that.avatar.getScaledWidth()),
+            Math.round(that.avatar.getScaledHeight())
+        ]
         $('#avatar_pos').text('坐标: [' + pos + ']')
         that.setPos(pos)
         that.avatar.on('moving', () => {
@@ -24,8 +27,12 @@ function Avatar(qq = 2544193782) {
 
     //监听移动
     function avatarMoving() {
-        let pos = [Math.round(that.avatar.left), Math.round(that.avatar.top),
-            Math.round(that.avatar.getScaledWidth()), Math.round(that.avatar.getScaledHeight())]
+        let pos = [
+            Math.round(that.avatar.left),
+            Math.round(that.avatar.top),
+            Math.round(that.avatar.getScaledWidth()),
+            Math.round(that.avatar.getScaledHeight())
+        ]
         $('#avatar_pos').text('坐标: [' + pos + ']')
         that.setPos(pos)
     }
@@ -71,11 +78,11 @@ function Avatar(qq = 2544193782) {
             const points = [{
                 x: a.left, y: a.top
             }, {
-                x: a.left, y: a.getScaledHeight()
+                x: a.left, y: a.getScaledHeight() + a.top
             }, {
-                x: a.getScaledWidth(), y: a.getScaledHeight()
+                x: a.getScaledWidth() + a.left, y: a.getScaledHeight() + a.top
             }, {
-                x: a.getScaledWidth(), y: a.top
+                x: a.getScaledWidth() + a.left, y: a.top
             }]
             that.polygon = new fabric.Polygon(points, {
                 fill: '#FFF0F5',
@@ -96,7 +103,8 @@ function Avatar(qq = 2544193782) {
             polygon.controls = polygon.points.reduce(function (acc, point, index) {
                 acc['p' + index] = new fabric.Control({
                     positionHandler: polygonPositionHandler,
-                    actionHandler: anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
+                    actionHandler: 
+                        anchorWrapper(index > 0 ? index - 1 : lastControl, actionHandler),
                     actionName: 'modifyPolygon',
                     pointIndex: index
                 });
@@ -113,22 +121,20 @@ function Avatar(qq = 2544193782) {
             if (frameLength === 1) that.pos = [that.pos]
             for (let p in that.pos) { //把xywh转换为deform格式
                 const v = that.pos[p]
-                that.pos[p] = `[${
-                    [v[0], v[1]]
-                }],[${
-                    [v[0], v[1] + v[3]]
-                }],[${
-                    [v[0] + v[2], v[1] + v[3]]
-                }],[${
-                    [v[0] + v[2], v[1]]
-                }],[0, 0]`
+                that.pos[p] = `[${[v[0], v[1]]
+                    }],[${[v[0], v[1] + v[3]]
+                    }],[${[v[0] + v[2], v[1] + v[3]]
+                    }],[${[v[0] + v[2], v[1]]
+                    }],[0, 0]`
             }
             console.log(that.pos)
         } else {
             const a = that.avatar
-            for (let p of that.pos) { //不可逆, 退而求其次
+            for (let p in that.pos) { //不可逆, 退而求其次
                 const v = that.pos[p]
-                that.pos[p] = v.toString() === [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]].toString() ?
+                console.log(v,p,that.pos)
+                that.pos[p] = 
+                v.toString() === [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]].toString() ?
                     [0, 0, 0, 0] : [a.left, a.top, a.getScaledWidth(), a.getScaledHeight()]
             }
             canvas.remove(that.polygon)
@@ -147,7 +153,11 @@ function Avatar(qq = 2544193782) {
                 x: (polygon.points[i].x - polygon.pathOffset.x),
                 y: (polygon.points[i].y - polygon.pathOffset.y)
             }, polygon.calcTransformMatrix());
-            newPosArr[i] = `[${Math.round(absolutePoint.x - x)}, ${Math.round(absolutePoint.y - y)}]`
+            newPosArr[i] = `[${
+                Math.round(absolutePoint.x - x)
+            }, ${
+                Math.round(absolutePoint.y - y)
+            }]`
         }
         newPosArr[4] = `[${x}, ${y}]`
         $('#avatar_pos').text('坐标: [' + newPosArr + ']')

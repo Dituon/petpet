@@ -1,6 +1,6 @@
 function Text(text) {
     const that = this
-    this.text = new fabric.IText(text, {fill: '#191919', fontSize: 128});
+    this.text = new fabric.IText(text, {fill: '#191919', fontSize: 56});
     this.text.setControlsVisibility({
         mb: false,
         ml: false,
@@ -15,10 +15,9 @@ function Text(text) {
     })
     this.text.on('scaling', e => {
         if (e.transform.target.scaleX === e.transform.target.scaleY) {
-            let size = e.transform.target.scaleX * 200
-            that.text.set('fontSize', size)
+            let size = that.text.fontSize * e.transform.target.scaleX
             document.getElementById('t' + that.id).querySelector('.typein').value =
-                Math.round(size / 16)
+                Math.round(size * 0.75)
         }
         textMoving()
     })
@@ -57,7 +56,7 @@ function Text(text) {
                 that.text.textAlign = 'right'
                 break
             case 'CENTER':
-                that.text.textAlign = 'right'
+                that.text.textAlign = 'center'
                 break
         }
         textMoving()
@@ -116,7 +115,7 @@ function Text(text) {
     <div class="element text" id="t${this.id}">
         <div class="typeText">Text ${this.id}</div>
         <div class="check" title="">color<input type="color" class="color"></div>
-        <div class="check">size<input type="number" class="typein size" value="8"></div>
+        <div class="check">size<input type="number" class="typein size" value="42"></div>
         <select class="textAlign">
             <option value="LEFT">左对齐</option>
             <option value="RIGHT">右对齐</option>
