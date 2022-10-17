@@ -106,7 +106,7 @@ function Text(text) {
         "text": "${that.text.get('text')}",
         "pos": [${that.pos}],
         "color": "${that.text.get('fill')}",
-        "size": ${Math.round(that.text.get('fontSize') / 16)}${extra}
+        "size": ${Math.round(that.text.get('fontSize') * that.text.get('scaleX') * 0.75)}${extra}
     }`
     }
 
@@ -137,7 +137,7 @@ $('#elementBar').on('change', '.text .color', function () {
 })
 
     .on('change', '.text .check .typein.size', function () {
-        textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * 16)
+        textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * (4/3))
         canvas.renderAll()
     })
 
