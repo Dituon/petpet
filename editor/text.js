@@ -137,7 +137,10 @@ $('#elementBar').on('change', '.text .color', function () {
 })
 
     .on('change', '.text .check .typein.size', function () {
-        textList[this.parentNode.parentNode.id.slice(1)].text.set('fontSize', this.value * (4/3))
+        const text = textList[this.parentNode.parentNode.id.slice(1)].text
+        text.set('fontSize', this.value * (4/3))
+        text.set('scaleX', 1)
+        text.set('scaleY', 1)
         canvas.renderAll()
     })
 
