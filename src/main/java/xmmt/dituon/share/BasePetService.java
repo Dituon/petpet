@@ -25,10 +25,14 @@ public class BasePetService {
     protected File dataRoot;
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
-    public static String keyListString;
+    public String keyListString;
+
+    protected int gifMakerThreadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
+    protected BaseGifMaker gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
+    protected BaseImageMaker imageMaker = new BaseImageMaker(gifMaker);
 
     public void readData(File[] files) {
-        if (files == null) {
+        if (files == null || files.length == 0) {
             System.out.println("无法读取文件，请检查data目录");
             return;
         }
@@ -171,7 +175,7 @@ public class BasePetService {
                         stickerMap.put(i, sticker);
                     }
                 }
-                InputStream inputStream = BaseGifMaker.makeGIF(
+                InputStream inputStream = gifMaker.makeGIF(
                         avatarList, textList, stickerMap, renderParams);
                 return new Pair<>(inputStream, "gif");
             }
@@ -179,7 +183,7 @@ public class BasePetService {
             if (data.getType() == Type.IMG) {
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
-                InputStream inputStream = BaseImageMaker.makeImage(
+                InputStream inputStream = imageMaker.makeImage(
                         avatarList, textList, sticker, renderParams);
                 return new Pair<>(inputStream, "png");
             }
@@ -247,7 +251,7 @@ public class BasePetService {
                         stickerMap.put(i, sticker);
                     }
                 }
-                InputStream inputStream = BaseGifMaker.makeGIF(
+                InputStream inputStream = gifMaker.makeGIF(
                         avatarList, textList, stickerMap, renderParams);
                 return new Pair<>(inputStream, "gif");
             }
@@ -255,7 +259,7 @@ public class BasePetService {
             if (data.getType() == Type.IMG) {
                 BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
                 assert sticker != null;
-                InputStream inputStream = BaseImageMaker.makeImage(
+                InputStream inputStream = imageMaker.makeImage(
                         avatarList, textList, sticker, renderParams);
                 return new Pair<>(inputStream, "png");
             }
@@ -338,5 +342,16 @@ public class BasePetService {
 
     public List<Integer> getGifMaxSize() {
         return gifMaxSize;
+    }
+
+    public void setGifMakerThreadPoolSize(int size) {
+        assert size >= 0;
+        gifMakerThreadPoolSize = size == 0 ? gifMakerThreadPoolSize : size;
+        gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
+        imageMaker = new BaseImageMaker(gifMaker);
+    }
+
+    public int getGifMakerThreadPoolSize() {
+        return gifMakerThreadPoolSize;
     }
 }

@@ -18,7 +18,7 @@ public class WebServer {
 
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(petService.port), 0);
         httpServer.createContext("/petpet", new PetHttpHandler());
-        httpServer.setExecutor(Executors.newFixedThreadPool(petService.threadPoolSize));
+        httpServer.setExecutor(Executors.newFixedThreadPool(petService.webServerThreadPoolSize));
         httpServer.start();
 
         System.out.println("PetpetWebServer started in port " + petService.port);

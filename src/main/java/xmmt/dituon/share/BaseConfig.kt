@@ -11,7 +11,9 @@ data class BaseServiceConfig(
     val antialias: Boolean = true,
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    val gifQuality: Byte = 90
+    val gifQuality: Byte = 90,
+    val threadPoolSize: Int = 0,
+    val headless: Boolean = true
 )
 
 enum class Encoder {
@@ -94,6 +96,10 @@ enum class CropType {
     NONE, PIXEL, PERCENT
 }
 
+enum class ZoomType {
+    STRETCH, CROP, REDUCE
+}
+
 enum class AvatarStyle {
     MIRROR, FLIP, GRAY, BINARIZATION
 }
@@ -105,6 +111,7 @@ data class AvatarData @JvmOverloads constructor(
     val posType: AvatarPosType? = AvatarPosType.ZOOM,
     val crop: JsonArray? = null,
     val cropType: CropType? = CropType.NONE,
+    val zoomType: ZoomType? = ZoomType.CROP,
     val style: List<AvatarStyle>? = emptyList(),
     val angle: Short? = 0,
     val round: Boolean? = false,

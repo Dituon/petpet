@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 public class ServerPetService extends BasePetService {
     public int port = 2333;
     public String path = "data/xmmt.dituon.petpet";
-    public int threadPoolSize = 10;
+    public int webServerThreadPoolSize = 10;
     public boolean headless = true;
     private String indexJson;
 
@@ -27,24 +27,27 @@ public class ServerPetService extends BasePetService {
             ServerConfig config = ServerConfig.getConfig(getFileStr(configFile));
             port = config.getPort();
             path = config.getDataPath();
-            threadPoolSize = config.getThreadPoolSize();
+            webServerThreadPoolSize = config.getWebServerThreadPoolSize();
             headless = config.getHeadless();
 
             super.setGifMaxSize(config.getGifMaxSize());
             super.encoder = config.getGifEncoder();
+
+            super.setGifMakerThreadPoolSize(config.getGifMakerThreadPoolSize());
+            System.out.println("GifMakerThreadPoolSize: " + super.getGifMakerThreadPoolSize());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     @Override
-    public void readData(File[] files){
+    public void readData(File[] files) {
         super.readData(files);
         indexJson = PetDataDTO.encodeToString(super.dataMap);
         System.out.println(keyListString);
     }
 
-    public String getIndexJson(){
+    public String getIndexJson() {
         return indexJson;
     }
 }

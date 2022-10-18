@@ -82,6 +82,9 @@ public class PluginPetService extends BasePetService {
         super.encoder = config.getGifEncoder();
         super.quality = (byte) config.getGifQuality();
 
+        super.setGifMakerThreadPoolSize(config.getThreadPoolSize());
+        System.out.println("Petpet GifMakerThreadPoolSize: " + super.getGifMakerThreadPoolSize());
+
         switch (config.getDisablePolicy()) {
             case NONE:
                 nudgeCanBeDisabled = false;
