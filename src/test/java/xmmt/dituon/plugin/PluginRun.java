@@ -4,7 +4,7 @@ import net.mamoe.mirai.console.plugin.PluginManager;
 import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;
 import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader;
 import org.junit.Test;
-import xmmt.dituon.plugin.Petpet;
+import moe.dituon.petpet.plugin.Petpet;
 
 public class PluginRun {
     public static void main(String[] args) {

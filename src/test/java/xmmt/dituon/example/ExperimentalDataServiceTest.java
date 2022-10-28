@@ -3,10 +3,10 @@ package xmmt.dituon.example;
 import kotlin.Pair;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import xmmt.dituon.share.BaseConfigFactory;
-import xmmt.dituon.share.BaseServiceConfig;
-import xmmt.dituon.share.TextData;
-import xmmt.dituon.share.TextExtraData;
+import moe.dituon.petpet.share.BaseConfigFactory;
+import moe.dituon.petpet.share.BaseServiceConfig;
+import moe.dituon.petpet.share.TextData;
+import moe.dituon.petpet.share.TextExtraData;
 
 import java.io.File;
 import java.io.IOException;
