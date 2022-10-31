@@ -56,7 +56,7 @@ publishing {
 jar {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
-        attributes 'Main-Class': 'xmmt.dituon.server.WebServer'
+        attributes 'Main-Class': 'moe.dituon.petpet.server.WebServer'
     }
     from {
         (configurations.runtimeClasspath).collect {
