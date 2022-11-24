@@ -4,7 +4,6 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
-import moe.dituon.petpet.share.BaseConfigFactory.RandomAvatar
 import java.awt.image.BufferedImage
 
 @Serializable
@@ -35,6 +34,7 @@ data class KeyData(
     val alias: List<String>? = null,
     val format: String? = "png", //未实装
     val inRandomList: Boolean? = true,
+    val reverse: Boolean? = false,
     val hidden: Boolean? = false
 ) {
     companion object {
@@ -149,5 +149,6 @@ data class GifRenderParams (
     val delay: Int = 65,
     val maxSize: List<Int>?,
     val antialias: Boolean,
-    val quality: Byte = 90
+    val quality: Byte = 90,
+    val reverse: Boolean = false
 )

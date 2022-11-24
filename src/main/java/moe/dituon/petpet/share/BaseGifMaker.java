@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class BaseGifMaker {
     protected ExecutorService threadPool;
@@ -21,16 +24,17 @@ public class BaseGifMaker {
     /**
      * 默认线程池容量为 <b>CPU线程数 + 1</b>
      */
-    public BaseGifMaker(){
+    public BaseGifMaker() {
         threadPool =
                 Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
     }
-    public BaseGifMaker(int threadPoolSize){
+
+    public BaseGifMaker(int threadPoolSize) {
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
     }
 
     public InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                      HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
+                               HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
         switch (params.getEncoder()) {
             case ANIMATED_LIB:
                 return makeGifUseAnimatedLib(avatarList, textList, stickerMap, params);
@@ -49,7 +53,7 @@ public class BaseGifMaker {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            HashMap<Short, BufferedImage> imageMap = new HashMap<>();
+            HashMap<Short, BufferedImage> imageMap = new HashMap<>(stickerMap.size());
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
                 threadPool.execute(() -> {
@@ -69,7 +73,12 @@ public class BaseGifMaker {
             BufferedGifEncoder gifEncoder =
                     new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
-            for (i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
+            if (params.getReverse()) {
+                var map = reverseMap(imageMap);
+                for (i = 0; i < map.size(); i++) gifEncoder.addFrame(map.get(i));
+            } else {
+                for (i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
+            }
             gifEncoder.finish();
             return gifEncoder.getOutput();
         } catch (InterruptedException | IOException e) {
@@ -84,7 +93,7 @@ public class BaseGifMaker {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            HashMap<Short, FrameData> frameMap = new HashMap<>();
+            HashMap<Short, FrameData> frameMap = new HashMap<>(stickerMap.size());
             int[] size = new int[2];
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
@@ -117,7 +126,12 @@ public class BaseGifMaker {
 
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
-            frameMap.forEach((in, frame) -> gifEncoder.addFrame(frame));
+            if (params.getReverse()) {
+                var map = reverseMap(frameMap);
+                map.forEach((id, frame) -> gifEncoder.addFrame(frame));
+            } else {
+                frameMap.forEach((id, frame) -> gifEncoder.addFrame(frame));
+            }
             gifEncoder.finish();
             return new ByteArrayInputStream(output.toByteArray());
         } catch (InterruptedException e) {
@@ -126,11 +140,11 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGifUseSquareupLib(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                                    HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
+                                             HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
         try {
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            HashMap<Short, Image> imageMap = new HashMap<>();
+            HashMap<Short, Image> imageMap = new HashMap<>(stickerMap.size());
             int[] size = new int[2];
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
@@ -153,13 +167,12 @@ public class BaseGifMaker {
 
             latch.await();
             GifEncoder gifEncoder = new GifEncoder(output, size[0], size[1], 0);
-            imageMap.forEach((in, image) -> {
-                try {
-                    gifEncoder.addImage(image, options);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            if (params.getReverse()) {
+                var map = reverseMap(imageMap);
+                for (i = 0; i < map.size(); i++) gifEncoder.addImage(map.get(i), options);
+            } else {
+                for (i = 0; i < imageMap.size(); i++) gifEncoder.addImage(imageMap.get(i), options);
+            }
             gifEncoder.finishEncoding();
             return new ByteArrayInputStream(output.toByteArray());
         } catch (InterruptedException | IOException e) {
@@ -168,7 +181,7 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                      BufferedImage sticker, GifRenderParams params) {
+                               BufferedImage sticker, GifRenderParams params) {
         switch (params.getEncoder()) {
             case ANIMATED_LIB:
                 return makeGifUseAnimatedLib(avatarList, textList, sticker, params);
@@ -199,8 +212,7 @@ public class BaseGifMaker {
                             params.getAntialias(), false, fi, params.getMaxSize()
                     );
                     BufferedImage temp =
-                            new BufferedImage(image.getWidth(), image.getHeight(),
-                                    BufferedImage.TYPE_3BYTE_BGR);
+                            new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
                     Graphics2D g = temp.createGraphics();
                     g.drawImage(image, 0, 0, null);
                     imageMap.put(fi, temp);
@@ -211,7 +223,12 @@ public class BaseGifMaker {
             BufferedGifEncoder gifEncoder =
                     new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
-            for (short i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
+            if (params.getReverse()) {
+                var map = reverseMap(imageMap);
+                for (short i = 0; i < map.size(); i++) gifEncoder.addFrame(map.get(i));
+            } else {
+                for (short i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
+            }
             gifEncoder.finish();
             return gifEncoder.getOutput();
         } catch (InterruptedException | IOException e) {
@@ -262,7 +279,12 @@ public class BaseGifMaker {
 
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
-            frameMap.forEach((i, frame) -> gifEncoder.addFrame(frame));
+            if (params.getReverse()) {
+                var map = reverseMap(frameMap);
+                map.forEach((id, frame) -> gifEncoder.addFrame(frame));
+            } else {
+                frameMap.forEach((id, frame) -> gifEncoder.addFrame(frame));
+            }
             gifEncoder.finish();
             return new ByteArrayInputStream(output.toByteArray());
         } catch (InterruptedException e) {
@@ -271,7 +293,7 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGifUseSquareupLib(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                                    BufferedImage sticker, GifRenderParams params) {
+                                             BufferedImage sticker, GifRenderParams params) {
         try {
             short maxFrameLength = 1;
             for (AvatarModel avatar : avatarList) {
@@ -300,19 +322,24 @@ public class BaseGifMaker {
             ImageOptions options = new ImageOptions().setDelay(params.getDelay(), TimeUnit.MILLISECONDS);
 
             latch.await();
-            GifEncoder gifEncoder = new GifEncoder(output,
-                    size[0], size[1], 0);
-            imageMap.forEach((in, image) -> {
-                try {
-                    gifEncoder.addImage(image, options);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            GifEncoder gifEncoder = new GifEncoder(output, size[0], size[1], 0);
+            if (params.getReverse()) {
+                var map = reverseMap(imageMap);
+                for (short i = 0; i < map.size(); i++) gifEncoder.addImage(map.get(i), options);
+            } else {
+                for (short i = 0; i < imageMap.size(); i++) gifEncoder.addImage(imageMap.get(i), options);
+            }
             gifEncoder.finishEncoding();
             return new ByteArrayInputStream(output.toByteArray());
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    static private <T> HashMap<Short, T> reverseMap(HashMap<Short, T> originMap) {
+        int size = originMap.size();
+        HashMap<Short, T> map = new HashMap<>(originMap.size());
+        originMap.forEach((id, img) -> map.put((short) (size - id - 1), img));
+        return map;
     }
 }

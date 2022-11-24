@@ -160,7 +160,9 @@ public class BasePetService {
 
             int delay = data.getDelay() != null ? data.getDelay() : 65;
             GifRenderParams renderParams = new GifRenderParams(
-                    encoder, delay, gifMaxSize, antialias, quality);
+                    encoder, delay, gifMaxSize, antialias, quality,
+                    Boolean.TRUE.equals(data.getReverse())
+            );
 
             if (data.getType() == Type.GIF) {
                 HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
@@ -235,7 +237,9 @@ public class BasePetService {
 
             int delay = data.getDelay() != null ? data.getDelay() : 65;
             GifRenderParams renderParams = new GifRenderParams(
-                    encoder, delay, gifMaxSize, antialias, quality);
+                    encoder, delay, gifMaxSize, antialias, quality,
+                    Boolean.TRUE.equals(data.getReverse())
+            );
 
             if (data.getType() == Type.GIF) {
                 HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
