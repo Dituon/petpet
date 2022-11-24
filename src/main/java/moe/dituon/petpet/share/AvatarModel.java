@@ -69,6 +69,9 @@ public class AvatarModel {
             case BOT:
                 imageList.add(Objects.requireNonNull(extraData.getBotAvatar()).invoke());
                 break;
+            case RANDOM:
+                imageList.add(Objects.requireNonNull(extraData.getRandomAvatar()).invoke());
+                break;
         }
     }
 
@@ -85,6 +88,9 @@ public class AvatarModel {
                 break;
             case BOT:
                 imageList = Objects.requireNonNull(extraData.getBotAvatar()).invoke();
+                break;
+            case RANDOM:
+                imageList = Objects.requireNonNull(extraData.getRandomAvatar()).invoke();
                 break;
         }
     }

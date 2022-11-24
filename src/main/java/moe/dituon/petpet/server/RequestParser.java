@@ -43,7 +43,8 @@ class GETParser extends RequestParser {
         super.imagePair = WebServer.petService.generateImage(
                 get("key"),
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
-                        get("fromAvatar"), get("toAvatar"), get("groupAvatar"), get("botAvatar")
+                        get("fromAvatar"), get("toAvatar"), get("groupAvatar"), get("botAvatar"),
+                        List.of(get("randomAvatarList").split(","))
                 ), new TextExtraData(
                         get("fromName") != null ? get("fromName") : "from",
                         get("toName") != null ? get("toName") : "to",
@@ -74,7 +75,8 @@ class POSTParser extends RequestParser{
                         request.getForm().getAvatar(),
                         request.getTo().getAvatar(),
                         request.getGroup().getAvatar(),
-                        request.getBot().getAvatar()
+                        request.getBot().getAvatar(),
+                        request.getRandomAvatarList()
                 ), new TextExtraData(
                         request.getForm().getName(),
                         request.getTo().getName(),

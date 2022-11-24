@@ -3,6 +3,7 @@ package moe.dituon.petpet.plugin;
 import kotlin.Pair;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
+import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
 import moe.dituon.petpet.share.BaseConfigFactory;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PluginPetService extends BasePetService {
 
@@ -176,7 +178,8 @@ public class PluginPetService extends BasePetService {
                         new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
         );
         GifAvatarExtraDataProvider gifAvatarExtraDataProvider = BaseConfigFactory.getGifAvatarExtraDataFromUrls(
-                from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl()
+                from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl(),
+                group.getMembers().stream().map(NormalMember::getAvatarUrl).collect(Collectors.toList())
         );
         sendImage(group, key, gifAvatarExtraDataProvider, textExtraData);
     }

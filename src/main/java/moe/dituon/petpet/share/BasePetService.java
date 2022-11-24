@@ -191,7 +191,7 @@ public class BasePetService {
             System.out.println("解析 " + key + "/data.json 出错");
             ex.printStackTrace();
         }
-        return null;
+        throw new RuntimeException();
     }
 
     /**
@@ -267,7 +267,7 @@ public class BasePetService {
             System.out.println("解析 " + key + "/data.json 出错");
             ex.printStackTrace();
         }
-        return null;
+        throw new RuntimeException();
     }
 
     private BufferedImage getBackgroundImage(File path, KeyData data,

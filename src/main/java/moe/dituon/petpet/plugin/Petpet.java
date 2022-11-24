@@ -3,10 +3,7 @@ package moe.dituon.petpet.plugin;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
-import net.mamoe.mirai.contact.AnonymousMember;
-import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.contact.Member;
-import net.mamoe.mirai.contact.MemberPermission;
+import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessagePostSendEvent;
@@ -174,7 +171,7 @@ public final class Petpet extends JavaPlugin {
                     List<String> keyList = new ArrayList<>();
                     keyList.add(service.getKeyAliasListString());
                     service.sendImage(e.getGroup(), "key_list",
-                            BaseConfigFactory.getGifAvatarExtraDataFromUrls(null, null, null, null),
+                            BaseConfigFactory.getGifAvatarExtraDataFromUrls(null, null, null, null, null),
                             new TextExtraData("", "", "", keyList));
                     break;
             }
@@ -321,7 +318,8 @@ public final class Petpet extends JavaPlugin {
 
         service.sendImage(e.getGroup(), key,
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
-                        fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl()
+                        fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl(),
+                        e.getGroup().getMembers().stream().map(NormalMember::getAvatarUrl).collect(Collectors.toList())
                 ), new TextExtraData(
                         fromName, toName, groupName, spanList
                 ));

@@ -11,6 +11,7 @@ data class RequestDTO(
     val to: TargetDTO = TargetDTO("to", ""),
     val group: TargetDTO = TargetDTO("group", ""),
     val bot: TargetDTO = TargetDTO("bot", ""),
+    val randomAvatarList: List<String> = emptyList(),
     val textList: List<String> = emptyList()
 ) {
     companion object {

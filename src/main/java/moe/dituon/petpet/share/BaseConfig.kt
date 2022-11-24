@@ -4,6 +4,7 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
+import moe.dituon.petpet.share.BaseConfigFactory.RandomAvatar
 import java.awt.image.BufferedImage
 
 @Serializable
@@ -85,7 +86,7 @@ data class TextExtraData(
 )
 
 enum class AvatarType {
-    FROM, TO, GROUP, BOT
+    FROM, TO, GROUP, BOT, RANDOM
 }
 
 enum class AvatarPosType {
@@ -125,14 +126,16 @@ data class AvatarExtraDataProvider(
     val fromAvatar: (() -> BufferedImage)? = null,
     val toAvatar: (() -> BufferedImage)? = null,
     val groupAvatar: (() -> BufferedImage)? = null,
-    val botAvatar: (() -> BufferedImage)? = null
+    val botAvatar: (() -> BufferedImage)? = null,
+    val randomAvatar: (() -> BufferedImage)? = null
 )
 
 data class GifAvatarExtraDataProvider(
     val fromAvatar: (() -> List<BufferedImage>)? = null,
     val toAvatar: (() -> List<BufferedImage>)? = null,
     val groupAvatar: (() -> List<BufferedImage>)? = null,
-    val botAvatar: (() -> List<BufferedImage>)? = null
+    val botAvatar: (() -> List<BufferedImage>)? = null,
+    val randomAvatar: (() -> List<BufferedImage>)? = null
 )
 
 @Serializable

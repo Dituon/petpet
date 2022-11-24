@@ -49,7 +49,7 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
                     BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                             "file:/example-data/input/from.gif",
                             "file:/example-data/input/to.gif",
-                            null, null
+                            null, null, null
                     )
                     , textExtraData, null
             );
