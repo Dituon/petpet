@@ -31,6 +31,10 @@ public class BasePetService {
     protected BaseGifMaker gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
     protected BaseImageMaker imageMaker = new BaseImageMaker(gifMaker);
 
+    /**
+     * 从文件中读取KeyData模板到dataMap中
+     * @param files KeyData目录
+     */
     public void readData(File[] files) {
         if (files == null || files.length == 0) {
             System.out.println("无法读取文件，请检查data目录");
@@ -38,7 +42,6 @@ public class BasePetService {
         }
         this.dataRoot = files[0].getParentFile();
 
-        StringBuilder keyListStringBuilder = new StringBuilder();
         for (File file : files) {
             if (file.getName().equals(FONTS_FOLDER)) {
                 // load fonts folder
@@ -50,30 +53,39 @@ public class BasePetService {
             File dataFile = new File(file.getPath() + File.separator + "data.json");
             try {
                 KeyData data = KeyData.getData(getFileStr(dataFile));
-                dataMap.put(file.getName(), data);
-                if (Boolean.TRUE.equals(data.getHidden())) continue;
-
-                keyListStringBuilder.append("\n").append(file.getName());
-                if (data.getAlias() != null) {
-                    keyListStringBuilder.append(" ( ");
-                    data.getAlias().forEach((aliasKey) -> {
-                        keyListStringBuilder.append(aliasKey).append(" ");
-                        if (aliaMap.get(aliasKey) == null) {
-                            aliaMap.put(aliasKey, new String[]{file.getName()});
-                            return;
-                        }
-                        String[] oldArray = aliaMap.get(aliasKey);
-                        String[] newArray = Arrays.copyOf(oldArray, oldArray.length + 1);
-                        newArray[oldArray.length] = file.getName();
-                        aliaMap.put(aliasKey, newArray);
-                    });
-                    keyListStringBuilder.append(")");
-                }
+                putKeyData(file.getName(), data);
             } catch (Exception ex) {
                 System.out.println("无法读取 " + file + "/data.json: \n\n" + ex);
             }
         }
-        keyListString = keyListStringBuilder.toString();
+    }
+
+    /**
+     * 将KeyData添加到dataMap中, 并更新aliaMap, keyListString
+     * @param key 索引
+     */
+    public void putKeyData(String key, KeyData data){
+        dataMap.put(key, data);
+        if (Boolean.TRUE.equals(data.getHidden())) return;
+
+        StringBuilder keyStringBuilder = new StringBuilder();
+        keyStringBuilder.append("\n").append(key);
+        if (data.getAlias() != null) {
+            keyStringBuilder.append(" ( ");
+            data.getAlias().forEach((aliasKey) -> {
+                keyStringBuilder.append(aliasKey).append(" ");
+                if (aliaMap.get(aliasKey) == null) {
+                    aliaMap.put(aliasKey, new String[]{key});
+                    return;
+                }
+                String[] oldArray = aliaMap.get(aliasKey);
+                String[] newArray = Arrays.copyOf(oldArray, oldArray.length + 1);
+                newArray[oldArray.length] = key;
+                aliaMap.put(aliasKey, newArray);
+            });
+            keyStringBuilder.append(")");
+        }
+        keyListString += keyStringBuilder.toString();
     }
 
     private void registerFontsToAwt(File fontsFolder) {
@@ -103,6 +115,11 @@ public class BasePetService {
 
     public void readBaseServiceConfig(BaseServiceConfig config) {
         antialias = config.getAntialias();
+        setGifMaxSize(config.getGifMaxSize());
+        encoder = config.getGifEncoder();
+        quality = config.getGifQuality();
+        setGifMakerThreadPoolSize(config.getThreadPoolSize());
+        if (config.getHeadless()) System.setProperty("java.awt.headless", "true");
     }
 
     public static String getFileStr(File file) throws IOException {
