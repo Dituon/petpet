@@ -16,7 +16,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
         switch (avatar.getPosType()) {
             case ZOOM:
                 g2dDrawZoomAvatar(g2d, avatar.getFrame(index), avatar.getPos(index),
-                        avatar.getAngle(index), avatar.isRound(), multiple);
+                        avatar.getAngle(index), avatar.isRound(), multiple, avatar.getZoomType());
                 break;
             case DEFORM:
                 AvatarModel.DeformData deformData = avatar.getDeformData();

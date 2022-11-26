@@ -14,6 +14,7 @@ public class AvatarModel {
     private Type imageType;
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
+    protected FitType fitType;
     protected short angle;
     protected boolean round;
     protected boolean rotate;
@@ -45,6 +46,7 @@ public class AvatarModel {
         setPos(data.getPos(), this.imageType = imageType);
         cropType = data.getCropType();
         setCrop(data.getCrop());
+        fitType = data.getFit();
         styleList = data.getStyle();
         angle = data.getAngle() != null ? data.getAngle() : 0;
         round = Boolean.TRUE.equals(data.getRound());
@@ -177,6 +179,10 @@ public class AvatarModel {
         if (round) {
             imageList = ImageSynthesis.convertCircular(imageList, antialias);
         }
+    }
+
+    public FitType getZoomType() {
+        return fitType;
     }
 
     public boolean isRound() {

@@ -97,8 +97,8 @@ enum class CropType {
     NONE, PIXEL, PERCENT
 }
 
-enum class ZoomType {
-    STRETCH, CROP, REDUCE
+enum class FitType {
+    CONTAIN, COVER, FILL
 }
 
 enum class AvatarStyle {
@@ -112,7 +112,7 @@ data class AvatarData @JvmOverloads constructor(
     val posType: AvatarPosType? = AvatarPosType.ZOOM,
     val crop: JsonArray? = null,
     val cropType: CropType? = CropType.NONE,
-    val zoomType: ZoomType? = ZoomType.CROP,
+    val fit: FitType? = FitType.FILL,
     val style: List<AvatarStyle>? = emptyList(),
     val angle: Short? = 0,
     val round: Boolean? = false,
@@ -149,6 +149,6 @@ data class GifRenderParams (
     val delay: Int = 65,
     val maxSize: List<Int>?,
     val antialias: Boolean,
-    val quality: Byte = 90,
+    val quality: Byte = 100,
     val reverse: Boolean = false
 )

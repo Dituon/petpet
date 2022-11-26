@@ -1,5 +1,7 @@
 package moe.dituon.petpet.share;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.GlyphVector;
@@ -10,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +29,7 @@ public abstract class ImageSynthesisCore {
      */
     protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
                                             float angle, boolean isRound) {
-        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, isRound, 1.0F);
+        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, isRound, 1.0F, FitType.FILL);
     }
 
     /**
@@ -39,32 +42,70 @@ public abstract class ImageSynthesisCore {
      * @param isRound     裁切为圆形
      * @param multiple    缩放倍数
      */
-    protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
-                                            float angle, boolean isRound, float multiple) {
-        if (avatarImage == null) {
-            return;
-        }
+    protected static void g2dDrawZoomAvatar(Graphics2D g2d, @NotNull BufferedImage avatarImage, int[] pos,
+                                            float angle, boolean isRound, float multiple, FitType fitType) {
 
         int x = (int) (pos[0] * multiple);
         int y = (int) (pos[1] * multiple);
         int w = (int) (pos[2] * multiple);
         int h = (int) (pos[3] * multiple);
+        BufferedImage newAvatarImage = avatarImage;
+
+        switch (fitType) {
+            case COVER: {
+                double ratio = Math.min(
+                        (double) avatarImage.getWidth() / w,
+                        (double) avatarImage.getHeight() / h
+                );
+                int resultWidth = (int) (w * ratio);
+                int resultHeight = (int) (h * ratio);
+
+                int[] cropPos = new int[]{
+                        0, 0, resultWidth, resultHeight
+                };
+                System.out.println(Arrays.toString(cropPos));
+
+                newAvatarImage = cropImage(newAvatarImage, cropPos);
+                break;
+            }
+            case CONTAIN: {
+                int resultWidth = w;
+                int resultHeight = h;
+                double avatarRatio = (double) avatarImage.getWidth() / avatarImage.getHeight();
+                double canvasRatio = (double) w / h;
+                if (avatarRatio > canvasRatio) {
+                    resultHeight = (int) (w / avatarRatio);
+                } else {
+                    resultWidth = (int) (h * avatarRatio);
+                }
+
+                int resultX = (w - resultWidth) / 2;
+                int resultY = (h - resultHeight) / 2;
+                x = x + resultX;
+                y = y + resultY;
+                w = resultWidth;
+                h = resultHeight;
+
+                break;
+            }
+        }
+
         if (angle == 0) {
-            g2d.drawImage(avatarImage, x, y, w, h, null);
+            g2d.drawImage(newAvatarImage, x, y, w, h, null);
             return;
         }
 
         if (isRound || angle % 90 == 0) {
-            BufferedImage newAvatarImage = new BufferedImage(avatarImage.getWidth(), avatarImage.getHeight(), avatarImage.getType());
+            newAvatarImage = new BufferedImage(newAvatarImage.getWidth(), newAvatarImage.getHeight(), newAvatarImage.getType());
             Graphics2D rotateG2d = newAvatarImage.createGraphics();
-            rotateG2d.rotate(Math.toRadians(angle), avatarImage.getWidth() / 2, avatarImage.getHeight() / 2);
-            rotateG2d.drawImage(avatarImage, null, 0, 0);
+            rotateG2d.rotate(Math.toRadians(angle), newAvatarImage.getWidth() / 2.0, newAvatarImage.getHeight() / 2.0);
+            rotateG2d.drawImage(newAvatarImage, null, 0, 0);
             rotateG2d.dispose();
             g2d.drawImage(newAvatarImage, x, y, w, h, null);
             return;
         }
 
-        g2d.drawImage(rotateImage(avatarImage, angle), x, y, w, h, null);
+        g2d.drawImage(rotateImage(newAvatarImage, angle), x, y, w, h, null);
     }
 
     /**
@@ -244,7 +285,7 @@ public abstract class ImageSynthesisCore {
         g2d = rotated.createGraphics();
 
         g2d.translate((neww - w) / 2, (newh - h) / 2);
-        g2d.rotate(Math.toRadians(angle), w / 2, h / 2);
+        g2d.rotate(Math.toRadians(angle), w / 2.0, h / 2.0);
         g2d.drawRenderedImage(avatarImage, null);
         g2d.dispose();
         return rotated;
