@@ -10,9 +10,9 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/dituon/petpet)
 [![](https://jitpack.io/v/Dituon/petpet.svg)](https://jitpack.io/#Dituon/petpet)
 
-一个生成摸摸头GIF的 Mirai 插件，灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
+自定义合成图片的 Mirai 插件 / 独立程序, 灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
-java 编写，**支持多线程** ：轻量，高效。
+原生 java 编写, kotlin仅用于数据序列化, **使用底层API**, **多线程优化**: 轻量, 高性能, 易拓展
 
 **[在线编辑器](https://dituon.github.io/petpet/editor)**
 
@@ -40,60 +40,6 @@ java 编写，**支持多线程** ：轻量，高效。
 ## 配置文件
 
 首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/Petpet.yml` 文件
-
-```
-# 触发 petpet 的指令
-command: pet
-# 使用 戳一戳 的触发概率
-probability: 30
-# 是否使用抗锯齿
-antialias: true
-# 禁用列表
-disabled: []
-# keyCommand前缀
-commandHead: ''
-# 是否响应机器人发出的戳一戳
-respondSelfNudge: false
-# 是否使用响应回复
-respondReply: true
-# 消息缓存池容量
-cachePoolSize: 10000
-# keyList响应格式
-keyListFormat: FORWARD
-# 禁用策略
-disablePolicy: FULL
-# 禁用群聊列表
-disabledGroups: []
-# 是否使用模糊匹配用户名
-fuzzy: false
-# 是否使用严格匹配模式
-strictCommand: true
-# 是否使用消息事件同步锁
-synchronized: false
-# GIF编码器
-gifEncoder: ANIMATED_LIB
-# GIF缩放阈值/尺寸
-gifMaxSize: 
-  - 200
-  - 200
-  - 32
-# GIF质量, 仅适用于ANIMATED_LIB编码器
-gifQuality: 90
-# 是否使用headless模式
-headless: true
-# 是否自动从仓库同步PetData
-autoUpdate: true
-# 用于自动更新的仓库地址
-repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'
-# 是否启用开发模式（支持热重载）
-devMode: false
-# 触发图片生成后的用户冷却时长（填入-1则禁用，单位为秒）
-coolDown: 10
-# 触发图片生成后的群聊冷却时长
-groupCoolDown: -1
-# 触发冷却后的回复消息, '[nudge]'为戳一戳
-inCoolDownMessage: 技能冷却中...
-```
 
 #### 配置项说明
 
@@ -221,16 +167,18 @@ inCoolDownMessage: 技能冷却中...
 > 
 > 当Gif长度超过`frameLength`时, 会对Gif进行等比例缩放
 > 
-> 例 : (配置项为`[200, 200, 32]`时) 
+> 注: 缩放在图片合成时进行, 不会影响性能
+> 
+> 例: (配置项为`-200 -200 -32]`时) 
 > - 当Gif长度超过`32`帧时, 检查Gif尺寸
 > - 当Gif尺寸大于`200*200`时, 对Gif进行等比例缩放
 > - Gif缩放后 最长边不会超过设定值
 > (当Gif中包含`40`帧, 尺寸为`300*500`时)
 > - 输出的Gif长度不变, 尺寸为`120*200`
 
-- **gifQuality**: `90`
+- **gifQuality**: `100`
 
-> Gif编码质量(1-100), 默认为90
+> Gif编码质量(1-100), 默认为100
 > 
 > 数字越大, 速度越慢, 质量越好 (小于70时, 速度不会有明显提升)
 > 
@@ -388,9 +336,10 @@ inCoolDownMessage: 技能冷却中...
 `data.json` 标准如下 (以 `thump/data.json` 为例)
 
 ```
+// *为必须参数
 {
-  "type": "GIF", // 图片类型(enum)
-  "avatar": [{ //头像(objArr), 参考下文
+  "type": "GIF", // 图片类型(enum)*
+  "avatar": [{ // 头像(avatarObj[])*, 详见下文
       "type": "TO",
       "pos": [
         [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
@@ -398,11 +347,17 @@ inCoolDownMessage: 技能冷却中...
       "round": true,
       "avatarOnTop": false
     }],
-  "text": [], //文字(objArr), 参考下文
-  "inRandomList": false, //在随机列表中(bolean)
-  "delay": 50 //帧间延时(ms/int), 默认为65
+  "text": [], // 文字(textObj[])*, 详见下文
+  "inRandomList": false, // 在随机列表中(bolean)
+  "reverse": false, // GIF倒放(bolean)
+  "delay": 50, // 帧间延时(ms/int), 默认为65
+  "background": {}, // 背景(obj), 详见下文
+  "alias": [ "别名1", "别名2" ], // 别名(str[])
+  "hidden": false // 隐藏(bolean)
 }
 ```
+
+部分配置项设计参考了`CSS`标准, 并尽可能实现`CSS`渲染效果
 
 ##### 图片类型枚举
 
@@ -458,8 +413,9 @@ inCoolDownMessage: 技能冷却中...
       "type": "FROM", //头像类型枚举(enum), 非空
       "pos": [[92, 64, 40, 40], [135, 40, 40, 40], [84, 105, 40, 40]], // 坐标
       "round": true, // 值为true时, 头像裁切为圆形, 默认为false
-      "avatarOnTop": true // 值为true时, 头像图层在背景之上, 默认为true
+      "avatarOnTop": true, // 值为true时, 头像图层在背景之上, 默认为true
       "angle": 90, // 初始角度
+      "opacity": 0.5 // 透明度
     },
     {
       "type": "TO", 
@@ -476,7 +432,8 @@ inCoolDownMessage: 技能冷却中...
       "style": [ // 风格化
         "MIRROR",
         "GRAY"
-      ]
+      ],
+      "fit": "CONTAIN" // 显示模式
     }
   ]
 ```
@@ -489,6 +446,7 @@ inCoolDownMessage: 技能冷却中...
 - `TO`  接收者头像, 或构造的图片
 - `GROUP`  群头像
 - `BOT`  机器人头像
+- `RANDOM`  随机头像 (随机从群聊成员中选择, 不会重复)
 
 **裁切格式枚举 `cropType`**
 
@@ -502,6 +460,12 @@ inCoolDownMessage: 技能冷却中...
 - `FLIP`  上下翻转
 - `GRAY`  灰度化
 - `BINARIZATION`  二值化
+
+**显示策略 `fit`**
+
+- `CONTAIN` 缩小
+- `COVER` 裁切
+- `FILL` 拉伸
 
 **坐标变量**
 
@@ -608,12 +572,14 @@ inCoolDownMessage: 技能冷却中...
 启动时会生成 `config.json`:
 ```
 {
-  "port": 2333, //监听端口
-  "threadPoolSize": 10, //线程池容量
-  "dataPath": "data/xmmt.dituon.petpet", //PetData路径
-  "gifMaxSize": [200, 200, 32], //Gif缩放阈值, 详见上文
-  "gifEncoder": "ANIMATED_LIB", //Gif编码器, 详见上文
-  "headless": true //使用headless模式
+  "port": 2333, // 监听端口
+  "webServerThreadPoolSize": 10, // HTTP服务器线程池容量
+  "dataPath": "data/xmmt.dituon.petpet", // PetData路径
+  "gifMaxSize": [200, 200, 32], // GIF缩放阈值, 详见上文
+  "gifEncoder": "ANIMATED_LIB", // GIF编码器, 详见上文
+  "gifQuality": 100, // GIF质量, 详见上文
+  "gifMakerThreadPoolSize": 0, // GIF编码器线程池容量, 详见上文
+  "headless": true // 使用headless模式
 }
 ```
 
@@ -632,10 +598,11 @@ inCoolDownMessage: 技能冷却中...
 <details>
 <summary>展开/收起</summary>
 
-- `key`(str): 对应`PetData`,例如`kiss` `rub`
-- `fromAvatar` `toAvatar` `groupAvatar` `botAvatar`(url): 头像URL地址
-- `fromName` `toName` `groupName`(str): 昵称, 有默认值
-- `textList`(str): 根据空格分割此字符串, 作为额外数据
+- `key` (str): 对应`PetData`,例如`kiss` `rub`
+- `fromAvatar` `toAvatar` `groupAvatar` `botAvatar` (url): 头像URL地址, `encodeURIComponent(rawUrl)`
+- `randomAvatarList` (url[]): 随机头像列表, 使用`,`分割多个url
+- `fromName` `toName` `groupName` (str): 昵称, 有默认值
+- `textList` (str): 根据空格分割此字符串, 作为额外数据
 </details>
 
 ##### `POST`
@@ -648,6 +615,9 @@ inCoolDownMessage: 技能冷却中...
         "name":"d2n",
         "avatar":"https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"
     },
+    "randomAvatarList": [
+        "url"
+    ],
     "textList": [
         "test"
     ]
@@ -672,7 +642,7 @@ inCoolDownMessage: 技能冷却中...
 - `Could not initialize class java.awt.Toolkit`?
   > 对于无输入输出设备的服务器 需要启用`headless`
 
-- 自动更新下载速度慢?
+- 自动更新下载速度慢 / 无法连接远程资源?
   > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(高速镜像)
 
 - 自动更新后 读取`data.json`出错?
@@ -683,7 +653,7 @@ inCoolDownMessage: 技能冷却中...
 
 ## 性能 & 兼容性
 
-程序使用底层`java.awt`类合成图片, 渲染时使用多线程, 静态图片渲染时间一般不会超过`1ms`;
+程序使用底层`java.awt`类合成图片, 渲染时使用多线程, 静态图片渲染时间一般不会超过`1ms`
 
 对Gif编码器的分析, 转换, 映射部分进行多线程优化, 速度超快
 
