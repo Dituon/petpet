@@ -16,6 +16,7 @@ public class AvatarModel {
     protected int[][] pos = {{0, 0, 100, 100}};
     protected FitType fitType;
     protected short angle;
+    protected float opacity = 1.0F;
     protected boolean round;
     protected boolean rotate;
     protected boolean onTop;
@@ -49,6 +50,7 @@ public class AvatarModel {
         fitType = data.getFit();
         styleList = data.getStyle();
         angle = data.getAngle() != null ? data.getAngle() : 0;
+        opacity = data.getOpacity() != null ? data.getOpacity() : 1.0F;
         round = Boolean.TRUE.equals(data.getRound());
         rotate = Boolean.TRUE.equals(data.getRotate());
         onTop = Boolean.TRUE.equals(data.getAvatarOnTop());
@@ -183,6 +185,9 @@ public class AvatarModel {
 
     public FitType getZoomType() {
         return fitType;
+    }
+    public float getOpacity() {
+        return opacity;
     }
 
     public boolean isRound() {

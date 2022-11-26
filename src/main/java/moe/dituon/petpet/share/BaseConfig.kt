@@ -115,6 +115,7 @@ data class AvatarData @JvmOverloads constructor(
     val fit: FitType? = FitType.FILL,
     val style: List<AvatarStyle>? = emptyList(),
     val angle: Short? = 0,
+    val opacity: Float? = 1.0F,
     val round: Boolean? = false,
     val rotate: Boolean? = false,
     val avatarOnTop: Boolean? = true,

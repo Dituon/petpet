@@ -29,7 +29,7 @@ public abstract class ImageSynthesisCore {
      */
     protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
                                             float angle, boolean isRound) {
-        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, isRound, 1.0F, FitType.FILL);
+        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, isRound, 1.0F, FitType.FILL, 1.0F);
     }
 
     /**
@@ -41,15 +41,19 @@ public abstract class ImageSynthesisCore {
      * @param angle       旋转角, 对特殊角度有特殊处理分支
      * @param isRound     裁切为圆形
      * @param multiple    缩放倍数
+     * @param fitType     显示策略
+     * @param opacity     头像不透明度
      */
-    protected static void g2dDrawZoomAvatar(Graphics2D g2d, @NotNull BufferedImage avatarImage, int[] pos,
-                                            float angle, boolean isRound, float multiple, FitType fitType) {
-
+    protected static void g2dDrawZoomAvatar(
+            Graphics2D g2d, @NotNull BufferedImage avatarImage, int[] pos,
+            float angle, boolean isRound, float multiple, FitType fitType, float opacity
+    ) {
         int x = (int) (pos[0] * multiple);
         int y = (int) (pos[1] * multiple);
         int w = (int) (pos[2] * multiple);
         int h = (int) (pos[3] * multiple);
         BufferedImage newAvatarImage = avatarImage;
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
 
         switch (fitType) {
             case COVER: {
