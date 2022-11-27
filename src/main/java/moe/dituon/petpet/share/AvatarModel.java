@@ -5,10 +5,7 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class AvatarModel {
     private Type imageType;

@@ -29,32 +29,32 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
     }
 
-    protected static void g2dDrawTexts(Graphics2D g2d, ArrayList<TextModel> texts,
+    protected static void g2dDrawTexts(Graphics2D g2d, List<TextModel> texts,
                                        int stickerWidth, int stickerHeight) {
         if (texts == null || texts.isEmpty()) return;
         texts.forEach(text -> text.drawAsG2d(g2d, stickerWidth, stickerHeight));
     }
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
-                                               ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+                                               List<AvatarModel> avatarList, List<TextModel> textList,
                                                boolean antialias) {
         return synthesisImage(sticker, avatarList, textList, antialias, false, (short) 0, null);
     }
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
-                                               ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+                                               List<AvatarModel> avatarList, List<TextModel> textList,
                                                boolean antialias, boolean transparent) {
         return synthesisImage(sticker, avatarList, textList, antialias, transparent, (short) 0, null);
     }
 
     public static BufferedImage synthesisImage(BufferedImage sticker,
-                                               ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+                                               List<AvatarModel> avatarList, List<TextModel> textList,
                                                boolean antialias, boolean transparent, short index) {
         return synthesisImage(sticker, avatarList, textList, antialias, transparent, index, null);
     }
 
     public static BufferedImage synthesisImage
-            (BufferedImage sticker, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+            (BufferedImage sticker, List<AvatarModel> avatarList, List<TextModel> textList,
              boolean antialias, boolean transparent, short index, List<Integer> maxSize) {
         int stickerWidth = sticker.getWidth();
         int stickerHeight = sticker.getHeight();
@@ -101,8 +101,8 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
 
         // 按照图层分类
-        ArrayList<AvatarModel> topAvatars = new ArrayList<>();
-        ArrayList<AvatarModel> bottomAvatars = new ArrayList<>();
+        List<AvatarModel> topAvatars = new ArrayList<>();
+        List<AvatarModel> bottomAvatars = new ArrayList<>();
         for (AvatarModel avatar : avatarList) {
             if (avatar.isOnTop()) {
                 topAvatars.add(avatar);

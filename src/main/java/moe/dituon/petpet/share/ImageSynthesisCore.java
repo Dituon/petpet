@@ -301,14 +301,11 @@ public abstract class ImageSynthesisCore {
      * @param imageUrl 图像URL
      */
     public static BufferedImage getWebImage(String imageUrl) {
-        BufferedImage image = null;
         try {
-            image = ImageIO.read(new URL(imageUrl));
-        } catch (Exception e) {
-            System.out.println("[获取图像失败]  URL: " + imageUrl);
-            e.printStackTrace();
+            return ImageIO.read(new URL(imageUrl));
+        } catch (Exception ex) {
+            throw new RuntimeException("[获取图像失败]  URL: " + imageUrl, ex);
         }
-        return image;
     }
 
     /**
@@ -318,7 +315,7 @@ public abstract class ImageSynthesisCore {
      * @return GIF全部帧 或一张静态图像
      */
     public static List<BufferedImage> getWebImageAsList(String imageUrl) {
-        ArrayList<BufferedImage> output = new ArrayList<>();
+        List<BufferedImage> output = new ArrayList<>();
         try {
             URL url = new URL(imageUrl);
             ReusableGifDecoder decoder = new ReusableGifDecoder();
@@ -336,8 +333,7 @@ public abstract class ImageSynthesisCore {
                 output.add(decoder.getFrame(i));
             }
         } catch (Exception ex) {
-            System.out.println("[获取/解析 图像失败]  URL: " + imageUrl);
-            ex.printStackTrace();
+            throw new RuntimeException("[获取/解析 图像失败]  URL: " + imageUrl, ex);
         }
         return output;
     }

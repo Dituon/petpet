@@ -3,6 +3,7 @@ package moe.dituon.petpet.share;
 import kotlin.Pair;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,6 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 
@@ -25,14 +27,17 @@ public class BasePetService {
     protected File dataRoot;
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
+    protected HashMap<String, Callable<Map<Short, BufferedImage>>> backgroundLambdaMap = new HashMap<>();
     public String keyListString;
 
     protected int gifMakerThreadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
     protected BaseGifMaker gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
     protected BaseImageMaker imageMaker = new BaseImageMaker(gifMaker);
+    private static final Random random = new Random();
 
     /**
      * 从文件中读取KeyData模板到dataMap中
+     *
      * @param files KeyData目录
      */
     public void readData(File[] files) {
@@ -62,12 +67,61 @@ public class BasePetService {
 
     /**
      * 将KeyData添加到dataMap中, 并更新aliaMap, keyListString
+     * <br/>
+     * <b>使用前 必须调用 readData() 方法指定父目录以读取背景图片</b>
+     *
      * @param key 索引
      */
-    public void putKeyData(String key, KeyData data){
+    public void putKeyData(String key, KeyData data) {
         dataMap.put(key, data);
-        if (Boolean.TRUE.equals(data.getHidden())) return;
 
+        assert dataRoot != null;
+        backgroundLambdaMap.put(key, () -> { //使用Lambda实现按需加载, 减少内存占用
+            String path = dataRoot.getAbsolutePath() + File.separator +
+                    (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
+            File[] files = new File(path).listFiles();
+            if (files == null) throw new RuntimeException("无法读取 " + path + " 目录");
+
+            Map<Short, BufferedImage> backgroundMap = new HashMap<>(files.length);
+            short imageNum = 0;
+            for (File file : files) {
+                if (!file.getName().endsWith(".png")) continue;
+                backgroundMap.put(imageNum, ImageIO.read(new File(path + imageNum++ + ".png")));
+            }
+            return backgroundMap;
+        });
+
+        if (!Boolean.TRUE.equals(data.getHidden())) putAlia(key, data);
+    }
+
+    /**
+     * 将KeyData添加到dataMap中, 指定背景, 并更新 aliaMap&keyListString
+     *
+     * @param key 索引
+     */
+    public void putKeyData(String key, KeyData data, BufferedImage background) {
+        putKeyData(key, data, List.of(background));
+    }
+
+    /**
+     * 将KeyData添加到dataMap中, 指定背景表列, 并更新 aliaMap&keyListString
+     *
+     * @param key 索引
+     */
+    public void putKeyData(String key, KeyData data, List<BufferedImage> backgroundList) {
+        dataMap.put(key, data);
+
+        Map<Short, BufferedImage> backgroundMap = new HashMap<>(backgroundList.size() + 1);
+        short imageNum = 0;
+        for (var background : backgroundList) {
+            backgroundMap.put(imageNum++, background);
+        }
+        backgroundLambdaMap.put(key, () -> backgroundMap);
+
+        if (!Boolean.TRUE.equals(data.getHidden())) putAlia(key, data);
+    }
+
+    private void putAlia(String key, KeyData data) {
         StringBuilder keyStringBuilder = new StringBuilder();
         keyStringBuilder.append("\n").append(key);
         if (data.getAlias() != null) {
@@ -133,102 +187,19 @@ public class BasePetService {
         return sb.toString();
     }
 
-
-    /**
-     * @return InputStream 及其图片格式（值域：["gif", "png"...]）
-     * @deprecated 不支持gif, 没有改用多线程, 不建议使用
-     */
-    @Deprecated
-    public Pair<InputStream, String> generateImage(
-            String key, AvatarExtraDataProvider avatarExtraDataProvider,
-            TextExtraData textExtraData,
-            List<TextData> additionTextDatas
-    ) {
-        if (!dataMap.containsKey(key) && !aliaMap.containsKey(key)) {
-            System.out.println("无效的key: “" + key + "”");
-            return null;
-        }
-        KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key)[0]);
-        key = dataRoot.getAbsolutePath() + File.separator +
-                (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
-
-        try {
-            ArrayList<TextModel> textList = new ArrayList<>();
-            // add from KeyData
-            if (!data.getText().isEmpty()) {
-                for (TextData textElement : data.getText()) {
-                    textList.add(new TextModel(textElement, textExtraData));
-                }
-            }
-            // add from params
-            if (additionTextDatas != null) {
-                for (TextData textElement : additionTextDatas) {
-                    textList.add(new TextModel(textElement, textExtraData));
-                }
-            }
-
-            ArrayList<AvatarModel> avatarList = new ArrayList<>();
-
-            if (!data.getAvatar().isEmpty()) {
-                for (AvatarData avatarData : data.getAvatar()) {
-                    avatarList.add(new AvatarModel(avatarData, avatarExtraDataProvider, data.getType()));
-                }
-            }
-
-            int delay = data.getDelay() != null ? data.getDelay() : 65;
-            GifRenderParams renderParams = new GifRenderParams(
-                    encoder, delay, gifMaxSize, antialias, quality,
-                    Boolean.TRUE.equals(data.getReverse())
-            );
-
-            if (data.getType() == Type.GIF) {
-                HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
-                short imageNum = 0;
-                for (File file : Objects.requireNonNull(new File(key).listFiles())) {
-                    if (!file.getName().endsWith(".png")) continue;
-                    stickerMap.put(imageNum, ImageIO.read(new File(key + imageNum++ + ".png")));
-                }
-                if (data.getBackground() != null) { //从配置文件读背景
-                    BufferedImage sticker = new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
-                    for (short i = 0; i < avatarList.get(0).getPosLength(); i++) {
-                        stickerMap.put(i, sticker);
-                    }
-                }
-                InputStream inputStream = gifMaker.makeGIF(
-                        avatarList, textList, stickerMap, renderParams);
-                return new Pair<>(inputStream, "gif");
-            }
-
-            if (data.getType() == Type.IMG) {
-                BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
-                assert sticker != null;
-                InputStream inputStream = imageMaker.makeImage(
-                        avatarList, textList, sticker, renderParams);
-                return new Pair<>(inputStream, "png");
-            }
-        } catch (Exception ex) {
-            System.out.println("解析 " + key + "/data.json 出错");
-            ex.printStackTrace();
-        }
-        throw new RuntimeException();
-    }
-
     /**
      * @return InputStream 及其图片格式（值域：["gif", "png"...]）
      */
     public Pair<InputStream, String> generateImage(
-            String key, GifAvatarExtraDataProvider gifAvatarExtraDataProvider,
+            @NotNull String key,
+            GifAvatarExtraDataProvider gifAvatarExtraDataProvider,
             TextExtraData textExtraData,
-            List<TextData> additionTextDatas
+            List<TextData> additionTextDataList
     ) {
         if (!dataMap.containsKey(key) && !aliaMap.containsKey(key)) {
-            System.out.println("无效的key: “" + key + "”");
-            return null;
+            throw new RuntimeException("无效的key: “" + key + "”");
         }
         KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key)[0]);
-        key = dataRoot.getAbsolutePath() + File.separator +
-                (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
-
         try {
             ArrayList<TextModel> textList = new ArrayList<>();
             // add from KeyData
@@ -238,8 +209,8 @@ public class BasePetService {
                 );
             }
             // add from params
-            if (additionTextDatas != null) {
-                additionTextDatas.forEach(textElement ->
+            if (additionTextDataList != null) {
+                additionTextDataList.forEach(textElement ->
                         textList.add(new TextModel(textElement, textExtraData))
                 );
             }
@@ -259,12 +230,7 @@ public class BasePetService {
             );
 
             if (data.getType() == Type.GIF) {
-                HashMap<Short, BufferedImage> stickerMap = new HashMap<>();
-                short imageNum = 0;
-                for (File file : Objects.requireNonNull(new File(key).listFiles())) {
-                    if (!file.getName().endsWith(".png")) continue;
-                    stickerMap.put(imageNum, ImageIO.read(new File(key + imageNum++ + ".png")));
-                }
+                Map<Short, BufferedImage> stickerMap = backgroundLambdaMap.get(key).call();
 
                 if (data.getBackground() != null) { //从配置文件读背景
                     BufferedImage sticker = new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
@@ -278,37 +244,44 @@ public class BasePetService {
             }
 
             if (data.getType() == Type.IMG) {
-                BufferedImage sticker = getBackgroundImage(new File(key), data, avatarList, textList);
+                BufferedImage sticker = getBackgroundImage(key, data, avatarList, textList);
                 assert sticker != null;
                 InputStream inputStream = imageMaker.makeImage(
                         avatarList, textList, sticker, renderParams);
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {
-            System.out.println("解析 " + key + "/data.json 出错");
             ex.printStackTrace();
+            throw new RuntimeException("解析 " + key + "/data.json 出错");
         }
-        throw new RuntimeException();
+        throw new RuntimeException("未知错误");
     }
 
-    private BufferedImage getBackgroundImage(File path, KeyData data,
-                                             ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) throws IOException {
-        if (!path.isDirectory() || !path.exists()) return null;
-        File[] files = path.listFiles();
-        assert files != null;
-        List<File> fileList = Arrays.stream(files).filter(file -> file.getName().endsWith(".png")).collect(Collectors.toList());
-        if (fileList.isEmpty() && data.getBackground() == null) { //没有背景图片和背景配置
-            throw new FileNotFoundException("找不到" + path.getName() + "背景文件");
+    private BufferedImage getBackgroundImage(
+            String key,
+            KeyData data,
+            ArrayList<AvatarModel> avatarList,
+            ArrayList<TextModel> textList
+    ) throws Exception {
+        var backgroundFun = backgroundLambdaMap.get(key);
+        if (backgroundFun == null && data.getBackground() == null) { //没有背景图片和背景配置
+            throw new FileNotFoundException("找不到 " + key + " 背景文件");
         }
-        if (fileList.isEmpty() && data.getBackground() != null) { //无背景图片(读取背景配置
+        if (backgroundFun == null && data.getBackground() != null) { //无背景图片(读取背景配置
             return new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
         }
-        if (data.getBackground() == null) { //无背景配置(读取随机背景图片
-            return ImageIO.read(fileList.get(new Random().nextInt(fileList.size())));
-        }
+        assert backgroundFun != null;
+        var backgroundMap = backgroundFun.call();
+        var background = backgroundMap.get(
+                (short) random.nextInt(backgroundMap.keySet().size())
+        );
+
+        if (data.getBackground() == null) return background;  //无背景配置(读取随机背景图片
+
         //有配置项和图片
-        return new BackgroundModel(data.getBackground(), avatarList, textList,
-                ImageIO.read(fileList.get(new Random().nextInt(fileList.size())))).getImage();
+        return new BackgroundModel(
+                data.getBackground(), avatarList, textList, background
+        ).getImage();
     }
 
     public static Color decodeColor(JsonElement jsonElement) {

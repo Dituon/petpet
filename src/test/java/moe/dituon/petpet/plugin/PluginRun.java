@@ -1,4 +1,4 @@
-package xmmt.dituon.plugin;
+package moe.dituon.petpet.plugin;
 
 import net.mamoe.mirai.console.plugin.PluginManager;
 import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;

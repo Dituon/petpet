@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage
 
 @Serializable
 data class BaseServiceConfig(
-    val antialias: Boolean = true,
-    val gifMaxSize: List<Int> = emptyList(),
-    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    val gifQuality: Byte = 100,
-    val threadPoolSize: Int = 0,
-    val headless: Boolean = true
+    var antialias: Boolean = true,
+    var gifMaxSize: List<Int> = emptyList(),
+    var gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    var gifQuality: Byte = 100,
+    var threadPoolSize: Int = 0,
+    var headless: Boolean = true
 )
 
 enum class Encoder {
@@ -29,14 +29,16 @@ data class KeyData(
     val type: Type,
     val avatar: List<AvatarData>,
     val text: List<TextData>,
-    val background: BackgroundData? = null,
-    val delay: Int? = 65,
-    val alias: List<String>? = null,
+    var background: BackgroundData? = null,
+    var delay: Int? = 65,
+    var alias: List<String>? = null,
     val format: String? = "png", //未实装
     val inRandomList: Boolean? = true,
-    val reverse: Boolean? = false,
+    var reverse: Boolean? = false,
     val hidden: Boolean? = false
 ) {
+    constructor(type: Type) : this(type, ArrayList(), ArrayList())
+
     companion object {
         @JvmStatic
         fun getData(str: String): KeyData {
@@ -63,18 +65,18 @@ enum class Position {
 
 @Serializable
 data class TextData @JvmOverloads constructor(
-    val text: String,
-    val pos: List<Int>? = null,
-    val color: JsonElement? = null,
-    val font: String? = null,
-    val size: Int? = null,
-    val align: TextAlign? = TextAlign.LEFT,
-    val wrap: TextWrap? = TextWrap.NONE,
-    val style: TextStyle? = TextStyle.PLAIN,
-    val position: List<Position>? = listOf(Position.LEFT, Position.TOP),
-    val strokeColor: JsonElement? = null,
-    val strokeSize: Short? = null,
-    val greedy: Boolean? = false
+    var text: String,
+    var pos: List<Int>? = null,
+    var color: JsonElement? = null,
+    var font: String? = null,
+    var size: Int? = null,
+    var align: TextAlign? = TextAlign.LEFT,
+    var wrap: TextWrap? = TextWrap.NONE,
+    var style: TextStyle? = TextStyle.PLAIN,
+    var position: List<Position>? = listOf(Position.LEFT, Position.TOP),
+    var strokeColor: JsonElement? = null,
+    var strokeSize: Short? = null,
+    var greedy: Boolean? = false
 )
 
 @Serializable
@@ -108,17 +110,17 @@ enum class AvatarStyle {
 @Serializable
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
-    val pos: JsonArray? = null,
-    val posType: AvatarPosType? = AvatarPosType.ZOOM,
-    val crop: JsonArray? = null,
-    val cropType: CropType? = CropType.NONE,
-    val fit: FitType? = FitType.FILL,
-    val style: List<AvatarStyle>? = emptyList(),
-    val angle: Short? = 0,
-    val opacity: Float? = 1.0F,
-    val round: Boolean? = false,
-    val rotate: Boolean? = false,
-    val avatarOnTop: Boolean? = true,
+    var pos: JsonArray = Json.decodeFromString(JsonArray.serializer(), "[0,0,100,100]"),
+    var posType: AvatarPosType? = AvatarPosType.ZOOM,
+    var crop: JsonArray? = null,
+    var cropType: CropType? = CropType.NONE,
+    var fit: FitType? = FitType.FILL,
+    var style: List<AvatarStyle>? = emptyList(),
+    var angle: Short? = 0,
+    var opacity: Float? = 1.0F,
+    var round: Boolean? = false,
+    var rotate: Boolean? = false,
+    var avatarOnTop: Boolean? = true,
     val antialias: Boolean? = false
 )
 
@@ -141,11 +143,11 @@ data class GifAvatarExtraDataProvider(
 
 @Serializable
 data class BackgroundData @JvmOverloads constructor(
-    val size: JsonArray,
-    val color: JsonElement? = null
+    var size: JsonArray,
+    var color: JsonElement? = null
 )
 
-data class GifRenderParams (
+data class GifRenderParams(
     val encoder: Encoder,
     val delay: Int = 65,
     val maxSize: List<Int>?,

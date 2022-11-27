@@ -1,4 +1,4 @@
-package xmmt.dituon.example;
+package moe.dituon.petpet.example;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

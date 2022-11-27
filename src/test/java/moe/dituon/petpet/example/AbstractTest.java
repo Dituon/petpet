@@ -1,4 +1,4 @@
-package xmmt.dituon.example;
+package moe.dituon.petpet.example;
 
 import org.junit.BeforeClass;
 
@@ -10,8 +10,8 @@ import java.io.InputStream;
 
 public abstract class AbstractTest {
     static final int DEFAULT_BUFFER_SIZE = 8192;
-    static final String INPUT_ROOT = "./example-data/input/";
-    static final String OUTPUT_ROOT = "./example-data/output/";
+    public static final String INPUT_ROOT = "./example-data/input/";
+    public static final String OUTPUT_ROOT = "./example-data/output/";
     static BufferedImage avatarImage1;
     static BufferedImage avatarImage2;
 
@@ -27,7 +27,7 @@ public abstract class AbstractTest {
         }
     }
 
-    protected void copyInputStreamToFile(InputStream inputStream, File file) {
+    public static void copyInputStreamToFile(InputStream inputStream, File file) {
         // append = false
         try (FileOutputStream outputStream = new FileOutputStream(file, false)) {
             int read;

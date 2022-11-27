@@ -27,7 +27,7 @@ public class BaseConfigFactory {
                     } : null
             );
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException();
         }
     }
 
@@ -50,8 +50,18 @@ public class BaseConfigFactory {
                     } : null
             );
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException();
         }
+    }
+
+    public static GifAvatarExtraDataProvider toGifAvatarExtraDataProvider(AvatarExtraDataProvider extraData){
+        return new GifAvatarExtraDataProvider(
+                extraData.getFromAvatar() != null ? () -> List.of(extraData.getFromAvatar().invoke()) : null,
+                extraData.getToAvatar() != null ? () -> List.of(extraData.getToAvatar().invoke()) : null,
+                extraData.getGroupAvatar() != null ? () -> List.of(extraData.getGroupAvatar().invoke()) : null,
+                extraData.getBotAvatar() != null ? () -> List.of(extraData.getBotAvatar().invoke()) : null,
+                extraData.getRandomAvatar() != null ? () -> List.of(extraData.getRandomAvatar().invoke()) : null
+        );
     }
 
     static public class RandomAvatar {

@@ -1,12 +1,11 @@
-package xmmt.dituon.example;
+package moe.dituon.petpet.example;
 
 import kotlin.Pair;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.BaseServiceConfig;
 import moe.dituon.petpet.share.TextData;
 import moe.dituon.petpet.share.TextExtraData;
+import org.junit.BeforeClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,17 +22,14 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
         petService.readData(new File("./data/xmmt.dituon.petpet").listFiles());
     }
 
-    @Test
     public void testPandaFace() throws IOException {
-        testGeneral("testPandaFace", "panda-face", Arrays.asList(textDataForPandaFace("。。。")));
+        testGeneral("testPandaFace", "panda-face", List.of(textDataForPandaFace("。。。")));
     }
 
-    @Test
     public void testPandaFace2() throws IOException {
-        testGeneral("testPandaFace2", "panda-face", Arrays.asList(textDataForPandaFace("二次元，二次元")));
+        testGeneral("testPandaFace2", "panda-face", List.of(textDataForPandaFace("二次元，二次元")));
     }
 
-    @Test
     public void testAnyasuki() throws IOException {
         testGeneral("testAnyasuki-deform", "anyasuki-deform", null);
     }

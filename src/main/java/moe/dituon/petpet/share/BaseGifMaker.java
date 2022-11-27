@@ -11,8 +11,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,8 +34,8 @@ public class BaseGifMaker {
         threadPool = Executors.newFixedThreadPool(threadPoolSize);
     }
 
-    public InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                               HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
+    public InputStream makeGIF(List<AvatarModel> avatarList, List<TextModel> textList,
+                               Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
         switch (params.getEncoder()) {
             case ANIMATED_LIB:
                 return makeGifUseAnimatedLib(avatarList, textList, stickerMap, params);
@@ -47,13 +48,13 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGifUseBufferedStream
-            (ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-             HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
+            (List<AvatarModel> avatarList, List<TextModel> textList,
+             Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
         try {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            HashMap<Short, BufferedImage> imageMap = new HashMap<>(stickerMap.size());
+            Map<Short, BufferedImage> imageMap = new HashMap<>(stickerMap.size());
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
                 threadPool.execute(() -> {
@@ -87,13 +88,13 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGifUseAnimatedLib
-            (ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-             HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
+            (List<AvatarModel> avatarList, List<TextModel> textList,
+             Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
         try {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            HashMap<Short, FrameData> frameMap = new HashMap<>(stickerMap.size());
+            Map<Short, FrameData> frameMap = new HashMap<>(stickerMap.size());
             int[] size = new int[2];
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
@@ -139,12 +140,12 @@ public class BaseGifMaker {
         }
     }
 
-    public InputStream makeGifUseSquareupLib(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
-                                             HashMap<Short, BufferedImage> stickerMap, GifRenderParams params) {
+    public InputStream makeGifUseSquareupLib(List<AvatarModel> avatarList, List<TextModel> textList,
+                                             Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
         try {
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            HashMap<Short, Image> imageMap = new HashMap<>(stickerMap.size());
+            Map<Short, Image> imageMap = new HashMap<>(stickerMap.size());
             int[] size = new int[2];
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
@@ -180,7 +181,7 @@ public class BaseGifMaker {
         }
     }
 
-    public InputStream makeGIF(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+    public InputStream makeGIF(List<AvatarModel> avatarList, List<TextModel> textList,
                                BufferedImage sticker, GifRenderParams params) {
         switch (params.getEncoder()) {
             case ANIMATED_LIB:
@@ -194,7 +195,7 @@ public class BaseGifMaker {
     }
 
     private InputStream makeGifUseBufferedStream(
-            ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+            List<AvatarModel> avatarList, List<TextModel> textList,
             BufferedImage sticker, GifRenderParams params) {
         try {
             short maxFrameLength = 1;
@@ -203,7 +204,7 @@ public class BaseGifMaker {
             }
 
             CountDownLatch latch = new CountDownLatch(maxFrameLength);
-            HashMap<Short, BufferedImage> imageMap = new HashMap<>();
+            Map<Short, BufferedImage> imageMap = new HashMap<>(maxFrameLength);
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
                 threadPool.execute(() -> {
@@ -237,7 +238,7 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGifUseAnimatedLib(
-            ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+            List<AvatarModel> avatarList, List<TextModel> textList,
             BufferedImage sticker, GifRenderParams params) {
         try {
             short maxFrameLength = 1;
@@ -246,7 +247,7 @@ public class BaseGifMaker {
             }
 
             CountDownLatch latch = new CountDownLatch(maxFrameLength);
-            HashMap<Short, FrameData> frameMap = new HashMap<>();
+            Map<Short, FrameData> frameMap = new HashMap<>(maxFrameLength);
             int[] size = new int[2];
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
@@ -292,7 +293,7 @@ public class BaseGifMaker {
         }
     }
 
-    public InputStream makeGifUseSquareupLib(ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList,
+    public InputStream makeGifUseSquareupLib(List<AvatarModel> avatarList, List<TextModel> textList,
                                              BufferedImage sticker, GifRenderParams params) {
         try {
             short maxFrameLength = 1;
@@ -300,7 +301,7 @@ public class BaseGifMaker {
                 maxFrameLength = (short) Math.max(maxFrameLength, avatar.getImageList().size());
             }
             CountDownLatch latch = new CountDownLatch(maxFrameLength);
-            HashMap<Short, Image> imageMap = new HashMap<>();
+            Map<Short, Image> imageMap = new HashMap<>(maxFrameLength);
             int[] size = new int[2];
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
@@ -336,9 +337,9 @@ public class BaseGifMaker {
         }
     }
 
-    static private <T> HashMap<Short, T> reverseMap(HashMap<Short, T> originMap) {
+    static private <T> Map<Short, T> reverseMap(Map<Short, T> originMap) {
         int size = originMap.size();
-        HashMap<Short, T> map = new HashMap<>(originMap.size());
+        Map<Short, T> map = new HashMap<>(originMap.size());
         originMap.forEach((id, img) -> map.put((short) (size - id - 1), img));
         return map;
     }
