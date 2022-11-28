@@ -433,7 +433,7 @@
         "MIRROR",
         "GRAY"
       ],
-      "fit": "CONTAIN" // 显示模式
+      "fit": "CONTAIN" // 填充模式, 默认为 FILL
     }
   ]
 ```
@@ -461,11 +461,11 @@
 - `GRAY`  灰度化
 - `BINARIZATION`  二值化
 
-**显示策略 `fit`**
+**填充模式 `fit`**
 
-- `CONTAIN` 缩小
-- `COVER` 裁切
-- `FILL` 拉伸
+- `CONTAIN` 缩小以适应画布, 不改变原比例
+- `COVER` 裁切以适应画布, 不改变原比例
+- `FILL` 拉伸, 改变原比例
 
 **坐标变量**
 
