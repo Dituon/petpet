@@ -415,7 +415,7 @@
       "round": true, // 值为true时, 头像裁切为圆形, 默认为false
       "avatarOnTop": true, // 值为true时, 头像图层在背景之上, 默认为true
       "angle": 90, // 初始角度
-      "opacity": 0.5 // 透明度
+      "opacity": 0.5 // 不透明度
     },
     {
       "type": "TO", 
@@ -655,18 +655,21 @@
 
 程序使用底层`java.awt`类合成图片, 渲染时使用多线程, 静态图片渲染时间一般不会超过`1ms`
 
-对Gif编码器的分析, 转换, 映射部分进行多线程优化, 速度超快
+对GIF编码器的分析, 转换, 映射部分进行多线程优化, 速度极快
 
 **Android JVM**没有实现`java.awt`, 推荐使用`JDK 11+`版本
 
-## 分享你的作品
+## 分享你的作品 (模板)
 
 如果你想分享自定义的 Petpet, **欢迎Pr**
 
-## 依赖share包二次开发
+## 二次开发
 
-- 方式1. 在本项目内二次开发（非mirai插件形式）：见`xmmt.dituon.example.SimpleUsage`
-- 方式2. 在别的项目二次开发：[mirai-simplepetpet-plugin](https://github.com/hundun000/mirai-simplepetpet-plugin)
+程序提供超多实用API  拓展性极强, 附有互动式开发实例, 欢迎初学者学习!
+
+- 互动式开发实例 参见[`test.moe.dituon.petpet.example.HelloPetpet`](https://github.com/Dituon/petpet/blob/main/src/test/java/moe/dituon/petpet/example/HelloPetpet.java)
+
+- 在别的项目二次开发: [mirai-simplepetpet-plugin](https://github.com/hundun000/mirai-simplepetpet-plugin)
 
 ## 后话
 
