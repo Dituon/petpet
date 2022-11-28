@@ -4,7 +4,8 @@
         "type": "TO",
         "pos": [32,57,323,323],
         "round": false,
-        "avatarOnTop": false
+        "avatarOnTop": false,
+        "fit": "COVER"
     }],
     "text": [],
     "alias": ["远离"],

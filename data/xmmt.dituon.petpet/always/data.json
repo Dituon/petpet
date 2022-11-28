@@ -6,14 +6,16 @@
         "posType": "ZOOM",
         "style": [],
         "round": false,
-        "avatarOnTop": true
+        "avatarOnTop": true,
+        "fit": "CONTAIN"
     },{
         "type": "TO",
         "pos": [184,265,66,66],
         "posType": "ZOOM",
         "style": [],
         "round": false,
-        "avatarOnTop": true
+        "avatarOnTop": true, 
+        "fit": "CONTAIN"
     }],
     "text": [],
     "alias": ["要我一直"],
