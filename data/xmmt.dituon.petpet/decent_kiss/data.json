@@ -4,7 +4,8 @@
         "type": "TO",
         "pos": [1,2,589,448],
         "round": false,
-        "avatarOnTop": false
+        "avatarOnTop": false,
+        "fit": "CONTAIN"
     }],
     "text": [],
     "alias": ["抱歉"],

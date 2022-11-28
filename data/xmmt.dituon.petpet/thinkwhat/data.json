@@ -4,7 +4,8 @@
         "type": "TO",
         "pos": [540,0,516,488],
         "round": false,
-        "avatarOnTop": false
+        "avatarOnTop": false,
+        "fit": "COVER"
     }],
     "text": [],
     "alias": ["想"],
