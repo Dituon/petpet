@@ -1,0 +1,23 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "FROM",
+        "pos": [182,3,400,400],
+        "posType": "ZOOM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": true,
+		"opacity": 0.5,
+		"fit": "CONTAIN"
+    },{
+        "type": "TO",
+        "pos": [-2,279,299,299],
+        "posType": "ZOOM",
+        "style": [],
+        "round": false,
+        "avatarOnTop": true,
+        "fit": "CONTAIN"
+    }],
+    "text": [],
+    "alias": ["幻想时间"]
+}
