@@ -40,11 +40,13 @@ class GETParser extends RequestParser {
         List<String> textList = get("textList") != null ?
                 Arrays.asList(get("textList").split("\\s+")) : new ArrayList<>();
 
+        String randomAvatarListStr = get("randomAvatarList");
+
         super.imagePair = WebServer.petService.generateImage(
                 get("key"),
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         get("fromAvatar"), get("toAvatar"), get("groupAvatar"), get("botAvatar"),
-                        List.of(get("randomAvatarList").split(","))
+                        get("randomAvatarList") != null ? List.of(randomAvatarListStr.split(",")) : null
                 ), new TextExtraData(
                         get("fromName") != null ? get("fromName") : "from",
                         get("toName") != null ? get("toName") : "to",
