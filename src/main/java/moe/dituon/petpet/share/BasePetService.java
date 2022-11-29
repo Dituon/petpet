@@ -28,7 +28,7 @@ public class BasePetService {
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
     protected HashMap<String, Callable<Map<Short, BufferedImage>>> backgroundLambdaMap = new HashMap<>();
-    public String keyListString;
+    public String keyListString = "";
 
     protected int gifMakerThreadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
     protected BaseGifMaker gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
