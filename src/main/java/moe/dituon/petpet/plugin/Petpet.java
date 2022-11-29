@@ -179,19 +179,22 @@ public final class Petpet extends JavaPlugin {
         }
 
         boolean fuzzyLock = false; //锁住模糊匹配
+        boolean hasImage = false; //匹配到多张图片特殊处理
 
-        String fromName = getNameOrNick(e.getGroup().getBotAsMember());
-        String toName = e.getSenderName();
-        String groupName = e.getGroup().getName();
+        String fromName = getNameOrNick(e.getGroup().getBotAsMember()),
+                fromUrl = e.getBot().getAvatarUrl(),
+                toName = e.getSenderName(),
+                toUrl = e.getSender().getAvatarUrl(),
+                groupName = e.getGroup().getName();
 
         StringBuilder messageText = new StringBuilder();
-        String fromUrl = e.getBot().getAvatarUrl();
-        String toUrl = e.getSender().getAvatarUrl();
         for (SingleMessage singleMessage : e.getMessage()) {
             if (singleMessage instanceof QuoteReply && service.respondReply) {
                 long id = e.getGroup().getId() + ((QuoteReply) singleMessage).getSource().getIds()[0];
-                toUrl = imageCachePool.get(id) != null ? imageCachePool.get(id) : toUrl;
-                fuzzyLock = true;
+                if (imageCachePool.get(id) != null) {
+                    toUrl = imageCachePool.get(id);
+                    fuzzyLock = true;
+                }
                 continue;
             }
             if (singleMessage instanceof PlainText) {
@@ -215,11 +218,17 @@ public final class Petpet extends JavaPlugin {
                 continue;
             }
             if (singleMessage instanceof Image) {
+                String url = Image.queryUrl((Image) singleMessage);
+                if (hasImage) {
+                    fromUrl = url;
+                    continue;
+                }
                 fromName = getNameOrNick(e.getSender());
                 fromUrl = e.getSender().getAvatarUrl();
                 toName = "这个";
-                toUrl = Image.queryUrl((Image) singleMessage);
+                toUrl = url;
                 fuzzyLock = true;
+                hasImage = true;
             }
         }
 
