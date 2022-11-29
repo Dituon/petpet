@@ -54,9 +54,14 @@ public final class Petpet extends JavaPlugin {
         if (service.autoUpdate) new Thread(DataUpdater::autoUpdate).start();
         disabledGroup = service.disabledGroups;
 
-        getLogger().info("\n             _                _   \n  _ __   ___| |_   _ __   ___| |_ \n" +
-                " | '_ \\ / _ \\ __| | '_ \\ / _ \\ __|\n | |_) |  __/ |_  | |_) |  __/ |_ \n" +
-                " | .__/ \\___|\\__| | .__/ \\___|\\__|\n |_|              |_|             v" + BasePetService.VERSION + "  (*^▽^*)");
+        getLogger().info("\n\n" +
+                "    ██████╗ ███████╗████████╗██████╗ ███████╗████████╗\n" +
+                "    ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝\n" +
+                "    ██████╔╝█████╗     ██║   ██████╔╝█████╗     ██║   \n" +
+                "    ██╔═══╝ ██╔══╝     ██║   ██╔═══╝ ██╔══╝     ██║   \n" +
+                "    ██║     ███████╗   ██║   ██║     ███████╗   ██║   \n" +
+                "    ╚═╝     ╚══════╝   ╚═╝   ╚═╝     ╚══════╝   ╚═╝     " +
+                "v" + BasePetService.VERSION + "\n");
 
         if (service.probability > 0) GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class,
                 service.messageSynchronized ? this::onNudgeSynchronized : this::onNudge);
