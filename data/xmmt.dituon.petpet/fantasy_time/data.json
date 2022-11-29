@@ -19,5 +19,6 @@
         "fit": "CONTAIN"
     }],
     "text": [],
-    "alias": ["幻想时间"]
+    "alias": ["幻想时间"],
+    "inRandomList": false
 }
