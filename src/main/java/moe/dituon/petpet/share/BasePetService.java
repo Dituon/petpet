@@ -258,20 +258,19 @@ public class BasePetService {
     }
 
     private BufferedImage getBackgroundImage(
-            String key,
+            @NotNull String key,
             KeyData data,
             ArrayList<AvatarModel> avatarList,
             ArrayList<TextModel> textList
     ) throws Exception {
-        var backgroundFun = backgroundLambdaMap.get(key);
-        if (backgroundFun == null && data.getBackground() == null) { //没有背景图片和背景配置
+        var backgroundMap = backgroundLambdaMap.get(key).call();
+        if (backgroundMap.isEmpty() && data.getBackground() == null) { //没有背景图片和背景配置
             throw new FileNotFoundException("找不到 " + key + " 背景文件");
         }
-        if (backgroundFun == null && data.getBackground() != null) { //无背景图片(读取背景配置
+        if (backgroundMap.isEmpty() && data.getBackground() != null) { //无背景图片(读取背景配置
             return new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
         }
-        assert backgroundFun != null;
-        var backgroundMap = backgroundFun.call();
+        assert !backgroundMap.isEmpty();
         var background = backgroundMap.get(
                 (short) random.nextInt(backgroundMap.keySet().size())
         );
