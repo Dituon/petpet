@@ -1,6 +1,7 @@
 {
     "version": 5.0,
     "dataList": [
+        "reverse",
         "fantasy_time",
         "peep",
         "watch_tv",

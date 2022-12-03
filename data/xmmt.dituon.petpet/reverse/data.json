@@ -1,0 +1,16 @@
+{
+    "type": "IMG",
+    "avatar": [{
+      "type": "TO",
+      "pos": [0, 0, "width", "height"],
+      "round": false,
+      "avatarOnTop": true
+    }],
+    "text": [],
+    "background": {
+      "size": ["avatar0Width", "avatar0Height"]
+    },
+    "reverse": true,
+    "alias": ["倒放"],
+    "inRandomList": false
+  }
