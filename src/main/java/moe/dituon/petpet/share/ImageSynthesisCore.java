@@ -100,12 +100,12 @@ public abstract class ImageSynthesisCore {
         }
 
         if (isRound || angle % 90 == 0) {
-            newAvatarImage = new BufferedImage(newAvatarImage.getWidth(), newAvatarImage.getHeight(), newAvatarImage.getType());
-            Graphics2D rotateG2d = newAvatarImage.createGraphics();
+            BufferedImage roundedImage = new BufferedImage(newAvatarImage.getWidth(), newAvatarImage.getHeight(), newAvatarImage.getType());
+            Graphics2D rotateG2d = roundedImage.createGraphics();
             rotateG2d.rotate(Math.toRadians(angle), newAvatarImage.getWidth() / 2.0, newAvatarImage.getHeight() / 2.0);
             rotateG2d.drawImage(newAvatarImage, null, 0, 0);
             rotateG2d.dispose();
-            g2d.drawImage(newAvatarImage, x, y, w, h, null);
+            g2d.drawImage(roundedImage, x, y, w, h, null);
             return;
         }
 
