@@ -10,7 +10,7 @@ apply plugin: "java"
 
 
 group = 'xmmt.dituon'
-version = '5.0'
+version = '5.1'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }

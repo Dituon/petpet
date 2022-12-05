@@ -1,18 +1,19 @@
 package moe.dituon.petpet.plugin;
 
 import kotlin.Pair;
+import moe.dituon.petpet.share.BaseConfigFactory;
+import moe.dituon.petpet.share.BasePetService;
+import moe.dituon.petpet.share.GifAvatarExtraDataProvider;
+import moe.dituon.petpet.share.TextExtraData;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
-import moe.dituon.petpet.share.BaseConfigFactory;
-import moe.dituon.petpet.share.BasePetService;
-import moe.dituon.petpet.share.GifAvatarExtraDataProvider;
-import moe.dituon.petpet.share.TextExtraData;
 
 import java.io.File;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,6 +84,12 @@ public class PluginPetService extends BasePetService {
         super.setGifMaxSize(config.getGifMaxSize());
         super.encoder = config.getGifEncoder();
         super.quality = (byte) config.getGifQuality();
+        if (super.quality < 1 || super.quality >= 100) {
+            System.out.println(
+                    MessageFormat.format("Petpet Plugin 的GIF质量参数范围为 1-99 (1为最佳), 你提供的质量参数为{0}, 已自动更改为默认值10", quality)
+            );
+            super.quality = 10;
+        }
 
         super.setGifMakerThreadPoolSize(config.getThreadPoolSize());
         System.out.println("Petpet GifMakerThreadPoolSize: " + super.getGifMakerThreadPoolSize());

@@ -9,7 +9,6 @@
 # petpet special
 /example-data/output
 !/data/xmmt.dituon.petpet
-!/config/xmmt.dituon.petpet
 
 # User-specific stuff
 .idea/

@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 
 public class BasePetService {
-    public static final float VERSION = 5.0F;
+    public static final float VERSION = 5.1F;
     public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
-    protected byte quality = 100;
+    protected byte quality = 10;
     private List<Integer> gifMaxSize = null;
     public Encoder encoder = Encoder.ANIMATED_LIB;
 

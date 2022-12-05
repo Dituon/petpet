@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.List;
 
 public class HelloPetpet {
-    //(｡･∀･)ﾉﾞ嗨 欢迎来到第一人称互动式实例, 本实例可以让你快速了解到Petpet基础API的使用
+    //(｡･∀･)ﾉﾞ嗨 欢迎来到互动式实例, 本实例可以让你快速了解到Petpet基础API的使用
     static BasePetService service = new BasePetService(); //在开始之前, 需要先实例化PetService
     //Service是什么呢?
     //在Petpet中, Service是程序的核心, 可以把Service理解成工厂

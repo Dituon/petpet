@@ -2,10 +2,7 @@ package moe.dituon.petpet.share;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 public class BaseImageMaker {
@@ -42,7 +39,8 @@ public class BaseImageMaker {
             BufferedImage sticker, GifRenderParams params) {
         for (AvatarModel avatar : avatarList) {
             if (avatar.isGif()) return gifMaker.makeGIF(
-                    avatarList, textList, sticker, params);
+                    avatarList, textList, sticker, params
+            );
         }
         try {
             return bufferedImageToInputStream(ImageSynthesis.synthesisImage(

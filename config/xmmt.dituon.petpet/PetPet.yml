@@ -33,8 +33,8 @@ gifMaxSize:
   - 200
   - 200
   - 32
-# GIF质量, 仅适用于ANIMATED_LIB编码器
-gifQuality: 100
+# GIF质量, 仅适用于ANIMATED_LIB编码器, 1为质量最佳, 超过20不会有明显性能提升
+gifQuality: 10
 # 是否使用headless模式
 headless: true
 # 图片合成线程池容量, 填入0为CPU线程数+1 (默认值)

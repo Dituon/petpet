@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,11 +62,11 @@ public abstract class ImageSynthesisCore {
                 );
                 int resultWidth = (int) (w * ratio);
                 int resultHeight = (int) (h * ratio);
+                if (resultWidth <= 0 || resultHeight <= 0) return;
 
                 int[] cropPos = new int[]{
                         0, 0, resultWidth, resultHeight
                 };
-                System.out.println(Arrays.toString(cropPos));
 
                 newAvatarImage = cropImage(newAvatarImage, cropPos);
                 break;

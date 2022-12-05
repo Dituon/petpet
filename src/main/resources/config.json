@@ -4,7 +4,7 @@
   "dataPath": "data/xmmt.dituon.petpet",
   "gifMaxSize": [200, 200, 32],
   "gifEncoder": "ANIMATED_LIB",
-  "gifQuality": 100,
+  "gifQuality": 10,
   "gifMakerThreadPoolSize": 0,
   "headless": true
 }

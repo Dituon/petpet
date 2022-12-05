@@ -7,10 +7,7 @@ import moe.dituon.petpet.share.FastAnimatedGifEncoder.FrameData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +105,7 @@ public class BaseGifMaker {
                                     BufferedImage.TYPE_3BYTE_BGR);
                     Graphics2D g = temp.createGraphics();
                     g.drawImage(image, 0, 0, null);
+                    g.dispose();
                     FrameData frameData = new FrameData(temp, params.getQuality());
                     frameMap.put(fi, frameData);
                     if (fi == 0) {
