@@ -1,4 +1,5 @@
 import {Editor} from "./editor.js"
+import {SuperGif} from "../lib/libgif.min.js"
 
 const stopPropagation = e => {
     e.stopPropagation()
@@ -46,10 +47,12 @@ function initBackground(file) {
     reader.readAsDataURL(file)
     reader.onload = () => image.src = reader.result.toString()
 
-    if (file.type === 'image/gif') {
-        loadGif(image).then(frameList => new Editor(editorElement, ...frameList))
-    } else {
-        image.onload = () => new Editor(editorElement, image)
+    image.onload = () => {
+        if (file.type === 'image/gif') {
+            loadGif(image).then(frameList => new Editor(editorElement, ...frameList))
+        } else {
+            new Editor(editorElement, image)
+        }
     }
 }
 
@@ -60,9 +63,8 @@ function initBackground(file) {
  */
 async function loadGif(image) {
     document.body.appendChild(image)
-    await image.onload
-    let gif = new RubbableGif({gif: image})
-    await gif.load()
+    let gif = new SuperGif({gif: image})
+    await new Promise(resolve => gif.load(resolve))
     document.querySelector('.jsgif').remove()
     /** @type { HTMLImageElement[] } */
     const frameList = []
