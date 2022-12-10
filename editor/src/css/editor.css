@@ -1,0 +1,109 @@
+#drop-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFB6C1;
+    border: 2px dotted #FFB6C1;
+    text-align: center;
+    width: 60vw;
+    padding: 30vh 0;
+    border-radius: 12px;
+}
+
+#file-button {
+    color: #FFB6C1;
+    border: 2px solid #FFB6C1;
+    background-color: white;
+    padding: 0.8em 1.6em;
+    border-radius: 12px;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+#file-button:hover {
+    color: white;
+    background-color: #FFB6C1;
+    font-size: larger;
+    font-weight: bold;
+}
+
+#file {
+    display: none;
+}
+
+.canvas-container {
+    border: 1px dotted #FFB6C1;
+    margin: 0 auto;
+}
+
+.bar {
+    width: 60%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    border-radius: 12px;
+    margin: 0.8em auto;
+}
+
+.info {
+    padding: 0.5em;
+    background-color: #FFF0F5;
+}
+
+.bar > div, .check {
+    background-color: #FFF0F5;
+    padding: 0.3em 0.4em;
+    border-radius: 12px;
+    margin: 0.4em;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.check > * {
+    margin: 0 0.2em;
+}
+
+.gif-bar {
+    margin: 0 auto;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.gif-bar > img {
+    z-index: 10;
+    width: 6em;
+}
+
+.element {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border: 1px dotted #FFB6C1;
+    border-radius: 12px;
+    margin: 0.2em 0;
+}
+
+.typeText {
+    font-size: 0.95rem;
+    color: #FFB6C1;
+    margin: 0.8em;
+}
+
+.typein {
+    border: 1px solid #FFB6C1;
+    border-radius: 12px;
+    max-width: 3em;
+    padding: 0.1em 0.4em;
+}
+
+#downloadConfig {
+    width: 50%;
+    margin: 1em auto;
+}
+
+.checked {
+    filter: blur(2px);
+}

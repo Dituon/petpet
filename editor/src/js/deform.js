@@ -1,24 +1,4 @@
-// const points = [{
-//     x: 0, y: 0
-// }, {
-//     x: 0, y: 100
-// }, {
-//     x: 100, y: 100
-// }, {
-//     x: 100, y: 0
-// }];
-// let polygon = new fabric.Polygon(points, {
-//     fill: '#FFF0F5',
-//     strokeWidth: 2,
-//     stroke: '#FFB6C1',
-//     objectCaching: false,
-//     transparentCorners: false
-// });
-// canvas.add(polygon);
-
-// define a function that can locate the controls.
-// this function will be used both for drawing and for interaction.
-function polygonPositionHandler(dim, finalMatrix, fabricObject) {
+export const polygonPositionHandler = function (dim, finalMatrix, fabricObject) {
     let x = (fabricObject.points[this.pointIndex].x - fabricObject.pathOffset.x),
         y = (fabricObject.points[this.pointIndex].y - fabricObject.pathOffset.y);
     return fabric.util.transformPoint(
@@ -30,7 +10,7 @@ function polygonPositionHandler(dim, finalMatrix, fabricObject) {
     );
 }
 
-function getObjectSizeWithStroke(object) {
+export const getObjectSizeWithStroke = object => {
     const stroke = new fabric.Point(
         object.strokeUniform ? 1 / object.scaleX : 1,
         object.strokeUniform ? 1 / object.scaleY : 1
@@ -38,29 +18,20 @@ function getObjectSizeWithStroke(object) {
     return new fabric.Point(object.width + stroke.x, object.height + stroke.y);
 }
 
-// define a function that will define what the control does
-// this function will be called on every mouse move after a control has been
-// clicked and is being dragged.
-// The function receive as argument the mouse event, the current trasnform object
-// and the current position in canvas coordinate
-// transform.target is a reference to the current object being transformed,
-function actionHandler(eventData, transform, x, y) {
+export const actionHandler = (eventData, transform, x, y) => {
     const polygon = transform.target,
         currentControl = polygon.controls[polygon.__corner],
         mouseLocalPosition = polygon.toLocalPoint(new fabric.Point(x, y), 'center', 'center'),
         polygonBaseSize = getObjectSizeWithStroke(polygon),
-        size = polygon._getTransformedDimensions(0, 0),
-        finalPointPosition = {
-            x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
-            y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
-        };
-    polygon.points[currentControl.pointIndex] = finalPointPosition;
+        size = polygon._getTransformedDimensions(0, 0);
+    polygon.points[currentControl.pointIndex] = {
+        x: mouseLocalPosition.x * polygonBaseSize.x / size.x + polygon.pathOffset.x,
+        y: mouseLocalPosition.y * polygonBaseSize.y / size.y + polygon.pathOffset.y
+    };
     return true;
 }
 
-// define a function that can keep the polygon in the same position when we change its
-// width/height/top/left.
-function anchorWrapper(anchorIndex, fn) {
+export const anchorWrapper = (anchorIndex, fn) => {
     return function (eventData, transform, x, y) {
         const fabricObject = transform.target,
             absolutePoint = fabric.util.transformPoint({
