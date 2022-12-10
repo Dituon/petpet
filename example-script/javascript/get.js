@@ -18,7 +18,7 @@
  * @param { PetRequestDTO } param
  * @return { Promise<Blob> } Image Blob
  */
-const getImage = async param => {
+const fetchImage = async param => {
     if (!param.key) throw new Error('Param Key undefined')
     let {key, randomAvatarList, textList, ...targets} = param
 
@@ -53,7 +53,7 @@ const requestParam = {
     // textList: []
 }
 
-getImage(requestParam).then(imageBlob => {
+fetchImage(requestParam).then(imageBlob => {
     // do something
     console.log('Hello, Petpet!')
 
