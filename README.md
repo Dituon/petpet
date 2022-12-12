@@ -247,79 +247,79 @@
 <details>
 <summary>展开/收起</summary>
 
-| key                                    | 预览                                                                                                      |
-|----------------------------------------|---------------------------------------------------------------------------------------------------------|
-| **acclaim** <br/>喝彩 欢呼                 | <image alt="acclaim" src="https://s2.loli.net/2022/08/29/49ks1GMvmhuE7on.gif" width="320"/>             |
-| **bible** <br/>圣经 典中典                  | <image alt="bible" src="https://s2.loli.net/2022/08/29/hvxFqE3ckKjBpLW.gif" width="320"/>               |
-| **breakdown** <br/>惊吓 击穿               | <image alt="breakdown" src="https://s2.loli.net/2022/08/29/gZCfQx7TdiUJH1a.gif" width="320"/>           |
+| key                                            | 预览                                                                                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **acclaim** <br/>喝彩 欢呼                     | <image alt="acclaim" src="https://s2.loli.net/2022/08/29/49ks1GMvmhuE7on.gif" width="320"/>             |
+| **bible** <br/>圣经 典中典                     | <image alt="bible" src="https://s2.loli.net/2022/08/29/hvxFqE3ckKjBpLW.gif" width="320"/>               |
+| **breakdown** <br/>惊吓 击穿                   | <image alt="breakdown" src="https://s2.loli.net/2022/08/29/gZCfQx7TdiUJH1a.gif" width="320"/>           |
 | **carte** <br/>佩可莉姆 菜单 单页              | <image alt="carte" src="https://s2.loli.net/2022/08/29/c1xji8FevHbmlwA.gif" width="320"/>               |
-| **hold_sign** <br/>唐可可 举牌 应援           | <image alt="hold_sign" src="https://s2.loli.net/2022/08/29/DqLBbV2QHCTM4Xj.gif" width="320"/>           |
-| **kurumi** <br/>胡桃 放大                  | <image alt="kurumi" src="https://s2.loli.net/2022/08/29/utZaJGOTK2wnWYo.gif" width="320"/>              |
-| **monad** <br/>唐可可 拍 单页                | <image alt="monad" src="https://s2.loli.net/2022/08/29/OMEusdU7HBGwgJF.gif" width="320"/>               |
-| **point_tv** <br/>康纳 电视                | <image alt="point_tv" src="https://s2.loli.net/2022/08/29/IPQZfNSlGCKy6Vs.gif" width="320"/>            |
-| **remake** <br/>泥头车 创 重开               | <image alt="remake" src="https://s2.loli.net/2022/08/29/RVBQ9qU4wpNotjx.gif" width="320"/>              |
-| **reward** <br/>伊蕾娜 赏金 报酬              | <image alt="reward" src="https://s2.loli.net/2022/08/29/Byg4zWEGnFfCeUK.gif" width="320"/>              |
-| **watch_tv** <br/>汤姆 电视                | <image alt="watch_tv" src="https://s2.loli.net/2022/08/29/beCgr5uEPDjw4lk.gif" width="320"/>            |
-| **certificate** <br/>喜报                | <image alt="certificate" src="https://s2.loli.net/2022/08/29/pFnW2VgxzliJ7H8.png" width="320"/>         |
-| **anyasuki** <br/>阿尼亚 喜欢               | <image alt="anyasuki" src="https://s2.loli.net/2022/08/29/QTgMxkfv8d7Ls4J.gif" width="320"/>            |
-| **bite** <br/>啃 咬                      | <image alt="bite" src="https://s2.loli.net/2022/08/29/Kz7F5INyfqi9osU.gif" width="320"/>                |
-| **breast** <br/>胸 凶                    | <image alt="breast" src="https://s2.loli.net/2022/08/29/Q43OqdsvplABmUc.gif" width="320"/>              |
-| **cast** <br/>丢                        | <image alt="cast" src="https://s2.loli.net/2022/08/29/snLiMK57Gyukw1g.gif" width="320"/>                |
+| **hold_sign** <br/>唐可可 举牌 应援            | <image alt="hold_sign" src="https://s2.loli.net/2022/08/29/DqLBbV2QHCTM4Xj.gif" width="320"/>           |
+| **kurumi** <br/>胡桃 放大                      | <image alt="kurumi" src="https://s2.loli.net/2022/08/29/utZaJGOTK2wnWYo.gif" width="320"/>              |
+| **monad** <br/>唐可可 拍 单页                  | <image alt="monad" src="https://s2.loli.net/2022/08/29/OMEusdU7HBGwgJF.gif" width="320"/>               |
+| **point_tv** <br/>康纳 电视                    | <image alt="point_tv" src="https://s2.loli.net/2022/08/29/IPQZfNSlGCKy6Vs.gif" width="320"/>            |
+| **remake** <br/>泥头车 创 重开                 | <image alt="remake" src="https://s2.loli.net/2022/08/29/RVBQ9qU4wpNotjx.gif" width="320"/>              |
+| **reward** <br/>伊蕾娜 赏金 报酬               | <image alt="reward" src="https://s2.loli.net/2022/08/29/Byg4zWEGnFfCeUK.gif" width="320"/>              |
+| **watch_tv** <br/>汤姆 电视                    | <image alt="watch_tv" src="https://s2.loli.net/2022/08/29/beCgr5uEPDjw4lk.gif" width="320"/>            |
+| **certificate** <br/>喜报                      | <image alt="certificate" src="https://s2.loli.net/2022/08/29/pFnW2VgxzliJ7H8.png" width="320"/>         |
+| **anyasuki** <br/>阿尼亚 喜欢                  | <image alt="anyasuki" src="https://s2.loli.net/2022/08/29/QTgMxkfv8d7Ls4J.gif" width="320"/>            |
+| **bite** <br/>啃 咬                            | <image alt="bite" src="https://s2.loli.net/2022/08/29/Kz7F5INyfqi9osU.gif" width="320"/>                |
+| **breast** <br/>胸 凶                          | <image alt="breast" src="https://s2.loli.net/2022/08/29/Q43OqdsvplABmUc.gif" width="320"/>              |
+| **cast** <br/>丢                               | <image alt="cast" src="https://s2.loli.net/2022/08/29/snLiMK57Gyukw1g.gif" width="320"/>                |
 | **center_symmetry** <br/>中心对称 左上对称     | <image alt="center_symmetry" src="https://s2.loli.net/2022/08/29/pHo6PfQqrACt41U.gif" width="320"/>     |
-| **coupon** <br/>陪睡                     | <image alt="coupon" src="https://s2.loli.net/2022/08/29/DoCKvjwh9e3zmXl.gif" width="320"/>              |
-| **cover_face** <br/>挡                  | <image alt="cover_face" src="https://s2.loli.net/2022/08/29/qxg8hEpuck7YmHt.gif" width="320"/>          |
-| **crawl** <br/>爬                       | <image alt="crawl" src="https://s2.loli.net/2022/08/29/B51jDuRkpm4gft6.gif" width="320"/>               |
-| **decent_kiss** <br/>抱歉                | <image alt="decent_kiss" src="https://s2.loli.net/2022/08/29/nfDAkQP2alCFc9q.gif" width="320"/>         |
-| **distracted** <br/>注意力                | <image alt="distracted" src="https://s2.loli.net/2022/08/29/YqtehUVKsGTAx95.gif" width="320"/>          |
-| **dont_touch** <br/>不要靠近               | <image alt="dont_touch" src="https://s2.loli.net/2022/08/29/UZaw8DPI2pKN6fk.gif" width="320"/>          |
-| **down_symmetry** <br/>对称 下对称 上下对称     | <image alt="down_symmetry" src="https://s2.loli.net/2022/08/29/vVUieaYLPTQMEzG.gif" width="320"/>       |
-| **eat** <br/>吃                         | <image alt="eat" src="https://s2.loli.net/2022/08/29/y54QG68bj3drAPh.gif" width="320"/>                 |
-| **fencing** <br/>击剑 🤺                 | <image alt="fencing" src="https://s2.loli.net/2022/08/29/BC7IUVNpig5TLAt.gif" width="320"/>             |
-| **garbage** <br/>垃圾桶 垃圾 探头             | <image alt="garbage" src="https://s2.loli.net/2022/08/29/wndy54x271Vki3K.gif" width="320"/>             |
-| **hammer** <br/>锤                      | <image alt="hammer" src="https://s2.loli.net/2022/08/29/azOyFdvgVoENTPG.gif" width="320"/>              |
-| **interview** <br/>采访                  | <image alt="interview" src="https://s2.loli.net/2022/08/29/At1UIkxbay2imZd.gif" width="320"/>           |
-| **jiujiu** <br/>么么                     | <image alt="jiujiu" src="https://s2.loli.net/2022/08/29/sSrYzieQCHZcWy5.gif" width="320"/>              |
-| **keep_away** <br/>远离                  | <image alt="keep_away" src="https://s2.loli.net/2022/08/29/aNOUFQtHceP5Rov.gif" width="320"/>           |
-| **kiss** <br/>亲 热吻                     | <image alt="kiss" src="https://s2.loli.net/2022/08/29/KBCoj8q5DmMAysa.gif" width="320"/>                |
-| **knock** <br/>敲 打                     | <image alt="knock" src="https://s2.loli.net/2022/08/29/oQUVaGcEPX6sdA8.gif" width="320"/>               |
+| **coupon** <br/>陪睡                           | <image alt="coupon" src="https://s2.loli.net/2022/08/29/DoCKvjwh9e3zmXl.gif" width="320"/>              |
+| **cover_face** <br/>挡                         | <image alt="cover_face" src="https://s2.loli.net/2022/08/29/qxg8hEpuck7YmHt.gif" width="320"/>          |
+| **crawl** <br/>爬                              | <image alt="crawl" src="https://s2.loli.net/2022/08/29/B51jDuRkpm4gft6.gif" width="320"/>               |
+| **decent_kiss** <br/>抱歉                      | <image alt="decent_kiss" src="https://s2.loli.net/2022/08/29/nfDAkQP2alCFc9q.gif" width="320"/>         |
+| **distracted** <br/>注意力                     | <image alt="distracted" src="https://s2.loli.net/2022/08/29/YqtehUVKsGTAx95.gif" width="320"/>          |
+| **dont_touch** <br/>不要靠近                   | <image alt="dont_touch" src="https://s2.loli.net/2022/08/29/UZaw8DPI2pKN6fk.gif" width="320"/>          |
+| **down_symmetry** <br/>对称 下对称 上下对称    | <image alt="down_symmetry" src="https://s2.loli.net/2022/08/29/vVUieaYLPTQMEzG.gif" width="320"/>       |
+| **eat** <br/>吃                                | <image alt="eat" src="https://s2.loli.net/2022/08/29/y54QG68bj3drAPh.gif" width="320"/>                 |
+| **fencing** <br/>击剑 🤺                        | <image alt="fencing" src="https://s2.loli.net/2022/08/29/BC7IUVNpig5TLAt.gif" width="320"/>             |
+| **garbage** <br/>垃圾桶 垃圾 探头              | <image alt="garbage" src="https://s2.loli.net/2022/08/29/wndy54x271Vki3K.gif" width="320"/>             |
+| **hammer** <br/>锤                             | <image alt="hammer" src="https://s2.loli.net/2022/08/29/azOyFdvgVoENTPG.gif" width="320"/>              |
+| **interview** <br/>采访                        | <image alt="interview" src="https://s2.loli.net/2022/08/29/At1UIkxbay2imZd.gif" width="320"/>           |
+| **jiujiu** <br/>么么                           | <image alt="jiujiu" src="https://s2.loli.net/2022/08/29/sSrYzieQCHZcWy5.gif" width="320"/>              |
+| **keep_away** <br/>远离                        | <image alt="keep_away" src="https://s2.loli.net/2022/08/29/aNOUFQtHceP5Rov.gif" width="320"/>           |
+| **kiss** <br/>亲 热吻                          | <image alt="kiss" src="https://s2.loli.net/2022/08/29/KBCoj8q5DmMAysa.gif" width="320"/>                |
+| **knock** <br/>敲 打                           | <image alt="knock" src="https://s2.loli.net/2022/08/29/oQUVaGcEPX6sdA8.gif" width="320"/>               |
 | **left_down_symmetry** <br/>中心对称 左下对称  | <image alt="left_down_symmetry" src="https://s2.loli.net/2022/08/29/b4nl7faouWYKDk9.gif" width="320"/>  |
-| **leg** <br/>蹭                         | <image alt="leg" src="https://s2.loli.net/2022/08/29/ZWFgCMXuT2lErQ9.gif" width="320"/>                 |
-| **like** <br/>永远喜欢                     | <image alt="like" src="https://s2.loli.net/2022/08/29/6GblH1DTAeyMLOJ.gif" width="320"/>                |
-| **loading** <br/>加载 加载中                | <image alt="loading" src="https://s2.loli.net/2022/08/29/XGYMP15zqBLxaIF.gif" width="320"/>             |
-| **make_friend** <br/>加好友               | <image alt="make_friend" src="https://s2.loli.net/2022/08/29/5tK4aFbqe26OnpB.gif" width="320"/>         |
-| **marry** <br/>结婚                      | <image alt="marry" src="https://s2.loli.net/2022/08/29/lV3MJ1EYqZ5fUnw.gif" width="320"/>               |
-| **nano** <br/>纳米科技                     | <image alt="nano" src="https://s2.loli.net/2022/08/29/kZCzQJHnShgU3F1.gif" width="320"/>                |
-| **need** <br/>需要                       | <image alt="need" src="https://s2.loli.net/2022/08/29/kQ94fOdINc6m1Vy.gif" width="320"/>                |
-| **osu**                                | <image alt="osu" src="https://s2.loli.net/2022/08/29/2OYBN37RqgdEDKW.png" width="320"/>                 |
-| **painter** <br/>画                     | <image alt="painter" src="https://s2.loli.net/2022/08/29/G3LmpF1nkQYgwMz.gif" width="320"/>             |
-| **pat** <br/>拍                         | <image alt="pat" src="https://s2.loli.net/2022/08/29/c5RXlgYe7ZSQJ94.gif" width="320"/>                 |
-| **perfect** <br/>完美                    | <image alt="perfect" src="https://s2.loli.net/2022/08/29/TplOfJ4MUQIbkzB.gif" width="320"/>             |
-| **petpet** <br/>摸 摸头                   | <image alt="petpet" src="https://s2.loli.net/2022/08/29/dRNmAPhGqMye79K.gif" width="320"/>              |
-| **play** <br/>玩 顶                      | <image alt="play" src="https://s2.loli.net/2022/08/29/WRoPSutprEVXbqZ.gif" width="320"/>                |
-| **police** <br/>警察                     | <image alt="police" src="https://s2.loli.net/2022/08/29/GVW6CS2yexdJT51.gif" width="320"/>              |
-| **pound** <br/>捣                       | <image alt="pound" src="https://s2.loli.net/2022/08/29/P3uGoxgLCwqhe8l.gif" width="320"/>               |
-| **pr** <br/>舔屏                         | <image alt="pr" src="https://s2.loli.net/2022/08/29/yapZhPYf9I3QFCe.gif" width="320"/>                  |
-| **punch** <br/>打拳                      | <image alt="punch" src="https://s2.loli.net/2022/08/29/R9MCDugmebqYHIp.gif" width="320"/>               |
-| **record** <br/>唱片                     | <image alt="record" src="https://s2.loli.net/2022/08/29/FkOgoMxeiqDhsUc.gif" width="320"/>              |
+| **leg** <br/>蹭                                | <image alt="leg" src="https://s2.loli.net/2022/08/29/ZWFgCMXuT2lErQ9.gif" width="320"/>                 |
+| **like** <br/>永远喜欢                         | <image alt="like" src="https://s2.loli.net/2022/08/29/6GblH1DTAeyMLOJ.gif" width="320"/>                |
+| **loading** <br/>加载 加载中                   | <image alt="loading" src="https://s2.loli.net/2022/08/29/XGYMP15zqBLxaIF.gif" width="320"/>             |
+| **make_friend** <br/>加好友                    | <image alt="make_friend" src="https://s2.loli.net/2022/08/29/5tK4aFbqe26OnpB.gif" width="320"/>         |
+| **marry** <br/>结婚                            | <image alt="marry" src="https://s2.loli.net/2022/08/29/lV3MJ1EYqZ5fUnw.gif" width="320"/>               |
+| **nano** <br/>纳米科技                         | <image alt="nano" src="https://s2.loli.net/2022/08/29/kZCzQJHnShgU3F1.gif" width="320"/>                |
+| **need** <br/>需要                             | <image alt="need" src="https://s2.loli.net/2022/08/29/kQ94fOdINc6m1Vy.gif" width="320"/>                |
+| **osu**                                        | <image alt="osu" src="https://s2.loli.net/2022/08/29/2OYBN37RqgdEDKW.png" width="320"/>                 |
+| **painter** <br/>画                            | <image alt="painter" src="https://s2.loli.net/2022/08/29/G3LmpF1nkQYgwMz.gif" width="320"/>             |
+| **pat** <br/>拍                                | <image alt="pat" src="https://s2.loli.net/2022/08/29/c5RXlgYe7ZSQJ94.gif" width="320"/>                 |
+| **perfect** <br/>完美                          | <image alt="perfect" src="https://s2.loli.net/2022/08/29/TplOfJ4MUQIbkzB.gif" width="320"/>             |
+| **petpet** <br/>摸 摸头                        | <image alt="petpet" src="https://s2.loli.net/2022/08/29/dRNmAPhGqMye79K.gif" width="320"/>              |
+| **play** <br/>玩 顶                            | <image alt="play" src="https://s2.loli.net/2022/08/29/WRoPSutprEVXbqZ.gif" width="320"/>                |
+| **police** <br/>警察                           | <image alt="police" src="https://s2.loli.net/2022/08/29/GVW6CS2yexdJT51.gif" width="320"/>              |
+| **pound** <br/>捣                              | <image alt="pound" src="https://s2.loli.net/2022/08/29/P3uGoxgLCwqhe8l.gif" width="320"/>               |
+| **pr** <br/>舔屏                               | <image alt="pr" src="https://s2.loli.net/2022/08/29/yapZhPYf9I3QFCe.gif" width="320"/>                  |
+| **punch** <br/>打拳                            | <image alt="punch" src="https://s2.loli.net/2022/08/29/R9MCDugmebqYHIp.gif" width="320"/>               |
+| **record** <br/>唱片                           | <image alt="record" src="https://s2.loli.net/2022/08/29/FkOgoMxeiqDhsUc.gif" width="320"/>              |
 | **right_down_symmetry** <br/>中心对称 右下对称 | <image alt="right_down_symmetry" src="https://s2.loli.net/2022/08/29/2dN3e58ilCzy7Sf.gif" width="320"/> |
-| **right_symmetry** <br/>对称 右对称 左右对称    | <image alt="right_symmetry" src="https://s2.loli.net/2022/08/29/YfzjDGBwFe4pRuC.gif" width="320"/>      |
+| **right_symmetry** <br/>对称 右对称 左右对称   | <image alt="right_symmetry" src="https://s2.loli.net/2022/08/29/YfzjDGBwFe4pRuC.gif" width="320"/>      |
 | **right_up_symmetry** <br/>中心对称 右上对称   | <image alt="right_up_symmetry" src="https://s2.loli.net/2022/08/29/BnOvA5Z2DYTpwU4.gif" width="320"/>   |
-| **roll** <br/>滚 推                      | <image alt="roll" src="https://s2.loli.net/2022/08/29/TeSAQB5RvGdhUly.gif" width="320"/>                |
-| **rub** <br/>舔 prpr                    | <image alt="rub" src="https://s2.loli.net/2022/08/29/RxN9k8LlEcoUJzg.gif" width="320"/>                 |
-| **safe_sense** <br/>安全感                | <image alt="safe_sense" src="https://s2.loli.net/2022/08/29/cdM5Qe3Jt4qpkgj.gif" width="320"/>          |
-| **suck** <br/>吸                        | <image alt="suck" src="https://s2.loli.net/2022/08/29/cQzUpd9R4J3TBVk.gif" width="320"/>                |
-| **support** <br/>精神支柱                  | <image alt="support" src="https://s2.loli.net/2022/08/29/3DGP7wVNRqocWgY.gif" width="320"/>             |
-| **symmetry** <br/>对称 左对称 左右对称          | <image alt="symmetry" src="https://s2.loli.net/2022/08/29/qdlg3Ya8IOBnpHf.gif" width="320"/>            |
-| **tear** <br/>撕                        | <image alt="tear" src="https://s2.loli.net/2022/08/29/XaVi3uF5ZUt1MBe.gif" width="320"/>                |
-| **thinkwhat** <br/>想                   | <image alt="thinkwhat" src="https://s2.loli.net/2022/08/29/FfmL8AECiPNre9G.gif" width="320"/>           |
-| **throw** <br/>扔                       | <image alt="throw" src="https://s2.loli.net/2022/08/29/jNeWOSJkapxuPE2.gif" width="320"/>               |
-| **thump** <br/>锤                       | <image alt="thump" src="https://s2.loli.net/2022/08/29/pAfxMcmKInYF3sw.gif" width="320"/>               |
-| **tightly** <br/>黏                     | <image alt="tightly" src="https://s2.loli.net/2022/08/29/Iwql1hAK7edoS3W.gif" width="320"/>             |
-| **twist** <br/>抱                       | <image alt="twist" src="https://s2.loli.net/2022/08/29/SrhmXBsjNQuCLYd.gif" width="320"/>               |
-| **up_symmetry** <br/>对称 上对称 上下对称       | <image alt="up_symmetry" src="https://s2.loli.net/2022/08/29/qaJFDiPg5pV2zlt.gif" width="320"/>         |
-| **wallpaper** <br/>瑞克 壁纸               | <image alt="wallpaper" src="https://s2.loli.net/2022/08/29/p4R1v3UIjNrqz8Q.gif" width="320"/>           |
-| **worship** <br/>膜拜                    | <image alt="worship" src="https://s2.loli.net/2022/08/29/eA3SkmKFwRUhEl2.gif" width="320"/>             |
-| **yoasobi** <br/>群青                    | <image alt="yoasobi" src="https://s2.loli.net/2022/08/29/zSAN9o5XDcVtKx2.gif" width="320"/>             |
+| **roll** <br/>滚 推                            | <image alt="roll" src="https://s2.loli.net/2022/08/29/TeSAQB5RvGdhUly.gif" width="320"/>                |
+| **rub** <br/>舔 prpr                           | <image alt="rub" src="https://s2.loli.net/2022/08/29/RxN9k8LlEcoUJzg.gif" width="320"/>                 |
+| **safe_sense** <br/>安全感                     | <image alt="safe_sense" src="https://s2.loli.net/2022/08/29/cdM5Qe3Jt4qpkgj.gif" width="320"/>          |
+| **suck** <br/>吸                               | <image alt="suck" src="https://s2.loli.net/2022/08/29/cQzUpd9R4J3TBVk.gif" width="320"/>                |
+| **support** <br/>精神支柱                      | <image alt="support" src="https://s2.loli.net/2022/08/29/3DGP7wVNRqocWgY.gif" width="320"/>             |
+| **symmetry** <br/>对称 左对称 左右对称         | <image alt="symmetry" src="https://s2.loli.net/2022/08/29/qdlg3Ya8IOBnpHf.gif" width="320"/>            |
+| **tear** <br/>撕                               | <image alt="tear" src="https://s2.loli.net/2022/08/29/XaVi3uF5ZUt1MBe.gif" width="320"/>                |
+| **thinkwhat** <br/>想                          | <image alt="thinkwhat" src="https://s2.loli.net/2022/08/29/FfmL8AECiPNre9G.gif" width="320"/>           |
+| **throw** <br/>扔                              | <image alt="throw" src="https://s2.loli.net/2022/08/29/jNeWOSJkapxuPE2.gif" width="320"/>               |
+| **thump** <br/>锤                              | <image alt="thump" src="https://s2.loli.net/2022/08/29/pAfxMcmKInYF3sw.gif" width="320"/>               |
+| **tightly** <br/>黏                            | <image alt="tightly" src="https://s2.loli.net/2022/08/29/Iwql1hAK7edoS3W.gif" width="320"/>             |
+| **twist** <br/>抱                              | <image alt="twist" src="https://s2.loli.net/2022/08/29/SrhmXBsjNQuCLYd.gif" width="320"/>               |
+| **up_symmetry** <br/>对称 上对称 上下对称      | <image alt="up_symmetry" src="https://s2.loli.net/2022/08/29/qaJFDiPg5pV2zlt.gif" width="320"/>         |
+| **wallpaper** <br/>瑞克 壁纸                   | <image alt="wallpaper" src="https://s2.loli.net/2022/08/29/p4R1v3UIjNrqz8Q.gif" width="320"/>           |
+| **worship** <br/>膜拜                          | <image alt="worship" src="https://s2.loli.net/2022/08/29/eA3SkmKFwRUhEl2.gif" width="320"/>             |
+| **yoasobi** <br/>群青                          | <image alt="yoasobi" src="https://s2.loli.net/2022/08/29/zSAN9o5XDcVtKx2.gif" width="320"/>             |
 
 **..more&more**
 
@@ -624,9 +624,13 @@
 }
 ```
 
-可参考`example-script`中的代码实现请求
+> 可参考[`example-script`](./example-script/)中的代码实现请求
 
-> 更多示例请参考`example-script`
+| 语言           | 示例                                                                                              |
+|--------------|-------------------------------------------------------------------------------------------------|
+| `javascript` | [`post.js`](./example-script/javascript/post.js) [`get.js`](./example-script/javascript/get.js) |
+| `python`     | [`example.py`](./example-script/python/example.py)                                              |
+| `php`        | [`example.php`](./example-script/php/example.php)                                               |
 
 ## 常见问题
 
