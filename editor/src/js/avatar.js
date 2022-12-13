@@ -49,9 +49,9 @@ export class AvatarModel extends Model {
 
     /**
      * @param { fabric.Canvas } canvas
-     * @param { string } [url = '../avatar.jpg']
+     * @param { string } [url = './avatar.jpg']
      */
-    constructor(canvas, url = '../avatar.jpg') {
+    constructor(canvas, url = './avatar.jpg') {
         super(canvas)
         fabric.Image.fromURL(url, a => {
             this.avatar = a
