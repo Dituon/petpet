@@ -45,6 +45,8 @@ autoUpdate: true
 repositoryUrl: 'https://raw.githubusercontent.com/Dituon/petpet/main'
 # 是否启用开发模式 (支持热重载)
 devMode: false
+# 是否启用消息注入 (详见文档)
+messageHook: false
 # 触发图片生成后的用户冷却时长, 填入-1则禁用, 单位为秒
 coolDown: 10
 # 触发图片生成后的群聊冷却时长

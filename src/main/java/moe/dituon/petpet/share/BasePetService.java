@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 
 public class BasePetService {
-    public static final float VERSION = 5.1F;
+    public static final float VERSION = 5.2F;
     public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
     protected byte quality = 10;
