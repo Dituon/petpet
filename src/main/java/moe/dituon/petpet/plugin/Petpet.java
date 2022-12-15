@@ -1,5 +1,9 @@
 package moe.dituon.petpet.plugin;
 
+import kotlin.Pair;
+import moe.dituon.petpet.share.BaseConfigFactory;
+import moe.dituon.petpet.share.BasePetService;
+import moe.dituon.petpet.share.TextExtraData;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
@@ -7,14 +11,15 @@ import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessagePostSendEvent;
+import net.mamoe.mirai.event.events.MessagePreSendEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import net.mamoe.mirai.message.data.*;
-import moe.dituon.petpet.share.BaseConfigFactory;
-import moe.dituon.petpet.share.BasePetService;
-import moe.dituon.petpet.share.TextExtraData;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class Petpet extends JavaPlugin {
@@ -79,6 +84,8 @@ public final class Petpet extends JavaPlugin {
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
         }
+
+        if (service.messageHook) GlobalEventChannel.INSTANCE.subscribeAlways(MessagePreSendEvent.class, this::onMessagePreSend);
     }
 
     private void onNudgeSynchronized(NudgeEvent e) {
@@ -283,28 +290,6 @@ public final class Petpet extends JavaPlugin {
         if (key == null) return;
 
         if (service.fuzzy && !spanList.isEmpty() && !fuzzyLock) {
-            switch (spanList.get(0)) {
-                case "群主":
-                    fromName = getNameOrNick(e.getSender());
-                    fromUrl = e.getSender().getAvatarUrl();
-                    Member owner = e.getGroup().getOwner();
-                    toName = getNameOrNick(owner);
-                    toUrl = owner.getAvatarUrl();
-                    break;
-                case "管理":
-                case "管理员":
-                    fromName = getNameOrNick(e.getSender());
-                    fromUrl = e.getSender().getAvatarUrl();
-                    Member admin = e.getGroup().getOwner();
-                    List<Member> adminList = e.getGroup().getMembers().stream() //随机管理员
-                            .filter(m -> m.getPermission() == MemberPermission.ADMINISTRATOR)
-                            .collect(Collectors.toList());
-                    if (!adminList.isEmpty())
-                        admin = adminList.get(random.nextInt(adminList.size()));
-                    toName = getNameOrNick(admin);
-                    toUrl = admin.getAvatarUrl();
-                    break;
-            }
             for (Member m : e.getGroup().getMembers()) {
                 if (m.getNameCard().toLowerCase().contains(spanList.get(0).toLowerCase())
                         || m.getNick().toLowerCase().contains(spanList.get(0).toLowerCase())) {
@@ -337,6 +322,53 @@ public final class Petpet extends JavaPlugin {
                 ), new TextExtraData(
                         fromName, toName, groupName, spanList
                 ));
+    }
+
+    private void onMessagePreSend(MessagePreSendEvent e) {
+        String messageRaw = e.getMessage().contentToString();
+
+        final Pattern pattern = Pattern.compile("<pet>([\\s\\S]*?)<\\/pet>", Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(messageRaw);
+
+        boolean flag = false;
+        List<Pair<String, Image>> pairs = null;
+        while (matcher.find()) {
+            flag = true;
+            if (pairs == null) pairs = new ArrayList<>();
+            try {
+                Image image = service.inputStreamToImage(
+                        new PluginRequestParser(matcher.group(1), e.getTarget()).getImagePair().getFirst(),
+                        e.getTarget()
+                );
+                pairs.add(new Pair<>(matcher.group(0), image));
+            } catch (IOException ex) {
+                throw new RuntimeException("构造图片失败", ex);
+            }
+        }
+        if (!flag) return;
+        MessageChainBuilder messageBuilder = new MessageChainBuilder();
+        MessageChain originChain = e.getMessage() instanceof MessageChain ?
+                (MessageChain) e.getMessage() : MessageUtils.newChain(e.getMessage());
+        short i = 0;
+        for (SingleMessage message : originChain) {
+            if (!(message instanceof PlainText)) {
+                messageBuilder.add(message);
+                continue;
+            }
+            String msgStr = ((PlainText) message).getContent();
+            while (i < pairs.size()) {
+                Pair<String, Image> pair = pairs.get(i);
+                String typeStr = pair.getFirst();
+                int typePos = msgStr.indexOf(typeStr);
+                if (typePos == -1) break;
+                i++;
+                messageBuilder.add(msgStr.substring(0, typePos));
+                messageBuilder.add(pair.getSecond());
+                msgStr = msgStr.substring(typePos + typeStr.length());
+            }
+            messageBuilder.add(msgStr);
+        }
+        e.setMessage(messageBuilder.asMessageChain());
     }
 
     private void cacheMessageImage(GroupMessageEvent e) {

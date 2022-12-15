@@ -16,6 +16,8 @@
 
 **[在线编辑器](https://dituon.github.io/petpet/editor)**
 
+# [Mirai](https://github.com/mamoe/mirai)插件
+
 ## 使用方法
 
 1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/)
@@ -207,6 +209,11 @@
 - **devMode**: `false`
 
 > 开发模式, 启用后**任何人都能使用`pet reload`指令热重载`PetData`**, 默认为`false`
+<br/>
+
+- **messageHook**: `false`
+
+> 消息注入, 参考[MessageHook](#MessageHook), 默认为`false`
 <br/>
 
 - **coolDown**: `10`
@@ -563,9 +570,35 @@
 - `text(i)Width`  `i`号文本渲染后的宽度
 - `text(i)Height`  `i`号文本渲染后的高度
 
-## `WebServer`
+### MessageHook
+
+消息注入, 插件会检查将要发送的消息 解析后注入图片, 可配合各类消息回复插件使用
+
+`<pet></pet>` 标签中的`JSON`会被解析, 请求格式参考 [`WebServer.POST`](#`POST`)
+
+用例: 
+```
+这段文字之后的标签会变成一张图片发送<pet>{
+  "key": "petpet",
+  "to": {
+    "qq": 2544193782 
+  },
+  "textList": [
+    "text1"
+  ]
+}</pet>消息的顺序会被正确处理, 支持多张图片
+```
+
+不同于 `POST` 请求格式, 你可以用 `"qq"` 令程序自动获取头像和昵称, 也可以自定义`"name"` `"avatar"`
+(更推荐自定义的做法, 程序可能在某些情况下无法推断出正确的`"name"`)
+
+> 被`"hidden": true`隐藏的模板会正常调用
+> 
+> 此功能默认禁用, 需在配置文件中启用`messageHook: true`
+
+# WebServer
   
-除了作为`Mirai`插件, `Petpet` 也可以作为**http服务器**单独运行, 可被其它项目/语言使用
+除了作为`Mirai`插件, `Petpet` 也可以作为**http服务器 / API**单独运行, 可被其它项目/语言使用
 
 `java -jar petpet.jar`
 
@@ -585,11 +618,11 @@
 
 **程序使用`com.sun.net.httpserver`实现`http服务器`**
 
-#### `PetServer API`
+### `PetServer API`
 
 访问 `127.0.0.1:2333/petpet` 以获取 `PetDataList`
 
-##### `GET`
+### `GET`
 
 使用 `GET` 传递参数, 例如 `127.0.0.1:2333/petpet?key=petpet&toAvatar=$avatarUrl`
 `127.0.0.1:2333/petpet?key=osu&textList=hso!`
@@ -605,7 +638,7 @@
 - `textList` (str): 根据空格分割此字符串, 作为额外数据
 </details>
 
-##### `POST`
+### `POST`
 
 使用 `POST` 传递参数, 例如 `127.0.0.1:2333/petpet`
 ```
@@ -619,10 +652,11 @@
         "url"
     ],
     "textList": [
-        "test"
+        "text"
     ]
 }
 ```
+其中, `key`为必须项, 其它可以省略
 
 > 可参考[`example-script`](./example-script/)中的代码实现请求
 

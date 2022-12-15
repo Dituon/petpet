@@ -19,6 +19,7 @@ public class PetHttpHandler implements HttpHandler {
                     return;
                 }
 
+                System.out.println("DEBUG[GET URL]: " + requestParam);
                 parser = new GETParser(requestParam);
             } else {
                 //POST
@@ -32,7 +33,9 @@ public class PetHttpHandler implements HttpHandler {
                     requestBodyContent.append(line);
                 }
 
-                parser = new POSTParser(requestBodyContent.toString());
+                String content = requestBodyContent.toString();
+                System.out.println("DEBUG[POST BODY]: " + content);
+                parser = new POSTParser(content);
             }
 
             handleResponse(httpExchange, parser.getImagePair().getFirst(), parser.getImagePair().getSecond());

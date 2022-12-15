@@ -1,17 +1,20 @@
 package moe.dituon.petpet.plugin;
 
-import kotlin.Pair;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.BasePetService;
 import moe.dituon.petpet.share.GifAvatarExtraDataProvider;
 import moe.dituon.petpet.share.TextExtraData;
+import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class PluginPetService extends BasePetService {
     protected boolean autoUpdate = true;
     protected String repositoryUrl = "https://dituon.github.io/petpet";
     protected boolean devMode = false;
+    protected boolean messageHook = false;
     protected ArrayList<String> disabledKey = new ArrayList<>();
     protected ArrayList<String> randomableList = new ArrayList<>();
 
@@ -80,6 +84,7 @@ public class PluginPetService extends BasePetService {
         if ("[nudge]".equals(inCoolDownMessage)) inCoolDownNudge = true;
 
         devMode = Boolean.TRUE.equals(config.getDevMode());
+        messageHook = Boolean.TRUE.equals(config.getMessageHook());
 
         super.setGifMaxSize(config.getGifMaxSize());
         super.encoder = config.getGifEncoder();
@@ -121,8 +126,8 @@ public class PluginPetService extends BasePetService {
     }
 
     public void readData(File dir) {
-        if (dir.listFiles() == null){
-            System.out.println( autoUpdate ?
+        if (dir.listFiles() == null) {
+            System.out.println(autoUpdate ?
                     "o((>ω< ))o 你这头懒猪, 没有下载petData!\n\\^o^/ 还好我冰雪聪明, 帮你自动更新了⭐" :
                     "(ﾟДﾟ*)ﾉ 没有petData! 你自己手动更新吧x\n(☆-ｖ-) 笨蛋! 让你不开自动更新⭐");
             return;
@@ -193,22 +198,27 @@ public class PluginPetService extends BasePetService {
 
     public void sendImage(Group group, String key,
                           GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData) {
-        Pair<InputStream, String> generatedImageAndType = generateImage(key, gifAvatarExtraDataProvider,
-                textExtraData, null);
-
         try {
-            if (generatedImageAndType != null) {
-                ExternalResource resource = ExternalResource.create(generatedImageAndType.getFirst());
-                Image image = group.uploadImage(resource);
-                resource.close();
-                group.sendMessage(image);
-            } else {
-                System.out.println("生成图片失败");
-            }
+            group.sendMessage(
+                    inputStreamToImage(generateImage(
+                            key,
+                            gifAvatarExtraDataProvider,
+                            textExtraData,
+                            null
+                    ).getFirst(), group)
+            );
         } catch (Exception ex) {
             System.out.println("发送图片时出错：" + ex.getMessage());
             ex.printStackTrace();
         }
+    }
+
+    public Image inputStreamToImage(@NotNull InputStream input, Contact contact) throws IOException {
+        ExternalResource resource = ExternalResource.create(input);
+        if (contact == null) contact = Bot.getInstances().get(0).getAsFriend();
+        Image image = contact.uploadImage(resource);
+        resource.close();
+        return image;
     }
 
     public String getKeyAliasListString() {

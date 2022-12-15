@@ -57,6 +57,8 @@ object Config : AutoSavePluginConfig("PetPet") {
     val repositoryUrl: String? by value("https://raw.githubusercontent.com/Dituon/petpet/main")
     @ValueDescription("是否启用开发模式 (支持热重载)")
     val devMode: Boolean? by value(false)
+    @ValueDescription("是否启用消息注入 (详见文档)")
+    val messageHook: Boolean? by value(false)
     @ValueDescription("触发图片生成后的用户冷却时长, 填入-1则禁用, 单位为秒")
     val coolDown : Int by value(10)
     @ValueDescription("触发图片生成后的群聊冷却时长")
