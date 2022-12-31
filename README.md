@@ -10,7 +10,7 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/dituon/petpet)
 [![](https://jitpack.io/v/Dituon/petpet.svg)](https://jitpack.io/#Dituon/petpet)
 
-自定义合成图片的 Mirai 插件 / 独立程序, 灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
+自定义合成图片的 Mirai 插件 / 独立程序 / gocq-http插件, 灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
 原生 java 编写, kotlin仅用于数据序列化, **使用底层API**, **多线程优化**: 轻量, 高性能, 易拓展
 
