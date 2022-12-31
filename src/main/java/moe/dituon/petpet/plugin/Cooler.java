@@ -3,6 +3,9 @@ package moe.dituon.petpet.plugin;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cooler {
+    public static final int DEFAULT_USER_COOLDOWN = 10;
+    public static final int DEFAULT_GROUP_COOLDOWN = -1;
+    public static final String DEFAULT_MESSAGE = "技能冷却中...";
     private static final ConcurrentHashSet<Long> set = new ConcurrentHashSet<>();
     public static void lock(long id,int second){
         if(second<=0) return;

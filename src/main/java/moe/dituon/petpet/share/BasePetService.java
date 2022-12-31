@@ -3,6 +3,7 @@ package moe.dituon.petpet.share;
 import kotlin.Pair;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
+import kotlinx.serialization.json.JsonPrimitive;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -20,11 +21,11 @@ public class BasePetService {
     public static final float VERSION = 5.2F;
     public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
-    protected byte quality = 10;
+    protected int quality = 10;
     private List<Integer> gifMaxSize = null;
     public Encoder encoder = Encoder.ANIMATED_LIB;
 
-    protected File dataRoot;
+    public File dataRoot = null;
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
     protected HashMap<String, Callable<Map<Short, BufferedImage>>> backgroundLambdaMap = new HashMap<>();
@@ -33,7 +34,7 @@ public class BasePetService {
     protected int gifMakerThreadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
     protected BaseGifMaker gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
     protected BaseImageMaker imageMaker = new BaseImageMaker(gifMaker);
-    private static final Random random = new Random();
+    public static final Random random = new Random();
 
     /**
      * 从文件中读取KeyData模板到dataMap中
@@ -176,15 +177,19 @@ public class BasePetService {
         if (config.getHeadless()) System.setProperty("java.awt.headless", "true");
     }
 
-    public static String getFileStr(File file) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String str;
-        while ((str = br.readLine()) != null) {
-            sb.append(str);
+    public String getFileStr(File file) {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            String str;
+            while ((str = br.readLine()) != null) {
+                sb.append(str);
+            }
+            br.close();
+            return sb.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        br.close();
-        return sb.toString();
     }
 
     /**
@@ -254,7 +259,7 @@ public class BasePetService {
             ex.printStackTrace();
             throw new RuntimeException("解析 " + key + "/data.json 出错");
         }
-        throw new RuntimeException("未知错误");
+        throw new RuntimeException();
     }
 
     private BufferedImage getBackgroundImage(
@@ -283,25 +288,30 @@ public class BasePetService {
         ).getImage();
     }
 
-    public static Color decodeColor(JsonElement jsonElement) {
+    public static Color decodeColor(@NotNull JsonElement jsonElement) {
         return decodeColor(jsonElement, new short[]{255, 255, 255, 255}); //#fff
     }
 
-    public static Color decodeColor(JsonElement jsonElement, short[] defaultRgba) {
-        if (jsonElement == null) return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
+    /**
+     * 解析 RGB / RGBA / HEX 颜色, <b>可能更改原数组</b>
+     */
+    public static Color decodeColor(@NotNull JsonElement jsonElement, short[] defaultRgba) {
         assert defaultRgba.length == 4;
-        try { //rgb or rgba
+//        defaultRgba = defaultRgba.clone();
+        if (jsonElement instanceof JsonArray) {
             JsonArray jsonArray = (JsonArray) jsonElement;
-            if (jsonArray.getSize() == 3 || jsonArray.getSize() == 4) {
-                defaultRgba[0] = Short.parseShort(jsonArray.get(0).toString());
-                defaultRgba[1] = Short.parseShort(jsonArray.get(1).toString());
-                defaultRgba[2] = Short.parseShort(jsonArray.get(2).toString());
-                defaultRgba[3] = jsonArray.getSize() == 4 ? Short.parseShort(jsonArray.get(3).toString()) : 255;
+            if (jsonArray.getSize() != 3 && jsonArray.getSize() != 4) {
+                System.err.println("颜色格式有误，请输入正确的 RGB / RGBA 颜色数组\n输入: " + jsonArray.toString());
+                return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
             }
-        } catch (Exception ignored) { //hex
-            String hex = jsonElement.toString().replace("#", "").replace("\"", "");
+            defaultRgba[0] = Short.parseShort(jsonArray.get(0).toString());
+            defaultRgba[1] = Short.parseShort(jsonArray.get(1).toString());
+            defaultRgba[2] = Short.parseShort(jsonArray.get(2).toString());
+            defaultRgba[3] = jsonArray.getSize() == 4 ? Short.parseShort(jsonArray.get(3).toString()) : 255;
+        } else if (jsonElement instanceof JsonPrimitive) {
+            String hex = ((JsonPrimitive) jsonElement).getContent().replace("#", "").replace("\"", "");
             if (hex.length() != 6 && hex.length() != 8) {
-                System.out.println("颜色格式有误，请输入正确的16进制颜色\n输入: " + hex);
+                System.err.println("颜色格式有误，请输入正确的16进制颜色\n输入: " + hex);
                 return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
             }
             defaultRgba[0] = Short.parseShort(hex.substring(0, 2), 16);
@@ -346,5 +356,11 @@ public class BasePetService {
 
     public int getGifMakerThreadPoolSize() {
         return gifMakerThreadPoolSize;
+    }
+    public BaseGifMaker getGifMaker(){
+        return gifMaker;
+    }
+    public BaseImageMaker getImageMaker(){
+        return imageMaker;
     }
 }

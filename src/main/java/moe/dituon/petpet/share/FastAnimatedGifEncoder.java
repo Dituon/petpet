@@ -66,9 +66,9 @@ public class FastAnimatedGifEncoder extends AnimatedGifEncoder {
         byte[] indexedPixels;
         boolean[] usedEntry = new boolean[256];
 
-        FrameData(BufferedImage image, byte quality) {
+        FrameData(BufferedImage image, int quality) {
             pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-            neuQuant = new NeuQuant(pixels, pixels.length, quality < 1 ? 1 : quality);
+            neuQuant = new NeuQuant(pixels, pixels.length, Math.max(quality, 1));
             colorTab = neuQuant.process();
             // convert map from BGR to RGB
             for (int i = 0; i < colorTab.length; i += 3) {

@@ -1,5 +1,6 @@
 package moe.dituon.petpet.plugin;
 
+import moe.dituon.petpet.mirai.MiraiPetpet;
 import moe.dituon.petpet.server.RequestParser;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.TextExtraData;
@@ -14,7 +15,7 @@ public class PluginRequestParser extends RequestParser {
     public PluginRequestParser(String json, Contact contact) {
         this.contact = contact;
         PluginRequestDTO request = PluginRequestDTO.decodeFromString(json);
-        super.imagePair = Petpet.service.generateImage(
+        super.imagePair = MiraiPetpet.service.generateImage(
                 request.getKey(),
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         request.getForm().getURL(),

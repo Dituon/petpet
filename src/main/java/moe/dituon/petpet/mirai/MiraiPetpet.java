@@ -1,6 +1,7 @@
-package moe.dituon.petpet.plugin;
+package moe.dituon.petpet.mirai;
 
 import kotlin.Pair;
+import moe.dituon.petpet.plugin.*;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.BasePetService;
 import moe.dituon.petpet.share.TextExtraData;
@@ -22,10 +23,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public final class Petpet extends JavaPlugin {
-    public static final Petpet INSTANCE = new Petpet();
+public final class MiraiPetpet extends JavaPlugin {
+    public static final MiraiPetpet INSTANCE = new MiraiPetpet();
     private static List<Long> disabledGroup;
-    public static PluginPetService service;
+    public static MiraiPetService service;
     public static File dataFolder;
 
     private static MessageSource previousMessage;
@@ -35,18 +36,18 @@ public final class Petpet extends JavaPlugin {
     private static Set<String> keyAliaSet = null;
     public static final Random random = new Random();
 
-    private Petpet() {
+    private MiraiPetpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(BasePetService.VERSION))
                 .name("PetPet")
                 .author("Dituon")
                 .build());
-        service = new PluginPetService();
+        service = new MiraiPetService();
     }
 
     @Override
     public void onEnable() {
         try {
-            reloadPluginConfig(Config.INSTANCE);
+            reloadPluginConfig(MiraiPluginConfig.INSTANCE);
             service.readConfigByPluginAutoSave();
         } catch (NoClassDefFoundError ignored) {
             getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
@@ -56,7 +57,10 @@ public final class Petpet extends JavaPlugin {
         service.readData(dataFolder);
 
         if (service.headless) System.setProperty("java.awt.headless", "true");
-        if (service.autoUpdate) new Thread(DataUpdater::autoUpdate).start();
+        if (service.autoUpdate) new Thread(() -> {
+            DataUpdater updater = new DataUpdater(service.repositoryUrl, getDataFolder());
+            updater.autoUpdate();
+        }).start();
         disabledGroup = service.disabledGroups;
 
         getLogger().info("\n\n" +
@@ -85,7 +89,8 @@ public final class Petpet extends JavaPlugin {
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
         }
 
-        if (service.messageHook) GlobalEventChannel.INSTANCE.subscribeAlways(MessagePreSendEvent.class, this::onMessagePreSend);
+        if (service.messageHook)
+            GlobalEventChannel.INSTANCE.subscribeAlways(MessagePreSendEvent.class, this::onMessagePreSend);
     }
 
     private void onNudgeSynchronized(NudgeEvent e) {
@@ -203,10 +208,10 @@ public final class Petpet extends JavaPlugin {
         for (SingleMessage singleMessage : e.getMessage()) {
             if (singleMessage instanceof QuoteReply && service.respondReply) {
                 long id = e.getGroup().getId() + ((QuoteReply) singleMessage).getSource().getIds()[0];
-                if (imageCachePool.get(id) != null) {
-                    toUrl = imageCachePool.get(id);
-                    fuzzyLock = true;
-                }
+                if (imageCachePool.get(id) == null) continue;
+                toName = "这个";
+                toUrl = imageCachePool.get(id);
+                fuzzyLock = true;
                 continue;
             }
             if (singleMessage instanceof PlainText) {

@@ -12,10 +12,13 @@ import java.util.List;
 
 public class GETParser extends RequestParser {
     HashMap<String, String> parameterList = new HashMap<>();
-    public GETParser(String param) {
+    private final ServerPetService service;
+    public GETParser(ServerPetService service, String param) {
+        this.service = service;
         String[] queryList = param.split("&");
         for (String query : queryList) {
             String[] parameter = query.split("=");
+            if (parameter.length != 2) continue;
             parameterList.put(parameter[0], URLDecoder.decode(parameter[1], StandardCharsets.UTF_8));
         }
         parser();
@@ -27,7 +30,7 @@ public class GETParser extends RequestParser {
 
         String randomAvatarListStr = get("randomAvatarList");
 
-        super.imagePair = WebServer.petService.generateImage(
+        super.imagePair = service.generateImage(
                 get("key"),
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         get("fromAvatar"), get("toAvatar"), get("groupAvatar"), get("botAvatar"),

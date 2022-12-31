@@ -1,20 +1,50 @@
 package moe.dituon.petpet.share
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import java.awt.image.BufferedImage
 
+val encodeDefaultsPrettyJson = Json {
+    encodeDefaults = true
+    prettyPrint = true
+}
+
+val encodeDefaultsJson = Json { encodeDefaults = true }
+
+interface BaseServiceConfigInterface {
+    val antialias: Boolean
+    val gifMaxSize: List<Int>
+    val gifEncoder: Encoder
+    val gifQuality: Int
+    val threadPoolSize: Int
+    val headless: Boolean
+
+    fun toBaseServiceConfig() = BaseServiceConfig(
+        antialias = antialias,
+        gifMaxSize = gifMaxSize,
+        gifEncoder = gifEncoder,
+        gifQuality = gifQuality,
+        threadPoolSize = threadPoolSize,
+        headless = headless
+    )
+    fun stringify(): String {
+        return encodeDefaultsPrettyJson.encodeToString(this)
+    }
+}
+
 @Serializable
 data class BaseServiceConfig(
-    var antialias: Boolean = true,
-    var gifMaxSize: List<Int> = emptyList(),
-    var gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    var gifQuality: Byte = 100,
-    var threadPoolSize: Int = 0,
-    var headless: Boolean = true
-)
+    override val antialias: Boolean = true,
+    override val gifMaxSize: List<Int> = emptyList(),
+    override val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    override val gifQuality: Int = 100,
+    override val threadPoolSize: Int = 0,
+    override val headless: Boolean = true
+) : BaseServiceConfigInterface
 
 enum class Encoder {
     BUFFERED_STREAM, ANIMATED_LIB, SQUAREUP_LIB
@@ -152,6 +182,6 @@ data class GifRenderParams(
     val delay: Int = 65,
     val maxSize: List<Int>?,
     val antialias: Boolean,
-    val quality: Byte = 100,
+    val quality: Int = 5,
     val reverse: Boolean = false
 )

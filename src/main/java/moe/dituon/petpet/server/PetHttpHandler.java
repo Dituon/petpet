@@ -7,6 +7,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class PetHttpHandler implements HttpHandler {
+    private final ServerPetService service;
+    PetHttpHandler(ServerPetService service){
+        super();
+        this.service = service;
+    }
     @Override
     public void handle(HttpExchange httpExchange) {
         try {
@@ -15,12 +20,12 @@ public class PetHttpHandler implements HttpHandler {
 
                 String requestParam = httpExchange.getRequestURI().getRawQuery();
                 if (requestParam == null) {
-                    handleResponse(httpExchange, WebServer.petService.getIndexJson());
+                    handleResponse(httpExchange, service.getIndexJson());
                     return;
                 }
 
                 System.out.println("DEBUG[GET URL]: " + requestParam);
-                parser = new GETParser(requestParam);
+                parser = new GETParser(service, requestParam);
             } else {
                 //POST
                 BufferedReader bufferedReader = new BufferedReader(
@@ -35,7 +40,7 @@ public class PetHttpHandler implements HttpHandler {
 
                 String content = requestBodyContent.toString();
                 System.out.println("DEBUG[POST BODY]: " + content);
-                parser = new POSTParser(content);
+                parser = new POSTParser(service, content);
             }
 
             handleResponse(httpExchange, parser.getImagePair().getFirst(), parser.getImagePair().getSecond());

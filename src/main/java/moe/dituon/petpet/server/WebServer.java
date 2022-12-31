@@ -8,20 +8,37 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
 public class WebServer {
-    public static final ServerPetService petService = new ServerPetService();
+    public ServerPetService service = new ServerPetService();
+    private String apiUrl;
 
-    public static void main(String[] args) throws IOException {
-        petService.readConfig();
-        if (petService.headless) System.setProperty("java.awt.headless", "true");
+    public WebServer() {
+        service.readConfig();
+        init();
+    }
 
-        petService.readData(new File(petService.path).listFiles());
+    public WebServer(ServerServiceConfig config) {
+        service.readConfig(config);
+        init();
+    }
 
-        HttpServer httpServer = HttpServer.create(new InetSocketAddress(petService.port), 0);
-        httpServer.createContext("/petpet", new PetHttpHandler());
-        httpServer.setExecutor(Executors.newFixedThreadPool(petService.webServerThreadPoolSize));
-        httpServer.start();
+    private void init() {
+        service.readData(new File(service.path).listFiles());
 
-        System.out.println("PetpetWebServer started in port " + petService.port);
-        System.out.println("API-URL: 127.0.0.1:" + petService.port + "/petpet");
+        try {
+            HttpServer httpServer = HttpServer.create(new InetSocketAddress(service.port), 0);
+            httpServer.createContext("/petpet", new PetHttpHandler(service));
+            httpServer.setExecutor(Executors.newFixedThreadPool(service.webServerThreadPoolSize));
+            httpServer.start();
+
+            System.out.println("PetpetWebServer started in port " + service.port);
+            apiUrl = ("http://127.0.0.1:" + service.port + "/petpet").intern();
+            System.out.println("API-URL: " + apiUrl);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public String getApiUrl(){
+        return apiUrl;
     }
 }

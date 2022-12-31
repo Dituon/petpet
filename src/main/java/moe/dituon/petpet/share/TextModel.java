@@ -44,8 +44,7 @@ public class TextModel {
     }
 
     private String buildText(String text, TextExtraData extraData, boolean greedy) {
-        text = text.replace("\"", "")
-                .replace("$from", extraData.getFromReplacement())
+        text = text.replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
                 .replace("$group", extraData.getGroupReplacement())
                 .replace("\\n", "\n");

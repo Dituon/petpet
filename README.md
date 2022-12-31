@@ -16,9 +16,11 @@
 
 **[在线编辑器](https://dituon.github.io/petpet/editor)**
 
-# [Mirai](https://github.com/mamoe/mirai)插件
-
 ## 使用方法
+
+### [Mirai](https://github.com/mamoe/mirai)插件
+
+0. 部署 [Mirai](https://github.com/mamoe/mirai) 机器人框架
 
 1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/)
 
@@ -26,9 +28,11 @@
 
 3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
 
-4. 将图片素材放入 `Mirai/data/xmmt.dituon.petpet`
+4. 将图片素材放入 `Mirai/data/xmmt.dituon.petpet/`
 
-5. 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
+5. 启动 `Mirai`, 可自行更改配置文件 `Petpet.yml`, 重启后生效 (参考 [配置项说明](#配置项说明))
+
+- 使用 **戳一戳** 有 `30%` 的概率触发; 或发送 `pet @xxx`
 
 > `pet key @xxx` 或 `key @xxx` 可返回指定图片 例如 `pet kiss @xxx` `kiss @xxx`
 
@@ -37,12 +41,37 @@
 
 > 可使用 `pet`指令 获取 `keyList`
 
-**以上配置 均可在配置文件中修改**
+### 单独运行
+
+1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/) `petpet.jar` 或 `petpet-no-ws.jar`
+
+2. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
+
+3. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
+
+4. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `config.json`, 重启后生效
+
+5. 参考[`WebServer`](#WebServer)一节 发起网络请求
+
+### [gocq-http](https://github.com/Mrs4s/go-cqhttp)插件
+
+> **Warning**
+>
+> 此功能处于测试阶段, 目前仅能通过`key`生成图片, 请期待后续开发!
+
+0. 部署 [gocq-http](https://github.com/Mrs4s/go-cqhttp) 机器人框架, 设置**正向 WebSocket** 监听 (默认端口为`8080`)
+
+1. 更改 `gocq-http` 配置项 `message.post-format` 为 `array`
+
+2. 下载 [最新版本](https://github.com/Dituon/petpet/releases/) `petpet.jar`
+
+3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
+
+4. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
+
+5. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `gocqConfig.json`, 重启后生效
 
 ## 配置文件
-
-首次运行 Petpet 插件时，会生成 `Mirai/config/xmmt.dituon.petpet/Petpet.yml` 文件
-
 #### 配置项说明
 
 <details>
@@ -598,9 +627,9 @@
 
 # WebServer
   
-除了作为`Mirai`插件, `Petpet` 也可以作为**http服务器 / API**单独运行, 可被其它项目/语言使用
+`Petpet` 可以作为**http服务器 / API**单独运行, 被其它项目/语言使用
 
-`java -jar petpet.jar`
+> `java -jar petpet.jar`
 
 启动时会生成 `config.json`:
 ```
