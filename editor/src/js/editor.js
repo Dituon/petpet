@@ -66,47 +66,54 @@ export class Editor {
 
         const DTOArea = dom('textarea')
 
-        const settingBarElement = dom('div', {class: 'bar'})
+        const settingBarElement = dom('div', {class: 'bar toolbar'})
         const aliaChange = e => e.target.size = e.target.length > 4 ? e.target.length * 1.5 : 2
+        let idInput = domInput('ID', {
+            type: 'text',
+            size: 6,
+            placeholder: '唯一标识'
+        }, {
+            event: 'change',
+            fun: e => this.id = e.target.value.trim()
+        });
+        let aliasInput = domInput('别名', {
+            type: 'text',
+            size: 2,
+            placeholder: '多别名用空格分割'
+        }, {
+            event: 'keyup',
+            fun: aliaChange
+        }, {
+            event: 'keydown',
+            fun: aliaChange
+        }, {
+            event: 'change',
+            fun: e => this.alias = e.target.value.trim().split(' ')
+        });
+        idInput.classList.add("id-input")
+        aliasInput.classList.add("alias-input")
+        let randomListCheckBox = domCheckbox('在随机表列中', e => this.inRandomList = e.target.checked, this.inRandomList);
+        randomListCheckBox.classList.add("random-list-checkbox")
         settingBarElement.append(
-            domInput('ID', {
-                type: 'text',
-                size: 6,
-                placeholder: '唯一标识'
-            }, {
-                event: 'change',
-                fun: e => this.id = e.target.value.trim()
-            }),
-            dom('div', {html: 'addAvatar'}, {
+            idInput,
+            dom('div', {html: 'addAvatar',class:'add-avatar btn'}, {
                 event: 'click',
                 fun: e => this.addAvatar()
             }),
             dom('div', {html: 'addText'}, {
+                class:'add-text btn',
                 event: 'click',
                 fun: e => this.addText()
             }),
-            domInput('别名', {
-                type: 'text',
-                size: 2,
-                placeholder: '多别名用空格分割'
-            }, {
-                event: 'keyup',
-                fun: aliaChange
-            }, {
-                event: 'keydown',
-                fun: aliaChange
-            }, {
-                event: 'change',
-                fun: e => this.alias = e.target.value.trim().split(' ')
-            }),
-            dom('div', {html: 'buildData'}, {
+            aliasInput,
+            dom('div', {html: 'buildData',class:"btn buildData"}, {
                 event: 'click',
                 fun: e => DTOArea.innerHTML = JSON.stringify(this.DTO, null, 4)
             }),
-            domCheckbox('在随机表列中', e => this.inRandomList = e.target.checked, this.inRandomList)
+            randomListCheckBox
         )
 
-        const download = dom('div', {html: '下载'}, {
+        const download = dom('div', {html: '下载',class:'btn'}, {
             event: 'click',
             fun: () => this.download()
         })
