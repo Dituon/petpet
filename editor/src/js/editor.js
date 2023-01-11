@@ -95,21 +95,20 @@ export class Editor {
         let randomListCheckBox = domCheckbox('在随机表列中', e => this.inRandomList = e.target.checked, this.inRandomList);
         randomListCheckBox.classList.add("random-list-checkbox")
         settingBarElement.append(
-            idInput,
             dom('div', {html: 'addAvatar',class:'add-avatar btn'}, {
                 event: 'click',
                 fun: e => this.addAvatar()
             }),
-            dom('div', {html: 'addText'}, {
-                class:'add-text btn',
+            dom('div', {html: 'addText', class:'add-text btn',}, {
                 event: 'click',
                 fun: e => this.addText()
             }),
-            aliasInput,
             dom('div', {html: 'buildData',class:"btn buildData"}, {
                 event: 'click',
                 fun: e => DTOArea.innerHTML = JSON.stringify(this.DTO, null, 4)
             }),
+            idInput,
+            aliasInput,
             randomListCheckBox
         )
 
