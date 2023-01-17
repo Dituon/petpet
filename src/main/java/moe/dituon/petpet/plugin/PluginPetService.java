@@ -24,7 +24,6 @@ public class PluginPetService extends BasePetService {
     public ArrayList<String> randomableList = new ArrayList<>();
 
     public List<Long> disabledGroups;
-
     public void readPluginServiceConfig(PluginServiceConfig config) {
         command = config.getCommand();
         antialias = config.getAntialias();

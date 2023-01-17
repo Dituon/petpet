@@ -2,50 +2,89 @@ package moe.dituon.petpet.websocket.gocq
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import moe.dituon.petpet.plugin.*
+import moe.dituon.petpet.plugin.Cooler
+import moe.dituon.petpet.plugin.DataUpdater
+import moe.dituon.petpet.plugin.PluginServiceConfig
+import moe.dituon.petpet.plugin.ReplyFormat
 import moe.dituon.petpet.server.ServerPetService
-import moe.dituon.petpet.server.ServerServiceConfigInterface
+import moe.dituon.petpet.server.ServerServiceConfig
 import moe.dituon.petpet.share.Encoder
+import moe.dituon.petpet.share.encodeDefaultsPrettyJson
 
 @Serializable
-data class GoCQPluginConfig (
+data class GoCQPluginConfig(
     val eventWebSocketUrl: String = GoCQPetService.EVENT_WEBSOCKET_URL,
     val apiWebSocketUrl: String = GoCQPetService.API_WEBSOCKET_URL,
 
     // Server
-    override val port: Int = ServerPetService.DEFAULT_PORT,
-    override val dataPath: String = ServerPetService.DEFAULT_DATA_PATH,
-    override val webServerThreadPoolSize: Int = ServerPetService.DEFAULT_SERVER_THREAD_POOL_SIZE,
+    val port: Int = ServerPetService.DEFAULT_PORT,
+    val dataPath: String = ServerPetService.DEFAULT_DATA_PATH,
+    val webServerThreadPoolSize: Int = ServerPetService.DEFAULT_SERVER_THREAD_POOL_SIZE,
 
     // Plugin
-    override val command: String = "pet",
-    override val disabled: List<String> = emptyList(),
-    override val commandHead: String = "",
-    override val respondReply: Boolean = true,
-    override val cachePoolSize: Int = 10000,
-    override val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
-    override val fuzzy: Boolean = false,
-    override val strictCommand: Boolean = true,
-    override val synchronized: Boolean = false,
+    val command: String = "pet",
+    val disabled: List<String> = emptyList(),
+    val commandHead: String = "",
+    val respondReply: Boolean = true,
+    val cachePoolSize: Int = 10000,
+    val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
+    val fuzzy: Boolean = false,
+    val strictCommand: Boolean = true,
+    val synchronized: Boolean = false,
 
     // AutoUpdate
-    override val repositoryUrl: String = DataUpdater.DEFAULT_REPO_URL,
-    override val autoUpdate: Boolean = true,
+    val repositoryUrl: String = DataUpdater.DEFAULT_REPO_URL,
+    val autoUpdate: Boolean = true,
 
     // CoolDown
-    override val coolDown: Int = Cooler.DEFAULT_USER_COOLDOWN,
-    override val groupCoolDown: Int = Cooler.DEFAULT_GROUP_COOLDOWN,
-    override val inCoolDownMessage: String = Cooler.DEFAULT_MESSAGE,
+    val coolDown: Int = Cooler.DEFAULT_USER_COOLDOWN,
+    val groupCoolDown: Int = Cooler.DEFAULT_GROUP_COOLDOWN,
+    val inCoolDownMessage: String = Cooler.DEFAULT_MESSAGE,
 
     // BaseServiceConfig
-    override val antialias: Boolean = true,
-    override val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    override val gifMaxSize: List<Int> = listOf(200, 200, 32),
-    override val gifQuality: Int = 5,
-    override val headless: Boolean = true,
-    override val threadPoolSize: Int = 0
-): PluginServiceConfigInterface, ServerServiceConfigInterface ,AutoUpdate, CoolDown {
+    val antialias: Boolean = true,
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    val gifMaxSize: List<Int> = listOf(200, 200, 32),
+    val gifQuality: Int = 5,
+    val headless: Boolean = true,
+    val threadPoolSize: Int = 0
+) {
+    fun stringify(): String {
+        return encodeDefaultsPrettyJson.encodeToString(this)
+    }
+
+    fun toPluginServiceConfig() = PluginServiceConfig(
+        command = command,
+        disabled = disabled,
+        commandHead = commandHead,
+        respondReply = respondReply,
+        cachePoolSize = cachePoolSize,
+        keyListFormat = keyListFormat,
+        fuzzy = fuzzy,
+        strictCommand = strictCommand,
+        synchronized = synchronized,
+        antialias = antialias,
+        gifMaxSize = gifMaxSize,
+        gifEncoder = gifEncoder,
+        gifQuality = gifQuality,
+        headless = headless,
+        threadPoolSize = threadPoolSize
+    )
+
+    fun toServerServiceConfig() = ServerServiceConfig(
+        port = port,
+        dataPath = dataPath,
+        webServerThreadPoolSize = webServerThreadPoolSize,
+
+        antialias = antialias,
+        gifMaxSize = gifMaxSize,
+        gifEncoder = gifEncoder,
+        gifQuality = gifQuality,
+        headless = headless,
+        threadPoolSize = threadPoolSize
+    )
     companion object {
         @JvmStatic
         fun parse(str: String): GoCQPluginConfig {

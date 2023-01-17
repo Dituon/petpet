@@ -15,36 +15,36 @@ val encodeDefaultsPrettyJson = Json {
 
 val encodeDefaultsJson = Json { encodeDefaults = true }
 
-interface BaseServiceConfigInterface {
-    val antialias: Boolean
-    val gifMaxSize: List<Int>
-    val gifEncoder: Encoder
-    val gifQuality: Int
-    val threadPoolSize: Int
-    val headless: Boolean
-
-    fun toBaseServiceConfig() = BaseServiceConfig(
-        antialias = antialias,
-        gifMaxSize = gifMaxSize,
-        gifEncoder = gifEncoder,
-        gifQuality = gifQuality,
-        threadPoolSize = threadPoolSize,
-        headless = headless
-    )
-    fun stringify(): String {
-        return encodeDefaultsPrettyJson.encodeToString(this)
-    }
-}
+//@Serializable
+//abstract class AbstractBaseServiceConfig {
+//    abstract val antialias: Boolean
+//    abstract val gifMaxSize: List<Int>
+//    abstract val gifEncoder: Encoder
+//    abstract val gifQuality: Int
+//    abstract val threadPoolSize: Int
+//    abstract val headless: Boolean
+//}
 
 @Serializable
 data class BaseServiceConfig(
-    override val antialias: Boolean = true,
-    override val gifMaxSize: List<Int> = emptyList(),
-    override val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    override val gifQuality: Int = 100,
-    override val threadPoolSize: Int = 0,
-    override val headless: Boolean = true
-) : BaseServiceConfigInterface
+     val antialias: Boolean = true,
+     val gifMaxSize: List<Int> = emptyList(),
+     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+     val gifQuality: Int = 5,
+     val threadPoolSize: Int = 0,
+     val headless: Boolean = true
+) {
+    fun stringify(): String {
+        return encodeDefaultsPrettyJson.encodeToString(this)
+    }
+
+    companion object {
+        @JvmStatic
+        fun parse(str: String): BaseServiceConfig {
+            return Json.decodeFromString(str)
+        }
+    }
+}
 
 enum class Encoder {
     BUFFERED_STREAM, ANIMATED_LIB, SQUAREUP_LIB

@@ -3,7 +3,7 @@ package moe.dituon.petpet.plugin
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import moe.dituon.petpet.share.BaseServiceConfigInterface
+import moe.dituon.petpet.share.BaseServiceConfig
 import moe.dituon.petpet.share.Encoder
 
 interface Nudge {
@@ -30,55 +30,47 @@ interface MessageHook {
     val messageHook: Boolean
 }
 
-interface PluginServiceConfigInterface : BaseServiceConfigInterface {
-    val command: String
-    val disabled: List<String>
-    val commandHead: String
-    val respondReply: Boolean
-    val cachePoolSize: Int
-    val keyListFormat: ReplyFormat
-    val fuzzy: Boolean
-    val strictCommand: Boolean
-    val synchronized: Boolean
+//@Serializable
+//abstract class AbstractPluginServiceConfig : AbstractBaseServiceConfig() {
+//    abstract val command: String
+//    abstract val disabled: List<String>
+//    abstract val commandHead: String
+//    abstract val respondReply: Boolean
+//    abstract val cachePoolSize: Int
+//    abstract val keyListFormat: ReplyFormat
+//    abstract val fuzzy: Boolean
+//    abstract val strictCommand: Boolean
+//    abstract val synchronized: Boolean
+//}
 
-    fun toPluginServiceConfig() = PluginServiceConfig(
-        command = command,
-        disabled = disabled,
-        commandHead = commandHead,
-        respondReply = respondReply,
-        cachePoolSize = cachePoolSize,
-        keyListFormat = keyListFormat,
-        fuzzy = fuzzy,
-        strictCommand = strictCommand,
-        synchronized = synchronized,
-        antialias = antialias,
-        gifEncoder = gifEncoder,
-        gifMaxSize = gifMaxSize,
-        gifQuality = gifQuality,
-        headless = headless,
-        threadPoolSize = threadPoolSize
-    )
-}
-
+@Serializable
 data class PluginServiceConfig(
-    override val command: String = "pet",
-    override val disabled: List<String> = emptyList(),
-    override val commandHead: String = "",
-    override val respondReply: Boolean = true,
-    override val cachePoolSize: Int = 10000,
-    override val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
-    override val fuzzy: Boolean = false,
-    override val strictCommand: Boolean = true,
-    override val synchronized: Boolean = false,
+    val command: String = "pet",
+    val disabled: List<String> = emptyList(),
+    val commandHead: String = "",
+    val respondReply: Boolean = true,
+    val cachePoolSize: Int = 10000,
+    val keyListFormat: ReplyFormat = ReplyFormat.FORWARD,
+    val fuzzy: Boolean = false,
+    val strictCommand: Boolean = true,
+    val synchronized: Boolean = false,
 
-    // BaseServiceConfig
-    override val antialias: Boolean = true,
-    override val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    override val gifMaxSize: List<Int> = listOf(200, 200, 32),
-    override val gifQuality: Int = 5,
-    override val headless: Boolean = true,
-    override val threadPoolSize: Int = 0
-) : PluginServiceConfigInterface {
+    val antialias: Boolean = true,
+    val gifMaxSize: List<Int> = emptyList(),
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    val gifQuality: Int = 5,
+    val threadPoolSize: Int = 0,
+    val headless: Boolean = true
+) {
+    fun toBaseServiceConfig() = BaseServiceConfig(
+        antialias = antialias,
+        gifMaxSize = gifMaxSize,
+        gifEncoder = gifEncoder,
+        gifQuality = gifQuality,
+        threadPoolSize = threadPoolSize,
+        headless = headless
+    )
+
     companion object {
         @JvmStatic
         fun parse(str: String): PluginServiceConfig {
