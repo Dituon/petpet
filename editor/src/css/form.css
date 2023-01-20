@@ -1,0 +1,91 @@
+
+
+.form-list{
+    --primary-color:  #ff7a8d;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.form-list input::-webkit-color-swatch{
+    border-radius: unset;
+}
+.form-list [disabled]{
+    user-select: none;
+    pointer-events: none;
+}
+.form-list .separate{
+    flex: 1;
+}
+.form-list .form{
+    display: flex;
+    justify-content: center;
+    /*color: #7f7f7f;*/
+    padding: 10px 40px;
+    max-width: 800px;
+    /*border: 1px solid #d0d0d0;*/
+    background: transparent;
+    /*background-color: white;*/
+    color:var(--primary-color)!important;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-items: center;*/
+    /*word-break: keep-all;*/
+}
+.form-list .form .input-group{
+    display: flex;
+    margin-top: 10px;
+    justify-content: start;
+}
+.form-list .form.text-form .input-group>div:nth-child(2){
+    margin-left: 60px;
+}
+
+.form-list .form.avatar-form .input-group>div{
+    margin-left: 20px;
+}
+/*--radio-button-group---*/
+.radio-btn-group{
+    display: flex;
+
+}
+.radio-btn-group input[type=radio]{
+    display: none;
+}
+.radio-btn-group .radio-btn{
+    user-select: none;
+    overflow: hidden;
+    font-size: 13px;
+    text-align: center;
+    padding: 4px 8px;
+    border: 1px solid currentColor;
+    margin-left: 8px;
+}
+.radio-btn-group input[type=radio]:checked + .radio-btn{
+    color: white;
+    background: #1199fd;
+}
+
+
+.form-list .remove{
+    margin-right: 10px;
+    position: relative;
+    user-select: none;
+    line-height: 36px;
+    padding: 0 10px;
+    min-width: 60px;
+    height: 36px;
+    vertical-align: middle;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    transition: background-color .3s linear,
+    color.3s linear;
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border:1px solid currentColor;
+    overflow: hidden;
+}
