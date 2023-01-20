@@ -84,3 +84,22 @@ export const domInput = (text, paramObj = {type: 'text'}, ...listeners) => {
     input.input = inputElement
     return input
 }
+export function createInputGroup() {
+    const inputGroup = dom('div', {class: 'input-group'})
+    inputGroup.append(...Array.from(arguments))
+    return inputGroup
+}
+
+export function createRadioButtonGroup(text, nodeTexts = []) {
+    const el = dom('div', {class: 'radio-btn-group'})
+    el.append(text)
+    for (let {key, value,checked=false} of nodeTexts) {
+        el.append(dom('div', {
+            html: `        <label>
+                    <input type="radio" name="${text}" value="${key}" ${checked?'checked':''}>
+                    <div class="radio-btn"> ${value}</div>
+                </label>`
+        }))
+    }
+    return el
+}

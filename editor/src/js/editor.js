@@ -117,7 +117,7 @@ export class Editor {
             fun: () => this.download()
         })
 
-        const modalListElement = dom('div', {class: 'bar'})
+        const modalListElement = dom('div', {class: 'bar form-list'})
         this.#modalListElement = modalListElement
 
         parentElement.append(

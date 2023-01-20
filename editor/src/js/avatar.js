@@ -6,7 +6,7 @@
 
 import {fabric} from "fabric"
 import {actionHandler, anchorWrapper, polygonPositionHandler} from "./deform.js"
-import {dom, domCheckbox, domSelect} from "./dom.js"
+import {createInputGroup, createRadioButtonGroup, dom, domCheckbox, domSelect} from "./dom.js"
 import {Model} from "./model.js"
 
 /**
@@ -288,6 +288,9 @@ export class AvatarModel extends Model {
 
     /** @return { HTMLDivElement } */
     get DOM() {
+      const content=dom('div',{
+          class:'form-content'
+      })
         const deform = domCheckbox('Deform', e => this.deform = e.target.checked)
         const round = domCheckbox('Round', e => this.round = e.target.checked)
         const rotate = domCheckbox('Rotate', e => this.rotate = e.target.checked)
@@ -304,13 +307,16 @@ export class AvatarModel extends Model {
                 this.opacity = e.target.value
             }
         })
+        const type = createInputGroup(createRadioButtonGroup('type',['TO', 'FROM', 'GROUP', 'BOT', 'RANDOM'].map((key,index) => {
+          const  checked=(!index)
+            return {key,value:key,checked}
+        })))
+        // const type = domSelect(
+        //     e => this.type = e.target.value,
+        //     ...['TO', 'FROM', 'GROUP', 'BOT', 'RANDOM'].map(t => ({value: t}))
+        // )
 
-        const type = domSelect(
-            e => this.type = e.target.value,
-            ...['TO', 'FROM', 'GROUP', 'BOT', 'RANDOM'].map(t => ({value: t}))
-        )
-
-        const styleList = dom()
+        const styleList = createInputGroup()
         const styles = ['MIRROR', 'FLIP', 'GRAY', 'BINARIZATION']
         styles.forEach(style => {
             const checkbox = domCheckbox(style, e =>
@@ -324,8 +330,11 @@ export class AvatarModel extends Model {
             fun: () => this.remove()
         })
 
-        const parent = dom()
-        parent.append(deform, round, rotate, onTop, type, opacity, styleList, deleteDom)
+        const parent = dom('div',{class:"avatar-form form"})
+        content.append( createInputGroup(deform,round,rotate,onTop), styleList, type,
+            createInputGroup('不透明度:',opacity)
+            , createInputGroup(dom('div',{class:'separate'}),deleteDom))
+        parent.append(content)
         this.dom = parent
         return parent
     }
