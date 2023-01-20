@@ -131,3 +131,5 @@ run/
 
 # Local Test Launch point
 src/test/kotlin/RunTerminal.kt
+config.json
+gocqConfig.json

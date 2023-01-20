@@ -36,7 +36,7 @@ public class ServerPetService extends BasePetService {
             ServerServiceConfig config = ServerServiceConfig.parse(getFileStr(configFile));
             readConfig(config);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 

@@ -2,19 +2,37 @@ package moe.dituon.petpet.server
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import moe.dituon.petpet.share.BaseServiceConfigInterface
+import moe.dituon.petpet.share.BaseServiceConfig
 import moe.dituon.petpet.share.Encoder
+import moe.dituon.petpet.share.encodeDefaultsPrettyJson
 
-interface ServerServiceConfigInterface : BaseServiceConfigInterface{
-    val port: Int
-    val dataPath: String
-    val webServerThreadPoolSize: Int
+//@Serializable
+//sealed class AbstractServerServiceConfig : AbstractBaseServiceConfig() {
+//    abstract val port: Int
+//    abstract val dataPath: String
+//    abstract val webServerThreadPoolSize: Int
+//}
 
-    fun toServerServiceConfig() = ServerServiceConfig(
-        port = port,
-        dataPath = dataPath,
-        webServerThreadPoolSize = webServerThreadPoolSize,
+@Serializable
+data class ServerServiceConfig(
+    val port: Int = ServerPetService.DEFAULT_PORT,
+    val dataPath: String = ServerPetService.DEFAULT_DATA_PATH,
+    val webServerThreadPoolSize: Int = ServerPetService.DEFAULT_SERVER_THREAD_POOL_SIZE,
+
+    val antialias: Boolean = true,
+    val gifMaxSize: List<Int> = emptyList(),
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    val gifQuality: Int = 5,
+    val threadPoolSize: Int = 0,
+    val headless: Boolean = true
+) {
+    fun stringify(): String {
+        return encodeDefaultsPrettyJson.encodeToString(this)
+    }
+
+    fun toBaseServiceConfig() = BaseServiceConfig(
         antialias = antialias,
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
@@ -22,20 +40,7 @@ interface ServerServiceConfigInterface : BaseServiceConfigInterface{
         threadPoolSize = threadPoolSize,
         headless = headless
     )
-}
 
-@Serializable
-data class ServerServiceConfig (
-    override val port: Int = ServerPetService.DEFAULT_PORT,
-    override val dataPath: String = ServerPetService.DEFAULT_DATA_PATH,
-    override val webServerThreadPoolSize: Int = ServerPetService.DEFAULT_SERVER_THREAD_POOL_SIZE,
-    override val antialias: Boolean = true,
-    override val gifMaxSize: List<Int> = emptyList(),
-    override val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-    override val gifQuality: Int = 5,
-    override val threadPoolSize: Int = 0,
-    override val headless: Boolean = true
-) : ServerServiceConfigInterface {
     companion object {
         @JvmStatic
         fun parse(str: String): ServerServiceConfig {

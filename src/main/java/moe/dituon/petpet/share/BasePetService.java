@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 
 public class BasePetService {
-    public static final float VERSION = 5.2F;
+    public static final float VERSION = 5.3F;
     public static final String FONTS_FOLDER = "fonts";
     protected boolean antialias = true;
     protected int quality = 10;
@@ -166,7 +166,6 @@ public class BasePetService {
         }
         System.out.println("registerFontsToAwt成功: " + successNames);
     }
-
 
     public void readBaseServiceConfig(BaseServiceConfig config) {
         antialias = config.getAntialias();
