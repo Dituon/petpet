@@ -6,7 +6,7 @@
 
 import {fabric} from "fabric"
 import {Model} from "./model.js"
-import {dom, domCheckbox, domInput, domSelect} from "./dom.js"
+import {dom, domCheckbox, domInput, domSelect,createRadioButtonGroup,createInputGroup} from "./dom.js"
 
 /**
  * @typedef { object } TextDTO
@@ -164,8 +164,10 @@ export class TextModel extends Model {
 
     /** @return { HTMLDivElement } */
     get DOM() {
-        const parent = dom()
-
+        const content = dom('div', {
+            class: 'form-content'
+        })
+        const parent = dom('div', {class: "text-form form"})
         const size = domInput('字号', {
             type: 'number',
             placeholder: 'pt',
@@ -183,86 +185,102 @@ export class TextModel extends Model {
             type: 'color',
             value: '#191919'
         }, {
-            event: 'change',
+            event: 'input',
             fun: e => this.color = e.target.value
         })
 
-        const maxWidth = domInput('最大宽度', {
+        const maxWidth = domInput('', {
             type: 'number',
-            placeholder: 'px',
-            value: 100
+            placeholder: '文本最大宽度',
+            value: '',
         }, {
             event: 'change',
             fun: e => this.maxWidth = e.target.value
         })
+        maxWidth.setAttribute('disabled','true')
+        const fontStyle = createRadioButtonGroup("字体样式", [
+            {key: 'PLAIN', value: '默认',checked:true},
+            {key: 'BOLD', value: '粗体'},
+            {key: 'ITALIC', value: '斜体'}
+        ])
+        fontStyle.addEventListener('change',({target})=>{
+            this.style=target.value
+        })
 
-        const style = domSelect(e => {
-                this.style = e.target.value
-            },
-            {value: 'PLAIN', text: '默认'},
-            {value: 'BOLD', text: '粗体'},
-            {value: 'ITALIC', text: '斜体'}
-        )
 
-        const wrap = domSelect(e => {
-                this.wrap = e.target.value
-                if (this.wrap === 'BREAK' || this.wrap === 'ZOOM') {
-                    parent.appendChild(maxWidth)
-                    this.#maxWidth = maxWidth.input.value
-                } else {
-                    maxWidth.remove()
-                    this.#maxWidth = null
-                }
-            },
-            {value: 'NONE', text: '不换行'},
-            {value: 'BREAK', text: '自动换行'},
-            {value: 'ZOOM', text: '自动缩放'}
-        )
+        const wrap=createRadioButtonGroup('文本溢出',[
+            {key: 'NONE', value: '不换行',checked:true},
+            {key: 'BREAK', value: '自动换行'},
+            {key: 'ZOOM', value: '自动缩放'}
+        ])
+        const wrapInputGroup= createInputGroup(wrap)
+        wrapInputGroup.appendChild(maxWidth)
+        wrap.addEventListener('change',(e)=>{
+                    this.wrap = e.target.value
+                    if (this.wrap === 'BREAK' || this.wrap === 'ZOOM') {
+                        maxWidth.removeAttribute('disabled')
+                        this.#maxWidth = maxWidth.input.value
+                    } else {
+                        maxWidth.setAttribute('disabled','true')
+                        maxWidth.input.value=''
+                        this.#maxWidth = null
+                    }
+        })
 
-        const align = domSelect(e => {
-                this.align = e.target.value
-            },
-            {value: 'LEFT', text: '左对齐'},
-            {value: 'RIGHT', text: '右对齐'},
-            {value: 'CENTER', text: '居中'}
-        )
 
-        const strokeDiv = dom()
+        const align=createRadioButtonGroup('对齐方式',[
+                {key: 'LEFT', value: '左对齐',checked:true},
+                {key: 'RIGHT', value: '右对齐'},
+                {key: 'CENTER', value: '居中'}
+        ])
+        align.addEventListener('change',e => {
+                    this.align = e.target.value
+                })
+
+        const strokeDiv = dom('div', {class: 'text-stroke-input'})
         const strokeWidth = domInput('描边宽度', {
             type: 'number',
             placeholder: 'px',
-            value: 1
+            value: 0
         }, {
-            event: 'change',
-            fun: e => this.strokeSize = e.target.value
+            event: 'input',
+            fun: e => {
+                if (Number(e.target.value)){
+                    if (!this.strokeColor){
+                        this.strokeColor='#eeaabb'
+                    }
+                    this.strokeSize = e.target.value
+                }else {
+                    this.strokeColor = null
+                }
+
+            }
         })
         const strokeColor = domInput('描边颜色', {
             type: 'color',
             value: '#eeaabb'
         }, {
-            event: 'change',
-            fun: e => this.strokeColor = e.target.value
-        })
-        strokeDiv.append(strokeWidth, strokeColor)
-
-        const strokeCheckbox = domCheckbox('描边', e => {
-            if (e.target.checked) {
-                parent.appendChild(strokeDiv)
-                this.strokeSize = strokeWidth.input.value
-                this.strokeColor = strokeColor.input.value
-            } else {
-                strokeDiv.remove()
-                this.strokeSize = null
-                this.strokeColor = null
+            event: 'input',
+            fun: e => {
+                if (strokeWidth.input.value){
+                    this.strokeColor = e.target.value
+                }
             }
         })
+        strokeDiv.append(strokeWidth, strokeColor)
 
         const deleteDom = dom('div', {html: '移除', class: 'remove'}, {
             event: 'click',
             fun: () => this.remove()
         })
+        size.classList.add("text-size")
+        color.classList.add("text-color")
+        content.append(createInputGroup(size, color), createInputGroup(fontStyle, align),
+            wrapInputGroup,
+            createInputGroup(strokeWidth,strokeColor)
+            , createInputGroup(dom('div', {class: 'separate'}), deleteDom))
 
-        parent.append(size, color, style, wrap, align, strokeCheckbox, deleteDom)
+        parent.append( dom('div',{class:'form-header'}),content)
         this.dom = parent
         return parent
     }
