@@ -18,7 +18,11 @@ data class PetDataDTO(
         fun encodeToString(dataMap: Map<String, KeyData>): String{
             val dataList: ArrayList<PetDataObject> = ArrayList()
             dataMap.forEach { (key, data) ->
-                dataList.add(PetDataObject(key, data.avatar.stream().map { a -> a.type }.toList()))
+                dataList.add(PetDataObject(
+                    key,
+                    data.avatar.stream().map { a -> a.type }.toList(),
+                    data.alias ?: emptyList()
+                ))
             }
             return Json.encodeToString(
                 PetDataDTO(VERSION, dataList)
@@ -30,7 +34,8 @@ data class PetDataDTO(
 @Serializable
 data class PetDataObject(
     val key: String,
-    val types: List<AvatarType>
+    val types: List<AvatarType>,
+    val alias: List<String>
 )
 
 
