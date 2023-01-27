@@ -39,8 +39,8 @@ data class GoCQPluginConfig(
     val autoUpdate: Boolean = true,
 
     // CoolDown
-    val coolDown: Int = Cooler.DEFAULT_USER_COOLDOWN,
-    val groupCoolDown: Int = Cooler.DEFAULT_GROUP_COOLDOWN,
+    val coolDown: Long = Cooler.DEFAULT_USER_COOLDOWN,
+    val groupCoolDown: Long = Cooler.DEFAULT_GROUP_COOLDOWN,
     val inCoolDownMessage: String = Cooler.DEFAULT_MESSAGE,
 
     // BaseServiceConfig

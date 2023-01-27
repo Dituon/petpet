@@ -24,8 +24,8 @@ public class MiraiPetService extends PluginPetService{
 
     public byte probability = 30;
     public boolean respondSelfNudge = false;
-    public int coolDown = Cooler.DEFAULT_USER_COOLDOWN;
-    public int groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
+    public Long coolDown = Cooler.DEFAULT_USER_COOLDOWN;
+    public Long groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
     public String inCoolDownMessage = Cooler.DEFAULT_MESSAGE;
     public boolean inCoolDownNudge = false;
     public boolean devMode = false;

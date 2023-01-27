@@ -79,10 +79,10 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     val messageHook: Boolean by value(false)
 
     @ValueDescription("触发图片生成后的用户冷却时长, 填入-1则禁用, 单位为秒")
-    val coolDown: Int by value(Cooler.DEFAULT_USER_COOLDOWN)
+    val coolDown:Long by value(Cooler.DEFAULT_USER_COOLDOWN)
 
     @ValueDescription("触发图片生成后的群聊冷却时长")
-    val groupCoolDown: Int by value(Cooler.DEFAULT_GROUP_COOLDOWN)
+    val groupCoolDown: Long by value(Cooler.DEFAULT_GROUP_COOLDOWN)
 
     @ValueDescription("触发冷却后的回复消息, '[nudge]'为戳一戳")
     val inCoolDownMessage: String by value(Cooler.DEFAULT_MESSAGE)
