@@ -344,7 +344,7 @@ export class AvatarModel extends Model {
         return {
             type: this.type,
             posType: this.#deform ? 'DEFORM' : 'ZOOM',
-            pos: this.posList,
+            pos: this.#frameLength <= 1 ? this.posList.flat(1) : this.posList,
             style: [...this.#styleSet],
             opacity: this.#opacity,
             rotate: this.#rotate,
