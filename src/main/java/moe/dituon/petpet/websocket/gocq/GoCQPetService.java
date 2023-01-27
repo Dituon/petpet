@@ -20,8 +20,8 @@ public class GoCQPetService extends PluginPetService {
     public static final String CONFIG_NAME = "gocqConfig.json";
     public String eventWebSocketUri = EVENT_WEBSOCKET_URL;
     public String apiWebSocketUri = API_WEBSOCKET_URL;
-    public int coolDown = Cooler.DEFAULT_USER_COOLDOWN;
-    public int groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
+    public Long coolDown = Cooler.DEFAULT_USER_COOLDOWN;
+    public Long groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
     public String inCoolDownMessage = Cooler.DEFAULT_MESSAGE;
     public boolean autoUpdate = true;
     public String repositoryUrl = DataUpdater.DEFAULT_REPO_URL;
