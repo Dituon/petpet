@@ -185,8 +185,7 @@ public final class MiraiPetpet extends JavaPlugin {
                         e.getGroup().sendMessage("[ERROR]未找到PetData/key_list\n" + service.getKeyAliasListString());
                         return;
                     }
-                    List<String> keyList = new ArrayList<>();
-                    keyList.add(service.getKeyAliasListString());
+                    List<String> keyList = List.of(service.getKeyAliasListString());
                     service.sendImage(e.getGroup(), "key_list",
                             BaseConfigFactory.getGifAvatarExtraDataFromUrls(null, null, null, null, null),
                             new TextExtraData("", "", "", keyList));
@@ -250,7 +249,7 @@ public final class MiraiPetpet extends JavaPlugin {
         }
 
         String commandData = messageText.toString().trim();
-        ArrayList<String> spanList = new ArrayList<>(Arrays.asList(commandData.trim().split("\\s+")));
+        ArrayList<String> spanList = new ArrayList<>(Arrays.asList(commandData.split("\\s+")));
         if (spanList.isEmpty()) return;
 
         String key = null;
@@ -339,7 +338,7 @@ public final class MiraiPetpet extends JavaPlugin {
         List<Pair<String, Image>> pairs = null;
         while (matcher.find()) {
             flag = true;
-            if (pairs == null) pairs = new ArrayList<>();
+            if (pairs == null) pairs = new ArrayList<>(4);
             try {
                 Image image = service.inputStreamToImage(
                         new PluginRequestParser(matcher.group(1), e.getTarget()).getImagePair().getFirst(),

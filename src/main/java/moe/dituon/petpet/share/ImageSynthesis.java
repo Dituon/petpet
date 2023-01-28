@@ -101,8 +101,8 @@ public class ImageSynthesis extends ImageSynthesisCore {
         }
 
         // 按照图层分类
-        List<AvatarModel> topAvatars = new ArrayList<>();
-        List<AvatarModel> bottomAvatars = new ArrayList<>();
+        List<AvatarModel> topAvatars = new ArrayList<>(4);
+        List<AvatarModel> bottomAvatars = new ArrayList<>(4);
         for (AvatarModel avatar : avatarList) {
             if (avatar.isOnTop()) {
                 topAvatars.add(avatar);

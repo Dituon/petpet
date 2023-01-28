@@ -74,7 +74,7 @@ public class BasePetService {
      * @param key 索引
      */
     public void putKeyData(String key, KeyData data) {
-        dataMap.put(key, data);
+        dataMap.put(key.intern(), data);
 
         assert dataRoot != null;
         backgroundLambdaMap.put(key, () -> { //使用Lambda实现按需加载, 减少内存占用
@@ -255,8 +255,7 @@ public class BasePetService {
                 return new Pair<>(inputStream, "png");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("解析 " + key + "/data.json 出错");
+            throw new RuntimeException("解析 " + key + "/data.json 出错", ex);
         }
         throw new RuntimeException();
     }

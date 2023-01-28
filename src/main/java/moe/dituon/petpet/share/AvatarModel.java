@@ -56,7 +56,7 @@ public class AvatarModel {
     }
 
     private void setImage(AvatarType type, AvatarExtraDataProvider extraData) {
-        imageList = new ArrayList<>();
+        imageList = new ArrayList<>(1);
         switch (type) {
             case FROM:
                 imageList.add(Objects.requireNonNull(extraData.getFromAvatar()).invoke());

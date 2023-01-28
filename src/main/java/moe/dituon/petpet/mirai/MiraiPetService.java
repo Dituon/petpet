@@ -1,6 +1,8 @@
 package moe.dituon.petpet.mirai;
 
-import moe.dituon.petpet.plugin.*;
+import moe.dituon.petpet.plugin.Cooler;
+import moe.dituon.petpet.plugin.DataUpdater;
+import moe.dituon.petpet.plugin.PluginPetService;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.GifAvatarExtraDataProvider;
 import moe.dituon.petpet.share.TextExtraData;
@@ -16,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class MiraiPetService extends PluginPetService{
@@ -123,8 +125,9 @@ public class MiraiPetService extends PluginPetService{
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
                 to.getNameCard().isEmpty() ? to.getNick() : to.getNameCard(),
                 group.getName(),
-                otherText == null || otherText.equals("") ? new ArrayList<>() :
-                        new ArrayList<>(Arrays.asList(otherText.split("\\s+")))
+                otherText == null || otherText.equals("") ?
+                        Collections.emptyList() :
+                        Arrays.asList(otherText.split("\\s+"))
         );
         GifAvatarExtraDataProvider gifAvatarExtraDataProvider = BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                 from.getAvatarUrl(), to.getAvatarUrl(), group.getAvatarUrl(), group.getBotAsMember().getAvatarUrl(),

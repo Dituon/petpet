@@ -10,6 +10,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -314,25 +316,35 @@ public abstract class ImageSynthesisCore {
      * @return GIF全部帧 或一张静态图像
      */
     public static List<BufferedImage> getWebImageAsList(String imageUrl) {
-        List<BufferedImage> output = new ArrayList<>();
         try {
             URL url = new URL(imageUrl);
-            ReusableGifDecoder decoder = new ReusableGifDecoder();
-            BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
-            inputStream.mark(0); //循环利用inputStream, 避免重复获取
-            decoder.read(inputStream);
-            if (decoder.err()) {
-                inputStream.reset();
-                output.add(ImageIO.read(ImageIO.createImageInputStream(inputStream)));
-                inputStream.close();
-                return output;
-            }
-            inputStream.close();
-            for (short i = 0; i < decoder.getFrameCount(); i++) {
-                output.add(decoder.getFrame(i));
-            }
+            return getImageAsList(new BufferedInputStream(url.openStream()));
         } catch (Exception ex) {
             throw new RuntimeException("[获取/解析 图像失败]  URL: " + imageUrl, ex);
+        }
+    }
+
+    /**
+     * 从BufferedInputStream获取图像 (支持GIF)
+     *
+     * @param inputStream 图像输入流, 必须支持mark()
+     * @return GIF全部帧 或一张静态图像
+     */
+    public static List<BufferedImage> getImageAsList(InputStream inputStream) throws IOException {
+        ReusableGifDecoder decoder = new ReusableGifDecoder();
+        inputStream.mark(0); //循环利用inputStream, 避免重复获取
+        decoder.read(inputStream);
+
+        if (decoder.err()) {
+            inputStream.reset();
+            List<BufferedImage> list = List.of(ImageIO.read(ImageIO.createImageInputStream(inputStream)));
+            inputStream.close();
+            return list;
+        }
+        inputStream.close();
+        List<BufferedImage> output = new ArrayList<>(decoder.getFrameCount());
+        for (short i = 0; i < decoder.getFrameCount(); i++) {
+            output.add(decoder.getFrame(i));
         }
         return output;
     }

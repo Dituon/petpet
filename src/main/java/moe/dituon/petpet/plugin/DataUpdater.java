@@ -11,10 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DataUpdater {
@@ -22,10 +19,12 @@ public class DataUpdater {
     public static final String REPO_DATA_PATH = "/data/xmmt.dituon.petpet/";
     private final String repositoryUrl;
     private final File targetDir;
+
     public DataUpdater(String repositoryUrl, File targetDir) {
-            this.repositoryUrl = repositoryUrl;
-            this.targetDir = targetDir;
+        this.repositoryUrl = repositoryUrl;
+        this.targetDir = targetDir;
     }
+
     public void autoUpdate() {
         if (!checkUpdate()) updateData();
     }
@@ -48,10 +47,10 @@ public class DataUpdater {
         }
 
         String fontsPath = REPO_DATA_PATH + BasePetService.FONTS_FOLDER;
-        List<String> localFonts = new ArrayList<>();
-        if (new File(fontsPath).exists())
-            localFonts = Arrays.stream(Objects.requireNonNull(new File(fontsPath).listFiles()))
-                    .map(File::getName).distinct().collect(Collectors.toList());
+        List<String> localFonts = new File(fontsPath).exists() ?
+                Arrays.stream(Objects.requireNonNull(new File(fontsPath).listFiles()))
+                        .map(File::getName).distinct().collect(Collectors.toList()) :
+                Collections.emptyList();
 
         for (String font : index.getFontList()) {
             if (localFonts.contains(font)) continue;
