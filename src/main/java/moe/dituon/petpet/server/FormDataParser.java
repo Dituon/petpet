@@ -31,7 +31,7 @@ public class FormDataParser extends RequestParser {
             payload = payloadStream.readAllBytes();
         }
 
-        map = new HashMap<>(12);
+        map = new HashMap<>(6);
 
         List<Integer> offsets = searchBytes(payload, boundaryBytes, 0, payload.length - 1);
         offsets.add(0, 0);
