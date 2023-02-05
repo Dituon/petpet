@@ -687,6 +687,12 @@
 ```
 其中, `key`为必须项, 其它可以省略
 
+#### `form-data`
+
+可直接将图片二进制文件上传至服务器进行处理
+
+类似于 **`GET`数据结构**, 使用 `multipart/form-data`
+
 > 可参考[`example-script`](./example-script/)中的代码实现请求
 
 | 语言           | 示例                                                                                              |
