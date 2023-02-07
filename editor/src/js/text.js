@@ -298,7 +298,7 @@ export class TextModel extends Model {
             text: this.text.text,
             pos: this.pos,
             color: this.color,
-            size: this.size,
+            size: Math.round(this.size),
             align: this.align,
             wrap: this.wrap,
             style: this.style,
