@@ -30,11 +30,9 @@ public class GoCQEventWebSocketClient extends WebSocketClient {
     public void onMessage(String message) {
         try {
             GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(message);
-            System.out.println(e.toString());
             new OneBotGroupMessage(e);
         } catch (Exception e){
             System.err.println(message);
-//            e.printStackTrace();
         }
     }
 }

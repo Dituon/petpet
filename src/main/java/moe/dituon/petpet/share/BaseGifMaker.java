@@ -41,7 +41,7 @@ public class BaseGifMaker {
             case SQUAREUP_LIB:
                 return makeGifUseSquareupLib(avatarList, textList, stickerMap, params);
         }
-        return null;
+        throw new RuntimeException();
     }
 
     public InputStream makeGifUseBufferedStream
@@ -189,7 +189,7 @@ public class BaseGifMaker {
             case SQUAREUP_LIB:
                 return makeGifUseSquareupLib(avatarList, textList, sticker, params);
         }
-        return null;
+        throw new RuntimeException();
     }
 
     private InputStream makeGifUseBufferedStream(

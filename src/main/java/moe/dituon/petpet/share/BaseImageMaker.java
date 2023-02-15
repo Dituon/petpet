@@ -47,9 +47,8 @@ public class BaseImageMaker {
                     sticker, avatarList, textList, params.getAntialias(), true));
         } catch (IOException e) {
             System.out.println("构造IMG失败，请检查 PetData");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     private static InputStream bufferedImageToInputStream(BufferedImage bf) throws IOException {
