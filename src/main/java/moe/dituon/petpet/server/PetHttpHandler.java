@@ -17,6 +17,7 @@ public class PetHttpHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) {
+        httpExchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         try {
             RequestParser parser;
             if (httpExchange.getRequestMethod().equals("GET")) { //GET
@@ -79,7 +80,7 @@ public class PetHttpHandler implements HttpHandler {
     private void handleResponse(HttpExchange httpExchange, InputStream input, String type) throws IOException {
         byte[] imageBytes = input.readAllBytes();
 
-        httpExchange.getResponseHeaders().add("Content-Type:", "image/" + type);
+        httpExchange.getResponseHeaders().add("Content-Type", "image/" + type);
         httpExchange.sendResponseHeaders(200, imageBytes.length);
         OutputStream out = httpExchange.getResponseBody();
         out.write(imageBytes);
@@ -89,7 +90,7 @@ public class PetHttpHandler implements HttpHandler {
 
     private void handleResponse(HttpExchange httpExchange, String responseJson) throws IOException {
         byte[] responseContentByte = responseJson.getBytes(StandardCharsets.UTF_8);
-        httpExchange.getResponseHeaders().add("Content-Type:", "application/json;charset=utf-8");
+        httpExchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         httpExchange.sendResponseHeaders(200, responseContentByte.length);
 
         OutputStream out = httpExchange.getResponseBody();
