@@ -2,7 +2,7 @@ package moe.dituon.petpet.share;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,7 +49,7 @@ public class TextModel {
                 .replace("$group", extraData.getGroupReplacement())
                 .replace("\\n", "\n");
 
-        String regex = "\\$txt([1-9]\\d*)\\[(.*)]"; //$txt(num)[(xxx)]
+        String regex = "\\$txt([1-9]\\d*)\\[(.*?)]"; //$txt(num)[(xxx)]
         Matcher m = Pattern.compile(regex).matcher(text);
         if (greedy) {
             List<String> textList = new ArrayList<>(extraData.getTextList());
