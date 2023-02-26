@@ -9,10 +9,12 @@ import java.nio.charset.StandardCharsets;
 
 public class PetHttpHandler implements HttpHandler {
     private final ServerPetService service;
+    private final byte[] indexJsonBytes;
 
     PetHttpHandler(ServerPetService service) {
         super();
         this.service = service;
+        this.indexJsonBytes = service.getIndexJson().getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
@@ -24,7 +26,7 @@ public class PetHttpHandler implements HttpHandler {
 
                 String requestParam = httpExchange.getRequestURI().getRawQuery();
                 if (requestParam == null) {
-                    handleResponse(httpExchange, service.getIndexJson());
+                    handleResponseIndex(httpExchange);
                     return;
                 }
 
@@ -78,23 +80,21 @@ public class PetHttpHandler implements HttpHandler {
     }
 
     private void handleResponse(HttpExchange httpExchange, InputStream input, String type) throws IOException {
-        byte[] imageBytes = input.readAllBytes();
-
+        input.reset();
         httpExchange.getResponseHeaders().add("Content-Type", "image/" + type);
-        httpExchange.sendResponseHeaders(200, imageBytes.length);
+        httpExchange.sendResponseHeaders(200, input.available());
         OutputStream out = httpExchange.getResponseBody();
-        out.write(imageBytes);
+        input.transferTo(out);
         out.flush();
         out.close();
     }
 
-    private void handleResponse(HttpExchange httpExchange, String responseJson) throws IOException {
-        byte[] responseContentByte = responseJson.getBytes(StandardCharsets.UTF_8);
+    private void handleResponseIndex(HttpExchange httpExchange) throws IOException {
         httpExchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        httpExchange.sendResponseHeaders(200, responseContentByte.length);
+        httpExchange.sendResponseHeaders(200, indexJsonBytes.length);
 
         OutputStream out = httpExchange.getResponseBody();
-        out.write(responseContentByte);
+        out.write(indexJsonBytes);
         out.flush();
         out.close();
     }

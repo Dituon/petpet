@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class GoCQPetService extends PluginPetService {
     public static final String EVENT_WEBSOCKET_URL = "ws://127.0.0.1:8080";
     public static final String API_WEBSOCKET_URL = "ws://127.0.0.1:8080/api";
-    public static final String CONFIG_NAME = "gocqConfig.json";
+    public static final String CONFIG_NAME = "gocq-config.json";
     public String eventWebSocketUri = EVENT_WEBSOCKET_URL;
     public String apiWebSocketUri = API_WEBSOCKET_URL;
     public Long coolDown = Cooler.DEFAULT_USER_COOLDOWN;

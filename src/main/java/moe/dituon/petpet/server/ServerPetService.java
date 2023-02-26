@@ -5,7 +5,6 @@ import moe.dituon.petpet.share.BasePetService;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class ServerPetService extends BasePetService {
     public static final int DEFAULT_PORT = 2333;
@@ -15,12 +14,14 @@ public class ServerPetService extends BasePetService {
     public int port = DEFAULT_PORT;
     public String path = DEFAULT_DATA_PATH;
     public int webServerThreadPoolSize = DEFAULT_SERVER_THREAD_POOL_SIZE;
+    public boolean usePreview = true;
     private String indexJson;
 
     public void readConfig(ServerServiceConfig config) {
         port = config.getPort();
         path = config.getDataPath();
         webServerThreadPoolSize = config.getWebServerThreadPoolSize();
+        usePreview = config.getPreview();
 
         readBaseServiceConfig(config.toBaseServiceConfig());
         System.out.println("GifMakerThreadPoolSize: " + super.getGifMakerThreadPoolSize());
@@ -30,7 +31,7 @@ public class ServerPetService extends BasePetService {
         File configFile = new File(CONFIG_NAME);
         try {
             if (!configFile.exists()) { //save default config
-                Files.write(Paths.get(CONFIG_NAME), new ServerServiceConfig().stringify().getBytes());
+                Files.write(configFile.toPath(), new ServerServiceConfig().stringify().getBytes());
             }
 
             ServerServiceConfig config = ServerServiceConfig.parse(getFileStr(configFile));

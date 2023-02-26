@@ -46,6 +46,7 @@ public final class MiraiPetpet extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        System.setProperty("sun.java2d.opengl", "true");
         try {
             reloadPluginConfig(MiraiPluginConfig.INSTANCE);
             service.readConfigByPluginAutoSave();

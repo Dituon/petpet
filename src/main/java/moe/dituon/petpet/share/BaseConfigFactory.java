@@ -21,7 +21,7 @@ public class BaseConfigFactory {
                     toAvatarUrl != null ? () -> ImageSynthesis.getWebImage(toAvatarUrl) : null,
                     groupAvatarUrl != null ? () -> ImageSynthesis.getWebImage(groupAvatarUrl) : null,
                     botAvatarUrl != null ? () -> ImageSynthesis.getWebImage(botAvatarUrl) : null,
-                    randomAvatarList != null ? () -> {
+                    randomAvatarList != null && !randomAvatarList.isEmpty() ? () -> {
                         var randomAvatar = new RandomAvatar(randomAvatarList);
                         return ImageSynthesis.getWebImage(randomAvatar.getRandom());
                     } : null
@@ -44,7 +44,7 @@ public class BaseConfigFactory {
                     toAvatarUrl != null ? () -> ImageSynthesis.getWebImageAsList(toAvatarUrl) : null,
                     groupAvatarUrl != null ? () -> ImageSynthesis.getWebImageAsList(groupAvatarUrl) : null,
                     botAvatarUrl != null ? () -> ImageSynthesis.getWebImageAsList(botAvatarUrl) : null,
-                    randomAvatarList != null ? () -> {
+                    randomAvatarList != null && !randomAvatarList.isEmpty() ? () -> {
                         var randomAvatar = new RandomAvatar(randomAvatarList);
                         return ImageSynthesis.getWebImageAsList(randomAvatar.getRandom());
                     } : null
@@ -64,6 +64,21 @@ public class BaseConfigFactory {
         );
     }
 
+    public static GifAvatarExtraDataProvider cacheAvatarExtraDataProvider(GifAvatarExtraDataProvider provider){
+        var from = provider.getFromAvatar() == null ? null : provider.getFromAvatar().invoke();
+        var to = provider.getToAvatar() == null ? null : provider.getToAvatar().invoke();
+        var group = provider.getGroupAvatar() == null ? null : provider.getGroupAvatar().invoke();
+        var bot = provider.getBotAvatar() == null ? null : provider.getBotAvatar().invoke();
+        var random = provider.getRandomAvatar() == null ? null : provider.getRandomAvatar().invoke();
+        return new GifAvatarExtraDataProvider(
+                () -> from,
+                () -> to,
+                () -> group,
+                () -> bot,
+                () -> random
+        );
+    }
+
     static public class RandomAvatar {
         private final List<String> urlList;
         private Random random = defaultRandom;
@@ -77,7 +92,6 @@ public class BaseConfigFactory {
         }
 
         public String getRandom() {
-            if (urlList.size() == 1) return urlList.get(0);
             return urlList.remove(random.nextInt(urlList.size()));
         }
     }

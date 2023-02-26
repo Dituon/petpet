@@ -293,7 +293,7 @@ public class BasePetService {
     /**
      * 解析 RGB / RGBA / HEX 颜色, <b>可能更改原数组</b>
      */
-    public static Color decodeColor(@NotNull JsonElement jsonElement, short[] defaultRgba) {
+    public static Color decodeColor(JsonElement jsonElement, short[] defaultRgba) {
         assert defaultRgba.length == 4;
 //        defaultRgba = defaultRgba.clone();
         if (jsonElement instanceof JsonArray) {

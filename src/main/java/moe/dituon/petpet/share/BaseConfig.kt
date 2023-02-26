@@ -27,12 +27,12 @@ val encodeDefaultsJson = Json { encodeDefaults = true }
 
 @Serializable
 data class BaseServiceConfig(
-     val antialias: Boolean = true,
-     val gifMaxSize: List<Int> = emptyList(),
-     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
-     val gifQuality: Int = 5,
-     val threadPoolSize: Int = 0,
-     val headless: Boolean = true
+    val antialias: Boolean = true,
+    val gifMaxSize: List<Int> = emptyList(),
+    val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
+    val gifQuality: Int = 5,
+    val threadPoolSize: Int = 0,
+    val headless: Boolean = true
 ) {
     fun stringify(): String {
         return encodeDefaultsPrettyJson.encodeToString(this)

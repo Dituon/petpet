@@ -27,6 +27,7 @@ public class WebServer {
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(service.port), 0);
             httpServer.createContext("/petpet", new PetHttpHandler(service));
+            httpServer.createContext("/preview", new PreviewHttpHandler(service));
             httpServer.setExecutor(Executors.newFixedThreadPool(service.webServerThreadPoolSize));
             httpServer.start();
 

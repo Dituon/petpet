@@ -5,7 +5,7 @@ import moe.dituon.petpet.share.TextExtraData;
 
 public class POSTParser extends RequestParser {
     public POSTParser(ServerPetService service, String postBody) {
-        RequestDTO request = RequestDTO.decodeFromString(postBody);
+        RequestDTO request = RequestDTO.parse(postBody);
         super.imagePair = service.generateImage(
                 request.getKey(),
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(

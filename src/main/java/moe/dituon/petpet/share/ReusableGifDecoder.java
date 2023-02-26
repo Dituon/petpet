@@ -3,6 +3,7 @@ package moe.dituon.petpet.share;
 import com.madgag.gif.fmsware.GifDecoder;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 
 public class ReusableGifDecoder extends GifDecoder {
 
@@ -10,10 +11,13 @@ public class ReusableGifDecoder extends GifDecoder {
      * 不会关闭BufferedInputStream, 便于复用
      */
     @Override
-    public int read(BufferedInputStream is) {
+    public int read(InputStream is) {
         init();
         if (is != null) {
-            super.in = is;
+            if (!(is instanceof BufferedInputStream)) {
+                is = new BufferedInputStream(is);
+            }
+            super.in = (BufferedInputStream) is;
             readHeader();
             if (!err()) {
                 readContents();
@@ -28,7 +32,7 @@ public class ReusableGifDecoder extends GifDecoder {
     }
 
     @Override
-    public boolean err(){
+    public boolean err() {
         return super.err();
     }
 }

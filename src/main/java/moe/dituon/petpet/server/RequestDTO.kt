@@ -16,7 +16,7 @@ data class RequestDTO(
 ) {
     companion object {
         @JvmStatic
-        fun decodeFromString(json: String): RequestDTO {
+        fun parse(json: String): RequestDTO {
             return Json.decodeFromString(json)
         }
     }
