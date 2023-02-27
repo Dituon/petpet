@@ -187,10 +187,8 @@ public class AvatarModel {
         if (resampling && posType == AvatarPosType.ZOOM) {
             imageList = new ArrayList<>(imageList);
             for (short i = 0; i < imageList.size(); i++) {
-                imageList.set(
-                        i,
-                        Scalr.resize(imageList.get(i), Scalr.Method.AUTOMATIC, pos[i][2], pos[i][3])
-                );
+                var img = Scalr.resize(imageList.get(i), Scalr.Method.AUTOMATIC, getPos(i)[2], getPos(i)[3]);
+                imageList.set(i, img);
             }
         }
     }
