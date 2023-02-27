@@ -20,7 +20,9 @@ import java.util.stream.Collectors;
 public class BasePetService {
     public static final float VERSION = 5.3F;
     public static final String FONTS_FOLDER = "fonts";
+    public static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
     protected boolean antialias = true;
+    protected boolean resampling = true;
     protected int quality = 10;
     private List<Integer> gifMaxSize = null;
     public Encoder encoder = Encoder.ANIMATED_LIB;
@@ -31,8 +33,10 @@ public class BasePetService {
     protected HashMap<String, Callable<Map<Short, BufferedImage>>> backgroundLambdaMap = new HashMap<>();
     public String keyListString = "";
 
-    protected int gifMakerThreadPoolSize = Runtime.getRuntime().availableProcessors() + 1;
-    protected BaseGifMaker gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
+//    protected int serviceThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+//    protected ExecutorService serviceThreadPool = Executors.newFixedThreadPool(serviceThreadPoolSize);
+    protected int gifEncoderThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+    protected BaseGifMaker gifMaker = new BaseGifMaker(gifEncoderThreadPoolSize);
     protected BaseImageMaker imageMaker = new BaseImageMaker(gifMaker);
     public static final Random random = new Random();
 
@@ -74,6 +78,9 @@ public class BasePetService {
      * @param key 索引
      */
     public void putKeyData(String key, KeyData data) {
+        data.getAvatar().forEach(avatar -> {
+            if  (avatar.getResampling() == null) avatar.setResampling(resampling);
+        });
         dataMap.put(key.intern(), data);
 
         assert dataRoot != null;
@@ -110,6 +117,9 @@ public class BasePetService {
      * @param key 索引
      */
     public void putKeyData(String key, KeyData data, List<BufferedImage> backgroundList) {
+        data.getAvatar().forEach(avatar -> {
+            if  (avatar.getResampling() == null) avatar.setResampling(resampling);
+        });
         dataMap.put(key, data);
 
         Map<Short, BufferedImage> backgroundMap = new HashMap<>(backgroundList.size() + 1);
@@ -169,10 +179,12 @@ public class BasePetService {
 
     public void readBaseServiceConfig(BaseServiceConfig config) {
         antialias = config.getAntialias();
+        resampling = config.getResampling();
         setGifMaxSize(config.getGifMaxSize());
         encoder = config.getGifEncoder();
         quality = config.getGifQuality();
-        setGifMakerThreadPoolSize(config.getThreadPoolSize());
+        setGifEncoderThreadPoolSize(config.getGifEncoderThreadPoolSize());
+//        setServiceThreadPoolSize(config.getServiceThreadPoolSize());
         if (config.getHeadless()) System.setProperty("java.awt.headless", "true");
     }
 
@@ -345,15 +357,29 @@ public class BasePetService {
         return gifMaxSize;
     }
 
-    public void setGifMakerThreadPoolSize(int size) {
+    public void setGifEncoderThreadPoolSize(int size) {
         assert size >= 0;
-        gifMakerThreadPoolSize = size == 0 ? gifMakerThreadPoolSize : size;
-        gifMaker = new BaseGifMaker(gifMakerThreadPoolSize);
+        gifEncoderThreadPoolSize = size == 0 ? DEFAULT_THREAD_POOL_SIZE : size;
+        gifMaker = new BaseGifMaker(gifEncoderThreadPoolSize);
         imageMaker = new BaseImageMaker(gifMaker);
     }
 
-    public int getGifMakerThreadPoolSize() {
-        return gifMakerThreadPoolSize;
+//    public void setServiceThreadPoolSize(int size) {
+//        assert size >= 0;
+//        serviceThreadPoolSize = size == 0 ? DEFAULT_THREAD_POOL_SIZE : size;
+//        serviceThreadPool = Executors.newFixedThreadPool(serviceThreadPoolSize);
+//    }
+//
+//    public int getServiceThreadPoolSize(){
+//        return serviceThreadPoolSize;
+//    }
+//
+//    public ExecutorService getServiceThreadPool(){
+//        return serviceThreadPool;
+//    }
+
+    public int getGifEncoderThreadPoolSize() {
+        return gifEncoderThreadPoolSize;
     }
     public BaseGifMaker getGifMaker(){
         return gifMaker;

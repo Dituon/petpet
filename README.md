@@ -98,6 +98,11 @@
 > 画布抗锯齿, 默认为`true`
 <br/>
 
+- **resampling**: `true`
+
+> 重采样缩放, 启用后头像质量更高, 可对模板单独配置
+<br/>
+
 - **disabled**: `[]`
 
 > 禁用表列, 默认为空, 在此数组中的`key`不会被随机触发 (会覆盖`data.json`中的配置)
@@ -200,16 +205,16 @@
 > 
 > 注: 缩放在图片合成时进行, 不会影响性能
 > 
-> 例: (配置项为`-200 -200 -32]`时) 
+> 例: (配置项为`[200, 200, 32]`时) 
 > - 当Gif长度超过`32`帧时, 检查Gif尺寸
 > - 当Gif尺寸大于`200*200`时, 对Gif进行等比例缩放
 > - Gif缩放后 最长边不会超过设定值
 > (当Gif中包含`40`帧, 尺寸为`300*500`时)
 > - 输出的Gif长度不变, 尺寸为`120*200`
 
-- **gifQuality**: `10`
+- **gifQuality**: `5`
 
-> Gif编码质量(`1`-`99`), 默认为`10`
+> Gif编码质量(`1`-`49`), 默认为`5`
 > 
 > 数字越小, 速度越慢, 质量越好 (大于`20`时, 速度不会有明显提升)
 > 
@@ -458,6 +463,7 @@
       "pos": [[5, 8], [60, 90], [50, 90], [50, 0], [60, 120]],
       "posType": "DEFORM", // 图像变形 坐标格式, 默认为ZOOM
       "antialias": true, // 抗锯齿, 对头像单独使用抗锯齿算法, 默认为false
+      "resampling": true, // 重采样, 对头像使用重采样缩放, 默认跟随全局设置
       "rotate": false // 值为true时, GIF类型的头像会旋转, 默认为false
     },
     {
@@ -634,14 +640,17 @@
 启动时会生成 `config.json`:
 ```
 {
-  "port": 2333, // 监听端口
-  "webServerThreadPoolSize": 10, // HTTP服务器线程池容量
-  "dataPath": "data/xmmt.dituon.petpet", // PetData路径
-  "gifMaxSize": [200, 200, 32], // GIF缩放阈值, 详见上文
-  "gifEncoder": "ANIMATED_LIB", // GIF编码器, 详见上文
-  "gifQuality": 100, // GIF质量, 详见上文
-  "gifMakerThreadPoolSize": 0, // GIF编码器线程池容量, 详见上文
-  "headless": true // 使用headless模式
+    "port": 2333, // 监听端口
+    "webServerThreadPoolSize": 10, // HTTP服务器线程池容量
+    "dataPath": "data/xmmt.dituon.petpet", // PetData路径
+    "preview": false, // 启用动态预览 (启动时生成所有模板预览)
+    "antialias": true, // 启用抗锯齿, 详见上文
+    "resampling": true, // 启用重采样, 详见上文
+    "gifMaxSize": [200, 200, 32], // GIF缩放阈值, 详见上文
+    "gifEncoder": "ANIMATED_LIB", // GIF编码器, 详见上文
+    "gifQuality": 5, // GIF质量, 详见上文
+    "threadPoolSize": 0, // GIF编码器线程池容量, 详见上文
+    "headless": true // 使用headless模式
 }
 ```
 

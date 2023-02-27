@@ -23,6 +23,8 @@ data class ServerServiceConfig(
     val preview: Boolean = false,
 
     val antialias: Boolean = true,
+    val resampling: Boolean = true,
+//    val serviceThreadPoolSize: Int = 0,
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifQuality: Int = 5,
@@ -35,10 +37,12 @@ data class ServerServiceConfig(
 
     fun toBaseServiceConfig() = BaseServiceConfig(
         antialias = antialias,
+        resampling = resampling,
+//        serviceThreadPoolSize = serviceThreadPoolSize,
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        threadPoolSize = threadPoolSize,
+        gifEncoderThreadPoolSize = threadPoolSize,
         headless = headless
     )
 

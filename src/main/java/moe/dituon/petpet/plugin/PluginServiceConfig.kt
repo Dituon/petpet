@@ -6,29 +6,29 @@ import kotlinx.serialization.json.Json
 import moe.dituon.petpet.share.BaseServiceConfig
 import moe.dituon.petpet.share.Encoder
 
-interface Nudge {
-    val probability: Int
-    val respondSelfNudge: Boolean
-}
-
-interface AutoUpdate {
-    val autoUpdate: Boolean
-    val repositoryUrl: String
-}
-
-interface CoolDown {
-    val coolDown: Int
-    val groupCoolDown: Int
-    val inCoolDownMessage: String
-}
-
-interface DevMode {
-    val devMode: Boolean
-}
-
-interface MessageHook {
-    val messageHook: Boolean
-}
+//interface Nudge {
+//    val probability: Int
+//    val respondSelfNudge: Boolean
+//}
+//
+//interface AutoUpdate {
+//    val autoUpdate: Boolean
+//    val repositoryUrl: String
+//}
+//
+//interface CoolDown {
+//    val coolDown: Int
+//    val groupCoolDown: Int
+//    val inCoolDownMessage: String
+//}
+//
+//interface DevMode {
+//    val devMode: Boolean
+//}
+//
+//interface MessageHook {
+//    val messageHook: Boolean
+//}
 
 //@Serializable
 //abstract class AbstractPluginServiceConfig : AbstractBaseServiceConfig() {
@@ -56,6 +56,8 @@ data class PluginServiceConfig(
     val synchronized: Boolean = false,
 
     val antialias: Boolean = true,
+    val resampling: Boolean = true,
+//    val serviceThreadPoolSize: Int = 0,
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifQuality: Int = 5,
@@ -64,10 +66,12 @@ data class PluginServiceConfig(
 ) {
     fun toBaseServiceConfig() = BaseServiceConfig(
         antialias = antialias,
+        resampling = resampling,
+//        serviceThreadPoolSize = serviceThreadPoolSize,
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        threadPoolSize = threadPoolSize,
+        gifEncoderThreadPoolSize = threadPoolSize,
         headless = headless
     )
 

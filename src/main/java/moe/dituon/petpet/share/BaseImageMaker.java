@@ -51,7 +51,7 @@ public class BaseImageMaker {
         }
     }
 
-    private static InputStream bufferedImageToInputStream(BufferedImage bf) throws IOException {
+    public static InputStream bufferedImageToInputStream(BufferedImage bf) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ImageIO.write(bf, "png", os);
         return new ByteArrayInputStream(os.toByteArray());

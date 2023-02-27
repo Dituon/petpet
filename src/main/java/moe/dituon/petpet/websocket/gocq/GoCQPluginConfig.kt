@@ -45,11 +45,13 @@ data class GoCQPluginConfig(
 
     // BaseServiceConfig
     val antialias: Boolean = true,
+    val resampling: Boolean = true,
+//    val serviceThreadPoolSize: Int = 0,
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifMaxSize: List<Int> = listOf(200, 200, 32),
     val gifQuality: Int = 5,
-    val headless: Boolean = true,
-    val threadPoolSize: Int = 0
+    val threadPoolSize: Int = 0,
+    val headless: Boolean = true
 ) {
     fun stringify(): String {
         return encodeDefaultsPrettyJson.encodeToString(this)
@@ -66,11 +68,13 @@ data class GoCQPluginConfig(
         strictCommand = strictCommand,
         synchronized = synchronized,
         antialias = antialias,
+        resampling = resampling,
+//        serviceThreadPoolSize = serviceThreadPoolSize,
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        headless = headless,
-        threadPoolSize = threadPoolSize
+        threadPoolSize = threadPoolSize,
+        headless = headless
     )
 
     fun toServerServiceConfig() = ServerServiceConfig(
@@ -79,12 +83,15 @@ data class GoCQPluginConfig(
         webServerThreadPoolSize = webServerThreadPoolSize,
 
         antialias = antialias,
+        resampling = resampling,
+//        serviceThreadPoolSize = serviceThreadPoolSize,
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        headless = headless,
-        threadPoolSize = threadPoolSize
+        threadPoolSize = threadPoolSize,
+        headless = headless
     )
+
     companion object {
         @JvmStatic
         fun parse(str: String): GoCQPluginConfig {

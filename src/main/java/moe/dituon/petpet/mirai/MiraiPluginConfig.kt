@@ -18,6 +18,9 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     @ValueDescription("是否使用抗锯齿")
     val antialias: Boolean by value(true)
 
+    @ValueDescription("是否使用重采样")
+    val resampling: Boolean by value(true)
+
     @ValueDescription("禁用列表")
     val disabled: List<String> by value(emptyList())
 
@@ -51,6 +54,9 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     @ValueDescription("是否使用消息事件同步锁")
     val synchronized: Boolean by value(false)
 
+//    @ValueDescription("核心线程池容量, 填入0为CPU线程数+1 (默认值)")
+//    val serviceThreadPoolSize: Int by value(0)
+
     @ValueDescription("GIF编码器")
     val gifEncoder: Encoder by value(Encoder.ANIMATED_LIB)
 
@@ -58,13 +64,13 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     val gifMaxSize: List<Int> by value(listOf(200, 200, 32))
 
     @ValueDescription("GIF质量, 仅适用于ANIMATED_LIB编码器, 1为质量最佳, 超过20不会有明显性能提升")
-    val gifQuality: Int by value(10)
+    val gifQuality: Int by value(5)
 
     @ValueDescription("是否使用headless模式")
     val headless: Boolean by value(true)
 
-    @ValueDescription("图片合成线程池容量, 填入0为CPU线程数+1 (默认值)")
-    val threadPoolSize: Int by value(0)
+    @ValueDescription("GIF合成线程池容量, 填入0为CPU线程数+1 (默认值)")
+    val gifEncoderThreadPoolSize: Int by value(0)
 
     @ValueDescription("是否自动从仓库同步PetData")
     val autoUpdate: Boolean by value(true)
@@ -98,10 +104,11 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
         strictCommand = strictCommand,
         synchronized = synchronized,
         antialias = antialias,
+//        serviceThreadPoolSize = serviceThreadPoolSize,
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        headless = headless,
-        threadPoolSize = threadPoolSize
+        threadPoolSize = gifEncoderThreadPoolSize,
+        headless = headless
     )
 }

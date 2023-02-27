@@ -37,15 +37,14 @@ public class PluginPetService extends BasePetService {
 
         readBaseServiceConfig(config.toBaseServiceConfig());
 
-        if (super.quality < 1 || super.quality >= 100) {
+        if (super.quality < 1 || super.quality >= 49) {
             System.out.println(
-                    MessageFormat.format("Petpet Plugin 的GIF质量参数范围为 1-99 (1为最佳), 你提供的质量参数为{0}, 已自动更改为默认值10", quality)
+                    MessageFormat.format("Petpet Plugin 的GIF质量参数范围为 1-49 (1为最佳), 你提供的质量参数为{0}, 已自动更改为默认值5", quality)
             );
-            super.quality = 10;
+            super.quality = 5;
         }
 
-        super.setGifMakerThreadPoolSize(config.getThreadPoolSize());
-        System.out.println("Petpet GifMakerThreadPoolSize: " + super.getGifMakerThreadPoolSize());
+        System.out.println("Petpet GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
 
         for (String path : config.getDisabled()) {
             disabledKey.add(path.replace("\"", ""));

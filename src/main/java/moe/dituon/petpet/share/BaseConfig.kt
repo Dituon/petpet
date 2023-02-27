@@ -28,10 +28,12 @@ val encodeDefaultsJson = Json { encodeDefaults = true }
 @Serializable
 data class BaseServiceConfig(
     val antialias: Boolean = true,
+    val resampling: Boolean = true,
+//    val serviceThreadPoolSize: Int = 0,
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifQuality: Int = 5,
-    val threadPoolSize: Int = 0,
+    val gifEncoderThreadPoolSize: Int = 0,
     val headless: Boolean = true
 ) {
     fun stringify(): String {
@@ -151,7 +153,8 @@ data class AvatarData @JvmOverloads constructor(
     var round: Boolean? = false,
     var rotate: Boolean? = false,
     var avatarOnTop: Boolean? = true,
-    val antialias: Boolean? = false
+    var antialias: Boolean? = false,
+    var resampling: Boolean? = null
 )
 
 @Deprecated("使用GifAvatarExtraDataProvider以保证对GIF格式的解析")

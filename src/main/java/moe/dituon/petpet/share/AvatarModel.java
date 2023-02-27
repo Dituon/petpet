@@ -5,7 +5,10 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 public class AvatarModel {
     private Type imageType;
@@ -20,6 +23,7 @@ public class AvatarModel {
     protected List<BufferedImage> imageList = null;
     private short posIndex = 0;
     private boolean antialias;
+    private boolean resampling;
     private AvatarPosType posType;
     private DeformData deformData = null;
     private CropType cropType;
@@ -52,6 +56,7 @@ public class AvatarModel {
         rotate = Boolean.TRUE.equals(data.getRotate());
         onTop = Boolean.TRUE.equals(data.getAvatarOnTop());
         antialias = Boolean.TRUE.equals(data.getAntialias());
+        resampling = Boolean.TRUE.equals(data.getResampling());
         buildImage();
     }
 
@@ -122,7 +127,7 @@ public class AvatarModel {
                         try {
                             deformData = DeformData.fromGifPos(posElements);
                             break;
-                        } catch (Exception ignored){
+                        } catch (Exception ignored) {
                         }
                     case IMG:
                         deformData = DeformData.fromImgPos(posElements);
@@ -178,11 +183,22 @@ public class AvatarModel {
         if (round) {
             imageList = ImageSynthesis.convertCircular(imageList, antialias);
         }
+
+        if (resampling && posType == AvatarPosType.ZOOM) {
+            imageList = new ArrayList<>(imageList);
+            for (short i = 0; i < imageList.size(); i++) {
+                imageList.set(
+                        i,
+                        Scalr.resize(imageList.get(i), Scalr.Method.AUTOMATIC, pos[i][2], pos[i][3])
+                );
+            }
+        }
     }
 
     public FitType getZoomType() {
         return fitType;
     }
+
     public float getOpacity() {
         return opacity;
     }
@@ -316,7 +332,7 @@ public class AvatarModel {
             return deformData;
         }
 
-        public short getLength(){
+        public short getLength() {
             return (short) deformPos.length;
         }
 

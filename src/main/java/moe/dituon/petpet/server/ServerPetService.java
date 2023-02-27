@@ -24,7 +24,7 @@ public class ServerPetService extends BasePetService {
         usePreview = config.getPreview();
 
         readBaseServiceConfig(config.toBaseServiceConfig());
-        System.out.println("GifMakerThreadPoolSize: " + super.getGifMakerThreadPoolSize());
+        System.out.println("GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
     }
 
     public void readConfig() {

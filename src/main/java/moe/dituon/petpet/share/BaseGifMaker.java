@@ -7,7 +7,10 @@ import moe.dituon.petpet.share.FastAnimatedGifEncoder.FrameData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +26,7 @@ public class BaseGifMaker {
      * 默认线程池容量为 <b>CPU线程数 + 1</b>
      */
     public BaseGifMaker() {
-        threadPool =
-                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
+        threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
     }
 
     public BaseGifMaker(int threadPoolSize) {
@@ -121,7 +123,7 @@ public class BaseGifMaker {
             gifEncoder.start(output);
             gifEncoder.setRepeat(0);
             gifEncoder.setDelay(params.getDelay());
-            gifEncoder.setQuality(100 - params.getQuality());
+            gifEncoder.setQuality(params.getQuality());
 
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
