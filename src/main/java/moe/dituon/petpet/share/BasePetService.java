@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 
 public class BasePetService {
-    public static final float VERSION = 5.3F;
+    public static final float VERSION = 5.4F;
     public static final String FONTS_FOLDER = "fonts";
     public static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
     protected boolean antialias = true;
