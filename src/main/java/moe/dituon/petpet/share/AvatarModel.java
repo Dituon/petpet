@@ -5,10 +5,7 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class AvatarModel {
     private Type imageType;
@@ -185,9 +182,16 @@ public class AvatarModel {
         }
 
         if (resampling && posType == AvatarPosType.ZOOM) {
-            imageList = new ArrayList<>(imageList);
+            if (imageList.size() == 1) {
+                var img = imageList.get(0);
+                imageList = new ArrayList<>(pos.length);
+                for (int i = 0; i < pos.length; i++) imageList.add(img);
+            }
             for (short i = 0; i < imageList.size(); i++) {
-                var img = Scalr.resize(imageList.get(i), Scalr.Method.AUTOMATIC, getPos(i)[2], getPos(i)[3]);
+                int w = getPos(i)[2];
+                int h = getPos(i)[3];
+                if (w == 0 || h == 0) continue;
+                var img = Scalr.resize(imageList.get(i), Scalr.Method.AUTOMATIC, w, h);
                 imageList.set(i, img);
             }
         }
