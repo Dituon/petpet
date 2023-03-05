@@ -44,7 +44,7 @@ public class ServerPetService extends BasePetService {
     @Override
     public void readData(File[] files) {
         super.readData(files);
-        indexJson = PetDataDTO.encodeToString(super.dataMap);
+        indexJson = PetDataDTO.stringify(super.dataMap);
         System.out.println(keyListString);
     }
 

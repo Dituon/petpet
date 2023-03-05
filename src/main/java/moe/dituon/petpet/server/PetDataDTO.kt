@@ -15,13 +15,14 @@ data class PetDataDTO(
 ) {
     companion object {
         @JvmStatic
-        fun encodeToString(dataMap: Map<String, KeyData>): String{
+        fun stringify(dataMap: Map<String, KeyData>): String{
             val dataList: ArrayList<PetDataObject> = ArrayList()
             dataMap.forEach { (key, data) ->
                 dataList.add(PetDataObject(
                     key,
                     data.avatar.stream().map { a -> a.type }.toList(),
-                    data.alias ?: emptyList()
+                    data.alias ?: emptyList(),
+                    PreviewType.GIF
                 ))
             }
             return Json.encodeToString(
@@ -35,7 +36,12 @@ data class PetDataDTO(
 data class PetDataObject(
     val key: String,
     val types: List<AvatarType>,
-    val alias: List<String>
+    val alias: List<String>,
+    val previewType: PreviewType
 )
+
+enum class PreviewType {
+    PNG, GIF
+}
 
 
