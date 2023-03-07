@@ -6,8 +6,13 @@ import kotlinx.serialization.json.JsonElement;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AvatarModel {
+    private static final ExecutorService threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
+
     private Type imageType;
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
@@ -182,17 +187,39 @@ public class AvatarModel {
         }
 
         if (resampling && posType == AvatarPosType.ZOOM) {
-            if (imageList.size() == 1) {
-                var img = imageList.get(0);
-                imageList = new ArrayList<>(pos.length);
-                for (int i = 0; i < pos.length; i++) imageList.add(img);
+//            int tw = 0, th = 0, ti = 0;
+//            for (int[] p : pos) {
+//                if (p[2] == 0 || p[3] == 0) continue;
+//                tw += p[2];
+//                th += p[3];
+//                ti++;
+//            }
+//            int aw = tw / ti, ah = th / ti;
+            int aw = 0, ah = 0;
+            for (int[] p : pos) {
+                if (p[2] > aw) aw = p[2];
+                if (p[3] > ah) ah = p[3];
             }
+
+            if (imageList.size() == 1) {
+                imageList.set(0, Scalr.resize(imageList.get(0), Scalr.Method.AUTOMATIC, aw, ah));
+                return;
+            }
+
+            final int faw = aw, fah = ah;
+            CountDownLatch latch = new CountDownLatch(imageList.size());
             for (short i = 0; i < imageList.size(); i++) {
-                int w = getPos(i)[2];
-                int h = getPos(i)[3];
-                if (w == 0 || h == 0) continue;
-                var img = Scalr.resize(imageList.get(i), Scalr.Method.AUTOMATIC, w, h);
-                imageList.set(i, img);
+                short fi = i;
+                threadPool.execute(()->{
+                    var img = Scalr.resize(imageList.get(fi), Scalr.Method.AUTOMATIC, faw, fah);
+                    imageList.set(fi, img);
+                    latch.countDown();
+                });
+            }
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }
