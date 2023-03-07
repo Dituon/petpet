@@ -1,0 +1,19 @@
+#avatar-uploader{
+    position: relative;
+    width: calc(min(50vw, 24em) + 6em);
+    padding: 1em;
+    border: var(--text) 2px dashed;
+    border-radius: 16px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#avatar-uploader>div{
+    margin: 0.6em;
+    width: 8em;
+    height: 8em;
+    background: #2cb67d;
+    border: #fffffe 2px solid;
+}
