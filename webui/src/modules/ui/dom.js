@@ -1,31 +1,27 @@
 /**
  * @author Dituon
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 /**
- * @typedef { object } DOMListener
- * @property { string } event
- * @property { Function } fun
- */
-
-/**
- * @typedef { object } DOMParam
+ * @typedef { Object<any, any> } DOMParam
  * @property { string } html
  */
 
 /**
- * @param { string } [tagName = 'div']
- * @param { DOMParam } [paramObj = {html: ''}]
- * @param { DOMListener } [listeners]
- * @return { HTMLElement }
+ * @param { K } tagName
+ * @param { Record<keyof HTMLElementTagNameMap[K], string> & {html: string} } [paramObj = {html: ''}]
+ * @param { Record<E, (this:HTMLElementTagNameMap[K], ev: WindowEventMap[E]) => void> } [listenerMap]
+ * @return { HTMLElementTagNameMap[K] }
+ * @template {keyof HTMLElementTagNameMap} K
+ * @template {keyof WindowEventMap} E
  */
-export const dom = (tagName = 'div', paramObj = {html: ''}, ...listeners) => {
+export const dom = (tagName = 'div', paramObj = {html: ''}, listenerMap = {}) => {
     const dom = document.createElement(tagName)
     const {html, ...attr} = paramObj
     dom.innerHTML = html ?? ''
 
-    listeners.forEach(listener => dom.addEventListener(listener.event, listener.fun))
+    Object.entries(listenerMap).forEach(item => dom.addEventListener(item[0], item[1]))
 
     if (!attr) return dom
     const attrArr = Object.entries(attr)
@@ -45,7 +41,7 @@ export const domCheckbox = (text, callback, checked = false) => {
     const checkboxInput = dom(
         'input',
         checked ? {type: 'checkbox', checked: true} : {type: 'checkbox'},
-        {event: 'change', fun: callback}
+        {change: callback}
     )
     checkbox.append(checkboxSpan, checkboxInput)
     return checkbox
@@ -61,8 +57,7 @@ export const domSelect = (callback = () => {
     return dom('select', {
         html: optionObj.map(op => `<option value="${op.value}">${op.text ?? op.value}</option>`).join('')
     }, {
-        event: 'change',
-        fun: callback
+        change: callback
     })
 }
 
@@ -84,6 +79,7 @@ export const domInput = (text, paramObj = {type: 'text'}, ...listeners) => {
     input.input = inputElement
     return input
 }
+
 export function createInputGroup() {
     const inputGroup = dom('div', {class: 'input-group'})
     inputGroup.append(...Array.from(arguments))
@@ -93,10 +89,10 @@ export function createInputGroup() {
 export function createRadioButtonGroup(text, nodeTexts = []) {
     const el = dom('div', {class: 'radio-btn-group'})
     el.append(text)
-    for (let {key, value,checked=false} of nodeTexts) {
+    for (let {key, value, checked = false} of nodeTexts) {
         el.append(dom('div', {
             html: `<label>
-                    <input type="radio" name="${text}" value="${key}" ${checked?'checked':''}>
+                    <input type="radio" name="${text}" value="${key}" ${checked ? 'checked' : ''}>
                     <div class="radio-btn"> ${value}</div>
                 </label>`
         }))
