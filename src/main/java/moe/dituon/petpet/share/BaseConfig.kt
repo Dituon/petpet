@@ -49,7 +49,7 @@ data class BaseServiceConfig(
 }
 
 enum class Encoder {
-    BUFFERED_STREAM, ANIMATED_LIB, SQUAREUP_LIB
+    BUFFERED_STREAM, ANIMATED_LIB
 }
 
 enum class Type {

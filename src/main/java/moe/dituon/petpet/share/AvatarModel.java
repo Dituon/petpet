@@ -2,10 +2,15 @@ package moe.dituon.petpet.share;
 
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
+import net.coobird.thumbnailator.Thumbnails;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -201,8 +206,13 @@ public class AvatarModel {
                 if (p[3] > ah) ah = p[3];
             }
 
+            imageList = new ArrayList<>(imageList);
             if (imageList.size() == 1) {
-                imageList.set(0, Scalr.resize(imageList.get(0), Scalr.Method.AUTOMATIC, aw, ah));
+                try {
+                    imageList.set(0, Thumbnails.of(imageList.get(0)).size(aw, ah).keepAspectRatio(false).asBufferedImage());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 return;
             }
 
@@ -211,9 +221,14 @@ public class AvatarModel {
             for (short i = 0; i < imageList.size(); i++) {
                 short fi = i;
                 threadPool.execute(()->{
-                    var img = Scalr.resize(imageList.get(fi), Scalr.Method.AUTOMATIC, faw, fah);
-                    imageList.set(fi, img);
-                    latch.countDown();
+                    try {
+                        var img = Thumbnails.of(imageList.get(fi)).size(faw, fah).keepAspectRatio(false).asBufferedImage();
+                        imageList.set(fi, img);
+                    }catch (IOException ex){
+                        throw new RuntimeException(ex);
+                    } finally {
+                        latch.countDown();
+                    }
                 });
             }
             try {

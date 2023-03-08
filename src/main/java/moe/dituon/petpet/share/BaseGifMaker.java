@@ -1,8 +1,5 @@
 package moe.dituon.petpet.share;
 
-import com.squareup.gifencoder.GifEncoder;
-import com.squareup.gifencoder.Image;
-import com.squareup.gifencoder.ImageOptions;
 import moe.dituon.petpet.share.FastAnimatedGifEncoder.FrameData;
 
 import java.awt.*;
@@ -17,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class BaseGifMaker {
     protected ExecutorService threadPool;
@@ -40,8 +36,6 @@ public class BaseGifMaker {
                 return makeGifUseAnimatedLib(avatarList, textList, stickerMap, params);
             case BUFFERED_STREAM:
                 return makeGifUseBufferedStream(avatarList, textList, stickerMap, params);
-            case SQUAREUP_LIB:
-                return makeGifUseSquareupLib(avatarList, textList, stickerMap, params);
         }
         throw new RuntimeException();
     }
@@ -140,47 +134,6 @@ public class BaseGifMaker {
         }
     }
 
-    public InputStream makeGifUseSquareupLib(List<AvatarModel> avatarList, List<TextModel> textList,
-                                             Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
-        try {
-            short i = 0;
-            CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            Map<Short, Image> imageMap = new HashMap<>(stickerMap.size());
-            int[] size = new int[2];
-            for (short key : stickerMap.keySet()) {
-                short fi = i++;
-                threadPool.execute(() -> {
-                    BufferedImage image = ImageSynthesis.synthesisImage(
-                            stickerMap.get(key), avatarList, textList,
-                            params.getAntialias(), false, fi, params.getMaxSize());
-                    if (fi == 0) {
-                        size[0] = image.getWidth();
-                        size[1] = image.getHeight();
-                    }
-                    Image rgb = Image.fromRgb(ImageSynthesis.convertImageToArray(image));
-                    imageMap.put(fi, rgb);
-                    latch.countDown();
-                });
-            }
-
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageOptions options = new ImageOptions().setDelay(params.getDelay(), TimeUnit.MILLISECONDS);
-
-            latch.await();
-            GifEncoder gifEncoder = new GifEncoder(output, size[0], size[1], 0);
-            if (params.getReverse()) {
-                var map = reverseMap(imageMap);
-                for (i = 0; i < map.size(); i++) gifEncoder.addImage(map.get(i), options);
-            } else {
-                for (i = 0; i < imageMap.size(); i++) gifEncoder.addImage(imageMap.get(i), options);
-            }
-            gifEncoder.finishEncoding();
-            return new ByteArrayInputStream(output.toByteArray());
-        } catch (InterruptedException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public InputStream makeGIF(List<AvatarModel> avatarList, List<TextModel> textList,
                                BufferedImage sticker, GifRenderParams params) {
         switch (params.getEncoder()) {
@@ -188,8 +141,6 @@ public class BaseGifMaker {
                 return makeGifUseAnimatedLib(avatarList, textList, sticker, params);
             case BUFFERED_STREAM:
                 return makeGifUseBufferedStream(avatarList, textList, sticker, params);
-            case SQUAREUP_LIB:
-                return makeGifUseSquareupLib(avatarList, textList, sticker, params);
         }
         throw new RuntimeException();
     }
@@ -289,50 +240,6 @@ public class BaseGifMaker {
             gifEncoder.finish();
             return new ByteArrayInputStream(output.toByteArray());
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public InputStream makeGifUseSquareupLib(List<AvatarModel> avatarList, List<TextModel> textList,
-                                             BufferedImage sticker, GifRenderParams params) {
-        try {
-            short maxFrameLength = 1;
-            for (AvatarModel avatar : avatarList) {
-                maxFrameLength = (short) Math.max(maxFrameLength, avatar.getImageList().size());
-            }
-            CountDownLatch latch = new CountDownLatch(maxFrameLength);
-            Map<Short, Image> imageMap = new HashMap<>(maxFrameLength);
-            int[] size = new int[2];
-            for (short i = 0; i < maxFrameLength; i++) {
-                short fi = i;
-                threadPool.execute(() -> {
-                    BufferedImage image = ImageSynthesis.synthesisImage(
-                            sticker, avatarList, textList,
-                            params.getAntialias(), false, fi, params.getMaxSize());
-                    if (fi == 0) {
-                        size[0] = image.getWidth();
-                        size[1] = image.getHeight();
-                    }
-                    Image rgb = Image.fromRgb(ImageSynthesis.convertImageToArray(image));
-                    imageMap.put(fi, rgb);
-                    latch.countDown();
-                });
-            }
-
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageOptions options = new ImageOptions().setDelay(params.getDelay(), TimeUnit.MILLISECONDS);
-
-            latch.await();
-            GifEncoder gifEncoder = new GifEncoder(output, size[0], size[1], 0);
-            if (params.getReverse()) {
-                var map = reverseMap(imageMap);
-                for (short i = 0; i < map.size(); i++) gifEncoder.addImage(map.get(i), options);
-            } else {
-                for (short i = 0; i < imageMap.size(); i++) gifEncoder.addImage(imageMap.get(i), options);
-            }
-            gifEncoder.finishEncoding();
-            return new ByteArrayInputStream(output.toByteArray());
-        } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
         }
     }
