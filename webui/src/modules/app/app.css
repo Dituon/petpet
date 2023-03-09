@@ -8,6 +8,7 @@
 #app>div{
     padding: 0 0 0.8em;
     border-top: var(--sub-bg) 2px dashed;
+    position: relative;
 }
 
 #app h3 {

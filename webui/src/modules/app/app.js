@@ -1,6 +1,7 @@
 import config from "../../config.js"
 import {TemplateChooser} from "../template"
 import {AvatarUploader} from "../uploader";
+import {ResultArea} from "../result";
 
 import "./app.css"
 
@@ -19,6 +20,8 @@ export default class {
     #templateChooser
     /** @type { AvatarUploader } */
     #uploader
+    /** @type {ResultArea} */
+    #resultArea
 
     /** @param { string } id */
     constructor(id) {
@@ -66,20 +69,20 @@ export default class {
 
     generate = async () => {
         if (!this.#uploader.ready) return
+        if (!this.#resultArea) {
+            this.#resultArea = new ResultArea()
+            this.#parentElement.appendChild(this.#resultArea.dom)
+        }
 
         const formData = new FormData()
         formData.append('key', this.#template.key)
-        for (const item of this.#uploader.data){
+        for (const item of this.#uploader.data) {
             formData.append(item.name, item.file, item.name)
         }
 
-        const data = await fetch(this.#url + '/petpet', {
+        this.#resultArea.promise = fetch(this.#url + '/petpet', {
             body: formData,
             method: 'post'
         })
-
-        const img = document.createElement('img')
-        img.src = URL.createObjectURL(await data.blob())
-        document.body.appendChild(img)
     }
 }
