@@ -712,7 +712,6 @@
 启用`preview`配置项以加载`WebUI`模板预览 (可选, 默认关闭)
 
 - 修改 `server-config.json` `preview: true`
-- 或添加启动参数 `java -jar petpet.jar -preview`
 
 ## 常见问题
 
