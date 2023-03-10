@@ -705,6 +705,15 @@
 | `python`     | [`example.py`](./example-script/python/example.py)                                              |
 | `php`        | [`example.php`](./example-script/php/example.php)                                               |
 
+# WebUI
+
+启动`WebServer`后即可使用`WebUI`
+
+启用`preview`配置项以加载`WebUI`模板预览 (可选, 默认关闭)
+
+- 修改 `server-config.json` `preview: true`
+- 或添加启动参数 `java -jar petpet.jar -preview`
+
 ## 常见问题
 
 - 戳一戳无法触发?
