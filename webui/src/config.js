@@ -1,6 +1,6 @@
 export default {
     server: [
-        'http://127.0.0.1:2333',
+        window.location.origin,
         'http://api.xmmt.fun',
         'http://api.d2n.moe'
     ]

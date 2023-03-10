@@ -9,12 +9,12 @@ import java.nio.file.Files;
 public class ServerPetService extends BasePetService {
     public static final int DEFAULT_PORT = 2333;
     public static final String DEFAULT_DATA_PATH = "data/xmmt.dituon.petpet/";
-    public static final String CONFIG_NAME = "config.json";
+    public static final String CONFIG_NAME = "server-config.json";
     public static final int DEFAULT_SERVER_THREAD_POOL_SIZE = 10;
     public int port = DEFAULT_PORT;
     public String path = DEFAULT_DATA_PATH;
     public int webServerThreadPoolSize = DEFAULT_SERVER_THREAD_POOL_SIZE;
-    public boolean usePreview = true;
+    public boolean usePreview = false;
     private String indexJson;
 
     public void readConfig(ServerServiceConfig config) {
@@ -28,10 +28,12 @@ public class ServerPetService extends BasePetService {
     }
 
     public void readConfig() {
-        File configFile = new File(CONFIG_NAME);
+        File configFile = new File("./" + CONFIG_NAME);
         try {
             if (!configFile.exists()) { //save default config
-                Files.write(configFile.toPath(), new ServerServiceConfig().stringify().getBytes());
+                var defaultConfig = new ServerServiceConfig();
+                defaultConfig.setPreview(usePreview);
+                Files.write(configFile.toPath(), defaultConfig.stringify().getBytes());
             }
 
             ServerServiceConfig config = ServerServiceConfig.parse(getFileStr(configFile));

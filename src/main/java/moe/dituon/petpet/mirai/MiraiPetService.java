@@ -3,6 +3,7 @@ package moe.dituon.petpet.mirai;
 import moe.dituon.petpet.plugin.Cooler;
 import moe.dituon.petpet.plugin.DataUpdater;
 import moe.dituon.petpet.plugin.PluginPetService;
+import moe.dituon.petpet.server.WebServer;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.GifAvatarExtraDataProvider;
 import moe.dituon.petpet.share.TextExtraData;
@@ -74,6 +75,8 @@ public class MiraiPetService extends PluginPetService{
                 break;
         }
 
+        if (config.getStartWebServer()) new WebServer();
+
         super.readPluginServiceConfig(config.toPluginServiceConfig());
     }
 
@@ -81,8 +84,8 @@ public class MiraiPetService extends PluginPetService{
     public void readData(File dir){
         if (dir.listFiles() == null) {
             System.out.println(autoUpdate ?
-                    "o((>ω< ))o 你这头懒猪, 没有下载petData!\n\\^o^/ 还好我冰雪聪明, 帮你自动更新了⭐" :
-                    "(ﾟДﾟ*)ﾉ 没有petData! 你自己手动更新吧x\n(☆-ｖ-) 笨蛋! 让你不开自动更新⭐");
+                    "o((>ω< ))o 你这头懒猪, 没有下载petpet模板!\n\\^o^/ 还好我冰雪聪明, 帮你自动更新了⭐" :
+                    "(ﾟДﾟ*)ﾉ 没有petpet模板! 你自己手动更新吧x\n(☆-ｖ-) 笨蛋! 让你不开自动更新⭐");
             return;
         }
         super.readData(dir);

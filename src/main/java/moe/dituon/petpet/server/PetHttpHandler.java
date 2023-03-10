@@ -79,9 +79,9 @@ public class PetHttpHandler implements HttpHandler {
         }
     }
 
-    private void handleResponse(HttpExchange httpExchange, InputStream input, String type) throws IOException {
+    static public void handleResponse(HttpExchange httpExchange, InputStream input, String mime) throws IOException {
         input.reset();
-        httpExchange.getResponseHeaders().add("Content-Type", "image/" + type);
+        httpExchange.getResponseHeaders().add("Content-Type", mime);
         httpExchange.sendResponseHeaders(200, input.available());
         OutputStream out = httpExchange.getResponseBody();
         input.transferTo(out);
@@ -100,7 +100,7 @@ public class PetHttpHandler implements HttpHandler {
     }
 
     private void finish(HttpExchange httpExchange, RequestParser parser) throws IOException {
-        handleResponse(httpExchange, parser.getImagePair().getFirst(), parser.getImagePair().getSecond());
+        handleResponse(httpExchange, parser.getImagePair().getFirst(), ("image/" + parser.getImagePair().getSecond()).intern());
         parser.close();
     }
 }

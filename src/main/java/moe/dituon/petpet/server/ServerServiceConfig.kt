@@ -20,7 +20,7 @@ data class ServerServiceConfig(
     val port: Int = ServerPetService.DEFAULT_PORT,
     val dataPath: String = ServerPetService.DEFAULT_DATA_PATH,
     val webServerThreadPoolSize: Int = ServerPetService.DEFAULT_SERVER_THREAD_POOL_SIZE,
-    val preview: Boolean = false,
+    var preview: Boolean = false,
 
     val antialias: Boolean = true,
     val resampling: Boolean = true,
@@ -58,8 +58,8 @@ data class ServerServiceConfig(
 data class PreviewConfigDTO(
     val form: TargetDTO = TargetDTO("form", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
     val to: TargetDTO = TargetDTO("to", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
-    val group: TargetDTO = TargetDTO("group", "file:./example-data/input/avatar1.png"),
-    val bot: TargetDTO = TargetDTO("bot", "file:./example-data/input/avatar2.png"),
+    val group: TargetDTO = TargetDTO("group", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
+    val bot: TargetDTO = TargetDTO("bot", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
     val randomAvatarList: List<String> = emptyList(),
     val textList: List<String> = listOf("petpet!")
 ) {

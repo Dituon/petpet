@@ -31,6 +31,10 @@ public class PreviewHttpHandler implements HttpHandler {
             if (!configFile.exists()) {
                 Files.write(configFile.toPath(), new PreviewConfigDTO().stringify().getBytes());
             }
+            File destDir = new File(PREVIEW_ROOT);
+            if(!(destDir.exists()&& destDir.isDirectory())) {
+                if (!destDir.mkdirs()) System.out.println("can not mkdir " + PREVIEW_ROOT);
+            }
             PreviewConfigDTO config = PreviewConfigDTO.decodeFromString(service.getFileStr(configFile));
 
 //            mimeMap = new HashMap<>(service.getDataMap().size());

@@ -15,15 +15,16 @@ data class PetDataDTO(
 ) {
     companion object {
         @JvmStatic
-        fun stringify(dataMap: Map<String, KeyData>): String{
+        fun stringify(dataMap: Map<String, KeyData>): String {
             val dataList: ArrayList<PetDataObject> = ArrayList()
             dataMap.forEach { (key, data) ->
-                dataList.add(PetDataObject(
-                    key,
-                    data.avatar.stream().map { a -> a.type }.toList(),
-                    data.alias ?: emptyList(),
-                    PreviewType.GIF
-                ))
+                if (data.hidden == false) dataList.add(
+                    PetDataObject(
+                        key,
+                        data.avatar.stream().map { a -> a.type }.toList(),
+                        data.alias ?: emptyList()
+                    )
+                )
             }
             return Json.encodeToString(
                 PetDataDTO(VERSION, dataList)
@@ -36,12 +37,7 @@ data class PetDataDTO(
 data class PetDataObject(
     val key: String,
     val types: List<AvatarType>,
-    val alias: List<String>,
-    val previewType: PreviewType
+    val alias: List<String>
 )
-
-enum class PreviewType {
-    PNG, GIF
-}
 
 

@@ -90,8 +90,11 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     @ValueDescription("触发图片生成后的群聊冷却时长")
     val groupCoolDown: Long by value(Cooler.DEFAULT_GROUP_COOLDOWN)
 
-    @ValueDescription("触发冷却后的回复消息, '[nudge]'为戳一戳")
+    @ValueDescription("触发冷却后的回复消息, '[nudge]'为戳一戳, 可使用消息注入")
     val inCoolDownMessage: String by value(Cooler.DEFAULT_MESSAGE)
+
+    @ValueDescription("启动WebServer (详见文档)")
+    val startWebServer: Boolean by value(false)
 
     fun toPluginServiceConfig() = PluginServiceConfig(
         command = command,
