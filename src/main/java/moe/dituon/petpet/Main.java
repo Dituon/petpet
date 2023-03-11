@@ -14,10 +14,6 @@ public class Main {
             return;
         }
         List<String> param = Arrays.asList(args);
-        if (param.contains("-preview")) {
-            WebServer server = new WebServer();
-            server.service.usePreview = true;
-        }
         if (param.contains("-gocq")) {
             try {
                 GoCQPetpet goCQPetpet = GoCQPetpet.getInstance();

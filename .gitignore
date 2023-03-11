@@ -133,6 +133,7 @@ run/
 src/test/kotlin/RunTerminal.kt
 
 config.json
+server-config.json
 gocq-config.json
 preview-config.json
 

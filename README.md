@@ -16,7 +16,21 @@
 
 **[在线编辑器](https://dituon.github.io/petpet/editor)**
 
+**[WebUI demo (beta)](http://s.xmmt.fun:2333/)**
+
 ## 使用方法
+
+### 单独运行
+
+1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/) `petpet.jar` 或 `petpet-no-ws.jar`
+
+2. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
+
+3. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
+
+4. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `config.json`, 重启后生效
+
+5. 参考[`WebServer`](#WebServer)一节 发起网络请求 / 或使用[`WebUI`](#WebUI)
 
 ### [Mirai](https://github.com/mamoe/mirai)插件
 
@@ -40,18 +54,6 @@
 >> 可通过回复构造图片, 例如 `[图片]` -> `[回复[图片]] 对称`
 
 > 可使用 `pet`指令 获取 `keyList`
-
-### 单独运行
-
-1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/) `petpet.jar` 或 `petpet-no-ws.jar`
-
-2. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
-
-3. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
-
-4. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `config.json`, 重启后生效
-
-5. 参考[`WebServer`](#WebServer)一节 发起网络请求
 
 ### [gocq-http](https://github.com/Mrs4s/go-cqhttp)插件
 
