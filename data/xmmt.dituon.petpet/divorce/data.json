@@ -1,0 +1,13 @@
+{
+  "type": "IMG",
+  "avatar": [{
+      "type": "TO",
+      "pos": [0, 0, 1080, 1016 ],
+      "round": false,
+      "avatarOnTop": false
+  }],
+  "text": [],
+  "alias": ["离婚申请","离婚协议","离婚"],
+  "inRandomList": false
+
+}
