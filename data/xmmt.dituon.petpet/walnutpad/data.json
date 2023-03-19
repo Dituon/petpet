@@ -1,0 +1,12 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [368,65,540,360],
+        "round": false,
+        "avatarOnTop": false
+    }],
+    "text": [],
+    "alias": ["胡桃平板","平板"],
+    "inRandomList": true
+}
