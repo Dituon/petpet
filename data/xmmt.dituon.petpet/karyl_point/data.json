@@ -1,0 +1,12 @@
+{
+  "type": "IMG",
+  "avatar": [{
+      "type": "TO",
+      "pos": [87, 790, 225, 225 ],
+      "round": false,
+      "avatarOnTop": true,
+      "angle": 353
+  }],
+  "text": [],
+  "alias": ["指","凯露指"]
+}

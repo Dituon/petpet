@@ -1,0 +1,11 @@
+{
+  "type": "IMG",
+  "avatar": [{
+      "type": "TO",
+      "pos": [294, 369, 680, 578 ],
+      "round": false,
+      "avatarOnTop": false
+  }],
+  "text": [],
+  "alias": ["恐龙","小恐龙"]
+}

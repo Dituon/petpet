@@ -1,0 +1,12 @@
+{
+  "type": "IMG",
+  "avatar": [{
+      "type": "TO",
+      "pos": [531, 15, 458, 458 ],
+      "round": true,
+      "avatarOnTop": false,
+      "angle":355
+  }],
+  "text": [],
+  "alias": ["土豆"]
+}
