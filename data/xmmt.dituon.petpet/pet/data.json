@@ -1,0 +1,18 @@
+{
+  "type": "IMG",
+  "avatar":[],
+  "text":[
+      {
+          "pos": [30, 0],
+          "text": "请使用指令 [娱乐指令]",
+          "font": "MiSans Bold",
+          "color": "000000",
+          "size": 35
+      }
+  ],
+  "background": {
+          "size": ["text0Width+90","text0Height+100"]
+      },
+  "hidden": true,
+  "inRandomList": false
+}
