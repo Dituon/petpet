@@ -2,7 +2,8 @@
   "type": "IMG",
   "avatar": [{
       "type": "TO",
-      "pos": [0, 0, 1080, 1016 ],
+      "pos": [0, 0, 1080, 1016],
+      "style": ["GRAY"],
       "round": false,
       "avatarOnTop": false
   }],
