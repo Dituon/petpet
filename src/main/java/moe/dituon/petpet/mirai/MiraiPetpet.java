@@ -35,6 +35,7 @@ public final class MiraiPetpet extends JavaPlugin {
     private static LinkedHashMap<Long, String> imageCachePool;
     private static Set<String> keyAliaSet = null;
     public static final Random random = new Random();
+    private static final Pattern pattern = Pattern.compile("<pet>([\\s\\S]*?)</pet>", Pattern.MULTILINE);
 
     private MiraiPetpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(BasePetService.VERSION))
@@ -331,8 +332,6 @@ public final class MiraiPetpet extends JavaPlugin {
 
     private void onMessagePreSend(MessagePreSendEvent e) {
         String messageRaw = e.getMessage().contentToString();
-
-        final Pattern pattern = Pattern.compile("<pet>([\\s\\S]*?)<\\/pet>", Pattern.MULTILINE);
         final Matcher matcher = pattern.matcher(messageRaw);
 
         boolean flag = false;

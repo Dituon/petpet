@@ -71,11 +71,12 @@ jar {
 
 task wsJar(type: Jar) {
     group = 'build'
-    description = 'build jar, excluding the websocket lib'
+    description = 'build jar, excluding the websocket lib & webui'
     archiveClassifier.set("no-ws")
 
     exclude '**/petpet/websocket/**'
     exclude '**/org/java_websocket/**'
+    exclude '**/index.html'
 
     with jar
 }
