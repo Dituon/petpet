@@ -42,7 +42,7 @@ public class DataUpdater {
                 break;
             }
             short i = 0;
-            while (saveAs(targetDir.getPath() + pet, i + ".png")) i++;
+            while (saveAs(pet, i + ".png")) i++;
             System.out.println("PetData/" + pet + "下载成功 (length:" + i + ')');
         }
 
@@ -92,14 +92,13 @@ public class DataUpdater {
             connection.disconnect();
             return str.toString();
         } catch (IOException ignored) {
-            System.out.println("无法连接到远程资源: " + url);
-            return null;
+            throw new RuntimeException("无法连接到远程资源: " + url);
         }
     }
 
     private boolean saveAs(String key, String fileName) {
         String url = getRepositoryFileUrl(key, fileName);
-        Path target = Paths.get(targetDir.getAbsolutePath(), fileName);
+        Path target = Paths.get(targetDir.getAbsolutePath() + '/' + key, fileName);
         try (InputStream ins = new URL(url).openStream()) {
             Files.createDirectories(target.getParent());
             Files.copy(ins, target, StandardCopyOption.REPLACE_EXISTING);
