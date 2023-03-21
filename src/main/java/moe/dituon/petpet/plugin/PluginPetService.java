@@ -24,6 +24,7 @@ public class PluginPetService extends BasePetService {
     public ArrayList<String> randomableList = new ArrayList<>();
 
     public List<Long> disabledGroups;
+
     public void readPluginServiceConfig(PluginServiceConfig config) {
         command = config.getCommand();
         antialias = config.getAntialias();
@@ -56,6 +57,7 @@ public class PluginPetService extends BasePetService {
     public void readData(File dir) {
         // 1. 所有key加载到dataMap
         super.readData(Arrays.stream(Objects.requireNonNull(dir.listFiles()))
+                .filter(File::isDirectory)
                 .filter(file -> !disabledKey.contains(file.getName()))
                 .toArray(File[]::new));
 
