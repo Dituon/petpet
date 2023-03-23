@@ -62,16 +62,17 @@ public class PetHttpHandler implements HttpHandler {
             parser = new POSTParser(service, content);
             finish(httpExchange, parser);
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-            handleResponse(httpExchange, 400);
+            handleResponse(httpExchange, 400, ex.toString());
         }
     }
 
-    private void handleResponse(HttpExchange httpExchange, int rCode) {
+    static private void handleResponse(HttpExchange httpExchange, int rCode, String str) {
         try {
             httpExchange.sendResponseHeaders(rCode, 0);
             OutputStream out = httpExchange.getResponseBody();
+            out.write(str.getBytes(StandardCharsets.UTF_8));
             out.flush();
             out.close();
         } catch (IOException ex) {

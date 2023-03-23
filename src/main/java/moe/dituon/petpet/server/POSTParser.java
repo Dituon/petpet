@@ -9,13 +9,13 @@ public class POSTParser extends RequestParser {
         super.imagePair = service.generateImage(
                 request.getKey(),
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
-                        request.getForm().getAvatar(),
+                        request.getFrom().getAvatar(),
                         request.getTo().getAvatar(),
                         request.getGroup().getAvatar(),
                         request.getBot().getAvatar(),
                         request.getRandomAvatarList()
                 ), new TextExtraData(
-                        request.getForm().getName(),
+                        request.getFrom().getName(),
                         request.getTo().getName(),
                         request.getGroup().getName(),
                         request.getTextList()
