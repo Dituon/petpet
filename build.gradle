@@ -78,6 +78,10 @@ task wsJar(type: Jar) {
     exclude '**/org/java_websocket/**'
     exclude '**/index.html'
 
+    manifest {
+        attributes 'Main-Class': 'moe.dituon.petpet.Main'
+    }
+
     with jar
 }
 
