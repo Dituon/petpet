@@ -14,9 +14,9 @@
 
 原生 java 编写, kotlin仅用于数据序列化, **使用底层API**, **多线程优化**: 轻量, 高性能, 易拓展
 
-**[在线编辑器](https://dituon.github.io/petpet/editor)**
+- **[WebUI demo (beta)](http://s.xmmt.fun:2333/)**
 
-**[WebUI demo (beta)](http://s.xmmt.fun:2333/)**
+- **[在线编辑器](https://dituon.github.io/petpet/editor)**
 
 ## 使用方法
 
@@ -71,7 +71,7 @@
 
 4. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
 
-5. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `gocqConfig.json`, 重启后生效
+5. `cd ./` `java -jar petpet.jar -gocq`, 可自行更改配置文件 `gocq-config.json`, 重启后生效
 
 ## 配置文件
 #### 配置项说明
