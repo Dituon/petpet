@@ -287,7 +287,7 @@ public class BasePetService {
         }
         assert !backgroundMap.isEmpty();
         var background = backgroundMap.get(
-                (short) random.nextInt(backgroundMap.keySet().size())
+                (short) random.nextInt(backgroundMap.size())
         );
 
         if (data.getBackground() == null) return background;  //无背景配置(读取随机背景图片
