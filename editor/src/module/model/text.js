@@ -6,7 +6,7 @@
 
 import {fabric} from "fabric"
 import {Model} from "./model.js"
-import {dom, domCheckbox, domInput, domSelect,createRadioButtonGroup,createInputGroup} from "./dom.js"
+import {dom, domCheckbox, domInput, domSelect,createRadioButtonGroup,createInputGroup} from "../util/dom.js"
 
 /**
  * @typedef { object } TextDTO

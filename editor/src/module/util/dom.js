@@ -15,10 +15,11 @@
  */
 
 /**
- * @param { string } [tagName = 'div']
- * @param { DOMParam } [paramObj = {html: ''}]
+ * @param { K } [tagName = 'div']
+ * @param { Record<keyof HTMLElementTagNameMap[K], string> & {html: string} } [paramObj = {html: ''}]
  * @param { DOMListener } [listeners]
- * @return { HTMLElement }
+ * @return { HTMLElementTagNameMap[K] }
+ * @template {keyof HTMLElementTagNameMap} K
  */
 export const dom = (tagName = 'div', paramObj = {html: ''}, ...listeners) => {
     const dom = document.createElement(tagName)

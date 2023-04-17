@@ -1,10 +1,18 @@
 /** @typedef { 'IMG' | 'GIF' } TempType */
 
-import {dom, domCheckbox, domInput} from "./dom.js"
-import {AvatarModel} from "./avatar.js"
-import {TextModel} from "./text.js"
+import {dom, domCheckbox, domInput} from "../util/dom.js"
+import {AvatarModel} from "../model/avatar.js"
+import {TextModel} from "../model/text.js"
 import JSZip from "jszip"
 import {saveAs} from "file-saver"
+import binarization from "../util/binarization.js"
+binarization()
+
+import "./main.css"
+import "./editor.css"
+import "./drop-area.css"
+import "./toolbar.css"
+import "./form.css"
 
 /**
  * @typedef { object } PetDataDTO
@@ -44,6 +52,7 @@ export class Editor {
      * @param { HTMLImageElement } images
      */
     constructor(parentElement, ...images) {
+        parentElement.innerHTML = ''
         this.imageList = images
 
         const infoElement = dom('div', {class: 'info bar'})
@@ -144,7 +153,7 @@ export class Editor {
         parentElement.appendChild(backgroundListElement)
 
         settingBarElement.append(
-            dom('input', {
+            domInput('帧数', {
                 type: 'number',
                 value: 15,
                 size: 4

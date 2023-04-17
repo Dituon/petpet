@@ -1,4 +1,4 @@
-@import "reset.css";
+@import "./reset.css";
 body {
     --primary-color: #FFB6C1;
     --primary-text-color: #ffffff;

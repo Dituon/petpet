@@ -1,5 +1,6 @@
-import {Editor} from "./editor.js"
-import {SuperGif} from "../lib/libgif.min.js"
+import {Editor} from "./module/app/editor.js"
+import {loadGif} from "./module/loader/gif-loader.js"
+import {loadVideo} from "./module/loader/video-loader.js";
 
 const stopPropagation = e => {
     e.stopPropagation()
@@ -38,8 +39,10 @@ const editorElement = document.getElementById('editor')
  * @throw
  */
 function initBackground(file) {
-    if (!file.type.startsWith('image')) {
-        throw new Error("仅支持图片格式")
+    if (file.type.startsWith('video/')) {
+        loadVideo(file, editorElement).then(imgList => new Editor(editorElement, ...imgList))
+    } else if (!file.type.startsWith('image')) {
+        throw new Error("不支持的格式: " + file.type)
     }
 
     const reader = new FileReader()
@@ -54,25 +57,4 @@ function initBackground(file) {
             new Editor(editorElement, image)
         }
     }
-}
-
-/**
- * 加载GIF
- * @param { HTMLImageElement } image
- * @return {Promise<HTMLImageElement[]>}
- */
-async function loadGif(image) {
-    document.body.appendChild(image)
-    let gif = new SuperGif({gif: image})
-    await new Promise(resolve => gif.load(resolve))
-    document.querySelector('.jsgif').remove()
-    /** @type { HTMLImageElement[] } */
-    const frameList = []
-    for (let i = 0; i < gif.get_length(); i++) {
-        gif.move_to(i)
-        let frameImage = new Image()
-        frameImage.src = gif.get_canvas().toDataURL('image/png', 1)
-        frameList.push(frameImage)
-    }
-    return frameList
 }

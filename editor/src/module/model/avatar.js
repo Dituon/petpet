@@ -5,8 +5,8 @@
  */
 
 import {fabric} from "fabric"
-import {actionHandler, anchorWrapper, polygonPositionHandler} from "./deform.js"
-import {createInputGroup, createRadioButtonGroup, dom, domCheckbox, domSelect} from "./dom.js"
+import {actionHandler, anchorWrapper, polygonPositionHandler} from "../util/deform.js"
+import {createInputGroup, createRadioButtonGroup, dom, domCheckbox, domSelect} from "../util/dom.js"
 import {Model} from "./model.js"
 
 /**
