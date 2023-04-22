@@ -1,6 +1,7 @@
 package moe.dituon.petpet.websocket.gocq;
 
-import java.io.File;
+import moe.dituon.petpet.share.BasePetService;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
@@ -32,7 +33,7 @@ public class GoCQPetpet {
 //        }
 
         try{
-            System.out.println(service.apiWebSocketUri);
+            BasePetService.LOGGER.info("WebSocket API URL: " + service.apiWebSocketUri);
             apiClient = new GoCQAPIWebSocketClient(new URI(service.apiWebSocketUri));
             eventClient = new GoCQEventWebSocketClient(new URI(service.eventWebSocketUri));
         } catch (URISyntaxException e) {

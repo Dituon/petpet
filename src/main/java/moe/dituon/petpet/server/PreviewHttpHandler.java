@@ -33,7 +33,7 @@ public class PreviewHttpHandler implements HttpHandler {
             }
             File destDir = new File(PREVIEW_ROOT);
             if(!(destDir.exists()&& destDir.isDirectory())) {
-                if (!destDir.mkdirs()) System.out.println("can not mkdir " + PREVIEW_ROOT);
+                if (!destDir.mkdirs()) ServerPetService.LOGGER.info("can not mkdir " + PREVIEW_ROOT);
             }
             PreviewConfigDTO config = PreviewConfigDTO.decodeFromString(service.getFileStr(configFile));
 
@@ -65,7 +65,7 @@ public class PreviewHttpHandler implements HttpHandler {
                         k, avatars, texts, null
                 );
                 var snowTime = System.currentTimeMillis();
-                System.out.println(k + ' ' + (snowTime - stime) + "ms");
+                ServerPetService.LOGGER.info(k + ' ' + (snowTime - stime) + "ms");
                 File targetFile = new File(basePath + result.getSecond());
                 try {
                     Files.copy(result.getFirst(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -74,7 +74,7 @@ public class PreviewHttpHandler implements HttpHandler {
                 }
             });
             var nowTime = System.currentTimeMillis();
-            System.out.println("generate " + service.getDataMap().size() + " image in " + (nowTime - time) + "ms");
+            ServerPetService.LOGGER.info("Generate " + service.getDataMap().size() + " images in " + (nowTime - time) + "ms");
             mime = "image/gif";
         } catch (Exception ex) {
             throw new RuntimeException(ex);

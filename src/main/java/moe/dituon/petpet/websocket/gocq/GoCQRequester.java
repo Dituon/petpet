@@ -1,5 +1,7 @@
 package moe.dituon.petpet.websocket.gocq;
 
+import moe.dituon.petpet.plugin.PluginPetService;
+
 import java.util.HashMap;
 
 public class GoCQRequester {
@@ -11,7 +13,7 @@ public class GoCQRequester {
     }
     public GoCQMemberDTO getGroupMember(long groupId, long memberId){
         ThreadLockObject<GoCQMemberDTO> lock = new ThreadLockObject<>();
-        System.out.println(requestList+ "   id: " +memberId);
+        PluginPetService.LOGGER.info(requestList+ "   id: " +memberId);
         requestList.put(memberId, lock);
 
         apiClient.send(new GoCQGetGroupMemberRequestParamDTO(

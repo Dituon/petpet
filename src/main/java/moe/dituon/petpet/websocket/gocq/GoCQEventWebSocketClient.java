@@ -1,5 +1,6 @@
 package moe.dituon.petpet.websocket.gocq;
 
+import moe.dituon.petpet.plugin.PluginPetService;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -13,17 +14,17 @@ public class GoCQEventWebSocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("GoCQ API WebSocket 连接成功");
+        PluginPetService.LOGGER.info("GoCQ API WebSocket 连接成功");
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("GoCQ API WebSocket 连接关闭 (" + code + "): " + reason);
+        PluginPetService.LOGGER.info("GoCQ API WebSocket 连接关闭 (" + code + "): " + reason);
     }
 
     @Override
     public void onError(Exception ex) {
-        System.err.println("an error occurred:" + ex);
+        PluginPetService.LOGGER.warning("an error occurred:" + ex);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class GoCQEventWebSocketClient extends WebSocketClient {
             GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(message);
             new OneBotGroupMessage(e);
         } catch (Exception e){
-            System.err.println(message);
+            PluginPetService.LOGGER.warning(message, e);
         }
     }
 }

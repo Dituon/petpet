@@ -89,7 +89,7 @@ public class FormDataParser extends RequestParser {
 
         try {
             String key = map.get("key").value;
-            System.out.println(key);
+            ServerPetService.LOGGER.info("DEBUG[FORM DATA KEY]: " + key);
             assert key != null;
 
             super.imagePair = service.generateImage(

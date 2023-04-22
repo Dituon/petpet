@@ -1,5 +1,6 @@
 package moe.dituon.petpet.websocket.gocq;
 
+import moe.dituon.petpet.plugin.PluginPetService;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -7,6 +8,7 @@ import java.net.URI;
 
 public class GoCQAPIWebSocketClient extends WebSocketClient {
     public GoCQRequester requester = new GoCQRequester(this);
+
     public GoCQAPIWebSocketClient(URI serverURI) {
         super(serverURI);
         connect();
@@ -14,17 +16,17 @@ public class GoCQAPIWebSocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("GoCQ Event WebSocket 连接成功");
+        PluginPetService.LOGGER.info("GoCQ Event WebSocket 连接成功");
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("GoCQ Event WebSocket 连接关闭 (" + code + "): " + reason);
+        PluginPetService.LOGGER.info("GoCQ Event WebSocket 连接关闭 (" + code + "): " + reason);
     }
 
     @Override
     public void onError(Exception ex) {
-        System.err.println("an error occurred:" + ex);
+        PluginPetService.LOGGER.warning("an error occurred:" + ex);
     }
 
     @Override
@@ -33,11 +35,11 @@ public class GoCQAPIWebSocketClient extends WebSocketClient {
             GoCQResponseDTO response = GoCQResponseDTO.parse(message);
             Long id = Long.parseLong(response.getEcho());
             ThreadLockObject<GoCQMemberDTO> lock = requester.getThreadLock(id);
-            synchronized (lock){
+            synchronized (lock) {
                 lock.set(response.toGetGroupMemberResponseDTO().getData());
                 lock.notify();
             }
-        } catch (Exception e){
+        } catch (Exception ignored) {
         }
     }
 

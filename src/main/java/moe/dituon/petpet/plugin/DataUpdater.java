@@ -30,7 +30,7 @@ public class DataUpdater {
     }
 
     public void updateData() {
-        System.out.println("开始更新PetData");
+        PluginPetService.LOGGER.info("开始更新PetData");
         UpdateIndex index = UpdateIndex.parse(
                 Objects.requireNonNull(getUrlText(repositoryUrl + "/index.json")));
         List<String> newPetList = index.getDataList();
@@ -38,12 +38,12 @@ public class DataUpdater {
             if (MiraiPetpet.service.getDataMap().containsKey(pet)
                     || MiraiPetpet.service.disabledKey.contains(pet)) continue;
             if (!saveAs(pet, "data.json")) {
-                System.out.println("无法从远程仓库下载PetData: " + getRepositoryFileUrl(pet, "data.json"));
+                PluginPetService.LOGGER.warning("无法从远程仓库下载PetData: " + getRepositoryFileUrl(pet, "data.json"));
                 break;
             }
             short i = 0;
             while (saveAs(pet, i + ".png")) i++;
-            System.out.println("PetData/" + pet + "下载成功 (length:" + i + ')');
+            PluginPetService.LOGGER.info("PetData/" + pet + "下载成功 (length:" + i + ')');
         }
 
         String fontsPath = REPO_DATA_PATH + BasePetService.FONTS_FOLDER;
@@ -55,13 +55,13 @@ public class DataUpdater {
         for (String font : index.getFontList()) {
             if (localFonts.contains(font)) continue;
             if (!saveAs(BasePetService.FONTS_FOLDER, font)) {
-                System.out.println("无法从远程仓库下载PetFont: " + getRepositoryFileUrl(BasePetService.FONTS_FOLDER, font));
+                PluginPetService.LOGGER.warning("无法从远程仓库下载PetFont: " + getRepositoryFileUrl(BasePetService.FONTS_FOLDER, font));
                 return;
             }
-            System.out.println("PetFont/" + font + "下载成功");
+            PluginPetService.LOGGER.info("PetFont/" + font + "下载成功");
         }
 
-        System.out.println("PetData更新完毕, 正在重新加载");
+        PluginPetService.LOGGER.info("PetData更新完毕, 正在重载");
         MiraiPetpet.service.readData(MiraiPetpet.dataFolder);
     }
 
@@ -69,12 +69,14 @@ public class DataUpdater {
         UpdateIndex update = UpdateIndex.parse(
                 Objects.requireNonNull(getUrlText(MiraiPetpet.service.repositoryUrl + "/index.json")));
         if (BasePetService.VERSION != update.getVersion())
-            System.out.println("PetpetPlugin可更新到最新版本: " + update.getVersion() +
+            PluginPetService.LOGGER.info("PetpetPlugin可更新到最新版本: " + update.getVersion() +
                     " (当前版本 " + BasePetService.VERSION + ")  要养成经常更新的好习惯哦 (*/ω＼*)");
         for (String pet : update.getDataList()) {
-            if (MiraiPetpet.service.getDataMap().containsKey(pet)
-                    || MiraiPetpet.service.disabledKey.contains(pet)) continue;
-            System.out.println("发现新增PetData");
+            if (
+                    MiraiPetpet.service.getDataMap().containsKey(pet)
+                            || MiraiPetpet.service.disabledKey.contains(pet)
+            ) continue;
+            PluginPetService.LOGGER.info("发现新增PetData");
             return false;
         }
         return true;

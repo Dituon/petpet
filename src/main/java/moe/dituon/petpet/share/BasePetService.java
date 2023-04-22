@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class BasePetService {
     public static final float VERSION = 5.4F;
+    public static final BaseLogger LOGGER = BaseLogger.getInstance();
     public static final String FONTS_FOLDER = "fonts";
     public static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
     protected boolean antialias = true;
@@ -47,7 +48,7 @@ public class BasePetService {
      */
     public void readData(File[] files) {
         if (files == null || files.length == 0) {
-            System.out.println("无法读取文件，请检查data目录");
+            LOGGER.warning("无法读取文件, 请检查data目录 (files.length = 0)");
             return;
         }
         this.dataRoot = files[0].getParentFile();
@@ -65,7 +66,7 @@ public class BasePetService {
                 KeyData data = KeyData.getData(getFileStr(dataFile));
                 putKeyData(file.getName(), data);
             } catch (Exception ex) {
-                System.out.println("无法读取 " + file + "/data.json: \n\n" + ex);
+                LOGGER.warning("无法读取 " + file + "/data.json " , ex);
             }
         }
     }
@@ -154,10 +155,7 @@ public class BasePetService {
     }
 
     private void registerFontsToAwt(File fontsFolder) {
-        if (!fontsFolder.exists() || !fontsFolder.isDirectory()) {
-            System.out.println("无fonts");
-            return;
-        }
+        if (!fontsFolder.exists() || !fontsFolder.isDirectory()) return;
 
         List<String> successNames = new ArrayList<>();
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -168,13 +166,13 @@ public class BasePetService {
                 if (success) {
                     successNames.add(fontFile.getName());
                 } else {
-                    System.out.println("registerFontsToAwt失败: " + fontFile.getName());
+                    LOGGER.info("注册字体失败: " + fontFile.getName());
                 }
             } catch (Exception e) {
-                System.out.println("registerFontsToAwt异常: " + e);
+                LOGGER.warning("注册字体异常: " + e);
             }
         }
-        System.out.println("registerFontsToAwt成功: " + successNames);
+        LOGGER.info("注册字体成功: " + successNames);
     }
 
     public void readBaseServiceConfig(BaseServiceConfig config) {
@@ -262,9 +260,7 @@ public class BasePetService {
             if (data.getType() == Type.IMG) {
                 BufferedImage sticker = getBackgroundImage(key, data, avatarList, textList);
                 assert sticker != null;
-                InputStream inputStream = imageMaker.makeImage(
-                        avatarList, textList, sticker, renderParams);
-                return new Pair<>(inputStream, "png");
+                return imageMaker.makeImage(avatarList, textList, sticker, renderParams);
             }
         } catch (Exception ex) {
             throw new RuntimeException("解析 " + key + "/data.json 出错", ex);
@@ -343,7 +339,7 @@ public class BasePetService {
     public void setGifMaxSize(List<Integer> maxSize) {
         if (maxSize == null || maxSize.isEmpty()) return;
         if (maxSize.size() > 3) {
-            System.out.println("GifMaxSize无效: Length Must <= 3");
+            LOGGER.warning("GifMaxSize无效: Length Must <= 3");
             return;
         }
         if (maxSize.size() == 1) maxSize.add(maxSize.get(0));

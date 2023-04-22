@@ -30,7 +30,7 @@ public class PetHttpHandler implements HttpHandler {
                     return;
                 }
 
-                System.out.println("DEBUG[GET URL]: " + requestParam);
+                ServerPetService.LOGGER.info("DEBUG[GET QUERY]: " + requestParam);
                 parser = new GETParser(service, requestParam);
                 finish(httpExchange, parser);
                 return;
@@ -58,7 +58,7 @@ public class PetHttpHandler implements HttpHandler {
             }
 
             String content = requestBodyContent.toString();
-            System.out.println("DEBUG[POST BODY]: " + content);
+            ServerPetService.LOGGER.info(requestBodyContent.insert(0, "DEBUG[POST BODY]: ").toString());
             parser = new POSTParser(service, content);
             finish(httpExchange, parser);
 

@@ -1,5 +1,6 @@
 package moe.dituon.petpet.server;
 
+import moe.dituon.petpet.share.BaseLogger;
 import moe.dituon.petpet.share.BasePetService;
 
 import java.io.File;
@@ -7,6 +8,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class ServerPetService extends BasePetService {
+    public static final BaseLogger LOGGER = BaseLogger.getInstance();
+
     public static final int DEFAULT_PORT = 2333;
     public static final String DEFAULT_DATA_PATH = "data/xmmt.dituon.petpet/";
     public static final String CONFIG_NAME = "server-config.json";
@@ -24,7 +27,7 @@ public class ServerPetService extends BasePetService {
         usePreview = config.getPreview();
 
         readBaseServiceConfig(config.toBaseServiceConfig());
-        System.out.println("GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
+        LOGGER.info("GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
     }
 
     public void readConfig() {
@@ -47,7 +50,7 @@ public class ServerPetService extends BasePetService {
     public void readData(File[] files) {
         super.readData(files);
         indexJson = PetDataDTO.stringify(super.dataMap);
-        System.out.println(keyListString);
+        LOGGER.info("\n---Key List---\n" + keyListString + "\n--------------\n");
     }
 
     public String getIndexJson() {

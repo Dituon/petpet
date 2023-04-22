@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class PluginPetService extends BasePetService {
-
     public String command = "pet";
     public String commandHead = "";
     public boolean respondReply = true;
@@ -39,19 +38,19 @@ public class PluginPetService extends BasePetService {
         readBaseServiceConfig(config.toBaseServiceConfig());
 
         if (super.quality < 1 || super.quality >= 49) {
-            System.out.println(
-                    MessageFormat.format("Petpet Plugin 的GIF质量参数范围为 1-49 (1为最佳), 你提供的质量参数为{0}, 已自动更改为默认值5", quality)
+            LOGGER.warning(
+                    MessageFormat.format("Petpet Plugin 的GIF质量参数范围为 1-49 (1为最佳), 提供的质量参数为{0}, 已自动更改为默认值5", quality)
             );
             super.quality = 5;
         }
 
-        System.out.println("Petpet GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
+        LOGGER.info("Petpet GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
 
         for (String path : config.getDisabled()) {
             disabledKey.add(path.replace("\"", ""));
         }
 
-        System.out.println("ヾ(≧▽≦*)o Petpet 初始化成功，使用 " + command + " 以获取keyList!");
+        LOGGER.info("ヾ(≧▽≦*)o Petpet 初始化成功，使用 " + command + " 以获取keyList!");
     }
 
     public void readData(File dir) {
@@ -68,7 +67,7 @@ public class PluginPetService extends BasePetService {
             }
         });
 
-        System.out.println("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，随机表列包含 " +
+        LOGGER.info("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，随机表列包含 " +
                 randomableList.size() + " 素材，已禁用 " + disabledKey.size() + ")");
     }
 

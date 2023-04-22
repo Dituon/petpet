@@ -56,7 +56,7 @@ public class OneBotGroupMessage {
                     var toMember = GoCQPetpet.getInstance().apiClient.requester.getGroupMember(e.getGroup_id(), memberId);
                     fromUrl = getAvatarUrl(sender.getUser_id());
                     fromName = senderName;
-                    System.out.println(toMember.getUser_id());
+//                    PluginPetService.LOGGER.info(toMember.getUser_id() + "");
                     toUrl = getAvatarUrl(toMember.getUser_id());
                     toName = toMember.getName();
                     break;
@@ -82,8 +82,7 @@ public class OneBotGroupMessage {
             spanList.remove(0); //去掉指令头
             key = service.randomableList.get(BasePetService.random.nextInt(service.randomableList.size())); //随机key
         }
-
-        System.out.println(key);
+//        PluginPetService.LOGGER.info(key);
 
         if (!spanList.isEmpty() && !service.strictCommand) { //匹配非标准格式指令
             if (keyAliaSet == null) { //按需初始化

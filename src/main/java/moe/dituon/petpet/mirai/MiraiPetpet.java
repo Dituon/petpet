@@ -1,8 +1,11 @@
 package moe.dituon.petpet.mirai;
 
 import kotlin.Pair;
-import moe.dituon.petpet.plugin.*;
+import moe.dituon.petpet.plugin.Cooler;
+import moe.dituon.petpet.plugin.DataUpdater;
+import moe.dituon.petpet.plugin.PluginRequestParser;
 import moe.dituon.petpet.share.BaseConfigFactory;
+import moe.dituon.petpet.share.BaseLogger;
 import moe.dituon.petpet.share.BasePetService;
 import moe.dituon.petpet.share.TextExtraData;
 import net.mamoe.mirai.Bot;
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 
 public final class MiraiPetpet extends JavaPlugin {
     public static final MiraiPetpet INSTANCE = new MiraiPetpet();
+    public static BaseLogger LOGGER = BaseLogger.getInstance();
     private static List<Long> disabledGroup;
     public static MiraiPetService service;
     public static File dataFolder;
@@ -42,17 +46,19 @@ public final class MiraiPetpet extends JavaPlugin {
                 .name("PetPet")
                 .author("Dituon")
                 .build());
+        BaseLogger.getInstance().setLogger(new BaseLogger.MiraiUtilLogger(getLogger()));
         service = new MiraiPetService();
     }
 
     @Override
     public void onEnable() {
         System.setProperty("sun.java2d.opengl", "true");
+//        BaseLogger.getInstance().setLogger(new BaseLogger.MiraiUtilLogger(getLogger()));
         try {
             reloadPluginConfig(MiraiPluginConfig.INSTANCE);
             service.readConfigByPluginAutoSave();
         } catch (NoClassDefFoundError ignored) {
-            getLogger().error("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
+            LOGGER.warning("Mirai 2.11.0 提供了新的 JavaAutoSaveConfig 方法, 请更新Mirai版本至 2.11.0 (不是2.11.0-M1)\n使用旧版本将无法配置config");
         }
 
         dataFolder = getDataFolder();
@@ -65,7 +71,7 @@ public final class MiraiPetpet extends JavaPlugin {
         }).start();
         disabledGroup = service.disabledGroups;
 
-        getLogger().info("\n\n" +
+        LOGGER.info("\u001B[95m\n\n" +
                 "    ██████╗ ███████╗████████╗██████╗ ███████╗████████╗\n" +
                 "    ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝\n" +
                 "    ██████╔╝█████╗     ██║   ██████╔╝█████╗     ██║   \n" +

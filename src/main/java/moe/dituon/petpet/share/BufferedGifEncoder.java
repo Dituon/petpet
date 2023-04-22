@@ -45,7 +45,7 @@ public class BufferedGifEncoder {
             } catch (EOFException e) {
                 break;
             } catch (IOException e) {
-                System.out.println("Error processing the Image Stream");
+                BasePetService.LOGGER.warning("Error processing the Image Stream", e);
                 break;
             }
         }

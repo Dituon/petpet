@@ -83,7 +83,7 @@ public class MiraiPetService extends PluginPetService{
     @Override
     public void readData(File dir){
         if (dir.listFiles() == null) {
-            System.out.println(autoUpdate ?
+            MiraiPetpet.LOGGER.info(autoUpdate ?
                     "o((>ω< ))o 你这头懒猪, 没有下载petpet模板!\n\\^o^/ 还好我冰雪聪明, 帮你自动更新了⭐" :
                     "(ﾟДﾟ*)ﾉ 没有petpet模板! 你自己手动更新吧x\n(☆-ｖ-) 笨蛋! 让你不开自动更新⭐");
             return;
@@ -114,7 +114,6 @@ public class MiraiPetService extends PluginPetService{
     /**
      * 用key发送图片(无otherText)
      */
-    @Deprecated
     public void sendImage(Group group, Member from, Member to, String key) {
         sendImage(group, from, to, key, null);
     }
@@ -122,7 +121,6 @@ public class MiraiPetService extends PluginPetService{
     /**
      * 用key发送图片，指定otherText
      */
-    @Deprecated
     public void sendImage(Group group, Member from, Member to, String key, String otherText) {
         TextExtraData textExtraData = new TextExtraData(
                 from.getNameCard().isEmpty() ? from.getNick() : from.getNameCard(),
@@ -151,8 +149,7 @@ public class MiraiPetService extends PluginPetService{
                     ).getFirst(), group)
             );
         } catch (Exception ex) {
-            System.out.println("发送图片时出错：" + ex.getMessage());
-            ex.printStackTrace();
+            MiraiPetpet.LOGGER.error("发送图片时出错: " + ex.getMessage(), ex);
         }
     }
 

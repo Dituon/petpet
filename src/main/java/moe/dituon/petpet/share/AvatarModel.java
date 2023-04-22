@@ -340,7 +340,7 @@ public class AvatarModel {
         int[][] anchor;
 
         public static DeformData fromGifPos(JsonArray posElements) {
-//            System.out.println("DeformData fromPos by: " + posElements.toString());
+//            BasePetService.LOGGER.info("DeformData fromPos by: " + posElements.toString());
 
             DeformData deformData = new DeformData();
             deformData.deformPos = new Point2D[posElements.size()][POS_SIZE];

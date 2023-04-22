@@ -28,7 +28,7 @@ public class WebServer {
 
         try {
             HttpServer httpServer = HttpServer.create(new InetSocketAddress(service.port), 0);
-            System.out.println("PetpetWebServer started in port " + service.port);
+            ServerPetService.LOGGER.info("PetpetWebServer started in port " + service.port);
 
             httpServer.createContext("/petpet", new PetHttpHandler(service));
             httpServer.createContext("/preview", new PreviewHttpHandler(service));
@@ -38,17 +38,17 @@ public class WebServer {
                 InputStream html = new ByteArrayInputStream(stream.readAllBytes());
                 httpServer.createContext("/", exchange -> PetHttpHandler.handleResponse(exchange, html, "text/html"));
 
-                System.out.println("WebUI-URL: http://127.0.0.1:" + service.port + '/');
-                if (!service.usePreview) System.out.println("Warn: WebUI preview is disabled");
+                ServerPetService.LOGGER.info("WebUI-URL: http://127.0.0.1:" + service.port + '/');
+                if (!service.usePreview) ServerPetService.LOGGER.warning("WebUI preview is disabled");
             } catch (Exception e){
-                System.out.println("Petpet WebUI is disabled");
+                ServerPetService.LOGGER.info("Petpet WebUI is disabled");
             }
 
             httpServer.setExecutor(Executors.newFixedThreadPool(service.webServerThreadPoolSize));
             httpServer.start();
 
             apiUrl = ("http://127.0.0.1:" + service.port + "/petpet").intern();
-            System.out.println("API-URL: " + apiUrl);
+            ServerPetService.LOGGER.info("API-URL: " + apiUrl);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
