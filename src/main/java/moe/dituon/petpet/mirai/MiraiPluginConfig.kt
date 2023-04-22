@@ -84,13 +84,13 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     @ValueDescription("是否启用消息注入 (详见文档)")
     val messageHook: Boolean by value(false)
 
-    @ValueDescription("触发图片生成后的用户冷却时长, 填入-1则禁用, 单位为秒")
+    @ValueDescription("触发图片生成后的用户冷却时长, 填入-1则禁用, 单位为毫秒")
     val coolDown:Long by value(Cooler.DEFAULT_USER_COOLDOWN)
 
-    @ValueDescription("触发图片生成后的群聊冷却时长")
+    @ValueDescription("触发图片生成后的群聊冷却时长 (同上)")
     val groupCoolDown: Long by value(Cooler.DEFAULT_GROUP_COOLDOWN)
 
-    @ValueDescription("触发冷却后的回复消息, '[nudge]'为戳一戳, 可使用消息注入")
+    @ValueDescription("触发冷却后的回复消息, '[nudge]'为戳一戳, 可使用消息注入MessageHook (详见文档)")
     val inCoolDownMessage: String by value(Cooler.DEFAULT_MESSAGE)
 
     @ValueDescription("启动WebServer (详见文档)")
