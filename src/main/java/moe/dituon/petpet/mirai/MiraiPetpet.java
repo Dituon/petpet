@@ -39,7 +39,8 @@ public final class MiraiPetpet extends JavaPlugin {
     private static LinkedHashMap<Long, String> imageCachePool;
     private static Set<String> keyAliaSet = null;
     public static final Random random = new Random();
-    private static final Pattern pattern = Pattern.compile("<pet>([\\s\\S]*?)</pet>", Pattern.MULTILINE);
+    private static final Pattern hookPattern = Pattern.compile("<pet>([\\s\\S]*?)</pet>", Pattern.MULTILINE);
+    private static final Pattern spacePattern = Pattern.compile("\\s+");
 
     private MiraiPetpet() {
         super(new JvmPluginDescriptionBuilder("xmmt.dituon.petpet", String.valueOf(BasePetService.VERSION))
@@ -257,11 +258,12 @@ public final class MiraiPetpet extends JavaPlugin {
         }
 
         String commandData = messageText.toString().trim();
-        ArrayList<String> spanList = new ArrayList<>(Arrays.asList(commandData.split("\\s+")));
-        if (spanList.isEmpty()) return;
+        String[] spanArray = spacePattern.split(commandData);
+        if (spanArray.length == 0) return;
+        ArrayList<String> spanList = new ArrayList<>(Arrays.asList(spanArray));
 
         String key = null;
-        if (service.command.equals(spanList.get(0))) {
+        if (service.command.equals(spanArray[0])) {
             spanList.remove(0); //去掉指令头
             key = service.randomableList.get(random.nextInt(service.randomableList.size())); //随机key
         }
@@ -330,7 +332,9 @@ public final class MiraiPetpet extends JavaPlugin {
         service.sendImage(e.getGroup(), key,
                 BaseConfigFactory.getGifAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl(),
-                        e.getGroup().getMembers().stream().map(NormalMember::getAvatarUrl).collect(Collectors.toList())
+                        service.getDataMap().get(key).isUseRandomList() ?
+                                e.getGroup().getMembers().stream().map(NormalMember::getAvatarUrl).collect(Collectors.toList())
+                                : null
                 ), new TextExtraData(
                         fromName, toName, groupName, spanList
                 ));
@@ -338,7 +342,7 @@ public final class MiraiPetpet extends JavaPlugin {
 
     private void onMessagePreSend(MessagePreSendEvent e) {
         String messageRaw = e.getMessage().contentToString();
-        final Matcher matcher = pattern.matcher(messageRaw);
+        final Matcher matcher = hookPattern.matcher(messageRaw);
 
         boolean flag = false;
         List<Pair<String, Image>> pairs = null;

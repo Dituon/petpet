@@ -54,12 +54,14 @@ data class ServerServiceConfig(
     }
 }
 
+const val DEFAULT_AVATAR_URL = "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"
+
 @Serializable
 data class PreviewConfigDTO(
-    val form: TargetDTO = TargetDTO("form", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
-    val to: TargetDTO = TargetDTO("to", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
-    val group: TargetDTO = TargetDTO("group", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
-    val bot: TargetDTO = TargetDTO("bot", "https://q1.qlogo.cn/g?b=qq&nk=2544193782&s=640"),
+    val form: TargetDTO = TargetDTO("form", DEFAULT_AVATAR_URL),
+    val to: TargetDTO = TargetDTO("to", DEFAULT_AVATAR_URL),
+    val group: TargetDTO = TargetDTO("group", DEFAULT_AVATAR_URL),
+    val bot: TargetDTO = TargetDTO("bot", DEFAULT_AVATAR_URL),
     val randomAvatarList: List<String> = emptyList(),
     val textList: List<String> = listOf("petpet!")
 ) {

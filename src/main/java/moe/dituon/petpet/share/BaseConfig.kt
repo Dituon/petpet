@@ -70,6 +70,13 @@ data class KeyData(
     val hidden: Boolean? = false
 ) {
     constructor(type: Type) : this(type, ArrayList(), ArrayList())
+    private var useRandomList:Boolean? = null
+    fun isUseRandomList():Boolean{
+        if (useRandomList == null) {
+            useRandomList = avatar.any { a -> a.type == AvatarType.RANDOM }
+        }
+        return useRandomList as Boolean
+    }
 
     companion object {
         @JvmStatic
