@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
@@ -49,6 +50,9 @@ public class WebServer {
 
             apiUrl = ("http://127.0.0.1:" + service.port + "/petpet").intern();
             ServerPetService.LOGGER.info("API-URL: " + apiUrl);
+        } catch (BindException ex){
+            ServerPetService.LOGGER.error("port " + service.port + " already in use", ex);
+            throw new RuntimeException(ex);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

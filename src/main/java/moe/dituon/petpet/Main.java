@@ -12,19 +12,16 @@ public class Main {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true");
         BaseLogger.getInstance().info("\u001B[95m\n\n" +
-                "                ▄▀▄     ▄▀▄\n" +
-                "               ▄█░░▀▀▀▀▀░░█▄\n" +
-                "           ▄▄  █░░░░░░░░░░░█  ▄▄\n" +
-                "          █▄▄█ █░░▀░░┬░░▀░░█ █▄▄█\n" +
-                "█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█\n" +
-                "█                _                 _     █\n" +
-                "█   _ __    ___ | |_  _ __    ___ | |_   █\n" +
-                "█  | '_ \\  / _ \\| __|| '_ \\  / _ \\| __|  █\n" +
-                "█  | |_) ||  __/| |_ | |_) ||  __/| |_   █\n" +
-                "█  | .__/  \\___| \\__|| .__/  \\___| \\__|  █\n" +
-                "█  |_|               |_|                 █\n" +
-                "█                                        █\n" +
-                "█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█    v" +
+                "    ooooooooo.                 .                            .   \n" +
+                "    `888   `Y88.             .o8                          .o8   \n" +
+                "     888   .d88'  .ooooo.  .o888oo oo.ooooo.   .ooooo.  .o888oo \n" +
+                "     888ooo88P'  d88' `88b   888    888' `88b d88' `88b   888   \n" +
+                "     888         888ooo888   888    888   888 888ooo888   888   \n" +
+                "     888         888    .o   888 .  888   888 888    .o   888 . \n" +
+                "    o888o        `Y8bod8P'   \"888\"  888bod8P' `Y8bod8P'   \"888\" \n" +
+                "                                    888                         \n" +
+                "                                   o888o                        \n" +
+                "                                                                     v" +
                 BasePetService.VERSION + "\n");
         if (args.length == 0) {
             WebServer server = new WebServer();
