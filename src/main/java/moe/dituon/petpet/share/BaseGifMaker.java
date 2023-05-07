@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -47,7 +46,7 @@ public class BaseGifMaker {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            Map<Short, BufferedImage> imageMap = new HashMap<>(stickerMap.size());
+            BufferedImage[] images = new BufferedImage[stickerMap.size()];
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
                 threadPool.execute(() -> {
@@ -60,7 +59,7 @@ public class BaseGifMaker {
                                     BufferedImage.TYPE_3BYTE_BGR);
                     Graphics2D g = temp.createGraphics();
                     g.drawImage(image, 0, 0, null);
-                    imageMap.put(fi, temp);
+                    images[fi] = temp;
                     latch.countDown();
                 });
             }
@@ -68,10 +67,9 @@ public class BaseGifMaker {
                     new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
             if (params.getReverse()) {
-                var map = reverseMap(imageMap);
-                for (i = 0; i < map.size(); i++) gifEncoder.addFrame(map.get(i));
+                for (int s = images.length - 1; s >= 0 ; s--) gifEncoder.addFrame(images[s]);
             } else {
-                for (i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
+                for (BufferedImage image : images) gifEncoder.addFrame(image);
             }
             gifEncoder.finish();
             return gifEncoder.getOutput();
@@ -87,7 +85,7 @@ public class BaseGifMaker {
             //遍历获取GIF长度(图片文件数量)
             short i = 0;
             CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            Map<Short, FrameData> frameMap = new HashMap<>(stickerMap.size());
+            FrameData[] frames = new FrameData[stickerMap.size()];
             int[] size = new int[2];
             for (short key : stickerMap.keySet()) {
                 short fi = i++;
@@ -103,7 +101,7 @@ public class BaseGifMaker {
                     g.drawImage(image, 0, 0, null);
                     g.dispose();
                     FrameData frameData = new FrameData(temp, params.getQuality());
-                    frameMap.put(fi, frameData);
+                    frames[fi] = frameData;
                     if (fi == 0) {
                         size[0] = temp.getWidth();
                         size[1] = temp.getHeight();
@@ -122,10 +120,9 @@ public class BaseGifMaker {
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
             if (params.getReverse()) {
-                var map = reverseMap(frameMap);
-                map.forEach((id, frame) -> gifEncoder.addFrame(frame));
+                for (int s = frames.length - 1; s >= 0 ; s--) gifEncoder.addFrame(frames[s]);
             } else {
-                frameMap.forEach((id, frame) -> gifEncoder.addFrame(frame));
+                for (FrameData frame : frames) gifEncoder.addFrame(frame);
             }
             gifEncoder.finish();
             return new ByteArrayInputStream(output.toByteArray());
@@ -149,13 +146,13 @@ public class BaseGifMaker {
             List<AvatarModel> avatarList, List<TextModel> textList,
             BufferedImage sticker, GifRenderParams params) {
         try {
-            short maxFrameLength = 1;
+            int maxFrameLength = 1;
             for (AvatarModel avatar : avatarList) {
-                maxFrameLength = (short) Math.max(maxFrameLength, avatar.getImageList().size());
+                maxFrameLength = Math.max(maxFrameLength, avatar.getImageList().size());
             }
 
             CountDownLatch latch = new CountDownLatch(maxFrameLength);
-            Map<Short, BufferedImage> imageMap = new HashMap<>(maxFrameLength);
+            BufferedImage[] images = new BufferedImage[maxFrameLength];
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
                 threadPool.execute(() -> {
@@ -167,7 +164,7 @@ public class BaseGifMaker {
                             new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
                     Graphics2D g = temp.createGraphics();
                     g.drawImage(image, 0, 0, null);
-                    imageMap.put(fi, temp);
+                    images[fi] = temp;
                     latch.countDown();
                 });
             }
@@ -176,10 +173,9 @@ public class BaseGifMaker {
                     new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
             if (params.getReverse()) {
-                var map = reverseMap(imageMap);
-                for (short i = 0; i < map.size(); i++) gifEncoder.addFrame(map.get(i));
+                for (int s = images.length - 1; s >= 0 ; s--) gifEncoder.addFrame(images[s]);
             } else {
-                for (short i = 0; i < imageMap.size(); i++) gifEncoder.addFrame(imageMap.get(i));
+                for (BufferedImage image : images) gifEncoder.addFrame(image);
             }
             gifEncoder.finish();
             return gifEncoder.getOutput();
@@ -192,13 +188,13 @@ public class BaseGifMaker {
             List<AvatarModel> avatarList, List<TextModel> textList,
             BufferedImage sticker, GifRenderParams params) {
         try {
-            short maxFrameLength = 1;
+            int maxFrameLength = 1;
             for (AvatarModel avatar : avatarList) {
-                maxFrameLength = (short) Math.max(maxFrameLength, avatar.getImageList().size());
+                maxFrameLength = Math.max(maxFrameLength, avatar.getImageList().size());
             }
 
             CountDownLatch latch = new CountDownLatch(maxFrameLength);
-            Map<Short, FrameData> frameMap = new HashMap<>(maxFrameLength);
+            FrameData[] frames = new FrameData[maxFrameLength];
             int[] size = new int[2];
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
@@ -213,7 +209,7 @@ public class BaseGifMaker {
                     Graphics2D g = temp.createGraphics();
                     g.drawImage(image, 0, 0, null);
                     FrameData frameData = new FrameData(temp, params.getQuality());
-                    frameMap.put(fi, frameData);
+                    frames[fi] = frameData;
                     if (fi == 0) {
                         size[0] = temp.getWidth();
                         size[1] = temp.getHeight();
@@ -232,22 +228,14 @@ public class BaseGifMaker {
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
             if (params.getReverse()) {
-                var map = reverseMap(frameMap);
-                map.forEach((id, frame) -> gifEncoder.addFrame(frame));
+                for (int s = frames.length - 1; s >= 0 ; s--) gifEncoder.addFrame(frames[s]);
             } else {
-                frameMap.forEach((id, frame) -> gifEncoder.addFrame(frame));
+                for (FrameData frame : frames) gifEncoder.addFrame(frame);
             }
             gifEncoder.finish();
             return new ByteArrayInputStream(output.toByteArray());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    static private <T> Map<Short, T> reverseMap(Map<Short, T> originMap) {
-        int size = originMap.size();
-        Map<Short, T> map = new HashMap<>(originMap.size());
-        originMap.forEach((id, img) -> map.put((short) (size - id - 1), img));
-        return map;
     }
 }
