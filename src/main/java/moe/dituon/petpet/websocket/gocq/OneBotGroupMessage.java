@@ -4,6 +4,7 @@ import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 import kotlinx.serialization.json.JsonObject;
 import kotlinx.serialization.json.JsonPrimitive;
+import moe.dituon.petpet.plugin.PluginPetService;
 import moe.dituon.petpet.share.BasePetService;
 import moe.dituon.petpet.share.TextExtraData;
 
@@ -31,6 +32,9 @@ public class OneBotGroupMessage {
                 toUrl = getAvatarUrl(sender.getUser_id()),
                 groupName = "你群";
 
+        var imageCachePool = GoCQPetpet.getInstance().imageCachePool;
+
+        long id = e.getGroup_id() + e.getMessage_id();
         for (JsonElement ele : messageChar){
             JsonObject obj = (JsonObject) ele;
             String type = ((JsonPrimitive) Objects.requireNonNull(obj.get("type"))).getContent();
@@ -46,6 +50,13 @@ public class OneBotGroupMessage {
                     fromUrl = getAvatarUrl(sender.getUser_id());
                     toUrl = getDataKey(obj, "url");
                     toName = "这个";
+
+                    //记录图片缓存
+                    if (imageCachePool.get(id) == null){
+                        imageCachePool.put(id, toUrl);
+                    }else{
+                        imageCachePool.replace(id, toUrl);
+                    }
                     break;
                 case "text":
                     messageText.append(getDataKey(obj, "text")).append(' ');
@@ -60,14 +71,20 @@ public class OneBotGroupMessage {
                     toUrl = getAvatarUrl(toMember.getUser_id());
                     toName = toMember.getName();
                     break;
+            }
+        }
+
+        for (JsonElement ele : messageChar){
+            JsonObject obj = (JsonObject) ele;
+            String type = ((JsonPrimitive) Objects.requireNonNull(obj.get("type"))).getContent();
+            switch (type){
                 case "reply":
-                    long id = e.getGroup_id() + Integer.parseInt(getDataKey(obj, "id"));
-                    var imageCachePool = GoCQPetpet.getInstance().imageCachePool;
+                    id = e.getGroup_id() + Integer.parseInt(getDataKey(obj, "id"));
                     if (imageCachePool.get(id) == null) break;
                     fuzzyLock = true;
                     fromUrl = getAvatarUrl(sender.getUser_id());
                     fromName = senderName;
-                    toUrl = imageCachePool.get(id + e.getGroup_id());
+                    toUrl = imageCachePool.get(id);
                     toName = "这个";
                     break;
             }

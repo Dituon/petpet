@@ -30,8 +30,11 @@ public class GoCQEventWebSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         try {
-            GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(message);
-            new OneBotGroupMessage(e);
+            if(message.contains("\"post_type\":\"message\"")){
+                GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(message);
+                new OneBotGroupMessage(e);
+            }
+            PluginPetService.LOGGER.info(message);
         } catch (Exception e){
             PluginPetService.LOGGER.warning(message, e);
         }

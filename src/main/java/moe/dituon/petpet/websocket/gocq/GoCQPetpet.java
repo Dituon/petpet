@@ -5,6 +5,7 @@ import moe.dituon.petpet.share.BasePetService;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class GoCQPetpet {
     private static class GoCQPetpetInstance {
@@ -21,16 +22,16 @@ public class GoCQPetpet {
         service.readConfig();
         service.readData();
 
-//        if (service.respondReply) {
-//            imageCachePool = new LinkedHashMap<>(service.cachePoolSize, 0.75f, true) {
-//                @Override
-//                public boolean removeEldestEntry(Map.Entry eldest) {
-//                    return size() > service.cachePoolSize;
-//                }
-//            };
-////            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
-////            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
-//        }
+        if (service.respondReply) {
+            imageCachePool = new LinkedHashMap<>(service.cachePoolSize, 0.75f, true) {
+                @Override
+                public boolean removeEldestEntry(Map.Entry eldest) {
+                    return size() > service.cachePoolSize;
+                }
+            };
+//            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
+//            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
+        }
 
         try{
             BasePetService.LOGGER.info("WebSocket API URL: " + service.apiWebSocketUri);
