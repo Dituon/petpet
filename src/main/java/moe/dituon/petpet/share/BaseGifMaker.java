@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,30 +28,31 @@ public class BaseGifMaker {
     }
 
     public InputStream makeGIF(List<AvatarModel> avatarList, List<TextModel> textList,
-                               Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
+                               BufferedImage[] stickers, GifRenderParams params) {
         switch (params.getEncoder()) {
             case ANIMATED_LIB:
-                return makeGifUseAnimatedLib(avatarList, textList, stickerMap, params);
+                return makeGifUseAnimatedLib(avatarList, textList, stickers, params);
             case BUFFERED_STREAM:
-                return makeGifUseBufferedStream(avatarList, textList, stickerMap, params);
+                return makeGifUseBufferedStream(avatarList, textList, stickers, params);
         }
         throw new RuntimeException();
     }
 
-    public InputStream makeGifUseBufferedStream
-            (List<AvatarModel> avatarList, List<TextModel> textList,
-             Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
+    public InputStream makeGifUseBufferedStream(
+            List<AvatarModel> avatarList, List<TextModel> textList,
+            BufferedImage[] stickers, GifRenderParams params
+    ) {
         try {
             //遍历获取GIF长度(图片文件数量)
-            short i = 0;
-            CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            BufferedImage[] images = new BufferedImage[stickerMap.size()];
-            for (short key : stickerMap.keySet()) {
-                short fi = i++;
+            CountDownLatch latch = new CountDownLatch(stickers.length);
+            BufferedImage[] images = new BufferedImage[stickers.length];
+            for (int i = 0; i < stickers.length; i++) {
+                int fi = i;
                 threadPool.execute(() -> {
                     BufferedImage image = ImageSynthesis.synthesisImage(
-                            stickerMap.get(key), avatarList, textList,
-                            params.getAntialias(), false, fi, params.getMaxSize()
+                            stickers[fi], avatarList, textList,
+                            params.getAntialias(), false,
+                            (short) fi, params.getMaxSize()
                     );
                     BufferedImage temp =
                             new BufferedImage(image.getWidth(), image.getHeight(),
@@ -67,7 +67,7 @@ public class BaseGifMaker {
                     new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
             if (params.getReverse()) {
-                for (int s = images.length - 1; s >= 0 ; s--) gifEncoder.addFrame(images[s]);
+                for (int s = images.length - 1; s >= 0; s--) gifEncoder.addFrame(images[s]);
             } else {
                 for (BufferedImage image : images) gifEncoder.addFrame(image);
             }
@@ -80,19 +80,18 @@ public class BaseGifMaker {
 
     public InputStream makeGifUseAnimatedLib
             (List<AvatarModel> avatarList, List<TextModel> textList,
-             Map<Short, BufferedImage> stickerMap, GifRenderParams params) {
+             BufferedImage[] stickers, GifRenderParams params) {
         try {
             //遍历获取GIF长度(图片文件数量)
-            short i = 0;
-            CountDownLatch latch = new CountDownLatch(stickerMap.size());
-            FrameData[] frames = new FrameData[stickerMap.size()];
+            CountDownLatch latch = new CountDownLatch(stickers.length);
+            FrameData[] frames = new FrameData[stickers.length];
             int[] size = new int[2];
-            for (short key : stickerMap.keySet()) {
-                short fi = i++;
+            for (int i = 0; i < stickers.length; i++) {
+                int fi = i;
                 threadPool.execute(() -> {
                     BufferedImage image = ImageSynthesis.synthesisImage(
-                            stickerMap.get(key), avatarList, textList,
-                            params.getAntialias(), false, fi, params.getMaxSize()
+                            stickers[fi], avatarList, textList,
+                            params.getAntialias(), false, (short) fi, params.getMaxSize()
                     );
                     BufferedImage temp =
                             new BufferedImage(image.getWidth(), image.getHeight(),
@@ -120,7 +119,7 @@ public class BaseGifMaker {
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
             if (params.getReverse()) {
-                for (int s = frames.length - 1; s >= 0 ; s--) gifEncoder.addFrame(frames[s]);
+                for (int s = frames.length - 1; s >= 0; s--) gifEncoder.addFrame(frames[s]);
             } else {
                 for (FrameData frame : frames) gifEncoder.addFrame(frame);
             }
@@ -173,7 +172,7 @@ public class BaseGifMaker {
                     new BufferedGifEncoder(BufferedImage.TYPE_3BYTE_BGR, params.getDelay(), true);
             latch.await();
             if (params.getReverse()) {
-                for (int s = images.length - 1; s >= 0 ; s--) gifEncoder.addFrame(images[s]);
+                for (int s = images.length - 1; s >= 0; s--) gifEncoder.addFrame(images[s]);
             } else {
                 for (BufferedImage image : images) gifEncoder.addFrame(image);
             }
@@ -228,7 +227,7 @@ public class BaseGifMaker {
             latch.await();
             gifEncoder.setSize(size[0], size[1]);
             if (params.getReverse()) {
-                for (int s = frames.length - 1; s >= 0 ; s--) gifEncoder.addFrame(frames[s]);
+                for (int s = frames.length - 1; s >= 0; s--) gifEncoder.addFrame(frames[s]);
             } else {
                 for (FrameData frame : frames) gifEncoder.addFrame(frame);
             }
