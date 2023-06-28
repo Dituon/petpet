@@ -1,0 +1,33 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        0,
+        0,
+        1083,
+        1005
+      ],
+      "round": false,
+      "avatarOnTop": true,
+      "opacity": 0.5
+    }
+  ],
+  "text": [
+    {
+      "text": "我警告你，别碰我老婆$txt1[刻晴]\n       她不属于你",
+      "pos": [
+        100,
+        1150
+      ],
+      "color": "#191919",
+      "size": 120,
+      "align": "LEFT"
+    }
+  ],
+  "alias": [
+    "老婆警告"
+  ],
+  "inRandomList": false
+}
