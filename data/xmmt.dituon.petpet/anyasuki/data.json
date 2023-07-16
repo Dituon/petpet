@@ -3,14 +3,16 @@
     "avatar": [{
         "type": "TO",
         "pos": [106,72,305,235],
+        "fit": "COVER",
         "round": false,
         "avatarOnTop": false
     }],
     "text": [{
         "text": "阿尼亚喜欢$txt1[这个]",
-        "pos": [237,460],
+        "pos": [237,460, 460],
         "color": "#ffffff",
         "font": "MiSans Bold",
+        "wrap": "ZOOM",
         "size": 40,
         "align": "CENTER"
     }],
