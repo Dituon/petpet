@@ -114,14 +114,14 @@ task generateIndexJson {
         indexMapData.put(dir.getName(), fileCount)
     }
     def indexMapJsonData = new StringBuilder()
-    indexMapJsonData.append("{\n")
+    indexMapJsonData.append("{\n  \"length\": {\n")
     indexMapData.each { directory, fileCount ->
-        indexMapJsonData.append("  \"$directory\": $fileCount,\n")
+        indexMapJsonData.append("    \"$directory\": $fileCount,\n")
     }
     if (indexMapData) {
-        indexMapJsonData.delete(indexMapJsonData.length() - 2, indexMapJsonData.length() - 1) // Remove trailing comma
+        indexMapJsonData.delete(indexMapJsonData.length() - 2, indexMapJsonData.length() - 1)
     }
-    indexMapJsonData.append("}")
+    indexMapJsonData.append("  }\n}")
 
     def indexMapJsonFile = new File("$rootDir/index.map.json")
     indexMapJsonFile.write(indexMapJsonData.toString())
