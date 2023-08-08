@@ -33,6 +33,9 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     @ValueDescription("是否使用响应回复")
     val respondReply: Boolean by value(true)
 
+    @ValueDescription("是否使用响应私聊消息")
+    val respondFriend: Boolean by value(false)
+
     @ValueDescription("消息缓存池容量")
     val cachePoolSize: Int by value(10000)
 

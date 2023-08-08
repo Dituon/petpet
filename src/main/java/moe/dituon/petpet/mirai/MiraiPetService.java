@@ -27,6 +27,7 @@ public class MiraiPetService extends PluginPetService{
 
     public byte probability = 30;
     public boolean respondSelfNudge = false;
+    public boolean respondFriend = false;
     public Long coolDown = Cooler.DEFAULT_USER_COOLDOWN;
     public Long groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
     public String inCoolDownMessage = Cooler.DEFAULT_MESSAGE;
@@ -43,6 +44,7 @@ public class MiraiPetService extends PluginPetService{
 
         probability = (byte) config.getProbability();
         respondSelfNudge = config.getRespondSelfNudge();
+        respondFriend = config.getRespondFriend();
 
         autoUpdate = config.getAutoUpdate();
         repositoryUrl = config.getRepositoryUrl();
@@ -137,7 +139,7 @@ public class MiraiPetService extends PluginPetService{
         sendImage(group, key, gifAvatarExtraDataProvider, textExtraData);
     }
 
-    public void sendImage(Group group, String key,
+    public void sendImage(Contact group, String key,
                           GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData) {
         try {
             group.sendMessage(
