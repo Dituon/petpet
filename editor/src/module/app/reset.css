@@ -43,3 +43,20 @@ input[type=text]:focus{
     color: currentColor;
     border-color: currentColor;
 }
+/*主轴样式*/
+::-webkit-scrollbar {
+    width: 6px; /*滚动条宽度*/
+    height: 6px;
+    background-color: #f5f5f5; /*滚动条背景色*/
+}
+
+/*滑块样式*/
+::-webkit-scrollbar-thumb {
+    background-color: #cecece; /*滑块颜色*/
+    border-radius: 2px; /*滑块圆角*/
+}
+
+/*滑轨样式*/
+::-webkit-scrollbar-track {
+    background-color: #f5f5f5; /*滑轨颜色*/
+}

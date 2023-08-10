@@ -91,13 +91,13 @@ export function createInputGroup() {
     return inputGroup
 }
 
-export function createRadioButtonGroup(text, nodeTexts = []) {
+export function createRadioButtonGroup(text,name, nodeTexts = []) {
     const el = dom('div', {class: 'radio-btn-group'})
     el.append(text)
     for (let {key, value,checked=false} of nodeTexts) {
         el.append(dom('div', {
             html: `        <label>
-                    <input type="radio" name="${text}" value="${key}" ${checked?'checked':''}>
+                    <input type="radio" name="${name}" value="${key}" ${checked?'checked':''}>
                     <div class="radio-btn"> ${value}</div>
                 </label>`
         }))

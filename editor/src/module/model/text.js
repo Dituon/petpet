@@ -20,7 +20,7 @@ import {dom, domCheckbox, domInput, domSelect,createRadioButtonGroup,createInput
  * @property { string } strokeColor
  * @property { number } strokeSize
  */
-
+let textIndex=0
 export class TextModel extends Model {
     /** @type { fabric.IText } */
     text
@@ -198,7 +198,7 @@ export class TextModel extends Model {
             fun: e => this.maxWidth = e.target.value
         })
         maxWidth.setAttribute('disabled','true')
-        const fontStyle = createRadioButtonGroup("字体样式", [
+        const fontStyle = createRadioButtonGroup("字体样式",`字体样式${textIndex}`, [
             {key: 'PLAIN', value: '默认',checked:true},
             {key: 'BOLD', value: '粗体'},
             {key: 'ITALIC', value: '斜体'}
@@ -208,7 +208,7 @@ export class TextModel extends Model {
         })
 
 
-        const wrap=createRadioButtonGroup('文本溢出',[
+        const wrap=createRadioButtonGroup('文本溢出',`文本溢出${textIndex}`[
             {key: 'NONE', value: '不换行',checked:true},
             {key: 'BREAK', value: '自动换行'},
             {key: 'ZOOM', value: '自动缩放'}
@@ -228,7 +228,7 @@ export class TextModel extends Model {
         })
 
 
-        const align=createRadioButtonGroup('对齐方式',[
+        const align=createRadioButtonGroup('对齐方式',`对齐方式${textIndex++}`,[
                 {key: 'LEFT', value: '左对齐',checked:true},
                 {key: 'RIGHT', value: '右对齐'},
                 {key: 'CENTER', value: '居中'}
