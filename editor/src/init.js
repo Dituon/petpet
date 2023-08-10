@@ -24,7 +24,11 @@ const chooseFiles = files => {
 //拖拽上传
 dropElement.addEventListener("dragenter", stopPropagation, false)
 dropElement.addEventListener("dragover", stopPropagation, false)
-dropElement.addEventListener("drop", e => chooseFiles(e.dataTransfer.files), false)
+dropElement.addEventListener("drop", e => {
+        chooseFiles(e.dataTransfer.files)
+        stopPropagation(e)
+    }
+    , false)
 
 //选择上传
 /** @type { HTMLInputElement } */
