@@ -22,6 +22,7 @@ import {Model} from "./model.js"
  *
  */
 
+let avatarIndex=0
 export class AvatarModel extends Model {
     static defaultPosArray = () => [0, 0, 0, 0]
     static defaultDeformPosArray = () => [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
@@ -307,10 +308,13 @@ export class AvatarModel extends Model {
                 this.opacity = e.target.value
             }
         })
-        const type = createInputGroup(createRadioButtonGroup('type',['TO', 'FROM', 'GROUP', 'BOT', 'RANDOM'].map((key,index) => {
+        const type = createInputGroup(createRadioButtonGroup('type',`type${avatarIndex++}`,['TO', 'FROM', 'GROUP', 'BOT', 'RANDOM'].map((key,index) => {
           const  checked=(!index)
             return {key,value:key,checked}
         })))
+        type.addEventListener("change",({target})=>{
+           this.type=target.value
+        })
         // const type = domSelect(
         //     e => this.type = e.target.value,
         //     ...['TO', 'FROM', 'GROUP', 'BOT', 'RANDOM'].map(t => ({value: t}))
