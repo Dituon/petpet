@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'data/**'
+      - 'build.gradle'
 
 jobs:
   generate-index:
@@ -18,7 +19,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: oracle
+          distribution: temurin
           java-version: 11
           cache: gradle
 

@@ -10,10 +10,7 @@ apply plugin: "java"
 
 
 group = 'xmmt.dituon'
-version = '5.4'
-
-def dataPath = 'data/xmmt.dituon.petpet'
-def fontsPathName = 'fonts'
+version = '5.5'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
@@ -89,6 +86,8 @@ task wsJar(type: Jar) {
     with jar
 }
 
+def dataPath = 'data/xmmt.dituon.petpet'
+def fontsPathName = 'fonts'
 task generateIndexJson {
     def dataSubDirs = new File("$rootDir/$dataPath")
             .listFiles({ file -> file.isDirectory() && file.name != fontsPathName } as FileFilter)
