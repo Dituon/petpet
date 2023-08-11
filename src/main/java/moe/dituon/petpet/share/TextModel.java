@@ -237,8 +237,7 @@ public class TextModel {
      */
     public static int getTextHeight(String text, Font font) {
         if (container == null) container = new BufferedImage(1, 1, 1).createGraphics();
-        return (int) font.createGlyphVector(
-                container.getFontMetrics(font).getFontRenderContext(), text
-        ).getVisualBounds().getHeight();
+        FontMetrics fm = container.getFontMetrics(font);
+        return fm.getAscent() - fm.getDescent() - fm.getLeading();
     }
 }
