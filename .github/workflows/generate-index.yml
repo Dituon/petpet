@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'data/**'
-      - 'build.gradle'
+      - "data/**"
+      - "build.gradle"
 
 jobs:
   generate-index:
@@ -22,6 +22,9 @@ jobs:
           distribution: temurin
           java-version: 11
           cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Build with Gradle
         run: ./gradlew generateIndexJson
