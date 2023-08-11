@@ -200,16 +200,17 @@ public class AvatarModel {
 //                ti++;
 //            }
 //            int aw = tw / ti, ah = th / ti;
-            int aw = 0, ah = 0;
+            int aw = 0, ah = 0, maxSize = 0;
             for (int[] p : pos) {
                 if (p[2] > aw) aw = p[2];
                 if (p[3] > ah) ah = p[3];
+                maxSize = Math.max(aw, ah);
             }
 
             imageList = new ArrayList<>(imageList);
             if (imageList.size() == 1) {
                 try {
-                    imageList.set(0, Thumbnails.of(imageList.get(0)).size(aw, ah).keepAspectRatio(false).asBufferedImage());
+                    imageList.set(0, Thumbnails.of(imageList.get(0)).size(maxSize, maxSize).keepAspectRatio(true).asBufferedImage());
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

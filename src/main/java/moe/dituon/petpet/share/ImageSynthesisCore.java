@@ -54,8 +54,7 @@ public abstract class ImageSynthesisCore {
         int w = (int) (pos[2] * multiple);
         int h = (int) (pos[3] * multiple);
         BufferedImage newAvatarImage = avatarImage;
-//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
-//        g2d.setComposite(AlphaComposite.Src);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
