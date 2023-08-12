@@ -103,17 +103,10 @@ public abstract class ImageSynthesisCore {
             return;
         }
 
-        if (isRound || angle % 90 == 0) {
-            BufferedImage roundedImage = new BufferedImage(newAvatarImage.getWidth(), newAvatarImage.getHeight(), newAvatarImage.getType());
-            Graphics2D rotateG2d = roundedImage.createGraphics();
-            rotateG2d.rotate(Math.toRadians(angle), newAvatarImage.getWidth() / 2.0, newAvatarImage.getHeight() / 2.0);
-            rotateG2d.drawImage(newAvatarImage, null, 0, 0);
-            rotateG2d.dispose();
-            g2d.drawImage(roundedImage, x, y, w, h, null);
-            return;
-        }
-
-        g2d.drawImage(rotateImage(newAvatarImage, angle), x, y, w, h, null);
+        AffineTransform old = g2d.getTransform();
+        g2d.rotate(Math.toRadians(angle),  (double) w / 2 + x, (double) h / 2 + y);
+        g2d.drawImage(avatarImage, x, y, w, h, null);
+        g2d.setTransform(old);
     }
 
     /**
@@ -278,6 +271,7 @@ public abstract class ImageSynthesisCore {
      * @param angle       旋转角度
      * @return 旋转后的图像
      */
+    @Deprecated
     public static BufferedImage rotateImage(BufferedImage avatarImage, float angle) {
         double sin = Math.abs(Math.sin(Math.toRadians(angle))),
                 cos = Math.abs(Math.cos(Math.toRadians(angle)));
