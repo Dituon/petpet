@@ -28,7 +28,7 @@
 
 3. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
 
-4. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `config.json`, 重启后生效
+4. 运行 `start.bat` 或 `start.sh`, 可自行更改配置文件 `config.json`, 重启后生效
 
 5. 参考[`WebServer`](#WebServer)一节 发起网络请求 / 或使用[`WebUI`](#WebUI)
 
