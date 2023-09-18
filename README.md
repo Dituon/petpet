@@ -16,7 +16,7 @@
 
 - **[JS 前端版本](https://github.com/Dituon/petpet-js)**
 
-- **[在线编辑器](https://dituon.github.io/petpet/editor)**
+- **[在线编辑器](https://dituon.github.io/petpet-js/editor)**
 
 ## 使用方法
 
