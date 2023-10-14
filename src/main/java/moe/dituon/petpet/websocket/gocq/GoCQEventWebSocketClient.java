@@ -1,10 +1,13 @@
 package moe.dituon.petpet.websocket.gocq;
 
+import kotlinx.serialization.json.Json;
+import kotlinx.serialization.json.JsonObject;
 import moe.dituon.petpet.plugin.PluginPetService;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.Objects;
 
 public class GoCQEventWebSocketClient extends WebSocketClient {
     public GoCQEventWebSocketClient(URI serverURI) {
@@ -30,12 +33,12 @@ public class GoCQEventWebSocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         try {
-            if(message.contains("\"post_type\":\"message\"")){
-                GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(message);
-                new OneBotGroupMessage(e);
-            }
-            PluginPetService.LOGGER.info(message);
-        } catch (Exception e){
+            JsonObject obj = (JsonObject) Json.Default.parseToJsonElement(message);
+            String type = Objects.requireNonNull(obj.get("post_type")).toString();
+            if (!"message".equals(type)) return;
+            GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(obj);
+            new OneBotGroupMessage(e);
+        } catch (Exception e) {
             PluginPetService.LOGGER.warning(message, e);
         }
     }

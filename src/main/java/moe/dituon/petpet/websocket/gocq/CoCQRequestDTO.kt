@@ -4,9 +4,7 @@ import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.*
 import moe.dituon.petpet.share.encodeDefaultsJson
 
 enum class GoCQRole {
@@ -46,6 +44,11 @@ data class GoCQGroupMessageEventDTO(
         @JvmStatic
         fun parse(str: String): GoCQGroupMessageEventDTO {
             return ignoreUnknownKeysJson.decodeFromString(str)
+        }
+
+        @JvmStatic
+        fun parse(obj: JsonElement): GoCQGroupMessageEventDTO {
+            return ignoreUnknownKeysJson.decodeFromJsonElement(obj)
         }
     }
 }
