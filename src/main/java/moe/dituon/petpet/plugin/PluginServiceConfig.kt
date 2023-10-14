@@ -5,6 +5,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import moe.dituon.petpet.share.BaseServiceConfig
 import moe.dituon.petpet.share.Encoder
+import moe.dituon.petpet.share.encodeDefaultsIgnoreUnknownKeysJson
 
 //interface Nudge {
 //    val probability: Int
@@ -61,9 +62,14 @@ data class PluginServiceConfig(
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifQuality: Int = 5,
+
     val threadPoolSize: Int = 0,
-    val headless: Boolean = true
+    val headless: Boolean = true,
+
+    val autoUpdate: Boolean = true,
+    val repositoryUrls: Array<String> = emptyArray()
 ) {
+
     fun toBaseServiceConfig() = BaseServiceConfig(
         antialias = antialias,
         resampling = resampling,
@@ -93,14 +99,16 @@ enum class DisablePolicy {
 
 @Serializable
 data class UpdateIndex(
-    val version: Float,
-    val dataList: List<String>,
-    val fontList: List<String>
+    val version: Float = 0f,
+    val dataPath: String = DataUpdater.DEFAULT_REPO_DATA_PATH,
+    val dataList: List<String> = emptyList(),
+    val fontList: List<String> = emptyList(),
+    var url: String = ""
 ) {
     companion object {
         @JvmStatic
         fun parse(str: String): UpdateIndex {
-            return Json.decodeFromString(str)
+            return encodeDefaultsIgnoreUnknownKeysJson.decodeFromString(str)
         }
     }
 }

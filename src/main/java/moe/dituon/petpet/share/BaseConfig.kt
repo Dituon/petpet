@@ -15,6 +15,11 @@ val encodeDefaultsPrettyJson = Json {
 
 val encodeDefaultsJson = Json { encodeDefaults = true }
 
+val encodeDefaultsIgnoreUnknownKeysJson = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+}
+
 //@Serializable
 //abstract class AbstractBaseServiceConfig {
 //    abstract val antialias: Boolean

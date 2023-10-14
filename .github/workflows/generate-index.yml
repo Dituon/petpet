@@ -1,0 +1,48 @@
+name: Generate Index JSON
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "data/**"
+      - "build.gradle"
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 11
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew generateIndexJson
+
+      - name: Copy index.json
+        run: cp index.json ${{ github.workspace }}/index.json
+
+      - name: Copy index.map.json
+        run: cp index.map.json ${{ github.workspace }}/index.map.json
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update index.json and index.map.json
+          commit_user_name: GitHub Actions
+          commit_user_email: actions@github.com
+          commit_author: GitHub Actions <actions@github.com>
+          file_pattern: "index.json,index.map.json"

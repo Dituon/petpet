@@ -14,9 +14,9 @@
 
 原生 java 编写, kotlin仅用于数据序列化, **使用底层API**, **多线程优化**: 轻量, 高性能, 易拓展
 
-- **[WebUI demo (beta)](http://s.xmmt.fun:2333/)**
+- **[JS 前端版本](https://github.com/Dituon/petpet-js)**
 
-- **[在线编辑器](https://dituon.github.io/petpet/editor)**
+- **[在线编辑器](https://dituon.github.io/petpet-js/editor)**
 
 ## 使用方法
 
@@ -28,7 +28,7 @@
 
 3. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
 
-4. `cd ./` `java -jar petpet.jar`, 可自行更改配置文件 `config.json`, 重启后生效
+4. 运行 `start.bat` 或 `start.sh`, 可自行更改配置文件 `config.json`, 重启后生效
 
 5. 参考[`WebServer`](#WebServer)一节 发起网络请求 / 或使用[`WebUI`](#WebUI)
 
@@ -386,12 +386,12 @@
       "avatarOnTop": false
     }],
   "text": [], // 文字(textObj[])*, 详见下文
-  "inRandomList": false, // 在随机列表中(bolean)
-  "reverse": false, // GIF倒放(bolean)
+  "inRandomList": false, // 在随机列表中(boolean)
+  "reverse": false, // GIF倒放(boolean)
   "delay": 50, // 帧间延时(ms/int), 默认为65
   "background": {}, // 背景(obj), 详见下文
   "alias": [ "别名1", "别名2" ], // 别名(str[])
-  "hidden": false // 隐藏(bolean)
+  "hidden": false // 隐藏(boolean)
 }
 ```
 
@@ -537,7 +537,7 @@
       "pos": [0,200,300], // 第三个值为文本最大宽度
       "align": "CENTER", // 对齐方式, 默认为LEFT
       "wrap": "ZOOM", // 显示设置, 默认为NONE
-      "style": "BLOD", // 字体样式, 默认为PLAIN
+      "style": "BOLD", // 字体样式, 默认为PLAIN
       "greedy": true // 贪婪匹配模式, 会匹配多余的关键词
     }
   ]
@@ -572,7 +572,7 @@
 **`style`**
 
 - `PLAIN`: 默认
-- `BLOD`: 粗体
+- `BOLD`: 粗体
 - `ITALIC`: 斜体
 
 **`position`**

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 
 public class BasePetService {
-    public static final float VERSION = 5.4F;
+    public static final float VERSION = 5.5F;
     public static final BaseLogger LOGGER = BaseLogger.getInstance();
     public static final String FONTS_FOLDER = "fonts";
     public static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
@@ -28,13 +28,14 @@ public class BasePetService {
     private List<Integer> gifMaxSize = null;
     public Encoder encoder = Encoder.ANIMATED_LIB;
 
-    public File dataRoot = null;
+    public File dataRoot = new File("./data");
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
-    protected HashMap<String, Callable<Map<Short, BufferedImage>>> backgroundLambdaMap = new HashMap<>();
+    protected HashMap<String, Callable<BufferedImage[]>> backgroundLambdaMap = new HashMap<>();
+    protected HashMap<String, File[]> backgroundFileMap = new HashMap<>();
     public String keyListString = "";
 
-//    protected int serviceThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+    //    protected int serviceThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 //    protected ExecutorService serviceThreadPool = Executors.newFixedThreadPool(serviceThreadPoolSize);
     protected int gifEncoderThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
     protected BaseGifMaker gifMaker = new BaseGifMaker(gifEncoderThreadPoolSize);
@@ -66,7 +67,7 @@ public class BasePetService {
                 KeyData data = KeyData.getData(getFileStr(dataFile));
                 putKeyData(file.getName(), data);
             } catch (Exception ex) {
-                LOGGER.warning("无法读取 " + file + "/data.json " , ex);
+                LOGGER.warning("无法读取 " + file + "/data.json ", ex);
             }
         }
     }
@@ -80,24 +81,36 @@ public class BasePetService {
      */
     public void putKeyData(String key, KeyData data) {
         data.getAvatar().forEach(avatar -> {
-            if  (avatar.getResampling() == null) avatar.setResampling(resampling);
+            if (avatar.getResampling() == null) avatar.setResampling(resampling);
         });
         dataMap.put(key.intern(), data);
 
+        String path = dataRoot.getAbsolutePath() + File.separator + key + File.separator;
+        File[] files = new File(path).listFiles();
+        if (files == null) throw new RuntimeException("无法读取 " + path + " 目录");
+
+        File[] backgroundFiles = Arrays.stream(files)
+                .filter(f -> f.getName().endsWith(".png"))
+                .sorted(Comparator.comparingInt(f -> {
+                    String fileName = f.getName();
+                    int startIndex = fileName.lastIndexOf("/") + 1;
+                    int endIndex = fileName.lastIndexOf(".");
+                    String number = fileName.substring(startIndex, endIndex);
+                    return Integer.parseInt(number);
+                }))
+                .toArray(File[]::new);
+
+        backgroundFileMap.put(key, backgroundFiles);
+
         assert dataRoot != null;
         backgroundLambdaMap.put(key, () -> { //使用Lambda实现按需加载, 减少内存占用
-            String path = dataRoot.getAbsolutePath() + File.separator +
-                    (dataMap.containsKey(key) ? key : aliaMap.get(key)) + File.separator;
-            File[] files = new File(path).listFiles();
-            if (files == null) throw new RuntimeException("无法读取 " + path + " 目录");
-
-            Map<Short, BufferedImage> backgroundMap = new HashMap<>(files.length);
-            short imageNum = 0;
-            for (File file : files) {
-                if (!file.getName().endsWith(".png")) continue;
-                backgroundMap.put(imageNum, ImageIO.read(new File(path + imageNum++ + ".png")));
-            }
-            return backgroundMap;
+            return Arrays.stream(backgroundFiles).map(bg -> {
+                try {
+                    return ImageIO.read(bg);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toArray(BufferedImage[]::new);
         });
 
         if (!Boolean.TRUE.equals(data.getHidden())) putAlia(key, data);
@@ -119,16 +132,11 @@ public class BasePetService {
      */
     public void putKeyData(String key, KeyData data, List<BufferedImage> backgroundList) {
         data.getAvatar().forEach(avatar -> {
-            if  (avatar.getResampling() == null) avatar.setResampling(resampling);
+            if (avatar.getResampling() == null) avatar.setResampling(resampling);
         });
-        dataMap.put(key, data);
 
-        Map<Short, BufferedImage> backgroundMap = new HashMap<>(backgroundList.size() + 1);
-        short imageNum = 0;
-        for (var background : backgroundList) {
-            backgroundMap.put(imageNum++, background);
-        }
-        backgroundLambdaMap.put(key, () -> backgroundMap);
+        dataMap.put(key, data);
+        backgroundLambdaMap.put(key, () -> backgroundList.toArray(BufferedImage[]::new));
 
         if (!Boolean.TRUE.equals(data.getHidden())) putAlia(key, data);
     }
@@ -244,16 +252,17 @@ public class BasePetService {
             );
 
             if (data.getType() == Type.GIF) {
-                Map<Short, BufferedImage> stickerMap = backgroundLambdaMap.get(key).call();
+                BufferedImage[] stickers;
 
                 if (data.getBackground() != null) { //从配置文件读背景
-                    BufferedImage sticker = new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
-                    for (short i = 0; i < avatarList.get(0).getPosLength(); i++) {
-                        stickerMap.put(i, sticker);
-                    }
+                    stickers = new BufferedImage[avatarList.get(0).getPosLength()];
+                    Arrays.fill(stickers, new BackgroundModel(data.getBackground(), avatarList, textList).getImage());
+                } else {
+                    stickers = backgroundLambdaMap.get(key).call();
                 }
+
                 InputStream inputStream = gifMaker.makeGIF(
-                        avatarList, textList, stickerMap, renderParams);
+                        avatarList, textList, stickers, renderParams);
                 return new Pair<>(inputStream, "gif");
             }
 
@@ -274,17 +283,16 @@ public class BasePetService {
             ArrayList<AvatarModel> avatarList,
             ArrayList<TextModel> textList
     ) throws Exception {
-        var backgroundMap = backgroundLambdaMap.get(key).call();
-        if (backgroundMap.isEmpty() && data.getBackground() == null) { //没有背景图片和背景配置
+        var backgrounds = backgroundLambdaMap.get(key).call();
+        boolean isEmpty = backgrounds.length == 0;
+        if (isEmpty && data.getBackground() == null) { //没有背景图片和背景配置
             throw new FileNotFoundException("找不到 " + key + " 背景文件");
         }
-        if (backgroundMap.isEmpty() && data.getBackground() != null) { //无背景图片(读取背景配置
+        if (isEmpty && data.getBackground() != null) { //无背景图片(读取背景配置
             return new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
         }
-        assert !backgroundMap.isEmpty();
-        var background = backgroundMap.get(
-                (short) random.nextInt(backgroundMap.size())
-        );
+        assert !isEmpty;
+        var background = backgrounds[random.nextInt(backgrounds.length)];
 
         if (data.getBackground() == null) return background;  //无背景配置(读取随机背景图片
 
@@ -377,10 +385,12 @@ public class BasePetService {
     public int getGifEncoderThreadPoolSize() {
         return gifEncoderThreadPoolSize;
     }
-    public BaseGifMaker getGifMaker(){
+
+    public BaseGifMaker getGifMaker() {
         return gifMaker;
     }
-    public BaseImageMaker getImageMaker(){
+
+    public BaseImageMaker getImageMaker() {
         return imageMaker;
     }
 }

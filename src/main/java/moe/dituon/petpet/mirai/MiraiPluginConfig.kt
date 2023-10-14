@@ -33,6 +33,9 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     @ValueDescription("是否使用响应回复")
     val respondReply: Boolean by value(true)
 
+    @ValueDescription("是否使用响应私聊消息")
+    val respondFriend: Boolean by value(false)
+
     @ValueDescription("消息缓存池容量")
     val cachePoolSize: Int by value(10000)
 
@@ -76,7 +79,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
     val autoUpdate: Boolean by value(true)
 
     @ValueDescription("用于自动更新的仓库地址")
-    val repositoryUrl: String by value(DataUpdater.DEFAULT_REPO_URL)
+    val repositoryUrls: List<String> by value(listOf(DataUpdater.DEFAULT_REPO_URL))
 
     @ValueDescription("是否启用开发模式 (支持热重载)")
     val devMode: Boolean by value(false)
@@ -112,6 +115,8 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet")
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
         threadPoolSize = gifEncoderThreadPoolSize,
-        headless = headless
+        headless = headless,
+        autoUpdate = autoUpdate,
+        repositoryUrls = repositoryUrls.toTypedArray()
     )
 }

@@ -13,10 +13,7 @@ import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.GlobalEventChannel;
-import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.event.events.GroupMessagePostSendEvent;
-import net.mamoe.mirai.event.events.MessagePreSendEvent;
-import net.mamoe.mirai.event.events.NudgeEvent;
+import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.data.*;
 
 import java.io.File;
@@ -67,8 +64,11 @@ public final class MiraiPetpet extends JavaPlugin {
 
         if (service.headless) System.setProperty("java.awt.headless", "true");
         if (service.autoUpdate) new Thread(() -> {
-            DataUpdater updater = new DataUpdater(service.repositoryUrl, getDataFolder());
-            updater.autoUpdate();
+            DataUpdater updater = new DataUpdater(service, getDataFolder());
+            if (updater.autoUpdate()) {
+                LOGGER.info("Petpet 模板更新完毕, 正在重载");
+                service.readData(MiraiPetpet.dataFolder);
+            }
         }).start();
         disabledGroup = service.disabledGroups;
 
@@ -87,6 +87,9 @@ public final class MiraiPetpet extends JavaPlugin {
         GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class,
                 service.messageSynchronized ? this::onGroupMessageSynchronized : this::onGroupMessage);
 
+        if (service.respondFriend)
+            GlobalEventChannel.INSTANCE.subscribeAlways(UserMessageEvent.class, this::onUserMessage);
+
         if (service.respondReply) {
             imageCachePool = new LinkedHashMap<>(service.cachePoolSize, 0.75f, true) {
                 @Override
@@ -96,6 +99,11 @@ public final class MiraiPetpet extends JavaPlugin {
             };
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
+
+            if (service.respondFriend) {
+                GlobalEventChannel.INSTANCE.subscribeAlways(UserMessageEvent.class, this::cacheMessageImage);
+                GlobalEventChannel.INSTANCE.subscribeAlways(UserMessagePostSendEvent.class, this::cacheMessageImage);
+            }
         }
 
         if (service.messageHook)
@@ -123,10 +131,10 @@ public final class MiraiPetpet extends JavaPlugin {
         try {
             Cooler.lock(e.getFrom().getId(), service.coolDown);
             service.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
-        } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
+        } catch (Exception ignored0) { // 如果无法把被戳的对象转换为Member (只有Bot无法强制转换为Member对象)
             try {
                 service.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
-            } catch (Exception ignored) { // 如果bot戳了别人
+            } catch (Exception ignored1) { // 如果bot戳了别人
                 if (!service.respondSelfNudge) return;
                 service.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
             }
@@ -178,28 +186,7 @@ public final class MiraiPetpet extends JavaPlugin {
         if (service.messageCanBeDisabled && isDisabled(e.getGroup())) return;
 
         if (messageString.equals(service.command)) {
-            switch (service.replyFormat) {
-                case MESSAGE:
-                    e.getGroup().sendMessage("Petpet KeyList: \n" + service.getKeyAliasListString());
-                    break;
-                case FORWARD:
-                    ForwardMessageBuilder builder = new ForwardMessageBuilder(e.getGroup());
-                    builder.add(e.getBot().getId(), "petpet!",
-                            new PlainText("Petpet KeyList: \n" + service.getKeyAliasListString()));
-                    e.getGroup().sendMessage(builder.build());
-                    break;
-                case IMAGE:
-                    if (service.getDataMap().get("key_list") == null) {
-                        getLogger().error("未找到PetData/key_list, 无法进行图片构造");
-                        e.getGroup().sendMessage("[ERROR]未找到PetData/key_list\n" + service.getKeyAliasListString());
-                        return;
-                    }
-                    List<String> keyList = List.of(service.getKeyAliasListString());
-                    service.sendImage(e.getGroup(), "key_list",
-                            BaseConfigFactory.getGifAvatarExtraDataFromUrls(null, null, null, null, null),
-                            new TextExtraData("", "", "", keyList));
-                    break;
-            }
+            sendKeyList(e.getGroup());
             return;
         }
 
@@ -340,6 +327,152 @@ public final class MiraiPetpet extends JavaPlugin {
                 ));
     }
 
+    private void onUserMessage(UserMessageEvent e) {
+        if (!e.getMessage().contains(PlainText.Key)) return;
+
+        String messageString = e.getMessage().contentToString().trim();
+
+        if (service.devMode && messageString.equals(service.command + " reload")) {
+            e.getSender().sendMessage(service.command + "正在重载...");
+            service.readData(dataFolder);
+            e.getSender().sendMessage(service.command + "重载完成!");
+            return;
+        }
+
+        if (messageString.equals(service.command)) {
+            sendKeyList(e.getSubject());
+            return;
+        }
+
+        boolean fuzzyLock = false; //锁住模糊匹配
+        boolean hasImage = false; //匹配到多张图片特殊处理
+
+        String fromName = e.getBot().getNick(),
+                fromUrl = e.getBot().getAvatarUrl(),
+                toName = e.getSenderName(),
+                toUrl = e.getSender().getAvatarUrl(),
+                groupName = toName;
+
+        StringBuilder messageText = new StringBuilder();
+        for (SingleMessage singleMessage : e.getMessage()) {
+            if (singleMessage instanceof QuoteReply && service.respondReply) {
+                long id = e.getSubject().getId() + ((QuoteReply) singleMessage).getSource().getIds()[0];
+                if (imageCachePool.get(id) == null) continue;
+                toName = "这个";
+                toUrl = imageCachePool.get(id);
+                fuzzyLock = true;
+                continue;
+            }
+            if (singleMessage instanceof PlainText) {
+                String text = singleMessage.contentToString();
+                messageText.append(text).append(' ');
+                continue;
+            }
+            if (singleMessage instanceof Image) {
+                String url = Image.queryUrl((Image) singleMessage);
+                if (hasImage) {
+                    fromUrl = url;
+                    continue;
+                }
+                fromName = e.getSender().getNick();
+                fromUrl = e.getSender().getAvatarUrl();
+                toName = "这个";
+                toUrl = url;
+                fuzzyLock = true;
+                hasImage = true;
+            }
+        }
+
+        String commandData = messageText.toString().trim();
+        String[] spanArray = spacePattern.split(commandData);
+        if (spanArray.length == 0) return;
+        ArrayList<String> spanList = new ArrayList<>(Arrays.asList(spanArray));
+
+        String key = null;
+        if (service.command.equals(spanArray[0])) {
+            spanList.remove(0); //去掉指令头
+            key = service.randomableList.get(random.nextInt(service.randomableList.size())); //随机key
+        }
+
+        if (!spanList.isEmpty() && !service.strictCommand) { //匹配非标准格式指令
+            if (keyAliaSet == null) { //按需初始化
+                keyAliaSet = new HashSet<>(service.getDataMap().keySet());
+                keyAliaSet.addAll(service.getAliaMap().keySet());
+                keyAliaSet = keyAliaSet.stream()
+                        .map(str -> str = service.commandHead + str)
+                        .collect(Collectors.toSet());
+            }
+            for (String k : keyAliaSet) {
+                if (!spanList.get(0).startsWith(k)) break;
+                String span = spanList.set(0, k);
+                if (span.length() != k.length()) {
+                    spanList.add(1, span.substring(k.length()));
+                }
+            }
+        }
+
+        if (!spanList.isEmpty()) {
+            String firstSpan = spanList.get(0);
+            if (firstSpan.startsWith(service.commandHead)) {
+                spanList.set(0, firstSpan = firstSpan.substring(service.commandHead.length()));
+            } else {
+                return;
+            }
+
+            if (service.getDataMap().containsKey(firstSpan)) { //key
+                key = spanList.remove(0);
+            } else if (service.getAliaMap().containsKey(firstSpan)) { //别名
+                String[] keys = service.getAliaMap().get(spanList.remove(0));
+                key = keys[random.nextInt(keys.length)];
+            }
+        }
+
+        if (key == null) return;
+
+        if (Cooler.isLocked(e.getSender().getId()) || Cooler.isLocked(e.getSubject().getId())) {
+            if (service.inCoolDownNudge && !(e.getSender() instanceof AnonymousMember)) {
+                e.getSender().nudge().sendTo(e.getSubject());
+                return;
+            }
+            if (service.inCoolDownMessage == null) return;
+            sendReplyMessage(e, service.inCoolDownMessage);
+            return;
+        }
+        Cooler.lock(e.getSender().getId(), service.coolDown);
+
+        service.sendImage(e.getSubject(), key,
+                BaseConfigFactory.getGifAvatarExtraDataFromUrls(
+                        fromUrl, toUrl, e.getSubject().getAvatarUrl(), e.getBot().getAvatarUrl(), null
+                ), new TextExtraData(
+                        fromName, toName, groupName, spanList
+                ));
+    }
+
+    private void sendKeyList(Contact contact) {
+        switch (service.replyFormat) {
+            case MESSAGE:
+                contact.sendMessage("Petpet KeyList: \n" + service.getKeyAliasListString());
+                break;
+            case FORWARD:
+                ForwardMessageBuilder builder = new ForwardMessageBuilder(contact);
+                builder.add(contact.getBot().getId(), "petpet!",
+                        new PlainText("Petpet KeyList: \n" + service.getKeyAliasListString()));
+                contact.sendMessage(builder.build());
+                break;
+            case IMAGE:
+                if (service.getDataMap().get("key_list") == null) {
+                    getLogger().error("未找到 data/key_list, 无法进行图片构造");
+                    contact.sendMessage("[ERROR]未找到 data/key_list\n" + service.getKeyAliasListString());
+                    return;
+                }
+                List<String> keyList = List.of(service.getKeyAliasListString());
+                service.sendImage(contact, "key_list",
+                        BaseConfigFactory.getGifAvatarExtraDataFromUrls(null, null, null, null, null),
+                        new TextExtraData("", "", "", keyList));
+                break;
+        }
+    }
+
     private void onMessagePreSend(MessagePreSendEvent e) {
         String messageRaw = e.getMessage().contentToString();
         final Matcher matcher = hookPattern.matcher(messageRaw);
@@ -385,17 +518,17 @@ public final class MiraiPetpet extends JavaPlugin {
         e.setMessage(messageBuilder.asMessageChain());
     }
 
-    private void cacheMessageImage(GroupMessageEvent e) {
+    private void cacheMessageImage(MessageEvent e) {
         for (SingleMessage singleMessage : e.getMessage()) {
             if (singleMessage instanceof Image) {
-                long id = e.getGroup().getId() + e.getMessage().get(MessageSource.Key).getIds()[0];
+                long id = e.getSubject().getId() + e.getMessage().get(MessageSource.Key).getIds()[0];
                 imageCachePool.put(id, Image.queryUrl((Image) singleMessage));
                 return;
             }
         }
     }
 
-    private void cacheMessageImage(GroupMessagePostSendEvent e) {
+    private void cacheMessageImage(MessagePostSendEvent e) {
         for (SingleMessage singleMessage : e.getMessage()) {
             if (singleMessage instanceof Image) {
                 try {
@@ -425,8 +558,8 @@ public final class MiraiPetpet extends JavaPlugin {
         return e.getPermission() == MemberPermission.ADMINISTRATOR || e.getPermission() == MemberPermission.OWNER;
     }
 
-    private void sendReplyMessage(GroupMessageEvent e, String text) {
-        e.getGroup().sendMessage(new QuoteReply(e.getMessage()).plus(text));
+    private void sendReplyMessage(MessageEvent e, String text) {
+        e.getSubject().sendMessage(new QuoteReply(e.getMessage()).plus(text));
     }
 
     private boolean nudgeEventAreEqual(NudgeEvent nudge1, NudgeEvent nudge2) {

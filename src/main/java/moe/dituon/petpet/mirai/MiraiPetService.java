@@ -1,7 +1,6 @@
 package moe.dituon.petpet.mirai;
 
 import moe.dituon.petpet.plugin.Cooler;
-import moe.dituon.petpet.plugin.DataUpdater;
 import moe.dituon.petpet.plugin.PluginPetService;
 import moe.dituon.petpet.server.WebServer;
 import moe.dituon.petpet.share.BaseConfigFactory;
@@ -23,10 +22,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class MiraiPetService extends PluginPetService{
+public class MiraiPetService extends PluginPetService {
 
     public byte probability = 30;
     public boolean respondSelfNudge = false;
+    public boolean respondFriend = false;
     public Long coolDown = Cooler.DEFAULT_USER_COOLDOWN;
     public Long groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
     public String inCoolDownMessage = Cooler.DEFAULT_MESSAGE;
@@ -35,17 +35,14 @@ public class MiraiPetService extends PluginPetService{
     public boolean messageHook = false;
     public boolean nudgeCanBeDisabled = true;
     public boolean messageCanBeDisabled = false;
-    public boolean autoUpdate = true;
-    public String repositoryUrl = DataUpdater.DEFAULT_REPO_URL;
 
     public void readConfigByPluginAutoSave() {
         MiraiPluginConfig config = MiraiPluginConfig.INSTANCE;
 
         probability = (byte) config.getProbability();
         respondSelfNudge = config.getRespondSelfNudge();
+        respondFriend = config.getRespondFriend();
 
-        autoUpdate = config.getAutoUpdate();
-        repositoryUrl = config.getRepositoryUrl();
         disabledGroups = config.getDisabledGroups();
         coolDown = config.getCoolDown();
         groupCoolDown = config.getGroupCoolDown();
@@ -81,11 +78,12 @@ public class MiraiPetService extends PluginPetService{
     }
 
     @Override
-    public void readData(File dir){
+    public void readData(File dir) {
         if (dir.listFiles() == null) {
             MiraiPetpet.LOGGER.info(autoUpdate ?
-                    "o((>ω< ))o 你这头懒猪, 没有下载petpet模板!\n\\^o^/ 还好我冰雪聪明, 帮你自动更新了⭐" :
-                    "(ﾟДﾟ*)ﾉ 没有petpet模板! 你自己手动更新吧x\n(☆-ｖ-) 笨蛋! 让你不开自动更新⭐");
+                    "(ﾟДﾟ*)ﾉ 找不到 Petpet 模板, 开始尝试自动下载" :
+                    "(T_T) 找不到 Petpet 模板"
+            );
             return;
         }
         super.readData(dir);
@@ -137,7 +135,7 @@ public class MiraiPetService extends PluginPetService{
         sendImage(group, key, gifAvatarExtraDataProvider, textExtraData);
     }
 
-    public void sendImage(Group group, String key,
+    public void sendImage(Contact group, String key,
                           GifAvatarExtraDataProvider gifAvatarExtraDataProvider, TextExtraData textExtraData) {
         try {
             group.sendMessage(

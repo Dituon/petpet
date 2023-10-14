@@ -10,10 +10,7 @@ apply plugin: "java"
 
 
 group = 'xmmt.dituon'
-version = '5.4'
-
-def dataPath = 'data/xmmt.dituon.petpet'
-def fontsPathName = 'fonts'
+version = '5.5'
 
 repositories {
     maven { url 'https://maven.aliyun.com/repository/public' }
@@ -31,6 +28,7 @@ dependencies {
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
 
     testImplementation "junit:junit:4.11"
+    testImplementation 'org.codehaus.groovy:groovy-json:3.0.18'
 }
 
 java {
@@ -88,21 +86,61 @@ task wsJar(type: Jar) {
     with jar
 }
 
+def dataPath = 'data/xmmt.dituon.petpet'
+def fontsPathName = 'fonts'
 task generateIndexJson {
     def dataSubDirs = new File("$rootDir/$dataPath")
             .listFiles({ file -> file.isDirectory() && file.name != fontsPathName } as FileFilter)
-            .collect({ dir -> "\"${dir.getName()}\"" }).join(",\n    ")
+
+    def dataTemplateNames = dataSubDirs.collect({ dir -> dir.getName() })
 
     def fontsNames = new File("$rootDir/$dataPath/$fontsPathName")
-            .listFiles({ file -> file.isFile() } as FileFilter).collect({ file -> "\"${file.getName()}\"" }).join(",\n    ")
+            .listFiles({ file -> file.isFile() } as FileFilter).collect({ file -> file.getName() })
 
-    def jsonData = "{\n"
-    jsonData += "  \"version\": $project.version,\n"
-    jsonData += "  \"dataList\": [\n    $dataSubDirs\n  ],\n"
-    jsonData += "  \"fontList\": [\n    $fontsNames\n  ]\n"
-    jsonData += "}"
-    def indexJsonFile = new File("$rootDir/index.json")
-    indexJsonFile.write(jsonData)
+    def jsonData = [
+            version: Float.parseFloat(project.version),
+            dataList: dataTemplateNames,
+            fontList: fontsNames
+    ]
+
+    new File("$rootDir/index.json").withWriter { writer ->
+        writer << new groovy.json.JsonBuilder(jsonData).toPrettyString()
+    }
+
+    def lengthIndex = dataSubDirs.collectEntries { dir ->
+        [
+                (dir.getName()): dir.listFiles({ file ->
+                    file.isFile() && file.getName().endsWith(".png")
+                } as FileFilter)?.length ?: 0
+        ]
+    }
+
+    def aliasIndex = [:]
+    def typeIndex = [:]
+
+    dataSubDirs.each { dir ->
+        if (dir.name != fontsPathName) {
+            def dataJsonFile = new File("$rootDir/$dataPath/${dir.name}/data.json")
+            if (dataJsonFile.exists()) {
+                def dataJson = new groovy.json.JsonSlurper().parse(dataJsonFile)
+                aliasIndex[dir.name] = dataJson.alias ?: []
+                typeIndex[dir.name] = dataJson.type ?: "Unknown"
+            } else {
+                aliasIndex[dir.name] = []
+                typeIndex[dir.name] = "Unknown"
+            }
+        }
+    }
+
+    def indexMapJsonData = new groovy.json.JsonBuilder([
+            length: lengthIndex,
+            alias: aliasIndex.collectEntries { key, value -> [(key): value] },
+            type: typeIndex.collectEntries { key, value -> [(key): value] }
+    ]).toString()
+
+    new File("$rootDir/index.map.json").withWriter { writer ->
+        writer << indexMapJsonData
+    }
 }
 
 mirai {

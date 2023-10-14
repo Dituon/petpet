@@ -1,5 +1,6 @@
 @echo off
 cls
+title Petpet
 
 setlocal enableDelayedExpansion
 
@@ -32,11 +33,9 @@ for /f "delims=" %%a in ('dir /b /a-d %jar_file%') do (
 
 echo Running %jar_file%
 if exist %SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe (
-    powershell.exe -Command "cd '%~dp0'; java -jar -Xms16M "%jar_file%" %args%"
+    start powershell.exe -Command "Set-ItemProperty HKCU:\Console VirtualTerminalLevel -Type DWORD 1; cd '%~dp0'; java -jar -Xms16M "%jar_file%" %args%"
 ) else (
-    cmd /c "cd /d %~dp0 && java -jar -Xms16M "%jar_file%" %args%"
+    cmd /c "reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1 /f && cd /d %~dp0 && java -jar -Xms16M "%jar_file%" %args%"
 )
-
-title Petpet
 
 endlocal
