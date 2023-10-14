@@ -5,6 +5,7 @@ import moe.dituon.petpet.plugin.DataUpdater;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static moe.dituon.petpet.share.BasePetService.LOGGER;
 
@@ -23,6 +24,18 @@ public class GoCQPetpet {
         service.readConfig();
         service.readData();
 
+
+        if (service.respondReply) {
+            imageCachePool = new LinkedHashMap<>(service.cachePoolSize, 0.75f, true) {
+                @Override
+                public boolean removeEldestEntry(Map.Entry eldest) {
+                    return size() > service.cachePoolSize;
+                }
+            };
+//            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
+//            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
+        }
+
         if (service.autoUpdate){
             new Thread(() -> {
                 var uploader = new DataUpdater(service, service.dataRoot);
@@ -32,17 +45,6 @@ public class GoCQPetpet {
                 }
             });
         }
-
-//        if (service.respondReply) {
-//            imageCachePool = new LinkedHashMap<>(service.cachePoolSize, 0.75f, true) {
-//                @Override
-//                public boolean removeEldestEntry(Map.Entry eldest) {
-//                    return size() > service.cachePoolSize;
-//                }
-//            };
-////            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
-////            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
-//        }
 
         try{
             LOGGER.info("WebSocket API URL: " + service.apiWebSocketUri);

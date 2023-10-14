@@ -13,7 +13,7 @@ public class PluginPetService extends BasePetService {
     public String command = "pet";
     public String commandHead = "";
     public boolean respondReply = true;
-    public int cachePoolSize = 10000;
+    public int cachePoolSize = 200;
     public ReplyFormat replyFormat = ReplyFormat.MESSAGE;
     public boolean fuzzy = false;
     public boolean strictCommand = true;
