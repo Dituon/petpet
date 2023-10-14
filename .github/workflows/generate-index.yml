@@ -32,12 +32,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew generateIndexJson
 
-      - name: Copy index.json
-        run: cp index.json ${{ github.workspace }}/index.json
-
-      - name: Copy index.map.json
-        run: cp index.map.json ${{ github.workspace }}/index.map.json
-
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
