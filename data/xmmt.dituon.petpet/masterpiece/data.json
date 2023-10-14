@@ -1,0 +1,16 @@
+{
+	"type":"IMG",
+	"avatar":[
+		{
+		"type":"TO",
+		"pos": [43,104,150,175],
+		"posType":"ZOOM",
+		"fit":"FILL",
+		"avatarOnTop":false,
+		"angle":352,
+		"opacity":1
+	}
+	],
+	"text": [],
+	"alias":["名作"]
+}
