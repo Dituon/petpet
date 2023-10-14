@@ -19,10 +19,13 @@ public class PluginPetService extends BasePetService {
     public boolean strictCommand = true;
     public boolean messageSynchronized = false;
     public boolean headless = true;
-    public ArrayList<String> disabledKey = new ArrayList<>();
+    public List<String> disabledKey;
     public ArrayList<String> randomableList = new ArrayList<>();
 
     public List<Long> disabledGroups;
+
+    public boolean autoUpdate = true;
+    public String[] repositoryUrls = new String[]{DataUpdater.DEFAULT_REPO_URL};
 
     public void readPluginServiceConfig(PluginServiceConfig config) {
         command = config.getCommand();
@@ -35,6 +38,9 @@ public class PluginPetService extends BasePetService {
         strictCommand = config.getStrictCommand();
         messageSynchronized = config.getSynchronized();
 
+        autoUpdate = config.getAutoUpdate();
+        repositoryUrls = config.getRepositoryUrls();
+
         readBaseServiceConfig(config.toBaseServiceConfig());
 
         if (super.quality < 1 || super.quality >= 49) {
@@ -46,9 +52,7 @@ public class PluginPetService extends BasePetService {
 
         LOGGER.info("Petpet GifMakerThreadPoolSize: " + super.getGifEncoderThreadPoolSize());
 
-        for (String path : config.getDisabled()) {
-            disabledKey.add(path.replace("\"", ""));
-        }
+        disabledKey = config.getDisabled();
 
         LOGGER.info("ヾ(≧▽≦*)o Petpet 初始化成功，使用 " + command + " 以获取keyList!");
     }

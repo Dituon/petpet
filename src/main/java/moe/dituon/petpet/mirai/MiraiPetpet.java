@@ -64,8 +64,11 @@ public final class MiraiPetpet extends JavaPlugin {
 
         if (service.headless) System.setProperty("java.awt.headless", "true");
         if (service.autoUpdate) new Thread(() -> {
-            DataUpdater updater = new DataUpdater(service.repositoryUrl, getDataFolder());
-            updater.autoUpdate();
+            DataUpdater updater = new DataUpdater(service, getDataFolder());
+            if (updater.autoUpdate()) {
+                LOGGER.info("Petpet 模板更新完毕, 正在重载");
+                service.readData(MiraiPetpet.dataFolder);
+            }
         }).start();
         disabledGroup = service.disabledGroups;
 
@@ -128,10 +131,10 @@ public final class MiraiPetpet extends JavaPlugin {
         try {
             Cooler.lock(e.getFrom().getId(), service.coolDown);
             service.sendImage((Group) e.getSubject(), (Member) e.getFrom(), (Member) e.getTarget(), true);
-        } catch (Exception ex) { // 如果无法把被戳的对象转换为Member(只有Bot无法强制转换为Member对象)
+        } catch (Exception ignored0) { // 如果无法把被戳的对象转换为Member (只有Bot无法强制转换为Member对象)
             try {
                 service.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
-            } catch (Exception ignored) { // 如果bot戳了别人
+            } catch (Exception ignored1) { // 如果bot戳了别人
                 if (!service.respondSelfNudge) return;
                 service.sendImage((Group) e.getSubject(), ((Group) e.getSubject()).getBotAsMember(), (Member) e.getFrom(), true);
             }
@@ -458,8 +461,8 @@ public final class MiraiPetpet extends JavaPlugin {
                 break;
             case IMAGE:
                 if (service.getDataMap().get("key_list") == null) {
-                    getLogger().error("未找到PetData/key_list, 无法进行图片构造");
-                    contact.sendMessage("[ERROR]未找到PetData/key_list\n" + service.getKeyAliasListString());
+                    getLogger().error("未找到 data/key_list, 无法进行图片构造");
+                    contact.sendMessage("[ERROR]未找到 data/key_list\n" + service.getKeyAliasListString());
                     return;
                 }
                 List<String> keyList = List.of(service.getKeyAliasListString());

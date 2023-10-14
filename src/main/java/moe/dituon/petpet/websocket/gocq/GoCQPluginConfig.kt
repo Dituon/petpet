@@ -35,7 +35,7 @@ data class GoCQPluginConfig(
     val synchronized: Boolean = false,
 
     // AutoUpdate
-    val repositoryUrl: String = DataUpdater.DEFAULT_REPO_URL,
+    val repositoryUrls: Array<String> = arrayOf(DataUpdater.DEFAULT_REPO_URL),
     val autoUpdate: Boolean = true,
 
     // CoolDown
@@ -74,7 +74,9 @@ data class GoCQPluginConfig(
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
         threadPoolSize = threadPoolSize,
-        headless = headless
+        headless = headless,
+        autoUpdate = autoUpdate,
+        repositoryUrls = repositoryUrls
     )
 
     fun toServerServiceConfig() = ServerServiceConfig(

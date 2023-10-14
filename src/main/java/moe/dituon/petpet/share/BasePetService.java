@@ -28,7 +28,7 @@ public class BasePetService {
     private List<Integer> gifMaxSize = null;
     public Encoder encoder = Encoder.ANIMATED_LIB;
 
-    public File dataRoot = null;
+    public File dataRoot = new File("./data");
     protected HashMap<String, KeyData> dataMap = new HashMap<>();
     protected HashMap<String, String[]> aliaMap = new HashMap<>();
     protected HashMap<String, Callable<BufferedImage[]>> backgroundLambdaMap = new HashMap<>();

@@ -1,6 +1,5 @@
 package moe.dituon.petpet.plugin;
 
-import moe.dituon.petpet.mirai.MiraiPetpet;
 import moe.dituon.petpet.share.BasePetService;
 
 import java.io.*;
@@ -16,91 +15,129 @@ import java.util.stream.Collectors;
 
 public class DataUpdater {
     public static final String DEFAULT_REPO_URL = "https://raw.githubusercontent.com/Dituon/petpet/main";
-    public static final String REPO_DATA_PATH = "/data/xmmt.dituon.petpet/";
-    private final String repositoryUrl;
+    public static final String DEFAULT_REPO_DATA_PATH = "/data/xmmt.dituon.petpet/";
+    public static final String INDEX_FILE = "index.json";
+    public static final String TEMPLATE_FILE = "data.json";
+    private final String[] repositoryUrls;
     private final File targetDir;
+    private final PluginPetService service;
 
-    public DataUpdater(String repositoryUrl, File targetDir) {
-        this.repositoryUrl = repositoryUrl;
+    public DataUpdater(PluginPetService service, File targetDir) {
+        this.repositoryUrls = service.repositoryUrls;
         this.targetDir = targetDir;
+        this.service = service;
     }
 
-    public void autoUpdate() {
-        if (!checkUpdate()) updateData();
-    }
-
-    public void updateData() {
-        PluginPetService.LOGGER.info("开始更新PetData");
-        UpdateIndex index = UpdateIndex.parse(
-                Objects.requireNonNull(getUrlText(repositoryUrl + "/index.json")));
-        List<String> newPetList = index.getDataList();
-        for (String pet : newPetList) {
-            if (MiraiPetpet.service.getDataMap().containsKey(pet)
-                    || MiraiPetpet.service.disabledKey.contains(pet)) continue;
-            if (!saveAs(pet, "data.json")) {
-                PluginPetService.LOGGER.warning("无法从远程仓库下载PetData: " + getRepositoryFileUrl(pet, "data.json"));
-                break;
+    public boolean autoUpdate() {
+        List<UpdateIndex> indices = new ArrayList<>(repositoryUrls.length);
+        for (String repositoryUrl : repositoryUrls) {
+            String url = joinPath(repositoryUrl, INDEX_FILE);
+            try {
+                UpdateIndex index = UpdateIndex.parse(getUrlText(url));
+                index.setUrl(repositoryUrl);
+                indices.add(index);
+            } catch (IOException ex) {
+                PluginPetService.LOGGER.warning("无法连接到远程仓库: " + repositoryUrl, ex);
+            } catch (Exception ex) {
+                PluginPetService.LOGGER.warning("无法解析索引文件: " + url, ex);
             }
-            short i = 0;
-            while (saveAs(pet, i + ".png")) i++;
-            PluginPetService.LOGGER.info("PetData/" + pet + "下载成功 (length:" + i + ')');
         }
 
-        String fontsPath = REPO_DATA_PATH + BasePetService.FONTS_FOLDER;
-        List<String> localFonts = new File(fontsPath).exists() ?
-                Arrays.stream(Objects.requireNonNull(new File(fontsPath).listFiles()))
-                        .map(File::getName).distinct().collect(Collectors.toList()) :
-                Collections.emptyList();
+        if (!checkUpdate(indices)) {
+            PluginPetService.LOGGER.info("开始更新PetData");
+            updateData(indices);
+            return true;
+        }
+        return false;
+    }
 
-        for (String font : index.getFontList()) {
+    public void updateData(Iterable<UpdateIndex> indices) {
+        Map<String, String> templateMap = new HashMap<>(256);
+        Map<String, String> fontMap = new HashMap<>(8);
+        for (UpdateIndex index : indices) {
+            String baseUrl = index.getUrl() + '/' + index.getDataPath() + '/';
+
+            index.getDataList().forEach(key -> templateMap.put(key, baseUrl + key));
+            index.getFontList().forEach(font -> fontMap.put(font, baseUrl + font));
+        }
+
+        for (var entry : templateMap.entrySet()) {
+            String key = entry.getKey();
+            if (isExcludedKey(key)) {
+                continue;
+            }
+
+            String url = entry.getValue();
+            if (!saveAs(url, joinPath(key, TEMPLATE_FILE))) {
+                PluginPetService.LOGGER.warning("无法从远程仓库下载 PetTemplate: " + url);
+                continue;
+            }
+            short i = 0;
+            while (saveAs(url, key + '/' + i + ".png")) i++;
+            PluginPetService.LOGGER.info("PetTemplate/" + key + "下载成功 (length:" + i + ')');
+        }
+
+        File localFontsDir = new File(DEFAULT_REPO_DATA_PATH + BasePetService.FONTS_FOLDER);
+        Set<String> localFonts = localFontsDir.exists() && localFontsDir.isDirectory() && localFontsDir.canRead() ?
+                Arrays.stream(Objects.requireNonNull(localFontsDir.listFiles())).map(File::getName).collect(Collectors.toSet()) :
+                Collections.emptySet();
+
+        for (var entry : fontMap.entrySet()) {
+            String font = entry.getKey(), url = entry.getValue();
+            if (localFonts.contains(font)) continue;
+
+            if (!saveAs(url, joinPath(BasePetService.FONTS_FOLDER, font))) {
+                PluginPetService.LOGGER.warning("无法从远程仓库下载PetFont: " + url);
+                return;
+            }
+
+            PluginPetService.LOGGER.info("PetFont/" + font + "下载成功");
+        }
+
+
+        for (String font : fontMap.keySet()) {
             if (localFonts.contains(font)) continue;
             if (!saveAs(BasePetService.FONTS_FOLDER, font)) {
-                PluginPetService.LOGGER.warning("无法从远程仓库下载PetFont: " + getRepositoryFileUrl(BasePetService.FONTS_FOLDER, font));
+                PluginPetService.LOGGER.warning("无法从远程仓库下载PetFont: " + joinPath(BasePetService.FONTS_FOLDER, font));
                 return;
             }
             PluginPetService.LOGGER.info("PetFont/" + font + "下载成功");
         }
-
-        PluginPetService.LOGGER.info("PetData更新完毕, 正在重载");
-        MiraiPetpet.service.readData(MiraiPetpet.dataFolder);
     }
 
-    public boolean checkUpdate() {
-        UpdateIndex update = UpdateIndex.parse(
-                Objects.requireNonNull(getUrlText(MiraiPetpet.service.repositoryUrl + "/index.json")));
-        if (BasePetService.VERSION != update.getVersion())
-            PluginPetService.LOGGER.info("PetpetPlugin可更新到最新版本: " + update.getVersion() +
-                    " (当前版本 " + BasePetService.VERSION + ")  要养成经常更新的好习惯哦 (*/ω＼*)");
-        for (String pet : update.getDataList()) {
-            if (
-                    MiraiPetpet.service.getDataMap().containsKey(pet)
-                            || MiraiPetpet.service.disabledKey.contains(pet)
-            ) continue;
-            PluginPetService.LOGGER.info("发现新增PetData");
-            return false;
+    public boolean checkUpdate(Iterable<UpdateIndex> indices) {
+        for (UpdateIndex index : indices) {
+            if (BasePetService.VERSION != index.getVersion()) {
+                PluginPetService.LOGGER.info(
+                        "PetpetPlugin 可更新到最新版本: " + index.getVersion() +
+                                " (当前版本 " + BasePetService.VERSION + ")  养成更新的好习惯哦 (*/ω＼*)"
+                );
+            }
+
+            for (String key : index.getDataList()) {
+                if (isExcludedKey(key)) continue;
+                PluginPetService.LOGGER.info("发现新增 Petpet 模板");
+                return false;
+            }
         }
         return true;
     }
 
-    private String getUrlText(String url) {
-        try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-            connection.connect();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-            StringBuilder str = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) str.append(line);
-            reader.close();
-            connection.disconnect();
-            return str.toString();
-        } catch (IOException ignored) {
-            throw new RuntimeException("无法连接到远程资源: " + url);
-        }
+    protected String getUrlText(String url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.connect();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+        StringBuilder str = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) str.append(line);
+        reader.close();
+        connection.disconnect();
+        return str.toString();
     }
 
-    private boolean saveAs(String key, String fileName) {
-        String url = getRepositoryFileUrl(key, fileName);
-        Path target = Paths.get(targetDir.getAbsolutePath() + '/' + key, fileName);
+    protected boolean saveAs(String baseUrl, String filePath) {
+        String url = joinPath(baseUrl, filePath);
+        Path target = Paths.get(targetDir.getAbsolutePath(), filePath);
         try (InputStream ins = new URL(url).openStream()) {
             Files.createDirectories(target.getParent());
             Files.copy(ins, target, StandardCopyOption.REPLACE_EXISTING);
@@ -110,7 +147,11 @@ public class DataUpdater {
         return true;
     }
 
-    private String getRepositoryFileUrl(String key, String fileName) {
-        return repositoryUrl + REPO_DATA_PATH + key + '/' + fileName;
+    protected boolean isExcludedKey(String key) {
+        return service.getDataMap().containsKey(key) || service.disabledKey.contains(key);
+    }
+
+    protected String joinPath(String basePath, String fileName) {
+        return basePath + '/' + fileName;
     }
 }

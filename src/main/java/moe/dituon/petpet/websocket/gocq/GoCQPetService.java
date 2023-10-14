@@ -1,7 +1,6 @@
 package moe.dituon.petpet.websocket.gocq;
 
 import moe.dituon.petpet.plugin.Cooler;
-import moe.dituon.petpet.plugin.DataUpdater;
 import moe.dituon.petpet.plugin.PluginPetService;
 import moe.dituon.petpet.server.WebServer;
 import moe.dituon.petpet.share.TextExtraData;
@@ -17,22 +16,21 @@ import java.util.stream.Collectors;
 public class GoCQPetService extends PluginPetService {
     public static final String EVENT_WEBSOCKET_URL = "ws://127.0.0.1:8080";
     public static final String API_WEBSOCKET_URL = "ws://127.0.0.1:8080/api";
-    public static final String CONFIG_NAME = "gocq-config.json";
+    public static final String CONFIG_FILE = "gocq-config.json";
     public String eventWebSocketUri = EVENT_WEBSOCKET_URL;
     public String apiWebSocketUri = API_WEBSOCKET_URL;
     public Long coolDown = Cooler.DEFAULT_USER_COOLDOWN;
     public Long groupCoolDown = Cooler.DEFAULT_GROUP_COOLDOWN;
     public String inCoolDownMessage = Cooler.DEFAULT_MESSAGE;
     public boolean autoUpdate = true;
-    public String repositoryUrl = DataUpdater.DEFAULT_REPO_URL;
 
     private WebServer server;
 
     public void readConfig() {
-        File configFile = new File(CONFIG_NAME);
+        File configFile = new File(CONFIG_FILE);
         try {
             if (!configFile.exists()) { //save default config
-                Files.write(Paths.get(CONFIG_NAME), new GoCQPluginConfig().stringify().getBytes());
+                Files.write(Paths.get(CONFIG_FILE), new GoCQPluginConfig().stringify().getBytes());
             }
 
             GoCQPluginConfig config = GoCQPluginConfig.parse(getFileStr(configFile));
@@ -40,7 +38,7 @@ public class GoCQPetService extends PluginPetService {
             apiWebSocketUri = config.getApiWebSocketUrl();
 
             autoUpdate = config.getAutoUpdate();
-            repositoryUrl = config.getRepositoryUrl();
+            super.repositoryUrls = config.getRepositoryUrls();
             coolDown = config.getCoolDown();
             groupCoolDown = config.getGroupCoolDown();
             inCoolDownMessage = config.getInCoolDownMessage().isBlank() ?
