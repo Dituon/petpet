@@ -104,7 +104,7 @@ public abstract class ImageSynthesisCore {
         }
 
         AffineTransform old = g2d.getTransform();
-        g2d.rotate(Math.toRadians(angle),  (double) w / 2 + x, (double) h / 2 + y);
+        g2d.rotate(Math.toRadians(angle),  x, y);
         g2d.drawImage(avatarImage, x, y, w, h, null);
         g2d.setTransform(old);
     }

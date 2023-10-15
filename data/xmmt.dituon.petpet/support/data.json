@@ -2,9 +2,9 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [-185,-58,1187,1187],
+        "pos": [-65, 97, 274, 274],
         "round": false,
-        "angle": -24,
+        "angle": 337,
         "avatarOnTop": false
     }],
     "text": [],

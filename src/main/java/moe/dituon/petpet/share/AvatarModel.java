@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -221,11 +220,11 @@ public class AvatarModel {
             CountDownLatch latch = new CountDownLatch(imageList.size());
             for (short i = 0; i < imageList.size(); i++) {
                 short fi = i;
-                threadPool.execute(()->{
+                threadPool.execute(() -> {
                     try {
                         var img = Thumbnails.of(imageList.get(fi)).size(faw, fah).keepAspectRatio(false).asBufferedImage();
                         imageList.set(fi, img);
-                    }catch (IOException ex){
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     } finally {
                         latch.countDown();
@@ -278,7 +277,6 @@ public class AvatarModel {
     /**
      * 获取下一个旋转角度
      * <li>不旋转时 返回初始角度</li>
-     * <li>IMG格式 返回随机角度</li>
      * <li>GIF 返回下一个旋转角度</li>
      *
      * @deprecated 应当使用index直接获取角度, 之后的版本将不再维护posIndex
@@ -286,19 +284,16 @@ public class AvatarModel {
     @Deprecated
     public float getNextAngle() {
         if (!rotate) return angle; //不旋转
-        if (imageType == Type.IMG) return new Random().nextInt(angle != 0 ? angle : 360); //IMG随机旋转
         return ((float) (360 / pos.length) * posIndex) + angle; //GIF自动旋转
     }
 
     /**
      * 获取旋转角度
      * <li>不旋转时 返回初始角度</li>
-     * <li>IMG格式 返回随机角度</li>
-     * <li>GIF 返回旋转角度</li>
+     * <li>GIF 返回自动旋转角度</li>
      */
     public float getAngle(short index) {
-        if (!rotate) return angle; //不旋转
-        if (imageType == Type.IMG) return new Random().nextInt(angle != 0 ? angle : 360); //IMG随机旋转
+        if (!rotate || imageType == Type.IMG) return angle; //不旋转
         return ((float) (360 / pos.length) * index) + angle; //GIF自动旋转
     }
 

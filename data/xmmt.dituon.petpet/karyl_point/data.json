@@ -2,10 +2,10 @@
   "type": "IMG",
   "avatar": [{
       "type": "TO",
-      "pos": [87, 790, 225, 225 ],
+      "pos": [73, 807, 220, 220],
       "round": false,
       "avatarOnTop": true,
-      "angle": 353
+      "angle": 352
   }],
   "text": [],
   "alias": ["指","凯露指"]

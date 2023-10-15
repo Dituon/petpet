@@ -280,10 +280,12 @@
 
 ## 图片预览
 
-**图片按key排序(见`data/xmmt.dituon.petpet/`)**
+**[在线尝试](https://dituon.github.io/petpet-js)**
 
 <details>
 <summary>展开/收起</summary>
+
+**图片按key排序(见`data/xmmt.dituon.petpet/`)**
 
 | key                                            | 预览                                                                                                    |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
@@ -365,7 +367,7 @@
 
 ## 自定义
 
-**[在线编辑器](https://dituon.github.io/petpet/editor)**
+**[在线编辑器](https://dituon.github.io/petpet-js/editor)**
 
 ### data.json
 
@@ -476,8 +478,6 @@
     }
   ]
 ```
-
-> 在`IMG`中, 当`rotate = true`时, 头像会随机旋转角度, `angle`为最大值(`angle = 0`时, 随机范围为`0-359`)
 
 **头像类型枚举 `type`**
 

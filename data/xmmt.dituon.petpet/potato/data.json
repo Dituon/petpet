@@ -2,10 +2,9 @@
   "type": "IMG",
   "avatar": [{
       "type": "TO",
-      "pos": [531, 15, 458, 458 ],
-      "round": true,
+      "pos": [566, -31, 474, 474],
       "avatarOnTop": false,
-      "angle":355
+      "angle": 10
   }],
   "text": [],
   "alias": ["土豆"]
