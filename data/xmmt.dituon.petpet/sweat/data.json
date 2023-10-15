@@ -2,8 +2,8 @@
     "type": "IMG",
     "avatar": [{
         "type": "TO",
-        "pos": [121,68,236,308],
-        "angle": 25,
+        "pos": [197, 88, 185, 211],
+        "angle": 23,
         "style": [],
         "round": false,
         "avatarOnTop": false
