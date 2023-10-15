@@ -5,7 +5,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import moe.dituon.petpet.share.AvatarType
 import moe.dituon.petpet.share.BasePetService.VERSION
-import moe.dituon.petpet.share.KeyData
+import moe.dituon.petpet.share.TemplateDTO
 import kotlin.streams.toList
 
 @Serializable
@@ -15,7 +15,7 @@ data class PetDataDTO(
 ) {
     companion object {
         @JvmStatic
-        fun stringify(dataMap: Map<String, KeyData>): String {
+        fun stringify(dataMap: Map<String, TemplateDTO>): String {
             val dataList: ArrayList<PetDataObject> = ArrayList()
             dataMap.forEach { (key, data) ->
                 if (data.hidden == false) dataList.add(

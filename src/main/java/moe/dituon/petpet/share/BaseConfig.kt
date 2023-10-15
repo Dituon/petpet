@@ -62,10 +62,10 @@ enum class Type {
 }
 
 @Serializable
-data class KeyData(
+data class TemplateDTO(
     val type: Type,
-    val avatar: List<AvatarData>,
-    val text: List<TextData>,
+    val avatar: List<AvatarData> = emptyList(),
+    val text: List<TextData> = emptyList(),
     var background: BackgroundData? = null,
     var delay: Int? = 65,
     var alias: List<String>? = null,
@@ -74,7 +74,7 @@ data class KeyData(
     var reverse: Boolean? = false,
     val hidden: Boolean? = false
 ) {
-    constructor(type: Type) : this(type, ArrayList(), ArrayList())
+    constructor(type: Type) : this(type, emptyList(), emptyList())
     private var useRandomList:Boolean? = null
     fun isUseRandomList():Boolean{
         if (useRandomList == null) {
@@ -85,7 +85,7 @@ data class KeyData(
 
     companion object {
         @JvmStatic
-        fun getData(str: String): KeyData {
+        fun getData(str: String): TemplateDTO {
             return Json.decodeFromString(str)
         }
     }

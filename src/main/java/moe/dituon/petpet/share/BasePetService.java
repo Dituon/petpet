@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class BasePetService {
     public static final float VERSION = 5.5F;
+    public static final int DEFAULT_INITIAL_CAPACITY = 256;
     public static final BaseLogger LOGGER = BaseLogger.getInstance();
     public static final String FONTS_FOLDER = "fonts";
     public static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors() + 1;
@@ -29,10 +30,10 @@ public class BasePetService {
     public Encoder encoder = Encoder.ANIMATED_LIB;
 
     public File dataRoot = new File("./data");
-    protected HashMap<String, KeyData> dataMap = new HashMap<>();
-    protected HashMap<String, String[]> aliaMap = new HashMap<>();
-    protected HashMap<String, Callable<BufferedImage[]>> backgroundLambdaMap = new HashMap<>();
-    protected HashMap<String, File[]> backgroundFileMap = new HashMap<>();
+    protected HashMap<String, TemplateDTO> dataMap = new HashMap<>(DEFAULT_INITIAL_CAPACITY);
+    protected HashMap<String, String[]> aliaMap = new HashMap<>(DEFAULT_INITIAL_CAPACITY);
+    protected HashMap<String, Callable<BufferedImage[]>> backgroundLambdaMap = new HashMap<>(DEFAULT_INITIAL_CAPACITY);
+    protected WeakHashMap<String, BufferedImage[]> backgroundCacheMap = new WeakHashMap<>(DEFAULT_INITIAL_CAPACITY);
     public String keyListString = "";
 
     //    protected int serviceThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
@@ -64,7 +65,7 @@ public class BasePetService {
             // TODO 模板应放在data/templates而不是直接data
             File dataFile = new File(file.getPath() + File.separator + "data.json");
             try {
-                KeyData data = KeyData.getData(getFileStr(dataFile));
+                TemplateDTO data = TemplateDTO.getData(getFileStr(dataFile));
                 putKeyData(file.getName(), data);
             } catch (Exception ex) {
                 LOGGER.warning("无法读取 " + file + "/data.json ", ex);
@@ -79,7 +80,7 @@ public class BasePetService {
      *
      * @param key 索引
      */
-    public void putKeyData(String key, KeyData data) {
+    public void putKeyData(String key, TemplateDTO data) {
         data.getAvatar().forEach(avatar -> {
             if (avatar.getResampling() == null) avatar.setResampling(resampling);
         });
@@ -100,17 +101,20 @@ public class BasePetService {
                 }))
                 .toArray(File[]::new);
 
-        backgroundFileMap.put(key, backgroundFiles);
-
         assert dataRoot != null;
         backgroundLambdaMap.put(key, () -> { //使用Lambda实现按需加载, 减少内存占用
-            return Arrays.stream(backgroundFiles).map(bg -> {
+            if (backgroundCacheMap.containsKey(key)) {
+                return backgroundCacheMap.get(key);
+            }
+            BufferedImage[] result = Arrays.stream(backgroundFiles).map(bg -> {
                 try {
                     return ImageIO.read(bg);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }).toArray(BufferedImage[]::new);
+            backgroundCacheMap.put(key, result);
+            return result;
         });
 
         if (!Boolean.TRUE.equals(data.getHidden())) putAlia(key, data);
@@ -121,7 +125,7 @@ public class BasePetService {
      *
      * @param key 索引
      */
-    public void putKeyData(String key, KeyData data, BufferedImage background) {
+    public void putKeyData(String key, TemplateDTO data, BufferedImage background) {
         putKeyData(key, data, List.of(background));
     }
 
@@ -130,7 +134,7 @@ public class BasePetService {
      *
      * @param key 索引
      */
-    public void putKeyData(String key, KeyData data, List<BufferedImage> backgroundList) {
+    public void putKeyData(String key, TemplateDTO data, List<BufferedImage> backgroundList) {
         data.getAvatar().forEach(avatar -> {
             if (avatar.getResampling() == null) avatar.setResampling(resampling);
         });
@@ -141,7 +145,7 @@ public class BasePetService {
         if (!Boolean.TRUE.equals(data.getHidden())) putAlia(key, data);
     }
 
-    private void putAlia(String key, KeyData data) {
+    private void putAlia(String key, TemplateDTO data) {
         StringBuilder keyStringBuilder = new StringBuilder();
         keyStringBuilder.append("\n").append(key);
         if (data.getAlias() != null) {
@@ -221,72 +225,86 @@ public class BasePetService {
         if (!dataMap.containsKey(key) && !aliaMap.containsKey(key)) {
             throw new RuntimeException("无效的key: “" + key + "”");
         }
-        KeyData data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key)[0]);
         try {
-            ArrayList<TextModel> textList = new ArrayList<>();
-            // add from KeyData
-            if (!data.getText().isEmpty()) {
-                data.getText().forEach(textElement ->
-                        textList.add(new TextModel(textElement, textExtraData))
-                );
-            }
-            // add from params
-            if (additionTextDataList != null) {
-                additionTextDataList.forEach(textElement ->
-                        textList.add(new TextModel(textElement, textExtraData))
-                );
-            }
-
-            ArrayList<AvatarModel> avatarList = new ArrayList<>();
-
-            if (!data.getAvatar().isEmpty()) {
-                data.getAvatar().forEach(avatarData ->
-                        avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()))
-                );
-            }
-
-            int delay = data.getDelay() != null ? data.getDelay() : 65;
-            GifRenderParams renderParams = new GifRenderParams(
-                    encoder, delay, gifMaxSize, antialias, quality,
-                    Boolean.TRUE.equals(data.getReverse())
+            TemplateDTO data = dataMap.containsKey(key) ? dataMap.get(key) : dataMap.get(aliaMap.get(key)[0]);
+            BufferedImage[] backgrounds = backgroundLambdaMap.get(key).call();
+            return generateImage(
+                    data, backgrounds, gifAvatarExtraDataProvider, textExtraData, additionTextDataList
             );
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException("无法读取 " + key + " 背景文件", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-            if (data.getType() == Type.GIF) {
+    public Pair<InputStream, String> generateImage(
+            TemplateDTO data,
+            BufferedImage[] backgrounds,
+            GifAvatarExtraDataProvider gifAvatarExtraDataProvider,
+            TextExtraData textExtraData,
+            List<TextData> additionTextDataList
+    ) throws FileNotFoundException {
+        ArrayList<TextModel> textList = new ArrayList<>();
+        // add from KeyData
+        if (!data.getText().isEmpty()) {
+            data.getText().forEach(textElement ->
+                    textList.add(new TextModel(textElement, textExtraData))
+            );
+        }
+        // add from params
+        if (additionTextDataList != null) {
+            additionTextDataList.forEach(textElement ->
+                    textList.add(new TextModel(textElement, textExtraData))
+            );
+        }
+
+        ArrayList<AvatarModel> avatarList = new ArrayList<>();
+
+        if (!data.getAvatar().isEmpty()) {
+            data.getAvatar().forEach(avatarData ->
+                    avatarList.add(new AvatarModel(avatarData, gifAvatarExtraDataProvider, data.getType()))
+            );
+        }
+
+        int delay = data.getDelay() != null ? data.getDelay() : 65;
+        GifRenderParams renderParams = new GifRenderParams(
+                encoder, delay, gifMaxSize, antialias, quality,
+                Boolean.TRUE.equals(data.getReverse())
+        );
+
+        switch (data.getType()) {
+            case GIF:
                 BufferedImage[] stickers;
 
                 if (data.getBackground() != null) { //从配置文件读背景
                     stickers = new BufferedImage[avatarList.get(0).getPosLength()];
                     Arrays.fill(stickers, new BackgroundModel(data.getBackground(), avatarList, textList).getImage());
                 } else {
-                    stickers = backgroundLambdaMap.get(key).call();
+                    stickers = backgrounds;
                 }
 
                 InputStream inputStream = gifMaker.makeGIF(
                         avatarList, textList, stickers, renderParams);
                 return new Pair<>(inputStream, "gif");
-            }
-
-            if (data.getType() == Type.IMG) {
-                BufferedImage sticker = getBackgroundImage(key, data, avatarList, textList);
+            case IMG:
+                BufferedImage sticker = getBackgroundImage(backgrounds, data, avatarList, textList);
                 assert sticker != null;
                 return imageMaker.makeImage(avatarList, textList, sticker, renderParams);
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException("解析 " + key + "/data.json 出错", ex);
         }
-        throw new RuntimeException();
+
+        throw new RuntimeException(); //never
     }
 
     private BufferedImage getBackgroundImage(
-            @NotNull String key,
-            KeyData data,
+            BufferedImage[] backgrounds,
+            TemplateDTO data,
             ArrayList<AvatarModel> avatarList,
             ArrayList<TextModel> textList
-    ) throws Exception {
-        var backgrounds = backgroundLambdaMap.get(key).call();
+    ) throws FileNotFoundException {
         boolean isEmpty = backgrounds.length == 0;
         if (isEmpty && data.getBackground() == null) { //没有背景图片和背景配置
-            throw new FileNotFoundException("找不到 " + key + " 背景文件");
+            throw new FileNotFoundException();
         }
         if (isEmpty && data.getBackground() != null) { //无背景图片(读取背景配置
             return new BackgroundModel(data.getBackground(), avatarList, textList).getImage();
@@ -336,7 +354,7 @@ public class BasePetService {
         return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
     }
 
-    public HashMap<String, KeyData> getDataMap() {
+    public HashMap<String, TemplateDTO> getDataMap() {
         return dataMap;
     }
 

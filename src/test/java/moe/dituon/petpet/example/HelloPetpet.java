@@ -43,7 +43,7 @@ public class HelloPetpet {
          */
 
         //当然, 也可以在程序中创建并添加
-        KeyData exampleTemplate = new KeyData(Type.IMG); //实例化一个模板对象, 指定模板Type
+        TemplateDTO exampleTemplate = new TemplateDTO(Type.IMG); //实例化一个模板对象, 指定模板Type
 
         AvatarData avatarData = new AvatarData(AvatarType.TO); //手动实例化头像模板, 并指定参数
         //你可以更改一些参数的默认值, 例如:

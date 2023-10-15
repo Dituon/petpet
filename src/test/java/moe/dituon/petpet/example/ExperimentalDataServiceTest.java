@@ -6,6 +6,7 @@ import moe.dituon.petpet.share.BaseServiceConfig;
 import moe.dituon.petpet.share.TextData;
 import moe.dituon.petpet.share.TextExtraData;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,18 +23,22 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
         petService.readData(new File("./data/xmmt.dituon.petpet").listFiles());
     }
 
+    @Test
     public void testPandaFace() throws IOException {
         testGeneral("testPandaFace", "panda-face", List.of(textDataForPandaFace("。。。")));
     }
 
+    @Test
     public void testPandaFace2() throws IOException {
         testGeneral("testPandaFace2", "panda-face", List.of(textDataForPandaFace("二次元，二次元")));
     }
 
+    @Test
     public void testAnyasuki() throws IOException {
         testGeneral("testAnyasuki-deform", "anyasuki-deform", null);
     }
 
+    @Test
     public void testAll() {
         TextExtraData textExtraData = new TextExtraData(
                 "恋恋", "绝绝", "幻想乡",
