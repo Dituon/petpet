@@ -1,10 +1,9 @@
 package moe.dituon.petpet.share
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonElement
 import java.awt.image.BufferedImage
 
@@ -151,21 +150,88 @@ enum class AvatarStyle {
     MIRROR, FLIP, GRAY, BINARIZATION
 }
 
+@OptIn(ExperimentalSerializationApi::class)
+@Serializable
+@JsonClassDiscriminator("type")
+sealed class AvatarFilter
+
+@Serializable
+@SerialName("SWIRL")
+data class AvatarSwirlFilter(
+    val radius: Float = 0f,
+    val angle: Float = 3f,
+): AvatarFilter()
+
+@Serializable
+@SerialName("BULGE")
+data class AvatarBulgeFilter(
+    val radius: Float = 0f,
+    val strength: Float = 0.5f
+): AvatarFilter()
+
+@Serializable
+@SerialName("BLUR")
+data class AvatarBlurFilter(
+    val radius: Float = 10f
+): AvatarFilter()
+
+@Serializable
+@SerialName("CONTRAST")
+data class AvatarContrastFilter(
+    val brightness: Float = 0f,
+    val contrast: Float = 0f
+): AvatarFilter()
+
+@Serializable
+@SerialName("HSB")
+data class AvatarHueFilter(
+    val hue: Float = 0f,
+    val saturation: Float = 0f,
+    val brightness: Float = 0f
+): AvatarFilter()
+
+@Serializable
+@SerialName("HALFTONE")
+data class AvatarHalftoneFilter(
+    val angle: Float = 0f,
+    val radius: Float = 3f
+): AvatarFilter()
+
+@Serializable
+@SerialName("DOT_SCREEN")
+data class AvatarDotScreenFilter(
+    val angle: Float = 0f,
+    val radius: Float = 3f
+): AvatarFilter()
+
+@Serializable
+@SerialName("NOISE")
+data class AvatarNoiseFilter(
+    val amount: Float = 0.25f
+): AvatarFilter()
+
+@Serializable
+@SerialName("DENOISE")
+data class AvatarDenoiseFilter(
+    val exponent: Short = 20
+): AvatarFilter()
+
 @Serializable
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     var pos: JsonArray = Json.decodeFromString(JsonArray.serializer(), "[0,0,100,100]"),
-    var posType: AvatarPosType? = AvatarPosType.ZOOM,
+    var posType: AvatarPosType = AvatarPosType.ZOOM,
     var crop: JsonArray? = null,
-    var cropType: CropType? = CropType.NONE,
-    var fit: FitType? = FitType.FILL,
-    var style: List<AvatarStyle>? = emptyList(),
-    var angle: Short? = 0,
-    var opacity: Float? = 1.0F,
-    var round: Boolean? = false,
-    var rotate: Boolean? = false,
-    var avatarOnTop: Boolean? = true,
-    var antialias: Boolean? = false,
+    var cropType: CropType = CropType.NONE,
+    var fit: FitType = FitType.FILL,
+    var style: List<AvatarStyle> = emptyList(),
+    var filter: List<AvatarFilter> = emptyList(),
+    var angle: Short = 0,
+    var opacity: Float = 1.0F,
+    var round: Boolean = false,
+    var rotate: Boolean = false,
+    var avatarOnTop: Boolean = true,
+    var antialias: Boolean? = null,
     var resampling: Boolean? = null
 )
 

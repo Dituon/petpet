@@ -1,5 +1,6 @@
 package moe.dituon.petpet.share;
 
+import com.jhlabs.image.*;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 import net.coobird.thumbnailator.Thumbnails;
@@ -13,6 +14,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class AvatarModel {
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
@@ -35,6 +37,7 @@ public class AvatarModel {
     private CropType cropType;
     private int[] cropPos;
     private List<AvatarStyle> styleList;
+    private List<AvatarFilter> filterList;
     private short frameIndex = 0;
 
     @Deprecated
@@ -50,17 +53,18 @@ public class AvatarModel {
 
     private void buildData(AvatarData data, Type imageType) {
         type = data.getType();
-        posType = data.getPosType() != null ? data.getPosType() : AvatarPosType.ZOOM;
+        posType = data.getPosType();
         setPos(data.getPos(), this.imageType = imageType);
         cropType = data.getCropType();
         setCrop(data.getCrop());
         fitType = data.getFit();
         styleList = data.getStyle();
-        angle = data.getAngle() != null ? data.getAngle() : 0;
-        opacity = data.getOpacity() != null ? data.getOpacity() : 1.0F;
-        round = Boolean.TRUE.equals(data.getRound());
-        rotate = Boolean.TRUE.equals(data.getRotate());
-        onTop = Boolean.TRUE.equals(data.getAvatarOnTop());
+        filterList = data.getFilter();
+        angle = data.getAngle();
+        opacity = data.getOpacity();
+        round = data.getRound();
+        rotate = data.getRotate();
+        onTop = data.getAvatarOnTop();
         antialias = Boolean.TRUE.equals(data.getAntialias());
         resampling = Boolean.TRUE.equals(data.getResampling());
         buildImage();
@@ -183,6 +187,97 @@ public class AvatarModel {
                 case BINARIZATION:
                     imageList = ImageSynthesis.binarizeImage(imageList);
                     break;
+            }
+        }
+
+        for (AvatarFilter filter : filterList) {
+            if (filter instanceof AvatarSwirlFilter) {
+                var swirlFilter = (AvatarSwirlFilter) filter;
+//                imageList.replaceAll(img -> {
+//                    TwirlFilter twirlFilter = new TwirlFilter();
+//                    twirlFilter.setRadius(swirlFilter.getRadius());
+//                    twirlFilter.setAngle(swirlFilter.getAngle());
+//                    return twirlFilter.filter(img, null);
+//                });
+                imageList = imageList.stream().map(img -> {
+                    TwirlFilter tFilter = new TwirlFilter();
+                    tFilter.setRadius(swirlFilter.getRadius());
+                    tFilter.setAngle(swirlFilter.getAngle());
+                    return tFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarBulgeFilter) {
+                var bulgeFilter = (AvatarBulgeFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    SphereFilter sFilter = new SphereFilter();
+                    sFilter.setRadius(bulgeFilter.getRadius());
+                    sFilter.setRefractionIndex(Math.abs(bulgeFilter.getStrength()) + 1f);
+                    return sFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarBlurFilter) {
+                var blurFilter = (AvatarBlurFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    BoxBlurFilter bFilter = new BoxBlurFilter();
+                    bFilter.setRadius(blurFilter.getRadius());
+                    return bFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarContrastFilter){
+                var contrastFilter = (AvatarContrastFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    ContrastFilter cFilter = new ContrastFilter();
+                    cFilter.setContrast(contrastFilter.getContrast() + 1f);
+                    cFilter.setBrightness(contrastFilter.getBrightness() + 1f);
+                    return cFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarHueFilter) {
+                var hsbFilter = (AvatarHueFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    HSBAdjustFilter hFilter = new HSBAdjustFilter();
+                    hFilter.setHFactor(hsbFilter.getHue());
+                    hFilter.setSFactor(hsbFilter.getSaturation());
+                    hFilter.setBFactor(hsbFilter.getBrightness());
+                    return hFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarHalftoneFilter) {
+                var halftoneFilter = (AvatarHalftoneFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
+                    cFilter.setdotRadius(halftoneFilter.getRadius());
+                    float angle = halftoneFilter.getAngle();
+                    cFilter.setCyanScreenAngle(cFilter.getCyanScreenAngle() + angle);
+                    cFilter.setMagentaScreenAngle(cFilter.getMagentaScreenAngle() + angle);
+                    cFilter.setYellowScreenAngle(cFilter.getYellowScreenAngle() + angle);
+                    return cFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarDotScreenFilter) {
+                var dotScreenFilter = (AvatarDotScreenFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
+                    cFilter.setdotRadius(dotScreenFilter.getRadius());
+                    float angle = dotScreenFilter.getAngle();
+                    cFilter.setCyanScreenAngle(angle);
+                    cFilter.setMagentaScreenAngle(angle);
+                    cFilter.setYellowScreenAngle(angle);
+                    return ImageSynthesis.grayImage(cFilter.filter(img, null));
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarNoiseFilter) {
+                var noiseFilter = (AvatarNoiseFilter) filter;
+
+                imageList = imageList.stream().map(img -> {
+                    NoiseFilter nFilter = new NoiseFilter();
+                    nFilter.setAmount(Math.round(noiseFilter.getAmount() * 100));
+                    return nFilter.filter(img, null);
+                }).collect(Collectors.toList());
+            } else if (filter instanceof AvatarDenoiseFilter) {
+                imageList = imageList.stream().map(img -> {
+                    MedianFilter dFilter = new MedianFilter();
+                    return dFilter.filter(img, null);
+                }).collect(Collectors.toList());
             }
         }
 
