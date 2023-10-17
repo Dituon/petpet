@@ -4,6 +4,7 @@ import kotlin.Pair;
 import moe.dituon.petpet.plugin.Cooler;
 import moe.dituon.petpet.plugin.DataUpdater;
 import moe.dituon.petpet.plugin.PluginRequestParser;
+import moe.dituon.petpet.plugin.QQConfigFactory;
 import moe.dituon.petpet.share.BaseConfigFactory;
 import moe.dituon.petpet.share.BaseLogger;
 import moe.dituon.petpet.share.BasePetService;
@@ -344,7 +345,6 @@ public final class MiraiPetpet extends JavaPlugin {
             return;
         }
 
-        boolean fuzzyLock = false; //锁住模糊匹配
         boolean hasImage = false; //匹配到多张图片特殊处理
 
         String fromName = e.getBot().getNick(),
@@ -360,7 +360,6 @@ public final class MiraiPetpet extends JavaPlugin {
                 if (imageCachePool.get(id) == null) continue;
                 toName = "这个";
                 toUrl = imageCachePool.get(id);
-                fuzzyLock = true;
                 continue;
             }
             if (singleMessage instanceof PlainText) {
@@ -378,7 +377,6 @@ public final class MiraiPetpet extends JavaPlugin {
                 fromUrl = e.getSender().getAvatarUrl();
                 toName = "这个";
                 toUrl = url;
-                fuzzyLock = true;
                 hasImage = true;
             }
         }
@@ -441,7 +439,7 @@ public final class MiraiPetpet extends JavaPlugin {
         Cooler.lock(e.getSender().getId(), service.coolDown);
 
         service.sendImage(e.getSubject(), key,
-                BaseConfigFactory.getGifAvatarExtraDataFromUrls(
+                QQConfigFactory.getGifAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getSubject().getAvatarUrl(), e.getBot().getAvatarUrl(), null
                 ), new TextExtraData(
                         fromName, toName, groupName, spanList
