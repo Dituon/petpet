@@ -11,24 +11,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class AvatarModel {
-    private static final ExecutorService threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
-
-    private Type imageType;
     protected AvatarType type;
     protected int[][] pos = {{0, 0, 100, 100}};
     protected FitType fitType;
     protected short angle;
+    protected AvatarTransformOrigin transformOrigin;
     protected float opacity = 1.0F;
     protected boolean round;
     protected boolean rotate;
     protected boolean onTop;
     protected List<BufferedImage> imageList = null;
+    private Type imageType;
     private short posIndex = 0;
     private boolean antialias;
     private boolean resampling;
@@ -64,6 +59,7 @@ public class AvatarModel {
         opacity = data.getOpacity();
         round = data.getRound();
         rotate = data.getRotate();
+        transformOrigin = data.getOrigin();
         onTop = data.getAvatarOnTop();
         antialias = Boolean.TRUE.equals(data.getAntialias());
         resampling = Boolean.TRUE.equals(data.getResampling());
@@ -171,129 +167,27 @@ public class AvatarModel {
     }
 
     private void buildImage() {
-        if (cropType != CropType.NONE) imageList = ImageSynthesis.cropImage(imageList, cropType, cropPos);
+        if (imageList.size() == 1) {
+            imageList = List.of(buildImage(imageList.get(0)));
+        } else {
+            ImageSynthesis.execImageList(imageList, this::buildImage);
+        }
+    }
 
-        for (AvatarStyle style : styleList) {
-            switch (style) {
-                case FLIP:
-                    imageList = ImageSynthesis.flipImage(imageList);
-                    break;
-                case MIRROR:
-                    imageList = ImageSynthesis.mirrorImage(imageList);
-                    break;
-                case GRAY:
-                    imageList = ImageSynthesis.grayImage(imageList);
-                    break;
-                case BINARIZATION:
-                    imageList = ImageSynthesis.binarizeImage(imageList);
-                    break;
-            }
+    public BufferedImage buildImage(BufferedImage image) {
+        if (cropType != CropType.NONE) {
+            image = ImageSynthesis.cropImage(image, cropType, cropPos);
         }
 
-        for (AvatarFilter filter : filterList) {
-            if (filter instanceof AvatarSwirlFilter) {
-                var swirlFilter = (AvatarSwirlFilter) filter;
-//                imageList.replaceAll(img -> {
-//                    TwirlFilter twirlFilter = new TwirlFilter();
-//                    twirlFilter.setRadius(swirlFilter.getRadius());
-//                    twirlFilter.setAngle(swirlFilter.getAngle());
-//                    return twirlFilter.filter(img, null);
-//                });
-                imageList = imageList.stream().map(img -> {
-                    TwirlFilter tFilter = new TwirlFilter();
-                    tFilter.setRadius(swirlFilter.getRadius());
-                    tFilter.setAngle(swirlFilter.getAngle());
-                    return tFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarBulgeFilter) {
-                var bulgeFilter = (AvatarBulgeFilter) filter;
+        if (!styleList.isEmpty()) image = buildStyledImage(image);
 
-                imageList = imageList.stream().map(img -> {
-                    SphereFilter sFilter = new SphereFilter();
-                    sFilter.setRadius(bulgeFilter.getRadius());
-                    sFilter.setRefractionIndex(Math.abs(bulgeFilter.getStrength()) + 1f);
-                    return sFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarBlurFilter) {
-                var blurFilter = (AvatarBlurFilter) filter;
-
-                imageList = imageList.stream().map(img -> {
-                    BoxBlurFilter bFilter = new BoxBlurFilter();
-                    bFilter.setRadius(blurFilter.getRadius());
-                    return bFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarContrastFilter){
-                var contrastFilter = (AvatarContrastFilter) filter;
-
-                imageList = imageList.stream().map(img -> {
-                    ContrastFilter cFilter = new ContrastFilter();
-                    cFilter.setContrast(contrastFilter.getContrast() + 1f);
-                    cFilter.setBrightness(contrastFilter.getBrightness() + 1f);
-                    return cFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarHueFilter) {
-                var hsbFilter = (AvatarHueFilter) filter;
-
-                imageList = imageList.stream().map(img -> {
-                    HSBAdjustFilter hFilter = new HSBAdjustFilter();
-                    hFilter.setHFactor(hsbFilter.getHue());
-                    hFilter.setSFactor(hsbFilter.getSaturation());
-                    hFilter.setBFactor(hsbFilter.getBrightness());
-                    return hFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarHalftoneFilter) {
-                var halftoneFilter = (AvatarHalftoneFilter) filter;
-
-                imageList = imageList.stream().map(img -> {
-                    ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
-                    cFilter.setdotRadius(halftoneFilter.getRadius());
-                    float angle = halftoneFilter.getAngle();
-                    cFilter.setCyanScreenAngle(cFilter.getCyanScreenAngle() + angle);
-                    cFilter.setMagentaScreenAngle(cFilter.getMagentaScreenAngle() + angle);
-                    cFilter.setYellowScreenAngle(cFilter.getYellowScreenAngle() + angle);
-                    return cFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarDotScreenFilter) {
-                var dotScreenFilter = (AvatarDotScreenFilter) filter;
-
-                imageList = imageList.stream().map(img -> {
-                    ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
-                    cFilter.setdotRadius(dotScreenFilter.getRadius());
-                    float angle = dotScreenFilter.getAngle();
-                    cFilter.setCyanScreenAngle(angle);
-                    cFilter.setMagentaScreenAngle(angle);
-                    cFilter.setYellowScreenAngle(angle);
-                    return ImageSynthesis.grayImage(cFilter.filter(img, null));
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarNoiseFilter) {
-                var noiseFilter = (AvatarNoiseFilter) filter;
-
-                imageList = imageList.stream().map(img -> {
-                    NoiseFilter nFilter = new NoiseFilter();
-                    nFilter.setAmount(Math.round(noiseFilter.getAmount() * 100));
-                    return nFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            } else if (filter instanceof AvatarDenoiseFilter) {
-                imageList = imageList.stream().map(img -> {
-                    MedianFilter dFilter = new MedianFilter();
-                    return dFilter.filter(img, null);
-                }).collect(Collectors.toList());
-            }
-        }
+        if (!filterList.isEmpty()) image = buildFilteredImage(image);
 
         if (round) {
-            imageList = ImageSynthesis.convertCircular(imageList, antialias);
+            image = ImageSynthesis.convertCircular(image, antialias);
         }
 
         if (resampling && posType == AvatarPosType.ZOOM) {
-//            int tw = 0, th = 0, ti = 0;
-//            for (int[] p : pos) {
-//                if (p[2] == 0 || p[3] == 0) continue;
-//                tw += p[2];
-//                th += p[3];
-//                ti++;
-//            }
-//            int aw = tw / ti, ah = th / ti;
             int aw = 0, ah = 0, maxSize = 0;
             for (int[] p : pos) {
                 if (p[2] > aw) aw = p[2];
@@ -301,37 +195,97 @@ public class AvatarModel {
                 maxSize = Math.max(aw, ah);
             }
 
-            imageList = new ArrayList<>(imageList);
-            if (imageList.size() == 1) {
-                try {
-                    imageList.set(0, Thumbnails.of(imageList.get(0)).size(maxSize, maxSize).keepAspectRatio(true).asBufferedImage());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                return;
-            }
-
-            final int faw = aw, fah = ah;
-            CountDownLatch latch = new CountDownLatch(imageList.size());
-            for (short i = 0; i < imageList.size(); i++) {
-                short fi = i;
-                threadPool.execute(() -> {
-                    try {
-                        var img = Thumbnails.of(imageList.get(fi)).size(faw, fah).keepAspectRatio(false).asBufferedImage();
-                        imageList.set(fi, img);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    } finally {
-                        latch.countDown();
-                    }
-                });
-            }
             try {
-                latch.await();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                image = Thumbnails.of(imageList.get(0)).size(maxSize, maxSize).keepAspectRatio(true).asBufferedImage();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         }
+
+        return image;
+    }
+
+    protected BufferedImage buildStyledImage(BufferedImage image) {
+        for (AvatarStyle style : styleList) {
+            switch (style) {
+                case FLIP:
+                    image = ImageSynthesis.flipImage(image);
+                    break;
+                case MIRROR:
+                    image = ImageSynthesis.mirrorImage(image);
+                    break;
+                case GRAY:
+                    image = ImageSynthesis.grayImage(image);
+                    break;
+                case BINARIZATION:
+                    image = ImageSynthesis.binarizeImage(image);
+                    break;
+            }
+        }
+        return image;
+    }
+
+    protected BufferedImage buildFilteredImage(BufferedImage image) {
+        for (AvatarFilter filter : filterList) {
+            if (filter instanceof AvatarSwirlFilter) {
+                var swirlFilter = (AvatarSwirlFilter) filter;
+                TwirlFilter tFilter = new TwirlFilter();
+                tFilter.setRadius(swirlFilter.getRadius());
+                tFilter.setAngle(swirlFilter.getAngle());
+                image = tFilter.filter(image, null);
+            } else if (filter instanceof AvatarBulgeFilter) {
+                var bulgeFilter = (AvatarBulgeFilter) filter;
+                SphereFilter sFilter = new SphereFilter();
+                sFilter.setRadius(bulgeFilter.getRadius());
+                sFilter.setRefractionIndex(Math.abs(bulgeFilter.getStrength()) + 1f);
+                image = sFilter.filter(image, null);
+            } else if (filter instanceof AvatarBlurFilter) {
+                var blurFilter = (AvatarBlurFilter) filter;
+                BoxBlurFilter bFilter = new BoxBlurFilter();
+                bFilter.setRadius(blurFilter.getRadius());
+                image = bFilter.filter(image, null);
+            } else if (filter instanceof AvatarContrastFilter) {
+                var contrastFilter = (AvatarContrastFilter) filter;
+                ContrastFilter cFilter = new ContrastFilter();
+                cFilter.setContrast(contrastFilter.getContrast() + 1f);
+                cFilter.setBrightness(contrastFilter.getBrightness() + 1f);
+                image = cFilter.filter(image, null);
+            } else if (filter instanceof AvatarHueFilter) {
+                var hsbFilter = (AvatarHueFilter) filter;
+                HSBAdjustFilter hFilter = new HSBAdjustFilter();
+                hFilter.setHFactor(hsbFilter.getHue());
+                hFilter.setSFactor(hsbFilter.getSaturation());
+                hFilter.setBFactor(hsbFilter.getBrightness());
+                image = hFilter.filter(image, null);
+            } else if (filter instanceof AvatarHalftoneFilter) {
+                var halftoneFilter = (AvatarHalftoneFilter) filter;
+                ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
+                cFilter.setdotRadius(halftoneFilter.getRadius());
+                float angle = halftoneFilter.getAngle();
+                cFilter.setCyanScreenAngle(cFilter.getCyanScreenAngle() + angle);
+                cFilter.setMagentaScreenAngle(cFilter.getMagentaScreenAngle() + angle);
+                cFilter.setYellowScreenAngle(cFilter.getYellowScreenAngle() + angle);
+                image = cFilter.filter(image, null);
+            } else if (filter instanceof AvatarDotScreenFilter) {
+                var dotScreenFilter = (AvatarDotScreenFilter) filter;
+                ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
+                cFilter.setdotRadius(dotScreenFilter.getRadius());
+                float angle = dotScreenFilter.getAngle();
+                cFilter.setCyanScreenAngle(angle);
+                cFilter.setMagentaScreenAngle(angle);
+                cFilter.setYellowScreenAngle(angle);
+                image = ImageSynthesis.grayImage(cFilter.filter(image, null));
+            } else if (filter instanceof AvatarNoiseFilter) {
+                var noiseFilter = (AvatarNoiseFilter) filter;
+                NoiseFilter nFilter = new NoiseFilter();
+                nFilter.setAmount(Math.round(noiseFilter.getAmount() * 100));
+                image = nFilter.filter(image, null);
+            } else if (filter instanceof AvatarDenoiseFilter) {
+                MedianFilter dFilter = new MedianFilter();
+                image = dFilter.filter(image, null);
+            }
+        }
+        return image;
     }
 
     public FitType getZoomType() {
@@ -392,6 +346,10 @@ public class AvatarModel {
         return ((float) (360 / pos.length) * index) + angle; //GIF自动旋转
     }
 
+    public AvatarTransformOrigin getTransformOrigin() {
+        return transformOrigin;
+    }
+
     /**
      * 获取下一个坐标
      *
@@ -423,6 +381,36 @@ public class AvatarModel {
 
     public DeformData getDeformData() {
         return deformData;
+    }
+
+    public int getImageWidth() {
+        return this.getFirstImage().getWidth();
+    }
+
+    public int getImageHeight() {
+        return this.getFirstImage().getHeight();
+    }
+
+    public boolean isGif() {
+        return imageList.size() > 1;
+    }
+
+    /**
+     * 获取头像下一帧, 超过索引长度会重新开始循环 <b>(线程不安全)</b>
+     * <b>应当使用index直接获取帧</b>
+     */
+    public BufferedImage nextFrame() {
+        if (frameIndex >= imageList.size()) frameIndex = 0;
+        return imageList.get(frameIndex++);
+    }
+
+    /**
+     * 获取指定帧数, 超过索引长度会从头计数
+     * 例如: length: 8 index: 10 return: list[1]
+     */
+    public BufferedImage getFrame(short i) {
+        i = (short) (i % imageList.size());
+        return imageList.get(i);
     }
 
     public static class DeformData {
@@ -480,35 +468,5 @@ public class AvatarModel {
             i = (short) (i % anchor.length);
             return anchor[i];
         }
-    }
-
-    public int getImageWidth() {
-        return this.getFirstImage().getWidth();
-    }
-
-    public int getImageHeight() {
-        return this.getFirstImage().getHeight();
-    }
-
-    public boolean isGif() {
-        return imageList.size() > 1;
-    }
-
-    /**
-     * 获取头像下一帧, 超过索引长度会重新开始循环 <b>(线程不安全)</b>
-     * <b>应当使用index直接获取帧</b>
-     */
-    public BufferedImage nextFrame() {
-        if (frameIndex >= imageList.size()) frameIndex = 0;
-        return imageList.get(frameIndex++);
-    }
-
-    /**
-     * 获取指定帧数, 超过索引长度会从头计数
-     * 例如: length: 8 index: 10 return: list[1]
-     */
-    public BufferedImage getFrame(short i) {
-        i = (short) (i % imageList.size());
-        return imageList.get(i);
     }
 }

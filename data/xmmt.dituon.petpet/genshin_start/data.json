@@ -1,1 +1,14 @@
-{"type":"IMG","avatar":[{"type":"TO","posType":"DEFORM","pos":[[1,126],[42,377],[552,303],[545,1],[423,95]],"style":[],"opacity":1,"rotate":false,"round":false,"avatarOnTop":false}],"text":[],"alias":["启动"],"inRandomList":false}
+{
+    "type": "IMG",
+    "avatar": [
+        {
+            "type": "TO",
+            "posType": "DEFORM",
+            "pos": [[1, 126], [42, 377], [552, 303],[545, 1],[423, 95]],
+            "avatarOnTop": false
+        }
+    ],
+    "text": [],
+    "alias": ["启动"],
+    "inRandomList": false
+}

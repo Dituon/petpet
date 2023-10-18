@@ -1,1 +1,13 @@
-{"type":"IMG","avatar":[{"type":"TO","posType":"ZOOM","pos":[76,94,429,429],"style":[],"opacity":1,"rotate":false,"round":true,"avatarOnTop":false}],"text":[],"alias":["加入"],"inRandomList":false}
+{
+    "type": "IMG",
+    "avatar": [
+        {
+            "type": "TO",
+            "pos": [76, 94, 429, 429],
+            "avatarOnTop":false
+        }
+    ],
+    "text": [],
+    "alias": ["加入"],
+    "inRandomList": false
+}

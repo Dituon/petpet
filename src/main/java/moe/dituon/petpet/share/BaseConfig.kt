@@ -142,6 +142,10 @@ enum class CropType {
     NONE, PIXEL, PERCENT
 }
 
+enum class AvatarTransformOrigin {
+    DEFAULT, CENTER
+}
+
 enum class FitType {
     CONTAIN, COVER, FILL
 }
@@ -227,6 +231,7 @@ data class AvatarData @JvmOverloads constructor(
     var style: List<AvatarStyle> = emptyList(),
     var filter: List<AvatarFilter> = emptyList(),
     var angle: Short = 0,
+    var origin: AvatarTransformOrigin = AvatarTransformOrigin.DEFAULT,
     var opacity: Float = 1.0F,
     var round: Boolean = false,
     var rotate: Boolean = false,

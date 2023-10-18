@@ -5,8 +5,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
 
 public class ImageSynthesis extends ImageSynthesisCore {
+    protected static final ExecutorService threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
+
     protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar, short index) {
         g2dDrawAvatar(g2d, avatar, index, 1.0F);
     }
@@ -17,8 +23,9 @@ public class ImageSynthesis extends ImageSynthesisCore {
             case ZOOM:
                 g2dDrawZoomAvatar(
                         g2d, avatar.getFrame(index), avatar.getPos(index),
-                        avatar.getAngle(index), avatar.isRound(), multiple,
-                        avatar.getZoomType(), avatar.getOpacity()
+                        avatar.getAngle(index),
+                        avatar.getTransformOrigin() == AvatarTransformOrigin.CENTER,
+                        multiple, avatar.getZoomType(), avatar.getOpacity()
                 );
                 break;
             case DEFORM:
@@ -130,5 +137,29 @@ public class ImageSynthesis extends ImageSynthesisCore {
 
     public static List<BufferedImage> cropImage(List<BufferedImage> imageList, CropType type, int[] cropPos) {
         return cropImage(imageList, cropPos, type == CropType.PERCENT);
+    }
+
+    static List<BufferedImage> execImageList(
+            List<BufferedImage> imageList,
+            Function<BufferedImage, BufferedImage> fun
+    ) {
+        try {
+            CountDownLatch latch = new CountDownLatch(imageList.size());
+            List<BufferedImage> result = new ArrayList<>(imageList.size());
+
+            for (int i = 0; i < imageList.size(); i++) {
+                var fi = i;
+                threadPool.execute(() -> {
+                    BufferedImage img = imageList.get(fi);
+                    result.set(fi, fun.apply(img));
+                    latch.countDown();
+                });
+            }
+
+            latch.await();
+            return result;
+        } catch (InterruptedException ex){
+            throw new RuntimeException(ex);
+        }
     }
 }

@@ -22,32 +22,32 @@ public abstract class ImageSynthesisCore {
     /**
      * 在Graphics2D画布上 绘制缩放头像
      *
-     * @param g2d         Graphics2D 画布
-     * @param avatarImage 处理后的头像
-     * @param pos         处理后的坐标 (int[4]{x, y, w, h})
-     * @param angle       旋转角, 对特殊角度有特殊处理分支
-     * @param isRound     裁切为圆形
+     * @param g2d            Graphics2D 画布
+     * @param avatarImage    处理后的头像
+     * @param pos            处理后的坐标 (int[4]{x, y, w, h})
+     * @param angle          旋转角, 对特殊角度有特殊处理分支
+     * @param originAtCenter 旋转原点在中心
      */
     protected static void g2dDrawZoomAvatar(Graphics2D g2d, BufferedImage avatarImage, int[] pos,
-                                            float angle, boolean isRound) {
-        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, isRound, 1.0F, FitType.FILL, 1.0F);
+                                            float angle, boolean originAtCenter) {
+        g2dDrawZoomAvatar(g2d, avatarImage, pos, angle, originAtCenter, 1.0F, FitType.FILL, 1.0F);
     }
 
     /**
      * 在Graphics2D画布上 绘制缩放头像
      *
-     * @param g2d         Graphics2D 画布
-     * @param avatarImage 处理后的头像
-     * @param pos         处理后的坐标 (int[4]{x, y, w, h})
-     * @param angle       旋转角, 对特殊角度有特殊处理分支
-     * @param isRound     裁切为圆形
-     * @param multiple    缩放倍数
-     * @param fitType     显示策略
-     * @param opacity     头像不透明度
+     * @param g2d            Graphics2D 画布
+     * @param avatarImage    处理后的头像
+     * @param pos            处理后的坐标 (int[4]{x, y, w, h})
+     * @param angle          旋转角, 对特殊角度有特殊处理分支
+     * @param originAtCenter 旋转原点在中心
+     * @param multiple       缩放倍数
+     * @param fitType        显示策略
+     * @param opacity        头像不透明度
      */
     protected static void g2dDrawZoomAvatar(
             Graphics2D g2d, @NotNull BufferedImage avatarImage, int[] pos,
-            float angle, boolean isRound, float multiple, FitType fitType, float opacity
+            float angle, boolean originAtCenter, float multiple, FitType fitType, float opacity
     ) {
         int x = (int) (pos[0] * multiple);
         int y = (int) (pos[1] * multiple);
@@ -104,7 +104,11 @@ public abstract class ImageSynthesisCore {
         }
 
         AffineTransform old = g2d.getTransform();
-        g2d.rotate(Math.toRadians(angle),  x, y);
+        if (originAtCenter) {
+            g2d.rotate(Math.toRadians(angle),  (double) w / 2 + x, (double) h / 2 + y);
+        } else {
+            g2d.rotate(Math.toRadians(angle), x, y);
+        }
         g2d.drawImage(avatarImage, x, y, w, h, null);
         g2d.setTransform(old);
     }

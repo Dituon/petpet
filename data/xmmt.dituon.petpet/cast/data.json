@@ -3,8 +3,6 @@
     "avatar": [{
         "type": "TO",
         "pos":  [-16, 301, 158, 158],
-        "round": true,
-        "rotate": true,
         "angle": 288,
         "avatarOnTop": false
     }],
