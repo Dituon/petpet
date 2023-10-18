@@ -318,7 +318,7 @@ public final class MiraiPetpet extends JavaPlugin {
         Cooler.lock(e.getGroup().getId(), service.groupCoolDown);
 
         service.sendImage(e.getGroup(), key,
-                BaseConfigFactory.getGifAvatarExtraDataFromUrls(
+                QQConfigFactory.getGifAvatarExtraDataFromUrls(
                         fromUrl, toUrl, e.getGroup().getAvatarUrl(), e.getBot().getAvatarUrl(),
                         service.getDataMap().get(key).isUseRandomList() ?
                                 e.getGroup().getMembers().stream().map(NormalMember::getAvatarUrl).collect(Collectors.toList())
@@ -539,7 +539,6 @@ public final class MiraiPetpet extends JavaPlugin {
             }
         }
     }
-
 
     private boolean isDisabled(Group group) {
         if (disabledGroup != null && !disabledGroup.isEmpty()) {
