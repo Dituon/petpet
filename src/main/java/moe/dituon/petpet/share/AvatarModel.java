@@ -170,7 +170,7 @@ public class AvatarModel {
         if (imageList.size() == 1) {
             imageList = List.of(buildImage(imageList.get(0)));
         } else {
-            ImageSynthesis.execImageList(imageList, this::buildImage);
+            imageList = ImageSynthesis.execImageList(imageList, this::buildImage);
         }
     }
 
@@ -196,7 +196,7 @@ public class AvatarModel {
             }
 
             try {
-                image = Thumbnails.of(imageList.get(0)).size(maxSize, maxSize).keepAspectRatio(true).asBufferedImage();
+                image = Thumbnails.of(image).size(maxSize, maxSize).keepAspectRatio(true).asBufferedImage();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
