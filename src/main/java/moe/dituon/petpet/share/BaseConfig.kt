@@ -194,14 +194,14 @@ data class AvatarHueFilter(
 @SerialName("HALFTONE")
 data class AvatarHalftoneFilter(
     val angle: Float = 0f,
-    val radius: Float = 3f
+    val radius: Float = 4f
 ): AvatarFilter()
 
 @Serializable
 @SerialName("DOT_SCREEN")
 data class AvatarDotScreenFilter(
     val angle: Float = 0f,
-    val radius: Float = 3f
+    val radius: Float = 4f
 ): AvatarFilter()
 
 @Serializable
