@@ -58,7 +58,7 @@ public class DataUpdater {
             String baseUrl = index.getUrl() + '/' + index.getDataPath() + '/';
 
             index.getDataList().forEach(key -> templateMap.put(key, baseUrl + key));
-            index.getFontList().forEach(font -> fontMap.put(font, baseUrl + font));
+            index.getFontList().forEach(font -> fontMap.put(font, baseUrl + BasePetService.FONTS_FOLDER));
         }
 
         for (var entry : templateMap.entrySet()) {
@@ -68,12 +68,12 @@ public class DataUpdater {
             }
 
             String url = entry.getValue();
-            if (!saveAs(url, joinPath(key, TEMPLATE_FILE))) {
+            if (!saveAs(url, TEMPLATE_FILE)) {
                 PluginPetService.LOGGER.warning("无法从远程仓库下载 PetTemplate: " + url);
                 continue;
             }
             short i = 0;
-            while (saveAs(url, key + '/' + i + ".png")) i++;
+            while (saveAs(url, i + ".png")) i++;
             PluginPetService.LOGGER.info("PetTemplate/" + key + "下载成功 (length:" + i + ')');
         }
 
@@ -86,7 +86,7 @@ public class DataUpdater {
             String font = entry.getKey(), url = entry.getValue();
             if (localFonts.contains(font)) continue;
 
-            if (!saveAs(url, joinPath(BasePetService.FONTS_FOLDER, font))) {
+            if (!saveAs(url, font)) {
                 PluginPetService.LOGGER.warning("无法从远程仓库下载PetFont: " + url);
                 return;
             }
