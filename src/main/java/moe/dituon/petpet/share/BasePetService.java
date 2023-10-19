@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 
@@ -39,7 +40,7 @@ public class BasePetService {
     //    protected int serviceThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 //    protected ExecutorService serviceThreadPool = Executors.newFixedThreadPool(serviceThreadPoolSize);
     protected int gifEncoderThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
-    protected BaseGifMaker gifMaker = new BaseGifMaker(gifEncoderThreadPoolSize);
+    protected BaseGifMaker gifMaker = new BaseGifMaker();
     protected BaseImageMaker imageMaker = new BaseImageMaker(gifMaker);
     public static final Random random = new Random();
 
@@ -193,7 +194,7 @@ public class BasePetService {
         setGifMaxSize(config.getGifMaxSize());
         encoder = config.getGifEncoder();
         quality = config.getGifQuality();
-        setGifEncoderThreadPoolSize(config.getGifEncoderThreadPoolSize());
+        setThreadPoolSize(config.getThreadPoolSize());
 //        setServiceThreadPoolSize(config.getServiceThreadPoolSize());
         if (config.getHeadless()) System.setProperty("java.awt.headless", "true");
     }
@@ -379,11 +380,11 @@ public class BasePetService {
         return gifMaxSize;
     }
 
-    public void setGifEncoderThreadPoolSize(int size) {
+    public void setThreadPoolSize(int size) {
         assert size >= 0;
         gifEncoderThreadPoolSize = size == 0 ? DEFAULT_THREAD_POOL_SIZE : size;
-        gifMaker = new BaseGifMaker(gifEncoderThreadPoolSize);
-        imageMaker = new BaseImageMaker(gifMaker);
+        ImageSynthesis.threadPool.shutdown();
+        ImageSynthesis.threadPool = Executors.newFixedThreadPool(gifEncoderThreadPoolSize);
     }
 
 //    public void setServiceThreadPoolSize(int size) {

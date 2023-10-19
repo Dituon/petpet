@@ -3,6 +3,7 @@ package moe.dituon.petpet.share;
 import com.jhlabs.image.*;
 import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
+import kotlinx.serialization.json.JsonPrimitive;
 import net.coobird.thumbnailator.Thumbnails;
 
 import java.awt.geom.Point2D;
@@ -152,7 +153,7 @@ public class AvatarModel {
         int[] result = new int[ja.size()];
         short i = 0;
         for (JsonElement je : ja) {
-            String str = je.toString().replace("\"", "");
+            String str = ((JsonPrimitive) je).getContent();
             try {
                 result[i] = Integer.parseInt(str);
             } catch (NumberFormatException ignored) {

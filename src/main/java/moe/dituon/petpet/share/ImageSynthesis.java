@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 public class ImageSynthesis extends ImageSynthesisCore {
-    protected static final ExecutorService threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
+    protected static ExecutorService threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
 
     protected static void g2dDrawAvatar(Graphics2D g2d, AvatarModel avatar, short index) {
         g2dDrawAvatar(g2d, avatar, index, 1.0F);

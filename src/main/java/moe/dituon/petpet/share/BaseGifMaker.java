@@ -10,22 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class BaseGifMaker {
-    protected ExecutorService threadPool;
 
     /**
      * 默认线程池容量为 <b>CPU线程数 + 1</b>
      */
-    public BaseGifMaker() {
-        threadPool = Executors.newFixedThreadPool(BasePetService.DEFAULT_THREAD_POOL_SIZE);
-    }
-
-    public BaseGifMaker(int threadPoolSize) {
-        threadPool = Executors.newFixedThreadPool(threadPoolSize);
-    }
+    public BaseGifMaker() {}
 
     public InputStream makeGIF(List<AvatarModel> avatarList, List<TextModel> textList,
                                BufferedImage[] stickers, GifRenderParams params) {
@@ -48,7 +39,7 @@ public class BaseGifMaker {
             BufferedImage[] images = new BufferedImage[stickers.length];
             for (int i = 0; i < stickers.length; i++) {
                 int fi = i;
-                threadPool.execute(() -> {
+                ImageSynthesis.threadPool.execute(() -> {
                     BufferedImage image = ImageSynthesis.synthesisImage(
                             stickers[fi], avatarList, textList,
                             params.getAntialias(), false,
@@ -88,7 +79,7 @@ public class BaseGifMaker {
             int[] size = new int[2];
             for (int i = 0; i < stickers.length; i++) {
                 int fi = i;
-                threadPool.execute(() -> {
+                ImageSynthesis.threadPool.execute(() -> {
                     BufferedImage image = ImageSynthesis.synthesisImage(
                             stickers[fi], avatarList, textList,
                             params.getAntialias(), false, (short) fi, params.getMaxSize()
@@ -154,7 +145,7 @@ public class BaseGifMaker {
             BufferedImage[] images = new BufferedImage[maxFrameLength];
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
-                threadPool.execute(() -> {
+                ImageSynthesis.threadPool.execute(() -> {
                     BufferedImage image = ImageSynthesis.synthesisImage(
                             sticker, avatarList, textList,
                             params.getAntialias(), false, fi, params.getMaxSize()
@@ -197,7 +188,7 @@ public class BaseGifMaker {
             int[] size = new int[2];
             for (short i = 0; i < maxFrameLength; i++) {
                 short fi = i;
-                threadPool.execute(() -> {
+                ImageSynthesis.threadPool.execute(() -> {
                     BufferedImage image = ImageSynthesis.synthesisImage(
                             sticker, avatarList, textList,
                             params.getAntialias(), false, fi, params.getMaxSize()

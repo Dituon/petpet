@@ -90,7 +90,7 @@ data class GoCQPluginConfig(
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        threadPoolSize = threadPoolSize,
+        serviceThreadPoolSize = threadPoolSize,
         headless = headless
     )
 

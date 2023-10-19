@@ -77,7 +77,7 @@ data class PluginServiceConfig(
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        gifEncoderThreadPoolSize = threadPoolSize,
+        threadPoolSize = threadPoolSize,
         headless = headless
     )
 

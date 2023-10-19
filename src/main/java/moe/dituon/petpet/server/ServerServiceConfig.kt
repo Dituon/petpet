@@ -28,7 +28,7 @@ data class ServerServiceConfig(
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifQuality: Int = 5,
-    val threadPoolSize: Int = 0,
+    val serviceThreadPoolSize: Int = 0,
     val headless: Boolean = true
 ) {
     fun stringify(): String {
@@ -42,7 +42,7 @@ data class ServerServiceConfig(
         gifMaxSize = gifMaxSize,
         gifEncoder = gifEncoder,
         gifQuality = gifQuality,
-        gifEncoderThreadPoolSize = threadPoolSize,
+        threadPoolSize = serviceThreadPoolSize,
         headless = headless
     )
 

@@ -37,7 +37,7 @@ data class BaseServiceConfig(
     val gifMaxSize: List<Int> = emptyList(),
     val gifEncoder: Encoder = Encoder.ANIMATED_LIB,
     val gifQuality: Int = 5,
-    val gifEncoderThreadPoolSize: Int = 0,
+    val threadPoolSize: Int = 0,
     val headless: Boolean = true
 ) {
     fun stringify(): String {
