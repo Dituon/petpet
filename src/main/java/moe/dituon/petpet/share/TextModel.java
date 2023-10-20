@@ -9,48 +9,46 @@ import java.util.regex.Pattern;
 
 public class TextModel {
     public static final byte LINE_SPACING = 2;
+    public static final String DEFAULT_COLOR_STR = "#191919";
+    public static final Color DEFAULT_COLOR = Color.decode(DEFAULT_COLOR_STR);
+    public static final String DEFAULT_STROKE_COLOR_STR = "#fffff";
+    public static final Color DEFAULT_STROKE_COLOR = Color.decode(DEFAULT_STROKE_COLOR_STR);
+    public static final String DEFAULT_FONT = "SimHei";
+    public static final Pattern TEXT_VAR_REGEX = Pattern.compile("\\$txt([1-9]\\d*)\\[(.*?)]"); //$txt(num)[(xxx)]
+
     protected String text;
-    protected int[] pos = {2, 14};
-    protected Color color = new Color(25, 25, 25, 255); // #191919
+    protected int[] pos;
+    protected Color color;
     protected Font font;
     protected TextAlign align;
     protected TextWrap wrap;
     protected List<Position> position;
-    protected Short strokeSize = null;
-    protected Color strokeColor = null;
+    protected short strokeSize;
+    protected Color strokeColor;
     private static Graphics2D container = null;
     private short line = 1;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
         text = extraInfo != null ? buildText(
-                textData.getText(), extraInfo,
-                textData.getGreedy() != null ? textData.getGreedy() : false
-        ) : textData.getText().replace("\"", "");
-        pos = textData.getPos() != null ? setPos(textData.getPos()) : pos;
-        color = textData.getColor() != null ?
-                BasePetService.decodeColor(textData.getColor(), new short[]{25, 25, 25, 255}) : color;
-        font = loadFont(textData.getFont() != null ? textData.getFont().replace("\"", "") : "黑体",
-                textData.getSize() != null ? textData.getSize() : 12,
-                textData.getStyle() != null ? textData.getStyle() : TextStyle.PLAIN);
+                textData.getText(), extraInfo, textData.getGreedy()
+        ) : textData.getText();
+        pos = setPos(textData.getPos());
+        color = textData.getAwtColor();
+        font = loadFont(textData.getFont(), textData.getSize(), textData.getStyle());
         align = textData.getAlign();
         wrap = textData.getWrap();
         position = textData.getPosition();
         if (position == null || position.size() != 2) position = null;
-        if (textData.getStrokeSize() != null || textData.getStrokeColor() != null) {
-            strokeSize = textData.getStrokeSize() != null ? textData.getStrokeSize() : 2;
-            strokeColor = textData.getStrokeColor() != null ?
-                    BasePetService.decodeColor(textData.getStrokeColor()) : color;
-        }
+        strokeSize = textData.getStrokeSize();
+        strokeColor = textData.getStrokeAwtColor();
     }
 
     private String buildText(String text, TextExtraData extraData, boolean greedy) {
         text = text.replace("$from", extraData.getFromReplacement())
                 .replace("$to", extraData.getToReplacement())
-                .replace("$group", extraData.getGroupReplacement())
-                .replace("\\n", "\n");
+                .replace("$group", extraData.getGroupReplacement());
 
-        String regex = "\\$txt([1-9]\\d*)\\[(.*?)]"; //$txt(num)[(xxx)]
-        Matcher m = Pattern.compile(regex).matcher(text);
+        Matcher m = TEXT_VAR_REGEX.matcher(text);
         if (greedy) {
             List<String> textList = new ArrayList<>(extraData.getTextList());
             short maxIndex = 0;
@@ -61,15 +59,14 @@ public class TextModel {
                 String replaceText = i > textList.size() ?
                         m.group(2) : (index == maxIndex ?
                         textList.remove(i - 1) : String.join(" ", textList)
-                ).replace("\\n", "\n").replace("\\s", " ");
+                );
                 text = text.replace(m.group(0), replaceText);
             }
         } else {
             while (m.find()) {
                 short i = Short.parseShort(m.group(1));
                 String replaceText = i > extraData.getTextList().size() ?
-                        m.group(2) : extraData.getTextList().get(i - 1)
-                        .replace("\\n", "\n").replace("\\s", " ");
+                        m.group(2) : extraData.getTextList().get(i - 1);
                 text = text.replace(m.group(0), replaceText);
             }
         }
@@ -81,13 +78,13 @@ public class TextModel {
     }
 
     private static Font loadFont(String fontName, int size, TextStyle style) {
-        return new Font(fontName, style.ordinal(), size);
+        return new Font(fontName, style.getValue(), size);
     }
 
-    private int[] setPos(List<Integer> posElements) {
-        int x = posElements.get(0);
-        int y = posElements.get(1);
-        int w = posElements.size() == 3 ? posElements.get(2) : 200;
+    private int[] setPos(int[] posArr) {
+        int x = posArr[0];
+        int y = posArr[1];
+        int w = posArr.length >= 3 ? posArr[2] : 200;
         return new int[]{x, y, w};
     }
 
@@ -188,7 +185,7 @@ public class TextModel {
                 break;
         }
 
-        if (strokeSize != null && strokeColor != null) {
+        if (strokeSize != 0) {
             ImageSynthesisCore.g2dDrawStrokeText(
                     g2d, getText(), pos, this.color, getFont(), strokeSize, strokeColor);
             return;

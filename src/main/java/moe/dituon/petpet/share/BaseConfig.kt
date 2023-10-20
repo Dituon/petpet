@@ -5,6 +5,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonElement
+import java.awt.Color
+import java.awt.Font
 import java.awt.image.BufferedImage
 
 val encodeDefaultsPrettyJson = Json {
@@ -98,8 +100,11 @@ enum class TextWrap {
     NONE, BREAK, ZOOM
 }
 
-enum class TextStyle {
-    PLAIN, BOLD, ITALIC
+enum class TextStyle(val value: Int) {
+    PLAIN(Font.PLAIN),
+    BOLD(Font.BOLD),
+    ITALIC(Font.ITALIC),
+    BOLD_ITALIC(BOLD.value or ITALIC.value)
 }
 
 enum class Position {
@@ -109,18 +114,41 @@ enum class Position {
 @Serializable
 data class TextData @JvmOverloads constructor(
     var text: String,
-    var pos: List<Int>? = null,
-    var color: JsonElement? = null,
-    var font: String? = null,
-    var size: Int? = null,
-    var align: TextAlign? = TextAlign.LEFT,
-    var wrap: TextWrap? = TextWrap.NONE,
-    var style: TextStyle? = TextStyle.PLAIN,
+    var pos: IntArray = intArrayOf(50, 50),
+    var color: String = TextModel.DEFAULT_COLOR_STR,
+    var font: String = TextModel.DEFAULT_FONT,
+    var size: Int = 16,
+    var align: TextAlign = TextAlign.LEFT,
+    var wrap: TextWrap = TextWrap.NONE,
+    var style: TextStyle = TextStyle.PLAIN,
     var position: List<Position>? = listOf(Position.LEFT, Position.TOP),
-    var strokeColor: JsonElement? = null,
-    var strokeSize: Short? = null,
-    var greedy: Boolean? = false
-)
+    var strokeColor: String = TextModel.DEFAULT_STROKE_COLOR_STR,
+    var strokeSize: Short = 0,
+    var greedy: Boolean = false
+) {
+    fun getAwtColor() : Color{
+        if (color == TextModel.DEFAULT_COLOR_STR) return TextModel.DEFAULT_COLOR
+        return decodeColor(color)
+    }
+    fun getStrokeAwtColor() : Color{
+        if (strokeColor == TextModel.DEFAULT_STROKE_COLOR_STR) return TextModel.DEFAULT_STROKE_COLOR
+        return decodeColor(strokeColor)
+    }
+
+    private fun decodeColor(nm: String): Color {
+        return if (nm.length <= 7) {
+            Color.decode(nm)
+        } else {
+            val i = java.lang.Long.decode(nm)
+            Color(
+                ((i shr 24) and 0xFF).toInt(),
+                ((i shr 16) and 0xFF).toInt(),
+                ((i shr 8) and 0xFF).toInt(),
+                (i and 0xFF).toInt()
+            )
+        }
+    }
+}
 
 @Serializable
 data class TextExtraData(
