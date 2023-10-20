@@ -233,13 +233,20 @@ public class AvatarModel {
                 TwirlFilter tFilter = new TwirlFilter();
                 tFilter.setRadius(swirlFilter.getRadius());
                 tFilter.setAngle(swirlFilter.getAngle());
+                tFilter.setCentreX(swirlFilter.getX());
+                tFilter.setCentreY(swirlFilter.getY());
                 image = tFilter.filter(image, null);
             } else if (filter instanceof AvatarBulgeFilter) {
                 var bulgeFilter = (AvatarBulgeFilter) filter;
-                SphereFilter sFilter = new SphereFilter();
-                sFilter.setRadius(bulgeFilter.getRadius());
-                sFilter.setRefractionIndex(Math.abs(bulgeFilter.getStrength()) + 1f);
-                image = sFilter.filter(image, null);
+
+                int x = Math.round(image.getWidth() * bulgeFilter.getX());
+                int y = Math.round(image.getHeight() * bulgeFilter.getY());
+
+                float radius = bulgeFilter.getRadius() != 0 ? bulgeFilter.getRadius() : Math.min(x, y);
+
+                image = ImageSynthesis.bulgePinchImage(
+                        image, x, y, radius, bulgeFilter.getStrength()
+                );
             } else if (filter instanceof AvatarBlurFilter) {
                 var blurFilter = (AvatarBlurFilter) filter;
                 BoxBlurFilter bFilter = new BoxBlurFilter();
@@ -251,8 +258,8 @@ public class AvatarModel {
                 cFilter.setContrast(contrastFilter.getContrast() + 1f);
                 cFilter.setBrightness(contrastFilter.getBrightness() + 1f);
                 image = cFilter.filter(image, null);
-            } else if (filter instanceof AvatarHueFilter) {
-                var hsbFilter = (AvatarHueFilter) filter;
+            } else if (filter instanceof AvatarHSBFilter) {
+                var hsbFilter = (AvatarHSBFilter) filter;
                 HSBAdjustFilter hFilter = new HSBAdjustFilter();
                 hFilter.setHFactor(hsbFilter.getHue());
                 hFilter.setSFactor(hsbFilter.getSaturation());

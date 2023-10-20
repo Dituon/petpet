@@ -164,13 +164,19 @@ sealed class AvatarFilter
 data class AvatarSwirlFilter(
     val radius: Float = 0f,
     val angle: Float = 3f,
+
+    val x: Float = 0.5f,
+    val y: Float = 0.5f
 ): AvatarFilter()
 
 @Serializable
 @SerialName("BULGE")
 data class AvatarBulgeFilter(
     val radius: Float = 0f,
-    val strength: Float = 0.5f
+    val strength: Float = 0.5f,
+
+    val x: Float = 0.5f,
+    val y: Float = 0.5f
 ): AvatarFilter()
 
 @Serializable
@@ -188,7 +194,7 @@ data class AvatarContrastFilter(
 
 @Serializable
 @SerialName("HSB")
-data class AvatarHueFilter(
+data class AvatarHSBFilter(
     val hue: Float = 0f,
     val saturation: Float = 0f,
     val brightness: Float = 0f
@@ -198,14 +204,20 @@ data class AvatarHueFilter(
 @SerialName("HALFTONE")
 data class AvatarHalftoneFilter(
     val angle: Float = 0f,
-    val radius: Float = 4f
+    val radius: Float = 4f,
+
+    val x: Float = 0.5f,
+    val y: Float = 0.5f
 ): AvatarFilter()
 
 @Serializable
 @SerialName("DOT_SCREEN")
 data class AvatarDotScreenFilter(
     val angle: Float = 0f,
-    val radius: Float = 4f
+    val radius: Float = 4f,
+
+    val x: Float = 0.5f,
+    val y: Float = 0.5f
 ): AvatarFilter()
 
 @Serializable

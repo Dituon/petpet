@@ -9,6 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -105,7 +106,7 @@ public abstract class ImageSynthesisCore {
 
         AffineTransform old = g2d.getTransform();
         if (originAtCenter) {
-            g2d.rotate(Math.toRadians(angle),  (double) w / 2 + x, (double) h / 2 + y);
+            g2d.rotate(Math.toRadians(angle), (double) w / 2 + x, (double) h / 2 + y);
         } else {
             g2d.rotate(Math.toRadians(angle), x, y);
         }
@@ -253,19 +254,6 @@ public abstract class ImageSynthesisCore {
         g2.drawImage(input, 0, 0, null);
         g2.dispose();
         return output;
-    }
-
-    /**
-     * 将图像裁切为圆形
-     *
-     * @param inputList 输入图像数组
-     * @param antialias 抗锯齿
-     * @return 裁切后的图像
-     */
-    public static List<BufferedImage> convertCircular(List<BufferedImage> inputList, boolean antialias) {
-        return inputList.stream()
-                .map(input -> convertCircular(input, antialias))
-                .collect(Collectors.toList());
     }
 
     /**
@@ -423,13 +411,6 @@ public abstract class ImageSynthesisCore {
     }
 
     /**
-     * 镜像翻转图像数组
-     */
-    public static List<BufferedImage> mirrorImage(List<BufferedImage> imageList) {
-        return imageList.stream().map(ImageSynthesisCore::mirrorImage).collect(Collectors.toList());
-    }
-
-    /**
      * 竖直翻转图像
      */
     public static BufferedImage flipImage(BufferedImage image) {
@@ -444,15 +425,6 @@ public abstract class ImageSynthesisCore {
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return flipped;
-    }
-
-    /**
-     * 竖直翻转图像数组
-     */
-    public static List<BufferedImage> flipImage(List<BufferedImage> imageList) {
-        return imageList.stream()
-                .map(ImageSynthesisCore::flipImage)
-                .collect(Collectors.toList());
     }
 
     /**
@@ -471,13 +443,6 @@ public abstract class ImageSynthesisCore {
             }
         }
         return grayscaleImage;
-    }
-
-    /**
-     * 灰度化图像数组
-     */
-    public static List<BufferedImage> grayImage(List<BufferedImage> imageList) {
-        return imageList.stream().map(ImageSynthesisCore::grayImage).collect(Collectors.toList());
     }
 
     /**
@@ -504,24 +469,60 @@ public abstract class ImageSynthesisCore {
         return binarizeImage;
     }
 
-    /**
-     * 二值化图像数组
-     */
-    public static List<BufferedImage> binarizeImage(List<BufferedImage> imageList) {
-        return imageList.stream().map(ImageSynthesisCore::binarizeImage).collect(Collectors.toList());
-    }
+    public static BufferedImage bulgePinchImage(
+            BufferedImage input, int cx, int cy,
+            float radius, float strength
+    ) {
+        if (strength == 0 || radius == 0) return input;
 
-    /**
-     * BufferedImage转为int[][]数组
-     */
-    public static int[][] convertImageToArray(BufferedImage bf) {
-        int width = bf.getWidth();
-        int height = bf.getHeight();
-        int[] data = new int[width * height];
-        bf.getRGB(0, 0, width, height, data, 0, width);
-        int[][] rgbArray = new int[height][width];
-        for (int i = 0; i < height; i++)
-            System.arraycopy(data, i * width, rgbArray[i], 0, width);
-        return rgbArray;
+        int w = input.getWidth();
+        int h = input.getHeight();
+        BufferedImage outputImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+
+        boolean isBulge = strength > 0;
+        float radiusSquared = radius * radius;
+        double inverseBulgeStrength = 1.0 / strength;
+
+        WritableRaster inputRaster = input.getRaster();
+        WritableRaster outputRaster = outputImage.getRaster();
+
+        int[] pixel = {255, 255, 255, 255};
+
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                int dx = x - cx;
+                int dy = y - cy;
+                double distanceSquared = dx * dx + dy * dy;
+                int sx = x;
+                int sy = y;
+
+                if (distanceSquared < radiusSquared) {
+                    if (isBulge) {
+                        double distance = Math.sqrt(distanceSquared);
+                        double dirX = dx / distance;
+                        double dirY = dy / distance;
+                        double alpha = 1 - distance / radius;
+                        double distortionFactor = Math.pow(alpha, inverseBulgeStrength) * distance;
+
+                        sx -= (int) (distortionFactor * dirX);
+                        sy -= (int) (distortionFactor * dirY);
+                    } else {
+                        float d = (float) Math.sqrt(distanceSquared / radiusSquared);
+                        float t = (float) Math.pow(Math.sin(Math.PI * 0.5 * d), strength);
+
+                        dx *= t;
+                        dy *= t;
+
+                        sx = (cx + dx);
+                        sy = (cy + dy);
+                    }
+                }
+                if (sx >= 0 && sx < w && sy >= 0 && sy < h) {
+                    inputRaster.getPixel(sx, sy, pixel);
+                    outputRaster.setPixel(x, y, pixel);
+                }
+            }
+        }
+        return outputImage;
     }
 }

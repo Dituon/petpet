@@ -135,10 +135,6 @@ public class ImageSynthesis extends ImageSynthesisCore {
         return cropImage(image, cropPos, type == CropType.PERCENT);
     }
 
-    public static List<BufferedImage> cropImage(List<BufferedImage> imageList, CropType type, int[] cropPos) {
-        return cropImage(imageList, cropPos, type == CropType.PERCENT);
-    }
-
     static List<BufferedImage> execImageList(
             List<BufferedImage> imageList,
             Function<BufferedImage, BufferedImage> fun
