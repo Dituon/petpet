@@ -18,7 +18,7 @@ public class AvatarModel {
     protected int[][] pos = {{0, 0, 100, 100}};
     protected FitType fitType;
     protected short angle;
-    protected AvatarTransformOrigin transformOrigin;
+    protected TransformOrigin transformOrigin;
     protected float opacity = 1.0F;
     protected boolean round;
     protected boolean rotate;
@@ -354,7 +354,7 @@ public class AvatarModel {
         return ((float) (360 / pos.length) * index) + angle; //GIF自动旋转
     }
 
-    public AvatarTransformOrigin getTransformOrigin() {
+    public TransformOrigin getTransformOrigin() {
         return transformOrigin;
     }
 

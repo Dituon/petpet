@@ -115,6 +115,7 @@ enum class Position {
 data class TextData @JvmOverloads constructor(
     var text: String,
     var pos: IntArray = intArrayOf(50, 50),
+    var angle: Short = 0,
     var color: String = TextModel.DEFAULT_COLOR_STR,
     var font: String = TextModel.DEFAULT_FONT,
     var size: Int = 16,
@@ -122,6 +123,7 @@ data class TextData @JvmOverloads constructor(
     var wrap: TextWrap = TextWrap.NONE,
     var style: TextStyle = TextStyle.PLAIN,
     var position: List<Position>? = listOf(Position.LEFT, Position.TOP),
+    var origin: TransformOrigin = TransformOrigin.DEFAULT,
     var strokeColor: String = TextModel.DEFAULT_STROKE_COLOR_STR,
     var strokeSize: Short = 0,
     var greedy: Boolean = false
@@ -170,7 +172,7 @@ enum class CropType {
     NONE, PIXEL, PERCENT
 }
 
-enum class AvatarTransformOrigin {
+enum class TransformOrigin {
     DEFAULT, CENTER
 }
 
@@ -271,7 +273,7 @@ data class AvatarData @JvmOverloads constructor(
     var style: List<AvatarStyle> = emptyList(),
     var filter: List<AvatarFilter> = emptyList(),
     var angle: Short = 0,
-    var origin: AvatarTransformOrigin = AvatarTransformOrigin.DEFAULT,
+    var origin: TransformOrigin = TransformOrigin.DEFAULT,
     var opacity: Float = 1.0F,
     var round: Boolean = false,
     var rotate: Boolean = false,

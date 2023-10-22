@@ -24,7 +24,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
                 g2dDrawZoomAvatar(
                         g2d, avatar.getFrame(index), avatar.getPos(index),
                         avatar.getAngle(index),
-                        avatar.getTransformOrigin() == AvatarTransformOrigin.CENTER,
+                        avatar.getTransformOrigin() == TransformOrigin.CENTER,
                         multiple, avatar.getZoomType(), avatar.getOpacity()
                 );
                 break;

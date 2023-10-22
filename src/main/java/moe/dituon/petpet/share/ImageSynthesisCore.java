@@ -157,20 +157,20 @@ public abstract class ImageSynthesisCore {
      * @param font  字体
      */
     protected static void g2dDrawText(Graphics2D g2d, String text, int[] pos, Color color, Font font) {
+        int x = pos[0], y = pos[1];
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(color);
         g2d.setFont(font);
         if (text.contains("\n")) {
             String[] texts = text.split("\n");
-            int y = pos[1];
             short height = (short) TextModel.getTextHeight(text, font);
             for (String txt : texts) {
-                g2d.drawString(txt, pos[0], y);
+                g2d.drawString(txt, x, y);
                 y += height + TextModel.LINE_SPACING;
             }
             return;
         }
-        g2d.drawString(text, pos[0], pos[1]);
+        g2d.drawString(text, x, y);
     }
 
     /**
@@ -178,7 +178,7 @@ public abstract class ImageSynthesisCore {
      *
      * @param g2d         Graphics2D 画布
      * @param text        文本数据
-     * @param pos         坐标 (int[2]{x, y})
+     * @param pos         坐标 (int[4]{x, y, width, height})
      * @param color       颜色
      * @param font        字体
      * @param strokeSize  描边宽度
@@ -254,35 +254,6 @@ public abstract class ImageSynthesisCore {
         g2.drawImage(input, 0, 0, null);
         g2.dispose();
         return output;
-    }
-
-    /**
-     * 完整旋转图像 (旋转时缩放以保持图像完整性)
-     *
-     * @param avatarImage 输入图像
-     * @param angle       旋转角度
-     * @return 旋转后的图像
-     */
-    @Deprecated
-    public static BufferedImage rotateImage(BufferedImage avatarImage, float angle) {
-        double sin = Math.abs(Math.sin(Math.toRadians(angle))),
-                cos = Math.abs(Math.cos(Math.toRadians(angle)));
-        int w = avatarImage.getWidth();
-        int h = avatarImage.getHeight();
-        int neww = (int) Math.floor(w * cos + h * sin),
-                newh = (int) Math.floor(h * cos + w * sin);
-        BufferedImage rotated = new BufferedImage(neww, newh, avatarImage.getType());
-        Graphics2D g2d = rotated.createGraphics();
-        rotated = g2d.getDeviceConfiguration().createCompatibleImage(
-                rotated.getWidth(), rotated.getHeight(), Transparency.TRANSLUCENT);
-        g2d.dispose();
-        g2d = rotated.createGraphics();
-
-        g2d.translate((neww - w) / 2, (newh - h) / 2);
-        g2d.rotate(Math.toRadians(angle), w / 2.0, h / 2.0);
-        g2d.drawRenderedImage(avatarImage, null);
-        g2d.dispose();
-        return rotated;
     }
 
     /**

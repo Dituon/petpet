@@ -1,6 +1,7 @@
 package moe.dituon.petpet.share;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,29 +19,39 @@ public class TextModel {
 
     protected String text;
     protected int[] pos;
+    protected short angle;
     protected Color color;
     protected Font font;
     protected TextAlign align;
     protected TextWrap wrap;
     protected List<Position> position;
+    protected TransformOrigin transformOrigin;
     protected short strokeSize;
     protected Color strokeColor;
     private static Graphics2D container = null;
     private short line = 1;
+    private boolean zoomed = false;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
 
     public TextModel(TextData textData, TextExtraData extraInfo) {
         text = extraInfo != null ? buildText(
                 textData.getText(), extraInfo, textData.getGreedy()
         ) : textData.getText();
-        pos = setPos(textData.getPos());
+        pos = textData.getPos();
+        angle = textData.getAngle();
         color = textData.getAwtColor();
-        font = loadFont(textData.getFont(), textData.getSize(), textData.getStyle());
+        font = parseFont(textData.getFont(), textData.getSize(), textData.getStyle());
         align = textData.getAlign();
         wrap = textData.getWrap();
         position = textData.getPosition();
         if (position == null || position.size() != 2) position = null;
+        transformOrigin = textData.getOrigin();
         strokeSize = textData.getStrokeSize();
         strokeColor = textData.getStrokeAwtColor();
+        build();
     }
 
     private String buildText(String text, TextExtraData extraData, boolean greedy) {
@@ -77,56 +88,55 @@ public class TextModel {
         return text;
     }
 
-    private static Font loadFont(String fontName, int size, TextStyle style) {
+    private static Font parseFont(String fontName, int size, TextStyle style) {
         return new Font(fontName, style.getValue(), size);
     }
 
-    private int[] setPos(int[] posArr) {
-        int x = posArr[0];
-        int y = posArr[1];
-        int w = posArr.length >= 3 ? posArr[2] : 200;
-        return new int[]{x, y, w};
-    }
+    public void build() {
+        int fx = x = pos[0];
+        int fy = y = pos[1];
+        int maxWidth = width = pos.length >= 3 ? pos[2] : 200;
+        font = getFont();
+        width = getWidth(font);
+        height = getHeight(font);
 
-    /**
-     * 获取构建后的文本数据
-     */
-    public String getText() {
-        if (wrap == TextWrap.BREAK && pos.length >= 3) {
-            int width = this.getWidth(font);
-            if (width <= pos[2]) return text;
+        switch (align) {
+            case CENTER:
+                x = fx - width / 2;
+                y = fy + height / 2;
+                break;
+            case RIGHT:
+                x = fx - width;
+        }
 
-            short lineAp = (short) (width / pos[2]);
+        if (wrap == TextWrap.BREAK && width >= maxWidth) {
+            short lineAp = (short) (width / maxWidth);
             StringBuilder builder = new StringBuilder(text);
             short lineWidth = (short) (text.length() / lineAp);
             short i = 1;
             while (i <= lineAp) {
                 builder.insert(lineWidth * i++, '\n');
             }
-
-            return builder.toString();
+            text = builder.toString();
+            width = getWidth(font);
+            height = getHeight(font);
         }
+    }
+
+    /**
+     * 获取构建后的文本数据
+     */
+    public String getText() {
         return text;
     }
 
     /**
      * 获取构建后的坐标(返回新对象)
      *
-     * @return int[2]{x, y}
+     * @return int[4]{x, y, width, height}
      */
     public int[] getPos() {
-        switch (align) {
-            case CENTER:
-                return new int[]{
-                        pos[0] - this.getWidth(this.getFont()) / 2,
-                        line == 1 ? pos[1] + getTextHeight(text, getFont()) / 2
-                                : pos[1] - (getHeight(getFont()) / 2)
-                                + (getTextHeight(text, getFont()) / 2) + LINE_SPACING
-                };
-            case RIGHT:
-                return new int[]{pos[0] - this.getWidth(this.getFont()), pos[1]};
-        }
-        return pos.clone();
+        return new int[]{x, y, width, height};
     }
 
     /**
@@ -136,8 +146,8 @@ public class TextModel {
         return color;
     }
 
-    public void zoomFont(float multiple) {
-        font = new Font(font.getFontName(), font.getStyle(), Math.round(font.getSize() * multiple));
+    public Font zoomFont(float multiple) {
+        return new Font(font.getFontName(), font.getStyle(), Math.round(font.getSize() * multiple));
     }
 
     public List<Position> getPosition() {
@@ -148,9 +158,12 @@ public class TextModel {
      * 获取构建后的字体
      */
     public Font getFont() {
-        if (wrap == TextWrap.ZOOM) {
+        if (!zoomed && wrap == TextWrap.ZOOM) {
             float multiple = Math.min(1.0F, (float) pos[2] / this.getWidth(font));
-            return new Font(font.getFontName(), font.getStyle(), Math.round(font.getSize() * multiple));
+            font = zoomFont(multiple);
+            width = this.pos[2];
+            height = getHeight(font);
+            zoomed = true;
         }
         return font;
     }
@@ -163,35 +176,53 @@ public class TextModel {
      * @param stickerHeight 画布高度, 用于计算坐标
      */
     public void drawAsG2d(Graphics2D g2d, int stickerWidth, int stickerHeight) {
+        AffineTransform old = null;
+        if (angle != 0) {
+            old = g2d.getTransform();
+            if (transformOrigin == TransformOrigin.CENTER) {
+                g2d.rotate(Math.toRadians(angle), (float) width / 2 + x, (float) height / 2 + y);
+            } else {
+                g2d.rotate(Math.toRadians(angle), x, y);
+            }
+        }
+
         if (position == null) {
-            ImageSynthesisCore.g2dDrawText(g2d, getText(), getPos(), this.color, getFont());
+            ImageSynthesisCore.g2dDrawText(
+                    g2d, getText(), getPos(),
+                    color, getFont()
+            );
             return;
         }
-        int[] pos = getPos();
+        int fx = x, fy = y;
         switch (position.get(0)) {
             case RIGHT:
-                pos[0] = stickerWidth - pos[0];
+                fx = stickerWidth - fx;
                 break;
             case CENTER:
-                pos[0] = stickerWidth / 2 + pos[0];
+                fx = stickerWidth / 2 + fx;
                 break;
         }
         switch (position.get(1)) {
             case BOTTOM:
-                pos[1] = stickerHeight - pos[1];
+                fy = stickerHeight - fy;
                 break;
             case CENTER:
-                pos[1] = stickerHeight / 2 + pos[1];
+                fy = stickerHeight / 2 + fy;
                 break;
         }
 
+        int[] fPos = new int[]{fx, fy, width, height};
         if (strokeSize != 0) {
             ImageSynthesisCore.g2dDrawStrokeText(
-                    g2d, getText(), pos, this.color, getFont(), strokeSize, strokeColor);
+                    g2d, getText(), fPos,
+                    color, getFont(), strokeSize, strokeColor
+            );
             return;
         }
 
-        ImageSynthesisCore.g2dDrawText(g2d, getText(), pos, this.color, getFont());
+        ImageSynthesisCore.g2dDrawText(g2d, getText(), fPos, color, getFont());
+
+        if (angle != 0) g2d.setTransform(old);
     }
 
     /**
