@@ -1,0 +1,18 @@
+{
+    "type": "IMG",
+    "avatar": [{
+      "type": "TO",
+      "pos": [0,0,"width","height"],
+      "style": ["MIRROR"],
+      "filter": [{
+        "type": "SWIRL"
+      }],
+      "avatarOnTop": true
+    }],
+    "text": [],
+    "background": {
+      "size": ["avatar0Width","avatar0Height"]
+    },
+    "alias": ["扭曲"],
+    "inRandomList": true
+}
