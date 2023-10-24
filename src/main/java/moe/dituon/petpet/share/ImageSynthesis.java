@@ -4,6 +4,7 @@ package moe.dituon.petpet.share;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -141,19 +142,19 @@ public class ImageSynthesis extends ImageSynthesisCore {
     ) {
         try {
             CountDownLatch latch = new CountDownLatch(imageList.size());
-            List<BufferedImage> result = new ArrayList<>(imageList.size());
+            BufferedImage[] result = new BufferedImage[imageList.size()];
 
             for (int i = 0; i < imageList.size(); i++) {
                 var fi = i;
                 threadPool.execute(() -> {
                     BufferedImage img = imageList.get(fi);
-                    result.set(fi, fun.apply(img));
+                    result[fi] = fun.apply(img);
                     latch.countDown();
                 });
             }
 
             latch.await();
-            return result;
+            return Arrays.asList(result);
         } catch (InterruptedException ex){
             throw new RuntimeException(ex);
         }
