@@ -1,0 +1,18 @@
+{
+    "type": "IMG",
+    "avatar": [{
+      "type": "TO",
+      "pos": [0,0,"width","height"],
+      "filter": [{
+        "type": "BULGE",
+        "strength": -0.5
+      }],
+      "avatarOnTop": true
+    }],
+    "text": [],
+    "background": {
+      "size": ["avatar0Width","avatar0Height"]
+    },
+    "alias": ["透镜", "凹透镜", "捏合"],
+    "inRandomList": true
+}
