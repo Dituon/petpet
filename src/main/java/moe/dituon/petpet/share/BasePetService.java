@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 public class BasePetService {
-    public static final float VERSION = 5.5F;
+    public static final float VERSION = 6.0F;
     public static final int DEFAULT_INITIAL_CAPACITY = 256;
     public static final BaseLogger LOGGER = BaseLogger.getInstance();
     public static final String FONTS_FOLDER = "fonts";

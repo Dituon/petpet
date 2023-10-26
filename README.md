@@ -282,89 +282,6 @@
 
 **[在线尝试](https://dituon.github.io/petpet-js)**
 
-<details>
-<summary>展开/收起</summary>
-
-**图片按key排序(见`data/xmmt.dituon.petpet/`)**
-
-| key                                            | 预览                                                                                                    |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| **acclaim** <br/>喝彩 欢呼                     | <image alt="acclaim" src="https://s2.loli.net/2022/08/29/49ks1GMvmhuE7on.gif" width="320"/>             |
-| **bible** <br/>圣经 典中典                     | <image alt="bible" src="https://s2.loli.net/2022/08/29/hvxFqE3ckKjBpLW.gif" width="320"/>               |
-| **breakdown** <br/>惊吓 击穿                   | <image alt="breakdown" src="https://s2.loli.net/2022/08/29/gZCfQx7TdiUJH1a.gif" width="320"/>           |
-| **carte** <br/>佩可莉姆 菜单 单页              | <image alt="carte" src="https://s2.loli.net/2022/08/29/c1xji8FevHbmlwA.gif" width="320"/>               |
-| **hold_sign** <br/>唐可可 举牌 应援            | <image alt="hold_sign" src="https://s2.loli.net/2022/08/29/DqLBbV2QHCTM4Xj.gif" width="320"/>           |
-| **kurumi** <br/>胡桃 放大                      | <image alt="kurumi" src="https://s2.loli.net/2022/08/29/utZaJGOTK2wnWYo.gif" width="320"/>              |
-| **monad** <br/>唐可可 拍 单页                  | <image alt="monad" src="https://s2.loli.net/2022/08/29/OMEusdU7HBGwgJF.gif" width="320"/>               |
-| **point_tv** <br/>康纳 电视                    | <image alt="point_tv" src="https://s2.loli.net/2022/08/29/IPQZfNSlGCKy6Vs.gif" width="320"/>            |
-| **remake** <br/>泥头车 创 重开                 | <image alt="remake" src="https://s2.loli.net/2022/08/29/RVBQ9qU4wpNotjx.gif" width="320"/>              |
-| **reward** <br/>伊蕾娜 赏金 报酬               | <image alt="reward" src="https://s2.loli.net/2022/08/29/Byg4zWEGnFfCeUK.gif" width="320"/>              |
-| **watch_tv** <br/>汤姆 电视                    | <image alt="watch_tv" src="https://s2.loli.net/2022/08/29/beCgr5uEPDjw4lk.gif" width="320"/>            |
-| **certificate** <br/>喜报                      | <image alt="certificate" src="https://s2.loli.net/2022/08/29/pFnW2VgxzliJ7H8.png" width="320"/>         |
-| **anyasuki** <br/>阿尼亚 喜欢                  | <image alt="anyasuki" src="https://s2.loli.net/2022/08/29/QTgMxkfv8d7Ls4J.gif" width="320"/>            |
-| **bite** <br/>啃 咬                            | <image alt="bite" src="https://s2.loli.net/2022/08/29/Kz7F5INyfqi9osU.gif" width="320"/>                |
-| **breast** <br/>胸 凶                          | <image alt="breast" src="https://s2.loli.net/2022/08/29/Q43OqdsvplABmUc.gif" width="320"/>              |
-| **cast** <br/>丢                               | <image alt="cast" src="https://s2.loli.net/2022/08/29/snLiMK57Gyukw1g.gif" width="320"/>                |
-| **center_symmetry** <br/>中心对称 左上对称     | <image alt="center_symmetry" src="https://s2.loli.net/2022/08/29/pHo6PfQqrACt41U.gif" width="320"/>     |
-| **coupon** <br/>陪睡                           | <image alt="coupon" src="https://s2.loli.net/2022/08/29/DoCKvjwh9e3zmXl.gif" width="320"/>              |
-| **cover_face** <br/>挡                         | <image alt="cover_face" src="https://s2.loli.net/2022/08/29/qxg8hEpuck7YmHt.gif" width="320"/>          |
-| **crawl** <br/>爬                              | <image alt="crawl" src="https://s2.loli.net/2022/08/29/B51jDuRkpm4gft6.gif" width="320"/>               |
-| **decent_kiss** <br/>抱歉                      | <image alt="decent_kiss" src="https://s2.loli.net/2022/08/29/nfDAkQP2alCFc9q.gif" width="320"/>         |
-| **distracted** <br/>注意力                     | <image alt="distracted" src="https://s2.loli.net/2022/08/29/YqtehUVKsGTAx95.gif" width="320"/>          |
-| **dont_touch** <br/>不要靠近                   | <image alt="dont_touch" src="https://s2.loli.net/2022/08/29/UZaw8DPI2pKN6fk.gif" width="320"/>          |
-| **down_symmetry** <br/>对称 下对称 上下对称    | <image alt="down_symmetry" src="https://s2.loli.net/2022/08/29/vVUieaYLPTQMEzG.gif" width="320"/>       |
-| **eat** <br/>吃                                | <image alt="eat" src="https://s2.loli.net/2022/08/29/y54QG68bj3drAPh.gif" width="320"/>                 |
-| **fencing** <br/>击剑 🤺                        | <image alt="fencing" src="https://s2.loli.net/2022/08/29/BC7IUVNpig5TLAt.gif" width="320"/>             |
-| **garbage** <br/>垃圾桶 垃圾 探头              | <image alt="garbage" src="https://s2.loli.net/2022/08/29/wndy54x271Vki3K.gif" width="320"/>             |
-| **hammer** <br/>锤                             | <image alt="hammer" src="https://s2.loli.net/2022/08/29/azOyFdvgVoENTPG.gif" width="320"/>              |
-| **interview** <br/>采访                        | <image alt="interview" src="https://s2.loli.net/2022/08/29/At1UIkxbay2imZd.gif" width="320"/>           |
-| **jiujiu** <br/>么么                           | <image alt="jiujiu" src="https://s2.loli.net/2022/08/29/sSrYzieQCHZcWy5.gif" width="320"/>              |
-| **keep_away** <br/>远离                        | <image alt="keep_away" src="https://s2.loli.net/2022/08/29/aNOUFQtHceP5Rov.gif" width="320"/>           |
-| **kiss** <br/>亲 热吻                          | <image alt="kiss" src="https://s2.loli.net/2022/08/29/KBCoj8q5DmMAysa.gif" width="320"/>                |
-| **knock** <br/>敲 打                           | <image alt="knock" src="https://s2.loli.net/2022/08/29/oQUVaGcEPX6sdA8.gif" width="320"/>               |
-| **left_down_symmetry** <br/>中心对称 左下对称  | <image alt="left_down_symmetry" src="https://s2.loli.net/2022/08/29/b4nl7faouWYKDk9.gif" width="320"/>  |
-| **leg** <br/>蹭                                | <image alt="leg" src="https://s2.loli.net/2022/08/29/ZWFgCMXuT2lErQ9.gif" width="320"/>                 |
-| **like** <br/>永远喜欢                         | <image alt="like" src="https://s2.loli.net/2022/08/29/6GblH1DTAeyMLOJ.gif" width="320"/>                |
-| **loading** <br/>加载 加载中                   | <image alt="loading" src="https://s2.loli.net/2022/08/29/XGYMP15zqBLxaIF.gif" width="320"/>             |
-| **make_friend** <br/>加好友                    | <image alt="make_friend" src="https://s2.loli.net/2022/08/29/5tK4aFbqe26OnpB.gif" width="320"/>         |
-| **marry** <br/>结婚                            | <image alt="marry" src="https://s2.loli.net/2022/08/29/lV3MJ1EYqZ5fUnw.gif" width="320"/>               |
-| **nano** <br/>纳米科技                         | <image alt="nano" src="https://s2.loli.net/2022/08/29/kZCzQJHnShgU3F1.gif" width="320"/>                |
-| **need** <br/>需要                             | <image alt="need" src="https://s2.loli.net/2022/08/29/kQ94fOdINc6m1Vy.gif" width="320"/>                |
-| **osu**                                        | <image alt="osu" src="https://s2.loli.net/2022/08/29/2OYBN37RqgdEDKW.png" width="320"/>                 |
-| **painter** <br/>画                            | <image alt="painter" src="https://s2.loli.net/2022/08/29/G3LmpF1nkQYgwMz.gif" width="320"/>             |
-| **pat** <br/>拍                                | <image alt="pat" src="https://s2.loli.net/2022/08/29/c5RXlgYe7ZSQJ94.gif" width="320"/>                 |
-| **perfect** <br/>完美                          | <image alt="perfect" src="https://s2.loli.net/2022/08/29/TplOfJ4MUQIbkzB.gif" width="320"/>             |
-| **petpet** <br/>摸 摸头                        | <image alt="petpet" src="https://s2.loli.net/2022/08/29/dRNmAPhGqMye79K.gif" width="320"/>              |
-| **play** <br/>玩 顶                            | <image alt="play" src="https://s2.loli.net/2022/08/29/WRoPSutprEVXbqZ.gif" width="320"/>                |
-| **police** <br/>警察                           | <image alt="police" src="https://s2.loli.net/2022/08/29/GVW6CS2yexdJT51.gif" width="320"/>              |
-| **pound** <br/>捣                              | <image alt="pound" src="https://s2.loli.net/2022/08/29/P3uGoxgLCwqhe8l.gif" width="320"/>               |
-| **pr** <br/>舔屏                               | <image alt="pr" src="https://s2.loli.net/2022/08/29/yapZhPYf9I3QFCe.gif" width="320"/>                  |
-| **punch** <br/>打拳                            | <image alt="punch" src="https://s2.loli.net/2022/08/29/R9MCDugmebqYHIp.gif" width="320"/>               |
-| **record** <br/>唱片                           | <image alt="record" src="https://s2.loli.net/2022/08/29/FkOgoMxeiqDhsUc.gif" width="320"/>              |
-| **right_down_symmetry** <br/>中心对称 右下对称 | <image alt="right_down_symmetry" src="https://s2.loli.net/2022/08/29/2dN3e58ilCzy7Sf.gif" width="320"/> |
-| **right_symmetry** <br/>对称 右对称 左右对称   | <image alt="right_symmetry" src="https://s2.loli.net/2022/08/29/YfzjDGBwFe4pRuC.gif" width="320"/>      |
-| **right_up_symmetry** <br/>中心对称 右上对称   | <image alt="right_up_symmetry" src="https://s2.loli.net/2022/08/29/BnOvA5Z2DYTpwU4.gif" width="320"/>   |
-| **roll** <br/>滚 推                            | <image alt="roll" src="https://s2.loli.net/2022/08/29/TeSAQB5RvGdhUly.gif" width="320"/>                |
-| **rub** <br/>舔 prpr                           | <image alt="rub" src="https://s2.loli.net/2022/08/29/RxN9k8LlEcoUJzg.gif" width="320"/>                 |
-| **safe_sense** <br/>安全感                     | <image alt="safe_sense" src="https://s2.loli.net/2022/08/29/cdM5Qe3Jt4qpkgj.gif" width="320"/>          |
-| **suck** <br/>吸                               | <image alt="suck" src="https://s2.loli.net/2022/08/29/cQzUpd9R4J3TBVk.gif" width="320"/>                |
-| **support** <br/>精神支柱                      | <image alt="support" src="https://s2.loli.net/2022/08/29/3DGP7wVNRqocWgY.gif" width="320"/>             |
-| **symmetry** <br/>对称 左对称 左右对称         | <image alt="symmetry" src="https://s2.loli.net/2022/08/29/qdlg3Ya8IOBnpHf.gif" width="320"/>            |
-| **tear** <br/>撕                               | <image alt="tear" src="https://s2.loli.net/2022/08/29/XaVi3uF5ZUt1MBe.gif" width="320"/>                |
-| **thinkwhat** <br/>想                          | <image alt="thinkwhat" src="https://s2.loli.net/2022/08/29/FfmL8AECiPNre9G.gif" width="320"/>           |
-| **throw** <br/>扔                              | <image alt="throw" src="https://s2.loli.net/2022/08/29/jNeWOSJkapxuPE2.gif" width="320"/>               |
-| **thump** <br/>锤                              | <image alt="thump" src="https://s2.loli.net/2022/08/29/pAfxMcmKInYF3sw.gif" width="320"/>               |
-| **tightly** <br/>黏                            | <image alt="tightly" src="https://s2.loli.net/2022/08/29/Iwql1hAK7edoS3W.gif" width="320"/>             |
-| **twist** <br/>抱                              | <image alt="twist" src="https://s2.loli.net/2022/08/29/SrhmXBsjNQuCLYd.gif" width="320"/>               |
-| **up_symmetry** <br/>对称 上对称 上下对称      | <image alt="up_symmetry" src="https://s2.loli.net/2022/08/29/qaJFDiPg5pV2zlt.gif" width="320"/>         |
-| **wallpaper** <br/>瑞克 壁纸                   | <image alt="wallpaper" src="https://s2.loli.net/2022/08/29/p4R1v3UIjNrqz8Q.gif" width="320"/>           |
-| **worship** <br/>膜拜                          | <image alt="worship" src="https://s2.loli.net/2022/08/29/eA3SkmKFwRUhEl2.gif" width="320"/>             |
-| **yoasobi** <br/>群青                          | <image alt="yoasobi" src="https://s2.loli.net/2022/08/29/zSAN9o5XDcVtKx2.gif" width="320"/>             |
-
-**..more&more**
-
-</details>
-
 ## 自定义
 
 **[在线编辑器](https://dituon.github.io/petpet-js/editor)**
@@ -373,111 +290,78 @@
 
 `./data/xmmt.dituon.petpet/` 下的目录名为 `key` ，插件启动时会遍历 `./data/xmmt.dituon.petpet/$key/data.json`
 
-`data.json` 标准如下 (以 `thump/data.json` 为例)
+`data.json` 是模板配置文件, 程序解析此文件以生成图像
 
-```
-// *为必须参数
+```json
 {
-  "type": "GIF", // 图片类型(enum)*
-  "avatar": [{ // 头像(avatarObj[])*, 详见下文
-      "type": "TO",
-      "pos": [
-        [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
-      ],
-      "round": true,
-      "avatarOnTop": false
-    }],
-  "text": [], // 文字(textObj[])*, 详见下文
-  "inRandomList": false, // 在随机列表中(boolean)
-  "reverse": false, // GIF倒放(boolean)
-  "delay": 50, // 帧间延时(ms/int), 默认为65
-  "background": {}, // 背景(obj), 详见下文
-  "alias": [ "别名1", "别名2" ], // 别名(str[])
-  "hidden": false // 隐藏(boolean)
+  "type": "GIF",
+  "avatar": [],
+  "text": [],
+  "delay": 50,
+  "alias": [ "别名1", "别名2" ]
 }
 ```
 
-部分配置项设计参考了`CSS`标准, 并尽可能实现`CSS`渲染效果
+| **属性**           | **类型**       | **注释**              | **默认值** |
+|------------------|--------------|---------------------|---------|
+| **type**         | 模板类型枚举       | 图片类型枚举, `IMG`或`GIF` | 必须      |
+| **avatar**       | `Avatar` 数组  | 头像配置数组, 见下文         | 必须      |
+| **text**         | `Text` 数组    | 文本配置数组, 见下文         | 必须      |
+| **inRandomList** | 布尔值          | 是否在随机列表中            | `false` |
+| **reverse**      | 布尔值          | GIF是否倒放             | `false` |
+| **delay**        | 整数           | 帧间延时 (毫秒)           | `65`    |
+| **background**   | `Background` | 背景配置, 见下文           | `null`  |
+| **alias**        | 字符串数组        | 别名数组                | `[]`    |
+| **hidden**       | 布尔值          | 是否隐藏                | `false` |
 
-##### 图片类型枚举
+##### 模板类型枚举
 
-**`type`**
+- `GIF`  动图, 程序会读取目录下所有`.png`格式的图像
+- `IMG`  静态图片, 程序会读取目录下随机`.png`格式的图像
 
-- `GIF`  动图
-- `IMG`  静态图片
+### 头像
 
-#### 坐标
+程序支持复杂的图像处理, 包括裁切, 旋转, 透明度, 滤镜等
 
-坐标的基本组成单位是 4长度 `int[]` 数组
-
-其中，前两项为 **左上角顶点坐标**， 后两项为 **宽度和高度**
-
-例:
-`[65, 128, 77, 72]` 即 头像的左上角顶点坐标是 `(65,128)`, 宽度为 `77`, 高度为 `72`
-
-如果是 `GIF` 类型，坐标应为二维数组，`GIF` 的每一帧视为单个图像文件
-
-```
-"pos": [ // pos的元素对应GIF的4帧
-    [65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]
-  ],
-```
-
-如果是`IMG`类型, 可以使用一维数组
-
-```
-  "pos": [0, 0, 200, 200]
-```
-
-> `4.0`版本后, 坐标支持变量运算, 例如 `[100,100,"width/2","height*1.5^2"]`
-
-###### 仿射变换/图像变形
-
-**坐标格式枚举`posType`**
-
-- `ZOOM`  缩放(见上文)
-- `DEFORM`  变形
-
-`DEFORM` 坐标格式为 `[[x1,y1],[x2,y2],[x3,y3],[x4,y4],[x_anchor,y_anchor]]`;
-分别对应图片的`[[左上角],[左下角],[右下角],[右上角],[锚点]]`，四角坐标用相对于锚点的偏移量表示
-
-目前仿射变换仅支持单帧
-
-#### 头像
-
-`3.0`版本后 提供了更灵活的头像构造方法, 与之前的版本有很大差别
-
-```
-"avatar": [
+```json
+{
+  "avatar": [
     {
-      "type": "FROM", //头像类型枚举(enum), 非空
-      "pos": [[92, 64, 40, 40], [135, 40, 40, 40], [84, 105, 40, 40]], // 坐标
-      "round": true, // 值为true时, 头像裁切为圆形, 默认为false
-      "avatarOnTop": true, // 值为true时, 头像图层在背景之上, 默认为true
-      "angle": 90, // 初始角度
-      "opacity": 0.5 // 不透明度
+      "type": "FROM",
+      "pos": [[92, 64, 40, 40], [135, 40, 40, 40], [84, 105, 40, 40]],
+      "round": true,
+      "rotate": false,
+      "avatarOnTop": true,
+      "angle": 90
     },
     {
-      "type": "TO", 
+      "type": "TO",
       "pos": [[5, 8], [60, 90], [50, 90], [50, 0], [60, 120]],
-      "posType": "DEFORM", // 图像变形 坐标格式, 默认为ZOOM
-      "antialias": true, // 抗锯齿, 对头像单独使用抗锯齿算法, 默认为false
-      "resampling": true, // 重采样, 对头像使用重采样缩放, 默认跟随全局设置
-      "rotate": false // 值为true时, GIF类型的头像会旋转, 默认为false
-    },
-    {
-      "type": "GROUP", 
-      "pos": [[182, 64, "width/2", "height*1.5^2"], [225, 40, "40", 40], [174, 105, 40, "height+width"]], // 支持变量运算
-      "crop": [0, 0, 50, 100], // 图片裁切坐标[x1, y1, x2, y2], 可简写为 [50, 100]
-      "cropType": "PERCENT", // 裁切格式, 默认为NONE
-      "style": [ // 风格化
-        "MIRROR",
-        "GRAY"
-      ],
-      "fit": "CONTAIN" // 填充模式, 默认为 FILL
+      "posType": "DEFORM",
+      "opacity": 0.5
     }
   ]
+}
 ```
+
+| **属性**          | **类型**  | **注释**                      | **默认值** |
+|-----------------|---------|-----------------------------|---------|
+| **type**        | 头像类型枚举  | 见下文, 例如`FROM`或`TO`          | 必须      |
+| **pos**         | 坐标数组    | 头像的坐标信息                     | 必须      |
+| **posType**     | 坐标格式枚举  | 坐标格式枚举, `ZOOM`或`DEFORM`     | `ZOOM`  |
+| **round**       | 布尔值     | 头像是否裁切为圆形                   | `false` |
+| **avatarOnTop** | 布尔值     | 头像图层是否在背景之上                 | `true`  |
+| **angle**       | 整数      | 头像的初始角度                     | `0`     |
+| **opacity**     | 浮点数     | 头像的不透明度                     | `1.0`   |
+| **rotate**      | 布尔值     | GIF类型的头像是否旋转                | `false` |
+| **fit**         | 填充模式枚举  | 填充模式枚举, 可以是`CONTAIN`或`FILL` | `FILL`  |
+| **crop**        | 裁切坐标数组  | 头像裁切坐标信息                    | `null`  |
+| **cropType**    | 裁切格式枚举  | 见下文                         | `NONE`  |
+| **style**       | 风格化枚举数组 | 风格化枚举数组, 见下文                | `[]`    |
+| **filter**      | 滤镜对象数组  | 滤镜数组, 见下文                   | `[]`    |
+| **antialias**   | 布尔值     | 是否使用抗锯齿算法, 默认跟随全局配置         | `null`  |
+| **resampling**  | 布尔值     | 是否使用重采样缩放, 默认跟随全局配置         | `null`  |
+
 
 **头像类型枚举 `type`**
 
@@ -487,11 +371,66 @@
 - `BOT`  机器人头像
 - `RANDOM`  随机头像 (随机从群聊成员中选择, 不会重复)
 
+#### 坐标
+
+**坐标格式枚举`posType`**
+
+- `ZOOM`  缩放, 通过 x, y, width, height 表示图像
+- `DEFORM`  变形, 通过四点坐标来表示图像
+
+###### ZOOM
+
+`ZOOM` 缩放坐标的基本组成单位是 4长度 `int[]` 数组
+
+其中，前两项为 **左上角顶点坐标**， 后两项为 **宽度和高度**
+
+例:
+`[65, 128, 77, 72]` 即 头像的左上角顶点坐标是 `(65,128)`, 宽度为 `77`, 高度为 `72`
+
+如果是 `GIF` 类型，坐标应为二维数组，`GIF` 的每一帧视为单个图像文件
+
+```json lines
+ {
+  // pos的元素对应GIF的4帧
+  "pos": [[65, 128, 77, 72], [67, 128, 73, 72], [54, 139, 94, 61], [57, 135, 86, 65]]
+}
+```
+
+如果是`IMG`类型, 可以使用一维数组
+
+```json lines
+{
+  "pos": [0, 0, 200, 200]
+}
+```
+
+坐标支持变量运算, 例如 `[100,100,"width/2","height*1.5^2"]`
+
+**坐标变量**
+
+- `width`  原图宽度
+- `height`  原图高度
+
+###### DEFORM
+
+`DEFORM` 仿射变换坐标格式为 `[[x1,y1],[x2,y2],[x3,y3],[x4,y4],[x_anchor,y_anchor]]`;
+分别对应图片的`[[左上角],[左下角],[右下角],[右上角],[锚点]]`，四角坐标用相对于锚点的偏移量表示
+
+#### 裁切
+
+图片裁切坐标 `[x1, y1, x2, y2]`, `[0, 0, x2, y2]` 可简写为 `[x2, y2]`
+
 **裁切格式枚举 `cropType`**
 
 - `NONE`  不裁切
 - `PIXEL`  按像素裁切
 - `PERCENT`  按百分比裁切
+
+**填充模式 `fit`**
+
+- `CONTAIN` 缩小以适应画布, 不改变原比例
+- `COVER` 裁切以适应画布, 不改变原比例
+- `FILL` 拉伸, 改变原比例
 
 **风格化枚举 `style`**
 
@@ -500,32 +439,120 @@
 - `GRAY`  灰度化
 - `BINARIZATION`  二值化
 
-**填充模式 `fit`**
+#### 滤镜 `filter`
 
-- `CONTAIN` 缩小以适应画布, 不改变原比例
-- `COVER` 裁切以适应画布, 不改变原比例
-- `FILL` 拉伸, 改变原比例
+通过滤镜实现头像特效, Java 与 JavaScript 版本实现有偏差, 并非完全相同
 
-**坐标变量**
+```json
+{
+  "filter": [
+    {
+      "type": "SWIRL",
+      "radius": 200,
+      "angle": 5.0
+    }
+  ]
+}
+```
 
-- `width`  原图宽度
-- `height`  原图高度
+##### 滤镜类型 `type`
 
-#### 文字
+- `SWIRL` 对应 `AvatarSwirlFilter`
+- `BULGE` 对应 `AvatarBulgeFilter`
+- `BLUR` 对应 `AvatarBlurFilter`
+- `CONTRAST` 对应 `AvatarContrastFilter`
+- `HSB` 对应 `AvatarHSBFilter`
+- `HALFTONE` 对应 `AvatarHalftoneFilter`
+- `DOT_SCREEN` 对应 `AvatarDotScreenFilter`
+- `NOISE` 对应 `AvatarNoiseFilter`
+- `DENOISE` 对应 `AvatarDenoiseFilter`
+
+##### 滤镜对象
+
+- `AvatarSwirlFilter` 对象, 漩涡滤镜
+
+| **属性**     | **类型** | **注释**           | **默认值** |
+|------------|--------|------------------|---------|
+| **radius** | 浮点数    | 涡旋半径, 值为0时表示图片半径 | `0.0`   |
+| **angle**  | 浮点数    | 涡旋角度             | `3.0`   |
+| **x**      | 浮点数    | 中心点X坐标百分比        | `0.5`   |
+| **y**      | 浮点数    | 中心点Y坐标百分比        | `0.5`   |
+
+- `AvatarBulgeFilter` 对象, 膨胀收缩滤镜
+
+| **属性**       | **类型** | **注释**                    | **默认值** |
+|--------------|--------|---------------------------|---------|
+| **radius**   | 浮点数    | 膨胀半径, 值为0时表示图片半径          | `0.0`   |
+| **strength** | 浮点数    | 膨胀强度 `[-1, 1]`, 负数时产生收缩效果 | `0.5`   |
+| **x**        | 浮点数    | 中心点X坐标百分比                 | `0.5`   |
+| **y**        | 浮点数    | 中心点Y坐标百分比                 | `0.5`   |
+
+- `AvatarBlurFilter` 对象, 模糊滤镜
+
+| **属性**     | **类型** | **注释** | **默认值** |
+|------------|--------|--------|---------|
+| **radius** | 浮点数    | 模糊半径   | `10.0`  |
+
+- `AvatarContrastFilter` 对象, 亮度对比度滤镜
+
+| **属性**         | **类型** | **注释** | **默认值** |
+|----------------|--------|--------|---------|
+| **brightness** | 浮点数    | 亮度     | `0.0`   |
+| **contrast**   | 浮点数    | 对比度    | `0.0`   |
+
+- `AvatarHSBFilter` 对象, 相对HSB (色相, 饱和度, 亮度) 滤镜
+
+| **属性**         | **类型** | **注释** | **默认值** |
+|----------------|--------|--------|---------|
+| **hue**        | 浮点数    | 色相     | `0.0`   |
+| **saturation** | 浮点数    | 饱和度    | `0.0`   |
+| **brightness** | 浮点数    | 亮度     | `0.0`   |
+
+- `AvatarHalftoneFilter` 对象, 半色调滤镜 (模仿彩色印刷的CMYK色彩)
+
+| **属性**     | **类型** | **注释**    | **默认值** |
+|------------|--------|-----------|---------|
+| **angle**  | 浮点数    | 角度        | `0.0`   |
+| **radius** | 浮点数    | 半径        | `4.0`   |
+| **x**      | 浮点数    | 中心点X坐标百分比 | `0.5`   |
+| **y**      | 浮点数    | 中心点Y坐标百分比 | `0.5`   |
+
+- `AvatarDotScreenFilter` 对象, 单色点阵滤镜 (模仿黑白印刷品)
+
+| **属性**     | **类型** | **注释**    | **默认值** |
+|------------|--------|-----------|---------|
+| **angle**  | 浮点数    | 角度        | `0.0`   |
+| **radius** | 浮点数    | 半径        | `4.0`   |
+| **x**      | 浮点数    | 中心点X坐标百分比 | `0.5`   |
+| **y**      | 浮点数    | 中心点Y坐标百分比 | `0.5`   |
+
+- `AvatarNoiseFilter` 对象, 噪声滤镜
+
+| **属性**     | **类型** | **注释** | **默认值** |
+|------------|--------|--------|---------|
+| **amount** | 浮点数    | 噪声强度   | `0.25`  |
+
+- `AvatarDenoiseFilter` 对象, 降噪滤镜
+
+| **属性**       | **类型** | **注释** | **默认值** |
+|--------------|--------|--------|---------|
+| **exponent** | 短整数    | 指数     | `20`    |
+
+### 文字
 
 如果你想在图片上添加文字，可以编辑 `text`
 
-```
-"text": [ // 这是一个数组, 可以添加很多文字
+```json lines
+{
+  "text": [
     {
       "text": "Petpet!", // 文字内容
       "color": "#66ccff", // 颜色, 默认为#191919
-      "pos": [100, 100], // 坐标, 默认为 [2,14]
+      "pos": [100, 100], // 坐标
       "size": 24 // 字号, 默认为12
     },
     {
       "text": "发送者: $from, 接收者: $to", // 支持变量
-      "color": [0,0,0,255], // 颜色可以使用RGB或RGBA的格式
       "pos": [20, 150], // 坐标
       "position": ["CENTER", "BOTTOM"], //坐标计算基准([x, y])
       "font": "宋体", // 字体, 默认为黑体
@@ -537,20 +564,33 @@
       "pos": [0,200,300], // 第三个值为文本最大宽度
       "align": "CENTER", // 对齐方式, 默认为LEFT
       "wrap": "ZOOM", // 显示设置, 默认为NONE
-      "style": "BOLD", // 字体样式, 默认为PLAIN
-      "greedy": true // 贪婪匹配模式, 会匹配多余的关键词
+      "style": "BOLD" // 字体样式, 默认为PLAIN
     }
   ]
+}
 ```
+
+| **属性**          | **类型** | **注释**       | **默认值**         |
+|-----------------|--------|--------------|-----------------|
+| **text**        | 字符串    | 文本内容         | 必须              |
+| **pos**         | 数组     | 文本的坐标信息      | 必须              |
+| **color**       | 字符串    | 文本颜色         | `#191919`       |
+| **size**        | 整数     | 文本字号         | `12`            |
+| **position**    | 数组     | 文本坐标计算基准     | [`LEFT`, `TOP`] |
+| **font**        | 字符串    | 字体           | `黑体`            |
+| **strokeColor** | 字符串    | 文本描边颜色       | `null`          |
+| **strokeSize**  | 整数     | 文本描边宽度       | `0`             |
+| **align**       | 字符串    | 文本对齐方式       | `LEFT`          |
+| **wrap**        | 字符串    | 文本显示设置       | `NONE`          |
+| **style**       | 字符串    | 字体样式         | `PLAIN`         |
+| **greedy**      | 布尔值    | 是否贪婪匹配多余的关键词 | `false`         |
 
 **`变量`**
 
-- `$from` : 发送者, 会被替换为发送者群名片，如果没有群名片就替换为昵称
-- `$to` : 接收者, 被戳或At的对象, 发送图片构造时为"你"
+- `$from` : 发送者, 会被替换为发送者昵称
+- `$to` : 接收者, 被戳或At的对象
 - `$group` : 群名称
 - `$txt(i)[(xxx)]` : 文本变量, 可用于生成meme图, i为关键词索引, xxx为默认值; 例: `$txt1[我]超市$txt2[你]` 指令为 `pet [key] 我 你`
-
-**需要更多变量请提交 Issue**
 
 **`font`**
 
@@ -558,22 +598,24 @@
 
 **`align`**
 
-- `LEFT`: 左对齐
-- `RIGHT`: 右对齐
-- `CENTER`: 居中对齐
+- `LEFT`: 左对齐, 文本基线是标准的字母基线
+- `RIGHT`: 右对齐, 文本基线是标准的字母基线
+- `CENTER`: 居中对齐, 文本基线在文本块的中间
 
 **`wrap`**
 
 - `NONE`: 不换行
-- `BREAK`: 自动换行
-- `ZOOM`: 自动缩放
->> 使用`BREAK`或`ZOOM`时, `maxWidth` 默认为`200`
+- `BREAK`: 自动换行, 超过最大宽度的文本会显示在下一行
+- `ZOOM`: 自动缩放, 缩放字体大小以填充最大宽度
+
+使用`BREAK`或`ZOOM`时, `maxWidth` 默认为 `200`
 
 **`style`**
 
 - `PLAIN`: 默认
 - `BOLD`: 粗体
 - `ITALIC`: 斜体
+- `BOLD_ITALIC`: 粗体与斜体
 
 **`position`**
 
@@ -586,13 +628,15 @@
 
 #### `background`
 
-`4.0`版本后, 支持动态创建画布
+程序支持动态创建画布
 
-```
-"background": {
+```json lines
+{
+  "background": {
     "size": ["avatar0Width*2","avatar0Height"], //支持变量运算
-    "color": "#f0f0f0" //支持hex或rgba数组
+    "color": "#f0f0f0"
   }
+}
 ```
 
 **坐标变量**
@@ -604,12 +648,12 @@
 
 ### MessageHook
 
-消息注入, 插件会检查将要发送的消息 解析后注入图片, 可配合各类消息回复插件使用
+本特性仅适用于 **Mirai 插件**, 消息注入, 插件会检查将要发送的消息 解析后注入图片, 可配合各类消息回复插件使用
 
 `<pet></pet>` 标签中的`JSON`会被解析, 请求格式参考 [`WebServer.POST`](#post)
 
 用例: 
-```
+```text
 这段文字之后的标签会变成一张图片发送<pet>{
   "key": "petpet",
   "to": {
@@ -630,12 +674,12 @@
 
 # WebServer
   
-`Petpet` 可以作为**http服务器 / API**单独运行, 被其它项目/语言使用
+程序可作为**http服务器 / API**单独运行, 被其它项目/语言使用
 
 > `java -jar petpet.jar`
 
 启动时会生成 `config.json`:
-```
+```json lines
 {
     "port": 2333, // 监听端口
     "webServerThreadPoolSize": 10, // HTTP服务器线程池容量
@@ -676,7 +720,7 @@
 ### `POST`
 
 使用 `POST` 传递参数, 例如 `127.0.0.1:2333/petpet`
-```
+```json
 {
     "key": "petpet",
     "to": {
@@ -722,9 +766,6 @@
 
 - 没有生成配置文件?
   > `Mirai 2.11.0` 提供了新的 `JavaAutoSaveConfig` 方法, 请更新Mirai版本至 `2.11.0` (不是`2.11.0-M1`), 旧版本不支持自定义配置项
-
-- `Exception in coroutine <unnamed>`?
-  > 图片素材应位于 `Mirai/data/xmmt.dituon.petpet` 目录下, 请检查路径
 
 - `Could not initialize class java.awt.Toolkit`?
   > 对于无输入输出设备的服务器 需要启用`headless`
