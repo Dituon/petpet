@@ -153,6 +153,9 @@ public class AvatarModel {
         int[] result = new int[ja.size()];
         short i = 0;
         for (JsonElement je : ja) {
+            if (je instanceof JsonArray) {
+                return JsonArrayToIntArray((JsonArray) je);
+            }
             String str = ((JsonPrimitive) je).getContent();
             try {
                 result[i] = Integer.parseInt(str);
