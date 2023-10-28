@@ -136,19 +136,19 @@ data class TextData @JvmOverloads constructor(
         if (strokeColor == TextModel.DEFAULT_STROKE_COLOR_STR) return TextModel.DEFAULT_STROKE_COLOR
         return decodeColor(strokeColor)
     }
+}
 
-    private fun decodeColor(nm: String): Color {
-        return if (nm.length <= 7) {
-            Color.decode(nm)
-        } else {
-            val i = java.lang.Long.decode(nm)
-            Color(
-                ((i shr 24) and 0xFF).toInt(),
-                ((i shr 16) and 0xFF).toInt(),
-                ((i shr 8) and 0xFF).toInt(),
-                (i and 0xFF).toInt()
-            )
-        }
+fun decodeColor(nm: String): Color {
+    return if (nm.length <= 7) {
+        Color.decode(nm)
+    } else {
+        val i = java.lang.Long.decode(nm)
+        Color(
+            ((i shr 24) and 0xFF).toInt(),
+            ((i shr 16) and 0xFF).toInt(),
+            ((i shr 8) and 0xFF).toInt(),
+            (i and 0xFF).toInt()
+        )
     }
 }
 
@@ -313,8 +313,14 @@ data class GifAvatarExtraDataProvider(
 @Serializable
 data class BackgroundData @JvmOverloads constructor(
     var size: JsonArray,
-    var color: JsonElement? = null
-)
+    var color: String = BackgroundModel.DEFAULT_COLOR_STR,
+    var length: Short = 0
+){
+    fun getAwtColor(): Color{
+        if (color == BackgroundModel.DEFAULT_COLOR_STR) return BackgroundModel.DEFAULT_COLOR
+        return decodeColor(color)
+    }
+}
 
 data class GifRenderParams(
     val encoder: Encoder,

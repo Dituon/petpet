@@ -1,9 +1,6 @@
 package moe.dituon.petpet.share;
 
 import kotlin.Pair;
-import kotlinx.serialization.json.JsonArray;
-import kotlinx.serialization.json.JsonElement;
-import kotlinx.serialization.json.JsonPrimitive;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
@@ -279,14 +276,14 @@ public class BasePetService {
                 BufferedImage[] stickers;
 
                 if (data.getBackground() != null) { //从配置文件读背景
-                    stickers = new BufferedImage[avatarList.get(0).getPosLength()];
-                    Arrays.fill(stickers, new BackgroundModel(data.getBackground(), avatarList, textList).getImage());
+                    stickers = new BackgroundModel(data.getBackground(), avatarList, textList).getImages();
                 } else {
                     stickers = backgrounds;
                 }
 
                 InputStream inputStream = gifMaker.makeGIF(
-                        avatarList, textList, stickers, renderParams);
+                        avatarList, textList, stickers, renderParams
+                );
                 return new Pair<>(inputStream, "gif");
             case IMG:
                 BufferedImage sticker = getBackgroundImage(backgrounds, data, avatarList, textList);
@@ -319,40 +316,6 @@ public class BasePetService {
         return new BackgroundModel(
                 data.getBackground(), avatarList, textList, background
         ).getImage();
-    }
-
-    public static Color decodeColor(@NotNull JsonElement jsonElement) {
-        return decodeColor(jsonElement, new short[]{255, 255, 255, 255}); //#fff
-    }
-
-    /**
-     * 解析 RGB / RGBA / HEX 颜色, <b>可能更改原数组</b>
-     */
-    public static Color decodeColor(JsonElement jsonElement, short[] defaultRgba) {
-        assert defaultRgba.length == 4;
-//        defaultRgba = defaultRgba.clone();
-        if (jsonElement instanceof JsonArray) {
-            JsonArray jsonArray = (JsonArray) jsonElement;
-            if (jsonArray.getSize() != 3 && jsonArray.getSize() != 4) {
-                System.err.println("颜色格式有误，请输入正确的 RGB / RGBA 颜色数组\n输入: " + jsonArray.toString());
-                return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
-            }
-            defaultRgba[0] = Short.parseShort(jsonArray.get(0).toString());
-            defaultRgba[1] = Short.parseShort(jsonArray.get(1).toString());
-            defaultRgba[2] = Short.parseShort(jsonArray.get(2).toString());
-            defaultRgba[3] = jsonArray.getSize() == 4 ? Short.parseShort(jsonArray.get(3).toString()) : 255;
-        } else if (jsonElement instanceof JsonPrimitive) {
-            String hex = ((JsonPrimitive) jsonElement).getContent().replace("#", "").replace("\"", "");
-            if (hex.length() != 6 && hex.length() != 8) {
-                System.err.println("颜色格式有误，请输入正确的16进制颜色\n输入: " + hex);
-                return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
-            }
-            defaultRgba[0] = Short.parseShort(hex.substring(0, 2), 16);
-            defaultRgba[1] = Short.parseShort(hex.substring(2, 4), 16);
-            defaultRgba[2] = Short.parseShort(hex.substring(4, 6), 16);
-            defaultRgba[3] = hex.length() == 8 ? Short.parseShort(hex.substring(6, 8), 16) : 255;
-        }
-        return new Color(defaultRgba[0], defaultRgba[1], defaultRgba[2], defaultRgba[3]);
     }
 
     public HashMap<String, TemplateDTO> getDataMap() {

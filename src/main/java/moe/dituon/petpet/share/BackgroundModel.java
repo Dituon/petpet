@@ -5,22 +5,37 @@ import kotlinx.serialization.json.JsonElement;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BackgroundModel {
+    public static final String DEFAULT_COLOR_STR = "#ffffff";
+    public static final Color DEFAULT_COLOR = Color.decode(DEFAULT_COLOR_STR);
     private final int[] size;
     private BufferedImage image = null;
     private final Color color;
+    private short length = 1;
 
-    public BackgroundModel(BackgroundData data, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) {
+    public BackgroundModel(BackgroundData data, List<AvatarModel> avatarList, List<TextModel> textList) {
         this(data, avatarList, textList, null);
     }
 
-    public BackgroundModel(BackgroundData data,
-                           ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList, BufferedImage image) {
+    public BackgroundModel(
+            BackgroundData data,
+            List<AvatarModel> avatarList,
+            List<TextModel> textList,
+            BufferedImage image
+    ) {
         this.size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
         this.image = image;
-        this.color = BasePetService.decodeColor(data.getColor(), new short[]{255, 255, 255, 255});
+        this.color = data.getAwtColor();
+        this.length = data.getLength() == 0 ? avatarList.get(0).getPosLength() : data.getLength();
+    }
+
+    public BufferedImage[] getImages(){
+        var arr = new BufferedImage[this.length];
+        Arrays.fill(arr, getImage());
+        return arr;
     }
 
     public BufferedImage getImage() {
@@ -33,7 +48,7 @@ public class BackgroundModel {
         return output;
     }
 
-    private int[] JsonArrayToIntArray(JsonArray ja, ArrayList<AvatarModel> avatarList, ArrayList<TextModel> textList) {
+    private int[] JsonArrayToIntArray(JsonArray ja, List<AvatarModel> avatarList, List<TextModel> textList) {
         int[] result = new int[ja.size()];
         short i = 0;
         for (JsonElement je : ja) {
