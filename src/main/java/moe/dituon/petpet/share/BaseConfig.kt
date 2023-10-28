@@ -210,6 +210,17 @@ data class AvatarBulgeFilter(
 ): AvatarFilter()
 
 @Serializable
+@SerialName("SWIM")
+data class AvatarSwimFilter(
+    val scale: Float = 32f,
+    val stretch: Float = 1f,
+    val angle: Float = 0f,
+    val amount: Float = 10f,
+    val turbulence: Float = 1f,
+    val time: Float = 0f
+): AvatarFilter()
+
+@Serializable
 @SerialName("BLUR")
 data class AvatarBlurFilter(
     val radius: Float = 10f

@@ -294,6 +294,16 @@ public class AvatarModel {
             } else if (filter instanceof AvatarDenoiseFilter) {
                 MedianFilter dFilter = new MedianFilter();
                 image = dFilter.filter(image, null);
+            } else if (filter instanceof AvatarSwimFilter) {
+                AvatarSwimFilter swimFilter = (AvatarSwimFilter) filter;
+                SwimFilter sFilter = new SwimFilter();
+                sFilter.setScale(swimFilter.getScale());
+                sFilter.setStretch(swimFilter.getStretch());
+                sFilter.setAmount(swimFilter.getAmount());
+                sFilter.setAngle(swimFilter.getAngle());
+                sFilter.setTurbulence(swimFilter.getTurbulence());
+                sFilter.setTime(swimFilter.getTime());
+                image = sFilter.filter(image, null);
             }
         }
         return image;
