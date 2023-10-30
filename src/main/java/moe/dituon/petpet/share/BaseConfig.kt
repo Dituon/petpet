@@ -1,10 +1,8 @@
 package moe.dituon.petpet.share
 
 import kotlinx.serialization.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonClassDiscriminator
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.builtins.FloatArraySerializer
+import kotlinx.serialization.json.*
 import java.awt.Color
 import java.awt.Font
 import java.awt.image.BufferedImage
@@ -187,91 +185,157 @@ enum class AvatarStyle {
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 @JsonClassDiscriminator("type")
-sealed class AvatarFilter
+sealed class AvatarFilter {
+    abstract fun hasAnimation(): Boolean
+    abstract val maxLength: Int
+}
+
+object FloatArraySerializer : JsonTransformingSerializer<FloatArray>(FloatArraySerializer()) {
+    override fun transformDeserialize(element: JsonElement): JsonElement =
+        if (element !is JsonArray) JsonArray(listOf(element)) else element
+}
 
 @Serializable
 @SerialName("SWIRL")
 data class AvatarSwirlFilter(
-    val radius: Float = 0f,
-    val angle: Float = 3f,
+    @Serializable(with = FloatArraySerializer::class)
+    val radius: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val angle: FloatArray = floatArrayOf(3f),
 
-    val x: Float = 0.5f,
-    val y: Float = 0.5f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val x: FloatArray = floatArrayOf(0.5f),
+    @Serializable(with = FloatArraySerializer::class)
+    val y: FloatArray = floatArrayOf(0.5f)
+): AvatarFilter() {
+    override val maxLength = intArrayOf(radius.size, angle.size, x.size, y.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("BULGE")
 data class AvatarBulgeFilter(
-    val radius: Float = 0f,
-    val strength: Float = 0.5f,
+    @Serializable(with = FloatArraySerializer::class)
+    val radius: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val strength: FloatArray = floatArrayOf(0.5f),
 
-    val x: Float = 0.5f,
-    val y: Float = 0.5f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val x: FloatArray = floatArrayOf(0.5f),
+    @Serializable(with = FloatArraySerializer::class)
+    val y: FloatArray = floatArrayOf(0.5f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(radius.size, strength.size, x.size, y.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("SWIM")
 data class AvatarSwimFilter(
-    val scale: Float = 32f,
-    val stretch: Float = 1f,
-    val angle: Float = 0f,
-    val amount: Float = 10f,
-    val turbulence: Float = 1f,
-    val time: Float = 0f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val scale: FloatArray = floatArrayOf(32f),
+    @Serializable(with = FloatArraySerializer::class)
+    val stretch: FloatArray = floatArrayOf(1f),
+    @Serializable(with = FloatArraySerializer::class)
+    val angle: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val amount: FloatArray = floatArrayOf(10f),
+    @Serializable(with = FloatArraySerializer::class)
+    val turbulence: FloatArray = floatArrayOf(1f),
+    @Serializable(with = FloatArraySerializer::class)
+    val time: FloatArray = floatArrayOf(0f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(scale.size, stretch.size, angle.size, amount.size, turbulence.size, time.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("BLUR")
 data class AvatarBlurFilter(
-    val radius: Float = 10f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val radius: FloatArray = floatArrayOf(10f)
+) : AvatarFilter() {
+    override val maxLength = radius.size
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("CONTRAST")
 data class AvatarContrastFilter(
-    val brightness: Float = 0f,
-    val contrast: Float = 0f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val brightness: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val contrast: FloatArray = floatArrayOf(0f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(brightness.size, contrast.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("HSB")
 data class AvatarHSBFilter(
-    val hue: Float = 0f,
-    val saturation: Float = 0f,
-    val brightness: Float = 0f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val hue: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val saturation: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val brightness: FloatArray = floatArrayOf(0f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(hue.size, saturation.size, brightness.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("HALFTONE")
 data class AvatarHalftoneFilter(
-    val angle: Float = 0f,
-    val radius: Float = 4f,
-
-    val x: Float = 0.5f,
-    val y: Float = 0.5f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val angle: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val radius: FloatArray = floatArrayOf(4f),
+    @Serializable(with = FloatArraySerializer::class)
+    val x: FloatArray = floatArrayOf(0.5f),
+    @Serializable(with = FloatArraySerializer::class)
+    val y: FloatArray = floatArrayOf(0.5f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(angle.size, radius.size, x.size, y.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("DOT_SCREEN")
 data class AvatarDotScreenFilter(
-    val angle: Float = 0f,
-    val radius: Float = 4f,
-
-    val x: Float = 0.5f,
-    val y: Float = 0.5f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val angle: FloatArray = floatArrayOf(0f),
+    @Serializable(with = FloatArraySerializer::class)
+    val radius: FloatArray = floatArrayOf(4f),
+    @Serializable(with = FloatArraySerializer::class)
+    val x: FloatArray = floatArrayOf(0.5f),
+    @Serializable(with = FloatArraySerializer::class)
+    val y: FloatArray = floatArrayOf(0.5f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(angle.size, radius.size, x.size, y.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("NOISE")
 data class AvatarNoiseFilter(
-    val amount: Float = 0.25f
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val amount: FloatArray = floatArrayOf(0.25f)
+) : AvatarFilter() {
+    override val maxLength = amount.size
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 @SerialName("DENOISE")
 data class AvatarDenoiseFilter(
-    val exponent: Short = 20
-): AvatarFilter()
+    @Serializable(with = FloatArraySerializer::class)
+    val exponent: FloatArray = floatArrayOf(20f)
+) : AvatarFilter() {
+    override val maxLength = exponent.size
+    override fun hasAnimation() = maxLength > 1
+}
 
 @Serializable
 data class AvatarData @JvmOverloads constructor(

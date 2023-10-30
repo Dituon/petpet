@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class ImageSynthesis extends ImageSynthesisCore {
@@ -140,6 +141,13 @@ public class ImageSynthesis extends ImageSynthesisCore {
             List<BufferedImage> imageList,
             Function<BufferedImage, BufferedImage> fun
     ) {
+        return execImageList(imageList, ((i, image) -> fun.apply(image)));
+    }
+
+    static List<BufferedImage> execImageList(
+            List<BufferedImage> imageList,
+            BiFunction<Integer, BufferedImage, BufferedImage> fun
+    ) {
         try {
             CountDownLatch latch = new CountDownLatch(imageList.size());
             BufferedImage[] result = new BufferedImage[imageList.size()];
@@ -148,7 +156,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
                 var fi = i;
                 threadPool.execute(() -> {
                     BufferedImage img = imageList.get(fi);
-                    result[fi] = fun.apply(img);
+                    result[fi] = fun.apply(fi, img);
                     latch.countDown();
                 });
             }

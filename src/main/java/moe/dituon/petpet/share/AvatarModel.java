@@ -10,8 +10,11 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class AvatarModel {
     protected AvatarType type;
@@ -171,21 +174,33 @@ public class AvatarModel {
     }
 
     private void buildImage() {
+        if (imageType == Type.GIF && !filterList.isEmpty() && filterList.stream().anyMatch(AvatarFilter::hasAnimation)) {
+            int maxLength = filterList.stream()
+                    .mapToInt(AvatarFilter::getMaxLength)
+                    .max().orElse(1);
+            if (imageList.size() == 1) {
+                imageList = Collections.nCopies(maxLength, imageList.get(0));
+            } else {
+                imageList = IntStream.range(0, maxLength)
+                        .mapToObj(i -> imageList.get(i % imageList.size()))
+                        .collect(Collectors.toList());;
+            }
+        }
         if (imageList.size() == 1) {
-            imageList = List.of(buildImage(imageList.get(0)));
+            imageList = List.of(buildImage(0, imageList.get(0)));
         } else {
             imageList = ImageSynthesis.execImageList(imageList, this::buildImage);
         }
     }
 
-    public BufferedImage buildImage(BufferedImage image) {
+    public BufferedImage buildImage(int index, BufferedImage image) {
         if (cropType != CropType.NONE) {
             image = ImageSynthesis.cropImage(image, cropType, cropPos);
         }
 
         if (!styleList.isEmpty()) image = buildStyledImage(image);
 
-        if (!filterList.isEmpty()) image = buildFilteredImage(image);
+        if (!filterList.isEmpty()) image = buildFilteredImage(index, image);
 
         if (round) {
             image = ImageSynthesis.convertCircular(image, antialias);
@@ -230,66 +245,72 @@ public class AvatarModel {
     }
 
     protected BufferedImage buildFilteredImage(BufferedImage image) {
+        return buildFilteredImage(0, image);
+    }
+
+    protected BufferedImage buildFilteredImage(int i, BufferedImage image) {
         for (AvatarFilter filter : filterList) {
             if (filter instanceof AvatarSwirlFilter) {
-                var swirlFilter = (AvatarSwirlFilter) filter;
+                AvatarSwirlFilter swirlFilter = (AvatarSwirlFilter) filter;
                 TwirlFilter tFilter = new TwirlFilter();
-                tFilter.setRadius(swirlFilter.getRadius());
-                tFilter.setAngle(swirlFilter.getAngle());
-                tFilter.setCentreX(swirlFilter.getX());
-                tFilter.setCentreY(swirlFilter.getY());
+                tFilter.setRadius(getNElement(swirlFilter.getRadius(), i));
+                tFilter.setAngle(getNElement(swirlFilter.getAngle(), i));
+                tFilter.setCentreX(getNElement(swirlFilter.getX(), i));
+                tFilter.setCentreY(getNElement(swirlFilter.getY(), i));
                 image = tFilter.filter(image, null);
             } else if (filter instanceof AvatarBulgeFilter) {
-                var bulgeFilter = (AvatarBulgeFilter) filter;
+                AvatarBulgeFilter bulgeFilter = (AvatarBulgeFilter) filter;
 
-                int x = Math.round(image.getWidth() * bulgeFilter.getX());
-                int y = Math.round(image.getHeight() * bulgeFilter.getY());
+                int x = Math.round(image.getWidth() * getNElement(bulgeFilter.getX(), i));
+                int y = Math.round(image.getHeight() * getNElement(bulgeFilter.getY(), i));
 
-                float radius = bulgeFilter.getRadius() != 0 ? bulgeFilter.getRadius() : Math.min(x, y);
+                float radius = getNElement(bulgeFilter.getRadius(), i) != 0
+                        ? getNElement(bulgeFilter.getRadius(), i)
+                        : Math.min(x, y);
 
                 image = ImageSynthesis.bulgePinchImage(
-                        image, x, y, radius, bulgeFilter.getStrength()
+                        image, x, y, radius, getNElement(bulgeFilter.getStrength(), i)
                 );
             } else if (filter instanceof AvatarBlurFilter) {
-                var blurFilter = (AvatarBlurFilter) filter;
+                AvatarBlurFilter blurFilter = (AvatarBlurFilter) filter;
                 BoxBlurFilter bFilter = new BoxBlurFilter();
-                bFilter.setRadius(blurFilter.getRadius());
+                bFilter.setRadius(getNElement(blurFilter.getRadius(), i));
                 image = bFilter.filter(image, null);
             } else if (filter instanceof AvatarContrastFilter) {
-                var contrastFilter = (AvatarContrastFilter) filter;
+                AvatarContrastFilter contrastFilter = (AvatarContrastFilter) filter;
                 ContrastFilter cFilter = new ContrastFilter();
-                cFilter.setContrast(contrastFilter.getContrast() + 1f);
-                cFilter.setBrightness(contrastFilter.getBrightness() + 1f);
+                cFilter.setContrast(getNElement(contrastFilter.getContrast(), i) + 1f);
+                cFilter.setBrightness(getNElement(contrastFilter.getBrightness(), i) + 1f);
                 image = cFilter.filter(image, null);
             } else if (filter instanceof AvatarHSBFilter) {
-                var hsbFilter = (AvatarHSBFilter) filter;
+                AvatarHSBFilter hsbFilter = (AvatarHSBFilter) filter;
                 HSBAdjustFilter hFilter = new HSBAdjustFilter();
-                hFilter.setHFactor(hsbFilter.getHue());
-                hFilter.setSFactor(hsbFilter.getSaturation());
-                hFilter.setBFactor(hsbFilter.getBrightness());
+                hFilter.setHFactor(getNElement(hsbFilter.getHue(), i));
+                hFilter.setSFactor(getNElement(hsbFilter.getSaturation(), i));
+                hFilter.setBFactor(getNElement(hsbFilter.getBrightness(), i));
                 image = hFilter.filter(image, null);
             } else if (filter instanceof AvatarHalftoneFilter) {
-                var halftoneFilter = (AvatarHalftoneFilter) filter;
+                AvatarHalftoneFilter halftoneFilter = (AvatarHalftoneFilter) filter;
                 ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
-                cFilter.setdotRadius(halftoneFilter.getRadius());
-                float angle = halftoneFilter.getAngle();
+                cFilter.setdotRadius(getNElement(halftoneFilter.getRadius(), i));
+                float angle = getNElement(halftoneFilter.getAngle(), i);
                 cFilter.setCyanScreenAngle(cFilter.getCyanScreenAngle() + angle);
                 cFilter.setMagentaScreenAngle(cFilter.getMagentaScreenAngle() + angle);
                 cFilter.setYellowScreenAngle(cFilter.getYellowScreenAngle() + angle);
                 image = cFilter.filter(image, null);
             } else if (filter instanceof AvatarDotScreenFilter) {
-                var dotScreenFilter = (AvatarDotScreenFilter) filter;
+                AvatarDotScreenFilter dotScreenFilter = (AvatarDotScreenFilter) filter;
                 ColorHalftoneFilter cFilter = new ColorHalftoneFilter();
-                cFilter.setdotRadius(dotScreenFilter.getRadius());
-                float angle = dotScreenFilter.getAngle();
+                cFilter.setdotRadius(getNElement(dotScreenFilter.getRadius(), i));
+                float angle = getNElement(dotScreenFilter.getAngle(), i);
                 cFilter.setCyanScreenAngle(angle);
                 cFilter.setMagentaScreenAngle(angle);
                 cFilter.setYellowScreenAngle(angle);
                 image = ImageSynthesis.grayImage(cFilter.filter(image, null));
             } else if (filter instanceof AvatarNoiseFilter) {
-                var noiseFilter = (AvatarNoiseFilter) filter;
+                AvatarNoiseFilter noiseFilter = (AvatarNoiseFilter) filter;
                 NoiseFilter nFilter = new NoiseFilter();
-                nFilter.setAmount(Math.round(noiseFilter.getAmount() * 100));
+                nFilter.setAmount(Math.round(getNElement(noiseFilter.getAmount(), i) * 100));
                 image = nFilter.filter(image, null);
             } else if (filter instanceof AvatarDenoiseFilter) {
                 MedianFilter dFilter = new MedianFilter();
@@ -297,16 +318,20 @@ public class AvatarModel {
             } else if (filter instanceof AvatarSwimFilter) {
                 AvatarSwimFilter swimFilter = (AvatarSwimFilter) filter;
                 SwimFilter sFilter = new SwimFilter();
-                sFilter.setScale(swimFilter.getScale());
-                sFilter.setStretch(swimFilter.getStretch());
-                sFilter.setAmount(swimFilter.getAmount());
-                sFilter.setAngle(swimFilter.getAngle());
-                sFilter.setTurbulence(swimFilter.getTurbulence());
-                sFilter.setTime(swimFilter.getTime());
+                sFilter.setScale(getNElement(swimFilter.getScale(), i));
+                sFilter.setStretch(getNElement(swimFilter.getStretch(), i));
+                sFilter.setAmount(getNElement(swimFilter.getAmount(), i));
+                sFilter.setAngle(getNElement(swimFilter.getAngle(), i));
+                sFilter.setTurbulence(getNElement(swimFilter.getTurbulence(), i));
+                sFilter.setTime(getNElement(swimFilter.getTime(), i));
                 image = sFilter.filter(image, null);
             }
         }
         return image;
+    }
+
+    private static float getNElement(float[] array, int i){
+        return array[i % array.length];
     }
 
     public FitType getZoomType() {
