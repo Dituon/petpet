@@ -338,6 +338,20 @@ data class AvatarDenoiseFilter(
 }
 
 @Serializable
+@SerialName("OIL")
+data class AvatarOilFilter(
+    @Serializable(with = FloatArraySerializer::class)
+    val skip: FloatArray = floatArrayOf(4f),
+    @Serializable(with = FloatArraySerializer::class)
+    val range: FloatArray = floatArrayOf(12f),
+    @Serializable(with = FloatArraySerializer::class)
+    val levels: FloatArray = floatArrayOf(8f)
+) : AvatarFilter() {
+    override val maxLength = arrayOf(skip.size, range.size, levels.size).maxOrNull() ?: 1
+    override fun hasAnimation() = maxLength > 1
+}
+
+@Serializable
 data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     var pos: JsonArray = Json.decodeFromString(JsonArray.serializer(), "[0,0,100,100]"),

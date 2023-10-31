@@ -325,6 +325,13 @@ public class AvatarModel {
                 sFilter.setTurbulence(getNElement(swimFilter.getTurbulence(), i));
                 sFilter.setTime(getNElement(swimFilter.getTime(), i));
                 image = sFilter.filter(image, null);
+            } else if (filter instanceof AvatarOilFilter){
+                AvatarOilFilter oilFilter = (AvatarOilFilter) filter;
+                PetpetOilFilter oFilter = new PetpetOilFilter();
+                oFilter.setLevels((int) getNElement(oilFilter.getLevels(), i));
+                oFilter.setSkip((int) getNElement(oilFilter.getSkip(), i));
+                oFilter.setRange((int) getNElement(oilFilter.getRange(), i));
+                image = oFilter.filter(image, null);
             }
         }
         return image;
