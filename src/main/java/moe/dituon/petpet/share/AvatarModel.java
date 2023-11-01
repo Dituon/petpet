@@ -254,7 +254,7 @@ public class AvatarModel {
                 AvatarSwirlFilter swirlFilter = (AvatarSwirlFilter) filter;
                 TwirlFilter tFilter = new TwirlFilter();
                 tFilter.setRadius(getNElement(swirlFilter.getRadius(), i));
-                tFilter.setAngle(getNElement(swirlFilter.getAngle(), i));
+                tFilter.setAngle(getNElement(swirlFilter.getAngle(), i) / 2);
                 tFilter.setCentreX(getNElement(swirlFilter.getX(), i));
                 tFilter.setCentreY(getNElement(swirlFilter.getY(), i));
                 image = tFilter.filter(image, null);

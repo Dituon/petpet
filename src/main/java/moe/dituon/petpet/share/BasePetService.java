@@ -257,7 +257,7 @@ public class BasePetService {
             );
         }
 
-        ArrayList<AvatarModel> avatarList = new ArrayList<>();
+        ArrayList<AvatarModel> avatarList = new ArrayList<>(data.getAvatar().size());
 
         if (!data.getAvatar().isEmpty()) {
             data.getAvatar().forEach(avatarData ->
