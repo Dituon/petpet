@@ -3,19 +3,19 @@ package moe.dituon.petpet.server;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import kotlin.jvm.functions.Function0;
+import moe.dituon.petpet.share.BasePetService;
 import moe.dituon.petpet.share.GifAvatarExtraDataProvider;
 import moe.dituon.petpet.share.ImageSynthesisCore;
 import moe.dituon.petpet.share.TextExtraData;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class FormDataParser extends RequestParser {
     private final Map<String, MultiPart> map;
+    protected static final byte[] HEAD_END_BYTES = new byte[]{13, 10, 13, 10};
 
     public FormDataParser(ServerPetService service, HttpExchange httpExchange) throws IOException, IllegalArgumentException {
         Headers headers = httpExchange.getRequestHeaders();
@@ -39,14 +39,16 @@ public class FormDataParser extends RequestParser {
             int startPart = offsets.get(idx);
             int endPart = payload.length;
             if (idx < offsets.size() - 1) {
+                System.out.println(1);
                 endPart = offsets.get(idx + 1);
             }
             int partLength = endPart - startPart;
             //look for header
-            int headerEnd = indexOf(payload, "\r\n\r\n".getBytes(StandardCharsets.UTF_8), startPart, endPart);
+            int headerEnd = indexOf(payload, HEAD_END_BYTES, startPart, endPart);
             if (headerEnd > 0) {
                 MultiPart p = new MultiPart();
-                String header = new String(payload, startPart, headerEnd);
+//                var sss = Arrays.copyOfRange(payload, startPart, headerEnd);
+                String header = new String(payload, startPart, headerEnd - startPart);
                 // extract name from header
                 int nameIndex = header.indexOf("\r\nContent-Disposition: form-data; name=");
                 if (nameIndex >= 0) {
@@ -77,11 +79,18 @@ public class FormDataParser extends RequestParser {
                     p.contentType = header.substring(startMarker, endMarker).trim();
                 }
 
-                int bodyLength = partLength - headerEnd - 4;
                 if (p.type == PartType.TEXT) {
-                    p.value = new String(payload, headerEnd + 4, bodyLength);
+                    p.value = new String(
+                            payload,
+                            headerEnd + 4,
+                            partLength - headerEnd - 4
+                    );
                 } else {
-                    p.stream = new ByteArrayInputStream(payload, headerEnd + 4, bodyLength);
+                    p.stream = new ByteArrayInputStream(
+                            payload,
+                            headerEnd + 4,
+                            partLength - (headerEnd - startPart) - 4
+                    );
                 }
                 map.put(p.name, p);
             }
@@ -188,6 +197,7 @@ public class FormDataParser extends RequestParser {
             try {
                 return ImageSynthesisCore.getImageAsList(stream);
             } catch (IOException e) {
+                BasePetService.LOGGER.error("Decode image error:", e);
                 return null;
             }
         }
