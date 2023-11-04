@@ -11,7 +11,7 @@
             "wrap": "ZOOM",
             "align": "CENTER",
             "strokeColor": "#ffd700",
-            "strokeSize": 10,
+            "strokeSize": 6,
             "greedy": true
         }
     ],
