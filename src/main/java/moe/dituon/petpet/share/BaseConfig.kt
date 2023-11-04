@@ -137,10 +137,15 @@ data class TextData @JvmOverloads constructor(
 }
 
 fun decodeColor(nm: String): Color {
+    var vnm = nm
+    if (!nm.startsWith('#')) run {
+        BasePetService.LOGGER.warning("通常以#开头以表示16进制颜色")
+        vnm = "#$nm"
+    }
     return if (nm.length <= 7) {
-        Color.decode(nm)
+        Color.decode(vnm)
     } else {
-        val i = java.lang.Long.decode(nm)
+        val i = java.lang.Long.decode(vnm)
         Color(
             ((i shr 24) and 0xFF).toInt(),
             ((i shr 16) and 0xFF).toInt(),
