@@ -29,7 +29,9 @@ public class BackgroundModel {
         this.size = JsonArrayToIntArray(data.getSize(), avatarList, textList);
         this.image = image;
         this.color = data.getAwtColor();
-        this.length = data.getLength() == 0 ? avatarList.get(0).getPosLength() : data.getLength();
+        this.length = data.getLength() == 0 ?
+                (avatarList.size() == 0 ? length : avatarList.get(0).getPosLength())
+                : data.getLength();
     }
 
     public BufferedImage[] getImages(){
