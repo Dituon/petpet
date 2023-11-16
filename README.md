@@ -463,6 +463,28 @@
 }
 ```
 
+滤镜可使用数组实现动画, 例如:
+
+```json lines
+{
+  "type": "GIF",
+  "background": {
+    "length": 5, // GIF 长度是 5 帧
+    "size": ["avatar0Width", "avatar0Height"] // 画布的尺寸为第一个头像的尺寸
+  },
+  "avatar": [{
+    "type": "TO",
+    "pos": [0, 0, "width", "height"], // 图像占满画布
+    //省略...
+    "filter": [{
+      "type": "SWIRL",
+      "angle": [0, 1.2, 2.4, 3.6, 4.8] // 对应每一帧的动画
+    }]
+  }]
+  //省略...
+}
+```
+
 <details><summary>实现差异对比</summary>
 
 ![实现差异对比](https://s2.loli.net/2023/11/01/n5dZ2SyQkNFWzCu.jpg)

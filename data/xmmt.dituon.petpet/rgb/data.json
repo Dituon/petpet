@@ -4,8 +4,8 @@
     "type": "TO",
     "pos": [[0, 0, "width", "height"]],
     "filter": [{
-      "type": "BULGE",
-      "strength": [0.1, 0.15, 0.25, 0.5, 0.8, 0.6, 0.35, 0.2, 0]
+      "type": "HSB",
+      "hue": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     }]
   }],
   "text": [],
@@ -13,5 +13,5 @@
     "size": ["avatar0Width", "avatar0Height"],
     "length": 10
   },
-  "alias": ["膨胀", "鱼眼", "透镜"]
+  "alias": ["变色"]
 }
