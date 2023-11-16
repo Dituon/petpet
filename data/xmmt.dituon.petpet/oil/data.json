@@ -4,8 +4,7 @@
     "type": "TO",
     "pos": [[0, 0, "width", "height"]],
     "filter": [{
-      "type": "SWIRL",
-      "angle": 3
+      "type": "OIL"
     }]
   }],
   "text": [],
