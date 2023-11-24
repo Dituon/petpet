@@ -2,9 +2,9 @@
   "type": "IMG",
   "avatar": [{
     "type": "TO",
-    "pos": [0, 0,"width/2","height/2"],
-    "crop":[0,0,50,50],
-    "cropType":"PERCENT",
+    "pos": [0, 0, "width/2","height/2"],
+    "crop":[0, 0, 50, 50],
+    "cropType": "PERCENT",
     "round": false,
     "avatarOnTop": true
   },{

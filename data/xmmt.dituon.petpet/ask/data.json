@@ -3,7 +3,7 @@
 	"avatar":[{
 		"type":"TO",
 		"posType":"ZOOM",
-		"pos":[-0,100,600,600],
+		"pos":[0,100,600,600],
 		"fit":"COVER",
 		"avatarOnTop":false
 	}],
