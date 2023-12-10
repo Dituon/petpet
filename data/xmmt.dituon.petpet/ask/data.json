@@ -10,16 +10,16 @@
 	"text":[
 		{
 			"text":"$txt1[$to]不知道哦。",			
-			"pos":[300,640],
+			"pos":[300,650],
 			"color":"#ffffff",
-			"size":26,
+			"size":24,
 			"align":"CENTER",
 			"style":"PLAIN"
 		},{
 			"text":"$txt1[$to]",
 			"pos":[300,600],
 			"color":"#f0bf6e",
-			"size":23,
+			"size":22,
 			"align":"CENTER",
 			"style":"BOLD"
 		},{
