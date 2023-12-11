@@ -18,6 +18,8 @@
 
 - **[JS 前端版本](https://github.com/Dituon/petpet-js)**
 
+- **[RUST skia版本 (开发中)](https://github.com/Dituon/petpet-rs)**
+
 - **[在线体验](https://dituon.github.io/petpet-js)**
 
 ## 使用方法
