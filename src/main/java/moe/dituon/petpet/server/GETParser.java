@@ -5,10 +5,7 @@ import moe.dituon.petpet.share.TextExtraData;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class GETParser extends RequestParser {
     HashMap<String, String> parameterList = new HashMap<>();
@@ -26,7 +23,7 @@ public class GETParser extends RequestParser {
 
     private void parser() {
         List<String> textList = get("textList") != null ?
-                Arrays.asList(get("textList").split("\\s+")) : new ArrayList<>();
+                Arrays.asList(get("textList").split("\\s+")) : Collections.emptyList();
 
         String randomAvatarListStr = get("randomAvatarList");
 
