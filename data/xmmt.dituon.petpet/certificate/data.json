@@ -6,7 +6,7 @@
             "text": "$txt1[好消息! 好消息!]",
             "color": "#dc3023",
             "pos": [650,487,900],
-            "size": 104,
+            "size": 36,
             "font": "MiSans",
             "style": "BOLD",
             "wrap": "ZOOM",
