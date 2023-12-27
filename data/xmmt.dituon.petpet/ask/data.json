@@ -29,7 +29,7 @@
 			"size":40,
 			"align":"LEFT"
 		},{
-			"text":"啊这，ta说不知道",
+			"text":"啊这，ta说$txt2[不知道]",
 			"pos":[10,750],
 			"color":"#191919",
 			"size":40,
