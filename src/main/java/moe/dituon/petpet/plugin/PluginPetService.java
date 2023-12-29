@@ -64,12 +64,15 @@ public class PluginPetService extends BasePetService {
                 .filter(file -> !disabledKey.contains(file.getName()))
                 .toArray(File[]::new));
 
+        ArrayList<String> randomableList = new ArrayList<>(dataMap.size());
         // 2. 其中某些key加入randomableList
         dataMap.forEach((path, keyData) -> {
             if (Boolean.TRUE.equals(super.dataMap.get(path).getInRandomList())) {
                 randomableList.add(path);
             }
         });
+
+        this.randomableList = randomableList;
 
         LOGGER.info("Petpet 加载完毕 (共 " + dataMap.size() + " 素材，随机表列包含 " +
                 randomableList.size() + " 素材，已禁用 " + disabledKey.size() + ")");
