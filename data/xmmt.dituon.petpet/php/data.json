@@ -1,0 +1,22 @@
+{
+  "type": "IMG",
+  "avatar": [],
+  "text": [
+    {
+      "text": "$txt1[php]",
+      "pos": [
+        257,
+        144,
+        370
+      ],
+      "size": 180,
+      "font": "Handel Gothic",
+      "color": "#000000",
+      "align": "CENTER",
+      "wrap": "ZOOM",
+      "style": "BOLD_ITALIC",
+      "strokeColor": "#ffffff",
+      "strokeSize": 8
+    }
+  ]
+}
