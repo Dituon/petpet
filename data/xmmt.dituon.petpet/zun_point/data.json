@@ -1,0 +1,17 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [0,1],[100,1101],[830,826],[775,131],[185,155]
+      ],
+      "posType": "DEFORM",
+      "avatarOnTop": false
+    }
+  ],
+  "text": [],
+  "alias": [
+    "ZUN", "指", "合影"
+  ]
+}
