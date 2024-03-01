@@ -35,7 +35,7 @@ public class GoCQEventWebSocketClient extends WebSocketClient {
         try {
             JsonObject obj = (JsonObject) Json.Default.parseToJsonElement(message);
             String type = Objects.requireNonNull(obj.get("post_type")).toString();
-            if (!"message".equals(type)) return;
+            if (!"\"message\"".equals(type)) return;
             GoCQGroupMessageEventDTO e = GoCQGroupMessageEventDTO.parse(obj);
             new OneBotGroupMessage(e);
         } catch (Exception e) {

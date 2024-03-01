@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GoCQPetService extends PluginPetService {
@@ -57,6 +58,16 @@ public class GoCQPetService extends PluginPetService {
 
     public void readData() {
         super.dataMap = server.service.getDataMap();
+
+        ArrayList<String> randomableList = new ArrayList<>(dataMap.size());
+        dataMap.forEach((path, keyData) -> {
+            if (Boolean.TRUE.equals(super.dataMap.get(path).getInRandomList())) {
+                randomableList.add(path);
+            }
+        });
+
+        this.randomableList = randomableList;
+
         super.aliaMap = server.service.getAliaMap();
         super.keyListString = server.service.keyListString;
     }

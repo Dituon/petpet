@@ -4,7 +4,6 @@ import kotlinx.serialization.json.JsonArray;
 import kotlinx.serialization.json.JsonElement;
 import kotlinx.serialization.json.JsonObject;
 import kotlinx.serialization.json.JsonPrimitive;
-import moe.dituon.petpet.plugin.PluginPetService;
 import moe.dituon.petpet.share.BasePetService;
 import moe.dituon.petpet.share.TextExtraData;
 
@@ -91,6 +90,13 @@ public class OneBotGroupMessage {
         }
 
         String commandData = messageText.toString().trim();
+
+//        if (service.command.equals(commandData)) {
+//            // TODO
+//            service.sendMessage("Petpet KeyList: \n" + service.getKeyAliasListString());
+//            return;
+//        }
+
         ArrayList<String> spanList = new ArrayList<>(Arrays.asList(commandData.split("\\s+")));
         if (spanList.isEmpty()) return;
 
