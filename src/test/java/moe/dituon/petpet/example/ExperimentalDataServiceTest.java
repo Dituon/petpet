@@ -11,7 +11,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 public class ExperimentalDataServiceTest extends AbstractServiceTest {
@@ -67,12 +66,11 @@ public class ExperimentalDataServiceTest extends AbstractServiceTest {
         int fontSizeByWidth = (int) (textWidth * 1.0 / text.length());
         int fontSize = Math.min(fontSizeByWidth, fontSizeByHeight);
         int x = (fullWidth / 2) - (text.length() * fontSize / 2);
-        return new TextData(
+        var data = new TextData(
                 text,
-                Arrays.asList(x, 430),
-                null,
-                null,
-                fontSize
+                new int[]{x, 430}
         );
+        data.setSize(fontSize);
+        return data;
     }
 }
