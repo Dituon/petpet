@@ -1,0 +1,23 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [
+          129,
+          405,
+          419,
+          419
+        ]
+      ],
+      "avatarOnTop": false
+    }
+  ],
+  "text": [],
+  "delay": 1000,
+  "alias": [
+    "啃地球"
+  ],
+  "fps": 1
+}
