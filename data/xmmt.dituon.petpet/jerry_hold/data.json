@@ -1,0 +1,23 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [
+          297,
+          220,
+          140,
+          140
+        ]
+      ],
+      "avatarOnTop": false,
+      "angle": 23
+    }
+  ],
+  "text": [],
+  "alias": [
+    "杰瑞",
+    "观察"
+  ]
+}
