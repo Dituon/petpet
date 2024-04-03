@@ -292,21 +292,23 @@ public abstract class ImageSynthesisCore {
      */
     public static List<BufferedImage> getImageAsList(InputStream inputStream) throws IOException {
         ReusableGifDecoder decoder = new ReusableGifDecoder();
-        inputStream.mark(0); //循环利用inputStream, 避免重复获取
-        decoder.read(inputStream);
 
-        if (decoder.err()) {
-            inputStream.reset();
-            List<BufferedImage> list = List.of(ImageIO.read(ImageIO.createImageInputStream(inputStream)));
-            inputStream.close();
-            return list;
+        try (inputStream) {
+            inputStream.mark(0); //循环利用inputStream, 避免重复获取
+            decoder.read(inputStream);
+
+            if (decoder.err()) {
+                inputStream.reset();
+                List<BufferedImage> list = List.of(ImageIO.read(ImageIO.createImageInputStream(inputStream)));
+                inputStream.close();
+                return list;
+            }
+            List<BufferedImage> output = new ArrayList<>(decoder.getFrameCount());
+            for (short i = 0; i < decoder.getFrameCount(); i++) {
+                output.add(decoder.getFrame(i));
+            }
+            return output;
         }
-        inputStream.close();
-        List<BufferedImage> output = new ArrayList<>(decoder.getFrameCount());
-        for (short i = 0; i < decoder.getFrameCount(); i++) {
-            output.add(decoder.getFrame(i));
-        }
-        return output;
     }
 
     /**
