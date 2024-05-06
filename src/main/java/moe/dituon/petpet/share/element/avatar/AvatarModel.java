@@ -30,6 +30,10 @@ public abstract class AvatarModel implements TemplateElement {
     protected final List<AvatarFilter> filterList;
 
     public AvatarModel(AvatarData data, Supplier<List<BufferedImage>> extraData) {
+        this(data, extraData, true);
+    }
+
+    public AvatarModel(AvatarData data, Supplier<List<BufferedImage>> extraData, boolean initFlag) {
         imageList = extraData.get();
         type = data.getType();
         posType = data.getPosType();
@@ -46,7 +50,7 @@ public abstract class AvatarModel implements TemplateElement {
         onTop = data.getAvatarOnTop();
         antialias = Boolean.TRUE.equals(data.getAntialias());
         resampling = Boolean.TRUE.equals(data.getResampling());
-        buildImage();
+        if (initFlag) buildImage();
     }
 
     @Override
@@ -54,7 +58,7 @@ public abstract class AvatarModel implements TemplateElement {
         return TemplateElement.Type.AVATAR;
     }
 
-    private void buildImage() {
+    protected void buildImage() {
         if (getPosLength() > 1 && !filterList.isEmpty()
                 && filterList.stream().anyMatch(AvatarFilter::hasAnimation)
         ) {

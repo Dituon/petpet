@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextTest {
-    public static TextAlign[] testAligns = TextAlign.values();
     public static final String outputDir = ".test-output/text/";
-    public static TextBaseline[] testBaselines = new TextBaseline[]{
+    public static final TextAlign[] testAligns = TextAlign.values();
+    public static final TextBaseline[] testBaselines = new TextBaseline[]{
             TextBaseline.TOP,
             TextBaseline.MIDDLE,
             TextBaseline.BOTTOM

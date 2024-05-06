@@ -18,8 +18,9 @@ public class AvatarDeformModel extends AvatarModel {
             Supplier<List<BufferedImage>> imageSupplier,
             PositionP4ACollection pos
     ) {
-        super(data, imageSupplier);
+        super(data, imageSupplier, false);
         this.pos = pos;
+        buildImage();
     }
 
     @Override

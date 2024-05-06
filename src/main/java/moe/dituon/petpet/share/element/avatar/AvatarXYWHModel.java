@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.function.Supplier;
 
 class AvatarXYWHModel extends AvatarModel {
-    final PositionXYWHCollection pos;
-    PositionDynamicData dynamicData;
+    protected final PositionXYWHCollection pos;
+    protected PositionDynamicData dynamicData;
 
     AvatarXYWHModel(
             AvatarData data,
             Supplier<List<BufferedImage>> imageSupplier,
             PositionXYWHCollection pos
     ) {
-        super(data, imageSupplier);
+        super(data, imageSupplier, false);
         this.pos = pos;
         if (pos.isDynamical()) {
             var firstImg = super.imageList.get(0);
@@ -33,6 +33,7 @@ class AvatarXYWHModel extends AvatarModel {
                     firstImg.getHeight()
             );
         }
+        buildImage();
     }
 
     @Override
@@ -92,6 +93,7 @@ class AvatarXYWHModel extends AvatarModel {
 
         if (angle == 0) {
             g2d.drawImage(newAvatarImage, x, y, w, h, null);
+            System.out.println("x: " + x + ", y: " + y + ", w: " + w + ", h: " + h);
             return;
         }
 
