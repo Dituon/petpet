@@ -57,7 +57,7 @@ public class HelloPetpet {
         );
          */
 
-        exampleTemplate.getAvatar().add(avatarData); //向模板中添加刚刚定义的头像
+        exampleTemplate.setAvatar(List.of(avatarData)); //向模板中添加刚刚定义的头像
         service.putKeyData("example", exampleTemplate, new BufferedImage(500, 500, Image.SCALE_DEFAULT)); //添加模板, 可通过Key"example"调用模板
 
         //到目前为止, 你已经了解到如何添加模板, 接下来  让我们通过模板生成图片吧!

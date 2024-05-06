@@ -23,6 +23,11 @@ public class PositionXYWHCollection implements PositionCollection<int[]> {
     }
 
     @Override
+    public int size() {
+        return pos.length;
+    }
+
+    @Override
     public boolean isDynamical() {
         return false;
     }

@@ -144,7 +144,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
         return execImageList(imageList, ((i, image) -> fun.apply(image)));
     }
 
-    static List<BufferedImage> execImageList(
+    public static List<BufferedImage> execImageList(
             List<BufferedImage> imageList,
             BiFunction<Integer, BufferedImage, BufferedImage> fun
     ) {

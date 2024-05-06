@@ -7,6 +7,8 @@ public interface PositionCollection<T> {
 
     T getPosition(int index, PositionDynamicData data);
 
+    int size();
+
     boolean isDynamical();
 
     static <T> PositionCollection<T> fromJson(JsonArray jsonArray) {

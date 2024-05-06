@@ -31,6 +31,10 @@ public class PositionP4ACollection implements PositionCollection<Point2D[]> {
         return getPosition(index);
     }
 
+    public int size() {
+        return pos.length;
+    }
+
     @Override
     public boolean isDynamical() {
         return false;

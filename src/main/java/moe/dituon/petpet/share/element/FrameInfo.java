@@ -9,6 +9,7 @@ public class FrameInfo {
     public int index;
     public int canvasWidth;
     public int canvasHeight;
+    public float multiple;
 
     public FrameInfo(int index, int canvasWidth, int canvasHeight){
         this.index = index;

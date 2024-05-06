@@ -146,10 +146,9 @@ public class AvatarModel {
         }
     }
 
-    private void setCrop(JsonArray crop) {
-        if (crop == null || crop.isEmpty()) return;
-        int[] result = JsonArrayToIntArray(crop);
-        cropPos = result.length == 2 ? new int[]{0, 0, result[0], result[1]} : result;
+    private void setCrop(int[] crop) {
+        if (crop == null || crop.length == 0) return;
+        cropPos = crop.length == 2 ? new int[]{0, 0, crop[0], crop[1]} : crop;
     }
 
     private int[] JsonArrayToIntArray(JsonArray ja) {

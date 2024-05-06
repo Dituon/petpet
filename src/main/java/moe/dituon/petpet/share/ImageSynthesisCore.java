@@ -156,7 +156,7 @@ public abstract class ImageSynthesisCore {
      * @param color 颜色
      * @param font  字体
      */
-    protected static void g2dDrawText(Graphics2D g2d, String text, int[] pos, Color color, Font font) {
+    public static void g2dDrawText(Graphics2D g2d, String text, int[] pos, Color color, Font font) {
         int x = pos[0], y = pos[1];
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2d.setColor(color);
@@ -184,9 +184,9 @@ public abstract class ImageSynthesisCore {
      * @param strokeSize  描边宽度
      * @param strokeColor 描边颜色
      */
-    protected static void g2dDrawStrokeText(Graphics2D g2d, String text, int[] pos,
-                                            Color color, Font font,
-                                            short strokeSize, Color strokeColor) {
+    public static void g2dDrawStrokeText(Graphics2D g2d, String text, int[] pos,
+                                         Color color, Font font,
+                                         short strokeSize, Color strokeColor) {
         BasicStroke outlineStroke = new BasicStroke(strokeSize);
         Color originalColor = g2d.getColor();
         Stroke originalStroke = g2d.getStroke();

@@ -63,8 +63,8 @@ enum class Type {
 @Serializable
 data class TemplateDTO(
     val type: Type,
-    val avatar: List<AvatarData> = emptyList(),
-    val text: List<TextData> = emptyList(),
+    var avatar: List<AvatarData> = emptyList(),
+    var text: List<TextData> = emptyList(),
     var background: BackgroundData? = null,
     var delay: Int? = 65,
     var alias: List<String>? = null,
@@ -74,8 +74,9 @@ data class TemplateDTO(
     val hidden: Boolean? = false
 ) {
     constructor(type: Type) : this(type, emptyList(), emptyList())
-    private var useRandomList:Boolean? = null
-    fun isUseRandomList():Boolean{
+
+    private var useRandomList: Boolean? = null
+    fun isUseRandomList(): Boolean {
         if (useRandomList == null) {
             useRandomList = avatar.any { a -> a.type == AvatarType.RANDOM }
         }
@@ -92,6 +93,10 @@ data class TemplateDTO(
 
 enum class TextAlign {
     LEFT, RIGHT, CENTER
+}
+
+enum class TextBaseline {
+    TOP, MIDDLE, ALPHABETIC, BOTTOM
 }
 
 enum class TextWrap {
@@ -112,12 +117,13 @@ enum class Position {
 @Serializable
 data class TextData @JvmOverloads constructor(
     var text: String,
-    var pos: IntArray = intArrayOf(50, 50),
+    var pos: IntArray = intArrayOf(0, 0),
     var angle: Short = 0,
     var color: String = TextModel.DEFAULT_COLOR_STR,
     var font: String = TextModel.DEFAULT_FONT,
     var size: Int = 16,
     var align: TextAlign = TextAlign.LEFT,
+    var baseline: TextBaseline = TextBaseline.TOP,
     var wrap: TextWrap = TextWrap.NONE,
     var style: TextStyle = TextStyle.PLAIN,
     var position: List<Position>? = listOf(Position.LEFT, Position.TOP),
@@ -126,11 +132,12 @@ data class TextData @JvmOverloads constructor(
     var strokeSize: Short = 0,
     var greedy: Boolean = false
 ) {
-    fun getAwtColor() : Color{
+    fun getAwtColor(): Color {
         if (color == TextModel.DEFAULT_COLOR_STR) return TextModel.DEFAULT_COLOR
         return decodeColor(color)
     }
-    fun getStrokeAwtColor() : Color{
+
+    fun getStrokeAwtColor(): Color {
         if (strokeColor == TextModel.DEFAULT_STROKE_COLOR_STR) return TextModel.DEFAULT_STROKE_COLOR
         return decodeColor(strokeColor)
     }
@@ -212,7 +219,7 @@ data class AvatarSwirlFilter(
     val x: FloatArray = floatArrayOf(0.5f),
     @Serializable(with = FloatArraySerializer::class)
     val y: FloatArray = floatArrayOf(0.5f)
-): AvatarFilter() {
+) : AvatarFilter() {
     override val maxLength = intArrayOf(radius.size, angle.size, x.size, y.size).maxOrNull() ?: 1
     override fun hasAnimation() = maxLength > 1
 }
@@ -250,7 +257,9 @@ data class AvatarSwimFilter(
     @Serializable(with = FloatArraySerializer::class)
     val time: FloatArray = floatArrayOf(0f)
 ) : AvatarFilter() {
-    override val maxLength = arrayOf(scale.size, stretch.size, angle.size, amount.size, turbulence.size, time.size).maxOrNull() ?: 1
+    override val maxLength =
+        arrayOf(scale.size, stretch.size, angle.size, amount.size, turbulence.size, time.size).maxOrNull() ?: 1
+
     override fun hasAnimation() = maxLength > 1
 }
 
@@ -361,7 +370,7 @@ data class AvatarData @JvmOverloads constructor(
     val type: AvatarType,
     var pos: JsonArray = Json.decodeFromString(JsonArray.serializer(), "[0,0,100,100]"),
     var posType: AvatarPosType = AvatarPosType.ZOOM,
-    var crop: JsonArray? = null,
+    var crop: IntArray? = null,
     var cropType: CropType = CropType.NONE,
     var fit: FitType = FitType.FILL,
     var style: List<AvatarStyle> = emptyList(),
@@ -398,8 +407,8 @@ data class BackgroundData @JvmOverloads constructor(
     var size: JsonArray,
     var color: String = BackgroundModel.DEFAULT_COLOR_STR,
     var length: Short = 0
-){
-    fun getAwtColor(): Color{
+) {
+    fun getAwtColor(): Color {
         if (color == BackgroundModel.DEFAULT_COLOR_STR) return BackgroundModel.DEFAULT_COLOR
         return decodeColor(color)
     }
