@@ -59,13 +59,13 @@
 
 > 可使用 `pet`指令 获取 `keyList`
 
-### [gocq-http](https://github.com/Mrs4s/go-cqhttp)插件
+###  [OneBot](https://onebot.dev/) / [gocq-http](https://github.com/Mrs4s/go-cqhttp) 插件
 
 > **Warning**
 >
 > 此功能处于测试阶段, 目前仅能通过`key`生成图片, 请期待后续开发!
 
-0. 部署 [gocq-http](https://github.com/Mrs4s/go-cqhttp) 机器人框架, 设置**正向 WebSocket** 监听 (默认端口为`8080`)
+0. 部署[gocq-http](https://github.com/Mrs4s/go-cqhttp) 或其它实现 [OneBot标准](https://onebot.dev/) 机器人框架, 设置**正向 WebSocket** 监听 (默认端口为`8080`)
 
 1. 更改 `gocq-http` 配置项 `message.post-format` 为 `array`
 
