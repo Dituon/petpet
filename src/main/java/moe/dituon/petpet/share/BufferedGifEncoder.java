@@ -69,28 +69,28 @@ public class BufferedGifEncoder {
         child.setAttribute("authenticationCode", "2.0");
 
         int loopContinuously = loop ? 0 : 1;
-        child.setUserObject(new byte[]{ 0x1, (byte) (loopContinuously & 0xFF), (byte) (0)});
+        child.setUserObject(new byte[]{0x1, (byte) (loopContinuously & 0xFF), (byte) (0)});
         appExtensionsNode.appendChild(child);
         metadata.setFromTree(metaFormatName, root);
     }
 
-    private static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName){
+    private static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName) {
         int nNodes = rootNode.getLength();
-        for (int i = 0; i < nNodes; i++){
-            if (rootNode.item(i).getNodeName().equalsIgnoreCase(nodeName)){
+        for (int i = 0; i < nNodes; i++) {
+            if (rootNode.item(i).getNodeName().equalsIgnoreCase(nodeName)) {
                 return (IIOMetadataNode) rootNode.item(i);
             }
         }
         IIOMetadataNode node = new IIOMetadataNode(nodeName);
         rootNode.appendChild(node);
-        return(node);
+        return (node);
     }
 
     public void addFrame(RenderedImage img) throws IOException {
         writer.writeToSequence(new IIOImage(img, null, metadata), params);
     }
 
-    public InputStream getOutput(){
+    public InputStream getOutput() {
         return output;
     }
 

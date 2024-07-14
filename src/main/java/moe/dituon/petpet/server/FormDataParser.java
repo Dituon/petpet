@@ -39,7 +39,6 @@ public class FormDataParser extends RequestParser {
             int startPart = offsets.get(idx);
             int endPart = payload.length;
             if (idx < offsets.size() - 1) {
-                System.out.println(1);
                 endPart = offsets.get(idx + 1);
             }
             int partLength = endPart - startPart;

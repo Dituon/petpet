@@ -34,7 +34,7 @@ public class BackgroundModel {
                 : data.getLength();
     }
 
-    public BufferedImage[] getImages(){
+    public BufferedImage[] getImages() {
         var arr = new BufferedImage[this.length];
         Arrays.fill(arr, getImage());
         return arr;

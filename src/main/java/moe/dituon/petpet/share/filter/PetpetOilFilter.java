@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package moe.dituon.petpet.share;
+package moe.dituon.petpet.share.filter;
 
 import com.jhlabs.image.WholeImageFilter;
 

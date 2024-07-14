@@ -182,7 +182,8 @@ public class AvatarModel {
             } else {
                 imageList = IntStream.range(0, maxLength)
                         .mapToObj(i -> imageList.get(i % imageList.size()))
-                        .collect(Collectors.toList());;
+                        .collect(Collectors.toList());
+                ;
             }
         }
         if (imageList.size() == 1) {
@@ -324,7 +325,7 @@ public class AvatarModel {
                 sFilter.setTurbulence(getNElement(swimFilter.getTurbulence(), i));
                 sFilter.setTime(getNElement(swimFilter.getTime(), i));
                 image = sFilter.filter(image, null);
-            } else if (filter instanceof AvatarOilFilter){
+            } else if (filter instanceof AvatarOilFilter) {
                 AvatarOilFilter oilFilter = (AvatarOilFilter) filter;
                 PetpetOilFilter oFilter = new PetpetOilFilter();
                 oFilter.setLevels((int) getNElement(oilFilter.getLevels(), i));
@@ -336,7 +337,7 @@ public class AvatarModel {
         return image;
     }
 
-    private static float getNElement(float[] array, int i){
+    private static float getNElement(float[] array, int i) {
         return array[i % array.length];
     }
 

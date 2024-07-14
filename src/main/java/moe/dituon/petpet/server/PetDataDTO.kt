@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import moe.dituon.petpet.share.AvatarType
 import moe.dituon.petpet.share.BasePetService.VERSION
 import moe.dituon.petpet.share.TemplateDTO
-import kotlin.streams.toList
+import java.util.stream.Collectors
 
 @Serializable
 data class PetDataDTO(
@@ -21,7 +21,7 @@ data class PetDataDTO(
                 if (data.hidden == false) dataList.add(
                     PetDataObject(
                         key,
-                        data.avatar.stream().map { a -> a.type }.toList(),
+                        data.avatar.stream().map { a -> a.type }.collect(Collectors.toList()),
                         data.alias ?: emptyList()
                     )
                 )

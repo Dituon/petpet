@@ -293,7 +293,7 @@ public abstract class ImageSynthesisCore {
     public static List<BufferedImage> getImageAsList(InputStream inputStream) throws IOException {
         ReusableGifDecoder decoder = new ReusableGifDecoder();
 
-        try (inputStream) {
+        try (inputStream; inputStream) {
             inputStream.mark(0); //循环利用inputStream, 避免重复获取
             decoder.read(inputStream);
 

@@ -54,7 +54,7 @@ public class BaseConfigFactory {
         }
     }
 
-    public static GifAvatarExtraDataProvider toGifAvatarExtraDataProvider(AvatarExtraDataProvider extraData){
+    public static GifAvatarExtraDataProvider toGifAvatarExtraDataProvider(AvatarExtraDataProvider extraData) {
         return new GifAvatarExtraDataProvider(
                 extraData.getFromAvatar() != null ? () -> List.of(extraData.getFromAvatar().invoke()) : null,
                 extraData.getToAvatar() != null ? () -> List.of(extraData.getToAvatar().invoke()) : null,
@@ -64,7 +64,7 @@ public class BaseConfigFactory {
         );
     }
 
-    public static GifAvatarExtraDataProvider cacheAvatarExtraDataProvider(GifAvatarExtraDataProvider provider){
+    public static GifAvatarExtraDataProvider cacheAvatarExtraDataProvider(GifAvatarExtraDataProvider provider) {
         var from = provider.getFromAvatar() == null ? null : provider.getFromAvatar().invoke();
         var to = provider.getToAvatar() == null ? null : provider.getToAvatar().invoke();
         var group = provider.getGroupAvatar() == null ? null : provider.getGroupAvatar().invoke();

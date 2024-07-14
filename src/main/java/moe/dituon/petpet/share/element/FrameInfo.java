@@ -15,7 +15,7 @@ public class FrameInfo {
     public int canvasHeight;
     public float multiple = 1.0F;
 
-    public FrameInfo(int index, int canvasWidth, int canvasHeight){
+    public FrameInfo(int index, int canvasWidth, int canvasHeight) {
         this.index = index;
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
@@ -23,7 +23,7 @@ public class FrameInfo {
 
     @NotNull
     @Contract(value = "_, _ -> new", pure = true)
-    public static FrameInfo fromImage(BufferedImage image, int index){
+    public static FrameInfo fromImage(BufferedImage image, int index) {
         return new FrameInfo(image.getWidth(), image.getWidth(), index);
     }
 }

@@ -163,7 +163,7 @@ public class ImageSynthesis extends ImageSynthesisCore {
 
             latch.await();
             return Arrays.asList(result);
-        } catch (InterruptedException ex){
+        } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
     }

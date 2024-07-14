@@ -61,7 +61,7 @@ public class TextDynamicModel extends TextModel {
     /**
      * 在Graphics2D对象上绘制TextModel
      *
-     * @param g2d           画布
+     * @param g2d 画布
      */
     @Override
     public void draw(Graphics2D g2d, FrameInfo info) {
