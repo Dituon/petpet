@@ -7,7 +7,7 @@ import moe.dituon.petpet.share.AvatarPosType;
 import moe.dituon.petpet.share.AvatarType;
 import moe.dituon.petpet.share.FitType;
 import moe.dituon.petpet.share.element.FrameInfo;
-import moe.dituon.petpet.share.element.avatar.AvatarFactory;
+import moe.dituon.petpet.share.element.avatar.AvatarBuilder;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -35,7 +35,7 @@ public class AvatarTest {
         var data = new AvatarData(AvatarType.TO);
         data.setPosType(AvatarPosType.ZOOM);
         data.setPos(jsonArrayFromString("[0, 0, 200, 200]"));
-        var builder = new AvatarFactory(data);
+        var builder = new AvatarBuilder(data);
         var avatarRaw = ImageIO.read(new File("example-data/input/avatar1.png"));
 
         var image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
@@ -51,7 +51,7 @@ public class AvatarTest {
         var data = new AvatarData(AvatarType.TO);
         data.setPosType(AvatarPosType.DEFORM);
         data.setPos(jsonArrayFromString("[[0,0],[0,200],[200,200],[200,0],[0,0]]"));
-        var builder = new AvatarFactory(data);
+        var builder = new AvatarBuilder(data);
         var avatarRaw = ImageIO.read(new File("example-data/input/avatar1.png"));
 
         var image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);

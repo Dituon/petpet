@@ -43,21 +43,31 @@ public class ResourceManager {
         };
     }
 
+    public BackgroundResource pushBackground(String id, BackgroundResource resource) {
+        return backgroundMap.put(id, resource);
+    }
+
+    public BackgroundResource pushBackground(File templateRoot) {
+        return pushBackground(templateRoot, false);
+    }
+
     /**
      * @param templateRoot 背景资源路径
      * @param randomFlag   随机选取一个图像
      */
-    public void pushBackgroundRoot(File templateRoot, boolean randomFlag) {
-        if (!templateRoot.isDirectory()) return;
-        var name = templateRoot.getName();
-        backgroundMap.put(name, new BackgroundResource(templateRoot, randomFlag));
+    public BackgroundResource pushBackground(File templateRoot, boolean randomFlag) {
+        if (!templateRoot.isDirectory()) return null;
+        var id = templateRoot.getName();
+        var resource = new BackgroundResource(templateRoot, randomFlag);
+        backgroundMap.put(id, resource);
+        return resource;
     }
 
-    public BufferedImage[] getBackgrounds(String key) throws IOException {
+    public BackgroundResource getBackgrounds(String key) throws IOException {
         if (!backgroundMap.containsKey(key)) throw new RuntimeException("Background not loaded");
         var images = backgroundMap.get(key).getImages();
         backgroundRefCache.put(key, images);
-        return images;
+        return backgroundMap.get(key);
     }
 
     public BufferedImage[] getImages(URI uri) throws IOException {

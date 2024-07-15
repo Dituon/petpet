@@ -2,10 +2,12 @@ package moe.dituon.petpet.share.element.text;
 
 import lombok.Getter;
 import moe.dituon.petpet.share.*;
+import moe.dituon.petpet.share.template.ExtraData;
+import moe.dituon.petpet.share.template.TextExtraData;
 
 import java.util.List;
 
-public class TextFactory {
+public class TextBuilder {
     public static final List<String> EXPR_LIST = List.of("$txt", "$from", "$to", "$group");
 
     @Getter
@@ -14,7 +16,7 @@ public class TextFactory {
     protected final boolean dynamic;
     protected GraphicsParagraph staticParagraph;
 
-    public TextFactory(TextData data) {
+    public TextBuilder(TextData data) {
         this.data = data;
         var text = data.getText();
         this.dynamic = EXPR_LIST.stream().anyMatch(text::contains);
@@ -75,6 +77,10 @@ public class TextFactory {
                 return new GraphicsParagraph(string, align, baseline);
         }
         throw new RuntimeException();
+    }
+
+    public TextModel build(ExtraData data) {
+        return build(data.getText());
     }
 
     public TextModel build(TextExtraData extraData) {

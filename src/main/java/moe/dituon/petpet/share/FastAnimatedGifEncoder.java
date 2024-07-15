@@ -66,7 +66,7 @@ public class FastAnimatedGifEncoder extends AnimatedGifEncoder {
         byte[] indexedPixels;
         boolean[] usedEntry = new boolean[256];
 
-        FrameData(BufferedImage image, int quality) {
+        public FrameData(BufferedImage image, int quality) {
             pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
             neuQuant = new NeuQuant(pixels, pixels.length, Math.max(quality, 1));
             colorTab = neuQuant.process();

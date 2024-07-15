@@ -5,6 +5,7 @@ import moe.dituon.petpet.share.ImageSynthesisCore;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageReaderSpi;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
@@ -55,8 +56,10 @@ public class ImageResource {
     public BufferedImage[] getImages() throws IOException {
         if (uri == null) throw new MalformedURLException("uri is null");
         if (imagesRef.get() != null) return imagesRef.get();
-        var images = ImageSynthesisCore.getImageAsList(uri.toURL().openStream()).toArray(BufferedImage[]::new);
-        imagesRef = new WeakReference<>(images);
-        return images;
+        try (var stream = new BufferedInputStream(uri.toURL().openStream())) {
+            var images = ImageSynthesisCore.getImageAsList(stream).toArray(BufferedImage[]::new);
+            imagesRef = new WeakReference<>(images);
+            return images;
+        }
     }
 }

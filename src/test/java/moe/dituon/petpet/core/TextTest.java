@@ -1,8 +1,9 @@
 package moe.dituon.petpet.core;
 
 import moe.dituon.petpet.share.*;
+import moe.dituon.petpet.share.template.TextExtraData;
 import moe.dituon.petpet.share.element.FrameInfo;
-import moe.dituon.petpet.share.element.text.TextFactory;
+import moe.dituon.petpet.share.element.text.TextBuilder;
 import moe.dituon.petpet.share.element.text.TextModel;
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TextTest {
     public static final String outputDir = ".test-output/text/";
@@ -29,9 +31,11 @@ public class TextTest {
 
     public static TextExtraData getTestExtraData() {
         return new TextExtraData(
-                "FROM",
-                "TO",
-                "GROUP",
+                Map.of(
+                        "FROM", "FROM",
+                        "TO", "TO",
+                        "GROUP", "GROUP"
+                ),
                 List.of("text1", "text2", "text3")
         );
     }
@@ -74,7 +78,7 @@ public class TextTest {
         g2d.drawLine(0, template.getPos()[1], img.getWidth(), template.getPos()[1]);
         g2d.fillRect(template.getPos()[0] - 5, template.getPos()[1] - 5, 10, 10);
 
-        var builder = new TextFactory(template);
+        var builder = new TextBuilder(template);
         var model = builder.build(getTestExtraData());
         model.draw(g2d, new FrameInfo(0, img.getWidth(), img.getHeight()));
         return img;

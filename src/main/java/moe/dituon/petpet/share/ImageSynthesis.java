@@ -167,4 +167,27 @@ public class ImageSynthesis extends ImageSynthesisCore {
             throw new RuntimeException(ex);
         }
     }
+
+    public static List<BufferedImage> execImageList(
+            int number,
+            Function<Integer, BufferedImage> fun
+    ) {
+        try {
+            CountDownLatch latch = new CountDownLatch(number);
+            BufferedImage[] result = new BufferedImage[number];
+
+            for (int i = 0; i < number; i++) {
+                var fi = i;
+                threadPool.execute(() -> {
+                    result[fi] = fun.apply(fi);
+                    latch.countDown();
+                });
+            }
+
+            latch.await();
+            return Arrays.asList(result);
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }

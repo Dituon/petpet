@@ -8,11 +8,10 @@ import moe.dituon.petpet.share.element.TemplateElement;
 import moe.dituon.petpet.share.element.avatar.AvatarModel;
 import moe.dituon.petpet.share.element.text.TextModel;
 import moe.dituon.petpet.share.service.BackgroundResource;
-import moe.dituon.petpet.share.service.ServiceContext;
 
 import java.util.regex.Pattern;
 
-public abstract class BackgroundFactory {
+public class BackgroundFactory {
     public static final Pattern EXPR_REGEX = Pattern.compile("(avatar|text)(\\d+)(Height|Width)");
 
     protected final BackgroundResource resource;
@@ -65,7 +64,6 @@ public abstract class BackgroundFactory {
     }
 
     public BackgroundModel build(
-            ServiceContext context,
             Iterable<AvatarModel> avatars, Iterable<TextModel> texts
     ) {
         if (staticModel != null) {

@@ -1,25 +1,32 @@
 package moe.dituon.petpet.share.element.avatar;
 
+import lombok.Getter;
 import moe.dituon.petpet.share.AvatarData;
 import moe.dituon.petpet.share.AvatarPosType;
 import moe.dituon.petpet.share.position.PositionCollection;
 import moe.dituon.petpet.share.position.PositionCollectionFactory;
 import moe.dituon.petpet.share.position.PositionP4ACollection;
 import moe.dituon.petpet.share.position.PositionXYWHCollection;
+import moe.dituon.petpet.share.template.ExtraData;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class AvatarFactory {
+public class AvatarBuilder {
+    @Getter
     private final AvatarData data;
     private final AvatarPosType posType;
     private final PositionCollection<?> pos;
 
-    public AvatarFactory(AvatarData data) {
+    public AvatarBuilder(AvatarData data) {
         posType = data.getPosType();
         pos = PositionCollectionFactory.createCollection(data.getPos(), posType);
         this.data = data;
+    }
+
+    public AvatarModel build(ExtraData data) {
+        return build(data.getAvatar().get(this.data.getType().toString()));
     }
 
     public AvatarModel build(Supplier<List<BufferedImage>> supplier) {

@@ -1,7 +1,7 @@
 package moe.dituon.petpet.share.element.text;
 
 import moe.dituon.petpet.share.TextData;
-import moe.dituon.petpet.share.TextExtraData;
+import moe.dituon.petpet.share.template.TextExtraData;
 import moe.dituon.petpet.share.element.FrameInfo;
 
 import java.awt.*;
@@ -21,7 +21,7 @@ public class TextDynamicModel extends TextModel {
         text = extraInfo != null ? buildText(
                 textData.getText(), extraInfo, textData.getGreedy()
         ) : textData.getText();
-        paragraph = TextFactory.buildParagraph(
+        paragraph = TextBuilder.buildParagraph(
                 new GraphicsAttributedString(text, textData),
                 textData,
                 textData.getPos().length > 2 ? textData.getPos()[2] : DEFAULT_WIDTH
@@ -29,13 +29,17 @@ public class TextDynamicModel extends TextModel {
     }
 
     protected String buildText(String text, TextExtraData extraData, boolean greedy) {
-        text = text.replace("$from", extraData.getFromReplacement())
-                .replace("$to", extraData.getToReplacement())
-                .replace("$group", extraData.getGroupReplacement());
+        for (var e : extraData.getMap().entrySet()) {
+            text = text.replace('$' + e.getKey(), e.getValue());
+        }
+
+//        text = text.replace("$from", extraData.getFromReplacement())
+//                .replace("$to", extraData.getToReplacement())
+//                .replace("$group", extraData.getGroupReplacement());
 
         Matcher m = TEXT_VAR_REGEX.matcher(text);
         if (greedy) {
-            List<String> textList = new ArrayList<>(extraData.getTextList());
+            List<String> textList = new ArrayList<>(extraData.getList());
             short maxIndex = 0;
             while (m.find()) maxIndex++;
             m.reset();
@@ -50,8 +54,8 @@ public class TextDynamicModel extends TextModel {
         } else {
             while (m.find()) {
                 short i = Short.parseShort(m.group(1));
-                String replaceText = i > extraData.getTextList().size() ?
-                        m.group(2) : extraData.getTextList().get(i - 1);
+                String replaceText = i > extraData.getList().size() ?
+                        m.group(2) : extraData.getList().get(i - 1);
                 text = text.replace(m.group(0), replaceText);
             }
         }

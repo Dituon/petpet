@@ -1,8 +1,10 @@
 package moe.dituon.petpet.share.element.avatar;
 
 import com.jhlabs.image.*;
+import lombok.Getter;
 import moe.dituon.petpet.share.*;
 import moe.dituon.petpet.share.element.TemplateElement;
+import moe.dituon.petpet.share.filter.PetpetOilFilter;
 
 import java.awt.image.BufferedImage;
 import java.util.Collections;
@@ -11,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Getter
 public abstract class AvatarModel implements TemplateElement {
     protected AvatarType type;
     protected FitType fitType;
@@ -212,43 +215,8 @@ public abstract class AvatarModel implements TemplateElement {
         return fitType;
     }
 
-    public float getOpacity() {
-        return opacity;
-    }
-
-    public boolean isRound() {
-        return round;
-    }
-
-    public boolean isRotate() {
-        return rotate;
-    }
-
-    public boolean isOnTop() {
-        return onTop;
-    }
-
-    public boolean isAntialias() {
-        return antialias;
-    }
-
-    /**
-     * 获取已经构建好的图像, 请放心食用
-     */
-    public List<BufferedImage> getImageList() {
-        return imageList;
-    }
-
     public BufferedImage getFirstImage() {
         return imageList.get(0);
-    }
-
-    public TransformOrigin getTransformOrigin() {
-        return transformOrigin;
-    }
-
-    public AvatarPosType getPosType() {
-        return posType;
     }
 
     @Override
