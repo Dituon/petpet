@@ -3,6 +3,7 @@ package moe.dituon.petpet.core;
 import moe.dituon.petpet.share.TemplateDTO;
 import moe.dituon.petpet.share.service.ResourceManager;
 import moe.dituon.petpet.share.template.ExtraData;
+import moe.dituon.petpet.share.template.PetpetTemplate;
 import moe.dituon.petpet.share.template.TemplateBuilder;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class TemplateTest {
         manager.pushBackground(basePath.toFile(), false);
 
         var templateRaw = basePath.resolve("data.json");
-        var templateConfig = TemplateDTO.getData(Files.readString(templateRaw));
+        var templateConfig = PetpetTemplate.fromString(Files.readString(templateRaw));
 
         var templateBuilder = new TemplateBuilder(
                 templateConfig,
@@ -52,7 +53,7 @@ public class TemplateTest {
         manager.pushBackground(basePath.toFile(), false);
 
         var templateRaw = basePath.resolve("data.json");
-        var templateConfig = TemplateDTO.getData(Files.readString(templateRaw));
+        var templateConfig = PetpetTemplate.fromString(Files.readString(templateRaw));
 
         var templateBuilder = new TemplateBuilder(
                 templateConfig,

@@ -3,6 +3,7 @@ package moe.dituon.petpet.share.service;
 import lombok.Getter;
 import moe.dituon.petpet.share.TemplateDTO;
 import moe.dituon.petpet.share.Type;
+import moe.dituon.petpet.share.template.PetpetTemplate;
 import moe.dituon.petpet.share.template.TemplateBuilder;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class TemplateManager {
             var templateRaw = file.toPath().resolve(TEMPLATE_FILE_NAME);
             if (!Files.isReadable(templateRaw)) continue;
             var id = file.getName();
-            var templateConfig = TemplateDTO.getData(Files.readString(templateRaw));
+            var templateConfig = PetpetTemplate.fromString(Files.readString(templateRaw));
 
             var background = resourceManager.pushBackground(id, new BackgroundResource(file));
             if (templateConfig.getType() == Type.IMG && background.files.length > 1) {

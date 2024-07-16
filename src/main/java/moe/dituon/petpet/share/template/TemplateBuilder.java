@@ -21,7 +21,7 @@ public class TemplateBuilder {
 
     protected final Set<String> avatarTypeSet;
 
-    public TemplateBuilder(TemplateDTO templateData, BackgroundResource resource) {
+    public TemplateBuilder(PetpetTemplate templateData, BackgroundResource resource) {
         this.avatarTypeSet = templateData.getAvatar().stream().map(data -> data.getType().toString()).collect(Collectors.toSet());
         this.avatarBuilders = templateData.getAvatar().stream()
                 .map(AvatarBuilder::new)

@@ -20,11 +20,11 @@ class AvatarXYWHModel extends AvatarModel {
     protected PositionDynamicData dynamicData;
 
     AvatarXYWHModel(
-            AvatarData data,
+            AvatarTemplate template,
             Supplier<List<BufferedImage>> imageSupplier,
             PositionXYWHCollection pos
     ) {
-        super(data, imageSupplier, false);
+        super(template, imageSupplier, false);
         this.pos = pos;
         if (pos.isDynamical()) {
             var firstImg = super.imageList.get(0);
@@ -93,7 +93,6 @@ class AvatarXYWHModel extends AvatarModel {
 
         if (angle == 0) {
             g2d.drawImage(newAvatarImage, x, y, w, h, null);
-            System.out.println("x: " + x + ", y: " + y + ", w: " + w + ", h: " + h);
             return;
         }
 

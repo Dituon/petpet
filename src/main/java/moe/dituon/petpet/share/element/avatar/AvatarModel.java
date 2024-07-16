@@ -15,7 +15,6 @@ import java.util.stream.IntStream;
 
 @Getter
 public abstract class AvatarModel implements TemplateElement {
-    protected AvatarType type;
     protected FitType fitType;
     protected short angle;
     protected TransformOrigin transformOrigin;
@@ -32,13 +31,12 @@ public abstract class AvatarModel implements TemplateElement {
     protected final List<AvatarStyle> styleList;
     protected final List<AvatarFilter> filterList;
 
-    public AvatarModel(AvatarData data, Supplier<List<BufferedImage>> extraData) {
+    public AvatarModel(AvatarTemplate data, Supplier<List<BufferedImage>> extraData) {
         this(data, extraData, true);
     }
 
-    public AvatarModel(AvatarData data, Supplier<List<BufferedImage>> extraData, boolean initFlag) {
+    public AvatarModel(AvatarTemplate data, Supplier<List<BufferedImage>> extraData, boolean initFlag) {
         imageList = extraData.get();
-        type = data.getType();
         posType = data.getPosType();
         cropType = data.getCropType();
         cropPos = data.getCrop();

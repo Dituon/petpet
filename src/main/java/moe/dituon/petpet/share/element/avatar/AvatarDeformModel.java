@@ -14,11 +14,11 @@ public class AvatarDeformModel extends AvatarModel {
     final PositionP4ACollection pos;
 
     AvatarDeformModel(
-            AvatarData data,
+            AvatarTemplate template,
             Supplier<List<BufferedImage>> imageSupplier,
             PositionP4ACollection pos
     ) {
-        super(data, imageSupplier, false);
+        super(template, imageSupplier, false);
         this.pos = pos;
         buildImage();
     }

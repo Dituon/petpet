@@ -2,12 +2,11 @@ package moe.dituon.petpet.core;
 
 import kotlinx.serialization.json.Json;
 import kotlinx.serialization.json.JsonArray;
-import moe.dituon.petpet.share.AvatarData;
 import moe.dituon.petpet.share.AvatarPosType;
-import moe.dituon.petpet.share.AvatarType;
 import moe.dituon.petpet.share.FitType;
 import moe.dituon.petpet.share.element.FrameInfo;
 import moe.dituon.petpet.share.element.avatar.AvatarBuilder;
+import moe.dituon.petpet.share.element.avatar.AvatarTemplate;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -32,9 +31,12 @@ public class AvatarTest {
 
     @Test
     public void testZoom() throws IOException {
-        var data = new AvatarData(AvatarType.TO);
-        data.setPosType(AvatarPosType.ZOOM);
-        data.setPos(jsonArrayFromString("[0, 0, 200, 200]"));
+        var data = new AvatarTemplate(
+                "TO",
+                null,
+                AvatarPosType.ZOOM,
+                jsonArrayFromString("[0, 0, 200, 200]")
+        );
         var builder = new AvatarBuilder(data);
         var avatarRaw = ImageIO.read(new File("example-data/input/avatar1.png"));
 
@@ -48,9 +50,12 @@ public class AvatarTest {
 
     @Test
     public void testDeform() throws IOException {
-        var data = new AvatarData(AvatarType.TO);
-        data.setPosType(AvatarPosType.DEFORM);
-        data.setPos(jsonArrayFromString("[[0,0],[0,200],[200,200],[200,0],[0,0]]"));
+        var data = new AvatarTemplate(
+                "TO",
+                null,
+                AvatarPosType.DEFORM,
+                jsonArrayFromString("[[0,0],[0,200],[200,200],[200,0],[0,0]]")
+        );
         var builder = new AvatarBuilder(data);
         var avatarRaw = ImageIO.read(new File("example-data/input/avatar1.png"));
 
