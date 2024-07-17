@@ -9,25 +9,28 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Random;
 
+@Getter
 public class BackgroundResource extends ImageResource {
     private static final Random random = new Random();
-    private static final BufferedImage[] empty = new BufferedImage[0];
+    private static final Object[] empty = new Object[0];
 
-    @Getter
     protected final File[] files;
-    @Getter
     protected final String name;
-    @Getter
     @Setter
     protected boolean randomFlag;
+    protected final Path basePath;
 
-    public BackgroundResource(URI uri) {
-        this(new File(uri));
+    public BackgroundResource() {
+        files = (File[]) empty;
+        name = null;
+        basePath = null;
+        randomFlag = true;
     }
 
     public BackgroundResource(File templateRoot) {
@@ -40,6 +43,7 @@ public class BackgroundResource extends ImageResource {
      */
     public BackgroundResource(File templateRoot, boolean randomFlag) {
         if (!templateRoot.isDirectory()) throw new RuntimeException("BackgroundResource must be a directory");
+        this.basePath = templateRoot.toPath();
         this.name = templateRoot.getName();
         this.files = Arrays.stream(Objects.requireNonNull(templateRoot.listFiles()))
                 .filter(file -> file.isFile() && ImageResource.indexedImagePattern.matcher(file.getName()).matches())
@@ -54,7 +58,7 @@ public class BackgroundResource extends ImageResource {
 
     public BufferedImage[] getImages() throws IOException {
         if (randomFlag) {
-            if (files.length == 0) return empty;
+            if (files.length == 0) return (BufferedImage[]) empty;
             return new BufferedImage[]{
                     ImageIO.read(files[random.nextInt(files.length)])
             };

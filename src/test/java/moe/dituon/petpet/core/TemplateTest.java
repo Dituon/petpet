@@ -44,7 +44,7 @@ public class TemplateTest {
         ));
 
         ByteArrayInputStream stream = new ByteArrayInputStream(templateModel.getResult().getBlob());
-        Files.copy(stream, Path.of("test.png"));
+        Files.copy(stream, Path.of("test.png"), StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Test

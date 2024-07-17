@@ -14,7 +14,7 @@ public class BackgroundModel {
     private final int[] size;
     private BufferedImage image = null;
     private final Color color;
-    private short length = 1;
+    private int length = 1;
 
     public BackgroundModel(BackgroundData data, List<AvatarModel> avatarList, List<TextModel> textList) {
         this(data, avatarList, textList, null);

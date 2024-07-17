@@ -406,7 +406,7 @@ data class GifAvatarExtraDataProvider(
 data class BackgroundData @JvmOverloads constructor(
     var size: JsonArray,
     var color: String = BackgroundModel.DEFAULT_COLOR_STR,
-    var length: Short = 0
+    var length: Int = 1
 ) {
     fun getAwtColor(): Color {
         if (color == BackgroundModel.DEFAULT_COLOR_STR) return BackgroundModel.DEFAULT_COLOR

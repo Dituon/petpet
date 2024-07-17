@@ -11,7 +11,7 @@ import moe.dituon.petpet.share.service.BackgroundResource;
 
 import java.util.regex.Pattern;
 
-public class BackgroundFactory {
+public class BackgroundBuilder {
     public static final Pattern EXPR_REGEX = Pattern.compile("(avatar|text)(\\d+)(Height|Width)");
 
     protected final BackgroundResource resource;
@@ -24,7 +24,7 @@ public class BackgroundFactory {
 
     protected BackgroundModel staticModel;
 
-    public BackgroundFactory(BackgroundResource resource, BackgroundData data) {
+    public BackgroundBuilder(BackgroundResource resource, BackgroundData data) {
         this.resource = resource;
         this.data = data;
 

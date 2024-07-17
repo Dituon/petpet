@@ -1,11 +1,11 @@
 package moe.dituon.petpet.share.template;
 
 import lombok.Getter;
-import moe.dituon.petpet.share.TemplateDTO;
+import moe.dituon.petpet.share.element.avatar.AvatarBuilder;
+import moe.dituon.petpet.share.element.avatar.AvatarTemplate;
 import moe.dituon.petpet.share.element.text.TextBuilder;
 import moe.dituon.petpet.share.service.BackgroundResource;
-import moe.dituon.petpet.share.element.avatar.AvatarBuilder;
-import moe.dituon.petpet.share.template.background.BackgroundFactory;
+import moe.dituon.petpet.share.template.background.BackgroundBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -17,26 +17,22 @@ public class TemplateBuilder {
     @Getter
     protected final List<TextBuilder> textBuilders;
     @Getter
-    protected final BackgroundFactory backgroundBuilder;
+    protected final BackgroundBuilder backgroundBuilder;
 
     protected final Set<String> avatarTypeSet;
 
     public TemplateBuilder(PetpetTemplate templateData, BackgroundResource resource) {
-        this.avatarTypeSet = templateData.getAvatar().stream().map(data -> data.getType().toString()).collect(Collectors.toSet());
+        this.avatarTypeSet = templateData.getAvatar().stream().map(AvatarTemplate::getType).collect(Collectors.toSet());
         this.avatarBuilders = templateData.getAvatar().stream()
-                .map(AvatarBuilder::new)
+                .map(template -> new AvatarBuilder(template, resource.getBasePath()))
                 .collect(Collectors.toList());
         this.textBuilders = templateData.getText().stream()
                 .map(TextBuilder::new)
                 .collect(Collectors.toList());
-        this.backgroundBuilder = new BackgroundFactory(resource, templateData.getBackground());
+        this.backgroundBuilder = new BackgroundBuilder(resource, templateData.getBackground());
     }
 
     public TemplateModel build(ExtraData data) {
-        if (!data.getAvatar().keySet().containsAll(avatarTypeSet)) {
-            throw new RuntimeException("missing some type");
-        }
-
         var avatarList = avatarBuilders.stream()
                 .map(avatarBuilder -> avatarBuilder.build(data))
                 .collect(Collectors.toList());
