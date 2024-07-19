@@ -1,0 +1,24 @@
+{
+  "type": "IMG",
+  "avatar": [
+      {
+          "type": "TO",
+          "pos": [
+              [
+                  330,
+                  -14,
+                  375,
+                  239
+              ]
+          ],
+          "fit": "COVER",
+          "avatarOnTop": false,
+          "angle": 15
+      }
+  ],
+  "text": [],
+  "alias": [
+      "鹿乃子",
+      "🦌"
+  ]
+}
