@@ -5,15 +5,15 @@
           "type": "TO",
           "pos": [
               [
-                  328,
-                  -11,
-                  372,
+                  330,
+                  -14,
+                  375,
                   239
               ]
           ],
           "fit": "COVER",
           "avatarOnTop": false,
-          "angle": 14
+          "angle": 15
       }
   ],
   "text": [],
