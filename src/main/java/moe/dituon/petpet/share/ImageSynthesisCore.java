@@ -337,7 +337,7 @@ public abstract class ImageSynthesisCore {
             width = (int) ((float) width / 100 * image.getWidth());
             height = (int) ((float) height / 100 * image.getHeight());
         }
-        BufferedImage croppedImage = new BufferedImage(width, height, image.getType());
+        BufferedImage croppedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D g2d = croppedImage.createGraphics();
         if (isPercent) { //百分比
             g2d.drawImage(image, 0, 0, width, height,

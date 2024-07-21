@@ -1,7 +1,7 @@
 package moe.dituon.petpet.share.element.avatar;
 
-import moe.dituon.petpet.share.AvatarData;
-import moe.dituon.petpet.share.ImageSynthesisCore;
+import moe.dituon.petpet.share.CropType;
+import moe.dituon.petpet.share.FitType;
 import moe.dituon.petpet.share.TransformOrigin;
 import moe.dituon.petpet.share.element.FrameInfo;
 import moe.dituon.petpet.share.position.PositionDynamicData;
@@ -13,6 +13,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 class AvatarXYWHModel extends AvatarModel {
@@ -52,43 +53,23 @@ class AvatarXYWHModel extends AvatarModel {
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        switch (fitType) {
-            case COVER: {
-                double ratio = Math.min(
-                        (double) avatarImage.getWidth() / w,
-                        (double) avatarImage.getHeight() / h
-                );
-                int resultWidth = (int) (w * ratio);
-                int resultHeight = (int) (h * ratio);
-                if (resultWidth <= 0 || resultHeight <= 0) return;
-
-                int[] cropPos = new int[]{
-                        0, 0, resultWidth, resultHeight
-                };
-
-                newAvatarImage = ImageSynthesisCore.cropImage(newAvatarImage, cropPos);
-                break;
+        if (Objects.requireNonNull(fitType) == FitType.CONTAIN) {
+            int resultWidth = w;
+            int resultHeight = h;
+            double avatarRatio = (double) avatarImage.getWidth() / avatarImage.getHeight();
+            double canvasRatio = (double) w / h;
+            if (avatarRatio > canvasRatio) {
+                resultHeight = (int) (w / avatarRatio);
+            } else {
+                resultWidth = (int) (h * avatarRatio);
             }
-            case CONTAIN: {
-                int resultWidth = w;
-                int resultHeight = h;
-                double avatarRatio = (double) avatarImage.getWidth() / avatarImage.getHeight();
-                double canvasRatio = (double) w / h;
-                if (avatarRatio > canvasRatio) {
-                    resultHeight = (int) (w / avatarRatio);
-                } else {
-                    resultWidth = (int) (h * avatarRatio);
-                }
 
-                int resultX = (w - resultWidth) / 2;
-                int resultY = (h - resultHeight) / 2;
-                x = x + resultX;
-                y = y + resultY;
-                w = resultWidth;
-                h = resultHeight;
-
-                break;
-            }
+            int resultX = (w - resultWidth) / 2;
+            int resultY = (h - resultHeight) / 2;
+            x = x + resultX;
+            y = y + resultY;
+            w = resultWidth;
+            h = resultHeight;
         }
 
         if (angle == 0) {
@@ -108,6 +89,29 @@ class AvatarXYWHModel extends AvatarModel {
 
     @Override
     public BufferedImage buildImage(int index, BufferedImage image) {
+        if (super.fitType == FitType.COVER) {
+            var pos = this.pos.getPosition(index, dynamicData);
+            int w = pos[2];
+            int h = pos[3];
+
+            float scale = Math.max(
+                    (float) w / image.getWidth(),
+                    (float) h / image.getHeight()
+            );
+            float scaledWidth = image.getWidth() * scale;
+            float scaledHeight = image.getHeight() * scale;
+
+            float dx = (scaledWidth - w),
+                    dy = (scaledHeight - h);
+
+            int pdx = Math.round(dx / scale / 2),
+                    pdy = Math.round(dy / scale / 2);
+
+            super.cropType = CropType.PIXEL;
+            super.cropPos = new int[]{
+                    pdx, pdy, image.getWidth() - pdx, image.getHeight() - pdy
+            };
+        }
         image = super.buildImage(index, image);
         if (super.resampling) {
             int aw = 0, ah = 0, maxSize = 0;

@@ -26,7 +26,7 @@ public abstract class AvatarModel implements TemplateElement {
     protected final boolean antialias;
     protected final boolean resampling;
     protected final AvatarPosType posType;
-    protected final CropType cropType;
+    protected CropType cropType;
     protected int[] cropPos;
     protected final List<AvatarStyle> styleList;
     protected final List<AvatarFilter> filterList;

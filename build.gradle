@@ -28,6 +28,8 @@ dependencies {
 
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
 
+    implementation "org.luaj:luaj-jse:3.0.1"
+
     testImplementation "junit:junit:4.11"
     testImplementation 'org.codehaus.groovy:groovy-json:3.0.18'
 

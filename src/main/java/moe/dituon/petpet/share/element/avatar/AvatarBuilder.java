@@ -11,11 +11,7 @@ import moe.dituon.petpet.share.service.ResourceManager;
 import moe.dituon.petpet.share.template.ExtraData;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -47,21 +43,7 @@ public class AvatarBuilder {
             this.defaultImageGetter = null;
             return;
         }
-        System.out.println(localPath);
-        if (localPath != null && defaultImageUri.getScheme().equals("file") && !isAbsolutePath(defaultImageUri)) {
-            System.out.println(localPath);
-            defaultImageUri = localPath.resolve(defaultImageUri.getSchemeSpecificPart()).toUri();
-        }
-        final URI finalDefaultImageUri = defaultImageUri;
-        this.defaultImageGetter = () -> {
-            try {
-                return List.of(ResourceManager.getDefaultInstance().getImages(
-                        finalDefaultImageUri
-                ));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
+        this.defaultImageGetter = ResourceManager.getDefaultInstance().getImageSupplier(defaultImageUri, localPath);
     }
 
     public AvatarModel build(ExtraData data) {
@@ -79,6 +61,15 @@ public class AvatarBuilder {
             if (getter == null) {
                 throw new RuntimeException("Avatar " + type + " not found!");
             }
+        } else if (defaultImageGetter != null) {
+            var rawGetter = getter;
+            getter = () -> {
+                try {
+                    return rawGetter.get();
+                } catch (RuntimeException e) {
+                    return defaultImageGetter.get();
+                }
+            };
         }
 
         return build(getter);
@@ -92,12 +83,5 @@ public class AvatarBuilder {
                 return new AvatarDeformModel(template, supplier, (PositionP4ACollection) pos);
         }
         throw new RuntimeException();
-    }
-
-    protected static boolean isAbsolutePath(URI uri) {
-        if (!uri.isOpaque()) {
-            return uri.getPath().startsWith("/");
-        }
-        return false;
     }
 }

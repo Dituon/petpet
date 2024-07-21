@@ -6,10 +6,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.function.Supplier;
 
 public class ResourceManager {
     static class ResourceManagerInstanceHolder {
@@ -87,5 +86,27 @@ public class ResourceManager {
             webImageRefCache.put(uri, images);
             return images;
         }
+    }
+
+    public Supplier<List<BufferedImage>> getImageSupplier(URI uri, Path base) {
+        var defaultImageUri = uri;
+        if (base != null && defaultImageUri.getScheme().equals("file") && !isAbsolutePath(defaultImageUri)) {
+            defaultImageUri = base.resolve(defaultImageUri.getSchemeSpecificPart()).toUri();
+        }
+        final URI finalDefaultImageUri = defaultImageUri;
+        return () -> {
+            try {
+                return List.of(this.getImages(finalDefaultImageUri));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    protected static boolean isAbsolutePath(URI uri) {
+        if (!uri.isOpaque()) {
+            return uri.getPath().startsWith("/");
+        }
+        return false;
     }
 }
