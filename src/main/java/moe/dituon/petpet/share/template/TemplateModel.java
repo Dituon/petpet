@@ -8,7 +8,9 @@ import moe.dituon.petpet.share.service.GifEncoder;
 import moe.dituon.petpet.share.service.GifEncoderParam;
 import moe.dituon.petpet.share.template.background.BackgroundModel;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +80,23 @@ public class TemplateModel {
                 return canvas;
             });
         }
-        var blob = GifEncoder.makeGifUseAnimatedLib(output, new GifEncoderParam());
 
-        return new ResultImage(blob, output.get(0).getWidth(), output.get(0).getHeight());
+        byte[] blob;
+        if (gifFlag) {
+            blob = GifEncoder.makeGifUseAnimatedLib(output, new GifEncoderParam());
+        } else {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(16384);
+            // TODO other image format
+            ImageIO.write(output.get(0), "png", baos);
+            blob = baos.toByteArray();
+        }
+
+        return new ResultImage(
+                blob,
+                output.get(0).getWidth(),
+                output.get(0).getHeight(),
+                totalLength > 1 ? "gif" : "png",
+                totalLength > 1 ? "image/gif" : "image/png"
+        );
     }
 }

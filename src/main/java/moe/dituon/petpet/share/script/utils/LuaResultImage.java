@@ -21,7 +21,6 @@ public class LuaResultImage {
         this.blob = image.getBlob();
         this.mime = image.getMime();
         this.suffix = image.getSuffix();
-        System.out.println(blob.length);
     }
 
     public void saveAs(String path) throws IOException {

@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TemplateBuilder {
+    public final PetpetTemplate templateData;
     @Getter
     protected final List<AvatarBuilder> avatarBuilders;
     @Getter
@@ -22,6 +23,7 @@ public class TemplateBuilder {
     protected final Set<String> avatarTypeSet;
 
     public TemplateBuilder(PetpetTemplate templateData, BackgroundResource resource) {
+        this.templateData = templateData;
         this.avatarTypeSet = templateData.getAvatar().stream().map(AvatarTemplate::getType).collect(Collectors.toSet());
         this.avatarBuilders = templateData.getAvatar().stream()
                 .map(template -> new AvatarBuilder(template, resource.getBasePath()))
