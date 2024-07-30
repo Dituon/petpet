@@ -46,7 +46,10 @@ public class PositionP4ACollection implements PositionCollection<Point2D[]> {
         var anchor = new int[posElements.size()][4];
         if (PositionCollection.calculateDepth(posElements) == 2) {
             parseJsonArray(posElements, pos[0], anchor[0]);
-            return new PositionP4ACollection(pos, anchor);
+            return new PositionP4ACollection(
+                    new Point2D[][]{pos[0]},
+                    new int[][]{anchor[0]}
+            );
         }
         for (JsonElement je : posElements) {
             JsonArray ja = (JsonArray) je;

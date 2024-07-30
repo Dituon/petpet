@@ -2,6 +2,7 @@ package moe.dituon.petpet.share.template.background;
 
 import kotlinx.serialization.json.JsonElement;
 import kotlinx.serialization.json.JsonPrimitive;
+import lombok.Getter;
 import moe.dituon.petpet.share.ArithmeticParser;
 import moe.dituon.petpet.share.BackgroundData;
 import moe.dituon.petpet.share.element.TemplateElement;
@@ -14,7 +15,9 @@ import java.util.regex.Pattern;
 public class BackgroundBuilder {
     public static final Pattern EXPR_REGEX = Pattern.compile("(avatar|text)(\\d+)(Height|Width)");
 
+    @Getter
     protected final BackgroundResource resource;
+    @Getter
     protected final BackgroundData data;
     protected int width;
     protected int height;

@@ -2,6 +2,7 @@ package moe.dituon.petpet.share.script
 
 import kotlinx.serialization.Serializable
 import moe.dituon.petpet.share.service.ResourceManager
+import moe.dituon.petpet.share.template.AvatarExtraData
 import moe.dituon.petpet.share.template.ExtraData
 import moe.dituon.petpet.share.template.TextExtraData
 import org.luaj.vm2.LuaTable
@@ -22,9 +23,14 @@ data class LuaExtraData(
 
     fun toExtraData(base: Path): ExtraData {
         return ExtraData(
-            avatar = avatar?.map?.mapValues { e ->
-                ResourceManager.getDefaultInstance().getImageSupplier(URI(e.value), base)
-            } ?: emptyMap(),
+            avatar = AvatarExtraData(
+                map = avatar?.map?.mapValues { e ->
+                    ResourceManager.getDefaultInstance().getImageSupplier(URI(e.value), base)
+                } ?: emptyMap(),
+                list = avatar?.list?.map { e ->
+                    ResourceManager.getDefaultInstance().getImageSupplier(URI(e), base)
+                } ?: emptyList()
+            ),
             text = TextExtraData(
                 text?.map ?: emptyMap(),
                 text?.list ?: emptyList()

@@ -17,26 +17,33 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class AvatarBuilder {
+    protected final String type;
     @Getter
-    private final AvatarTemplate template;
-    private final AvatarPosType posType;
-    private final PositionCollection<?> pos;
+    protected final AvatarTemplate template;
+    protected final AvatarPosType posType;
+    protected final PositionCollection<?> pos;
     protected final Supplier<List<BufferedImage>> defaultImageGetter;
 
-    public static final List<String> REPLACE_KEYS = List.of("from", "to", "group", "bot", "random");
-    public static final List<String> REPLACE_VALUES = REPLACE_KEYS.stream().map(String::toUpperCase).collect(Collectors.toList());
+    public static final List<String> REPLACE_VALUES = List.of("from", "to", "group", "bot", "random");
+    public static final List<String> REPLACE_KEYS = REPLACE_VALUES.stream().map(String::toUpperCase).collect(Collectors.toList());
 
     public AvatarBuilder(AvatarTemplate template) {
         this(template, null);
     }
 
     /**
-     * @param localPath 用于处理本地图像的相对路径
+     * @param localPath 用于处理本地图像的相对路径, Nullable
      */
     public AvatarBuilder(AvatarTemplate template, Path localPath) {
         posType = template.getPosType();
         pos = PositionCollectionFactory.createCollection(template.getPos(), posType);
         this.template = template;
+        var index = REPLACE_KEYS.indexOf(template.getType());
+        if (index != -1){
+            this.type = REPLACE_VALUES.get(index);
+        } else {
+            this.type = template.getType();
+        }
 
         var defaultImageUri = template.getDefault();
         if (defaultImageUri == null) {
@@ -47,17 +54,10 @@ public class AvatarBuilder {
     }
 
     public AvatarModel build(ExtraData data) {
-        String type = this.template.getType();
+        var getter = data.getAvatar().getMap().get(type);
 
-        var getter = data.getAvatar().get(type);
         if (getter == null) {
-            int index = REPLACE_KEYS.indexOf(type);
-            if (index != -1) getter = data.getAvatar().get(REPLACE_VALUES.get(index));
-
-            if (getter == null && defaultImageGetter != null) {
-                getter = defaultImageGetter;
-            }
-
+            getter = defaultImageGetter;
             if (getter == null) {
                 throw new RuntimeException("Avatar " + type + " not found!");
             }
@@ -74,6 +74,7 @@ public class AvatarBuilder {
 
         return build(getter);
     }
+
 
     public AvatarModel build(@NonNull Supplier<List<BufferedImage>> supplier) {
         switch (posType) {

@@ -26,12 +26,18 @@ public class TemplateBuilder {
         this.templateData = templateData;
         this.avatarTypeSet = templateData.getAvatar().stream().map(AvatarTemplate::getType).collect(Collectors.toSet());
         this.avatarBuilders = templateData.getAvatar().stream()
-                .map(template -> new AvatarBuilder(template, resource.getBasePath()))
-                .collect(Collectors.toList());
+                .map(template -> new AvatarBuilder(
+                        template,
+                        resource == null ? null : resource.getBasePath()
+                )).collect(Collectors.toList());
         this.textBuilders = templateData.getText().stream()
                 .map(TextBuilder::new)
                 .collect(Collectors.toList());
         this.backgroundBuilder = new BackgroundBuilder(resource, templateData.getBackground());
+    }
+
+    public BackgroundResource getBackgroundResource() {
+        return this.backgroundBuilder.getResource();
     }
 
     public TemplateModel build(ExtraData data) {

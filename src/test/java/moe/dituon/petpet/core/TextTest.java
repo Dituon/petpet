@@ -29,17 +29,6 @@ public class TextTest {
         return new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
     }
 
-    public static TextExtraData getTestExtraData() {
-        return new TextExtraData(
-                Map.of(
-                        "FROM", "FROM",
-                        "TO", "TO",
-                        "GROUP", "GROUP"
-                ),
-                List.of("text1", "text2", "text3")
-        );
-    }
-
     public static BufferedImage testTextModel(TextData template) {
         return testTextModel(template, -1);
     }
@@ -79,7 +68,7 @@ public class TextTest {
         g2d.fillRect(template.getPos()[0] - 5, template.getPos()[1] - 5, 10, 10);
 
         var builder = new TextBuilder(template);
-        var model = builder.build(getTestExtraData());
+        var model = builder.build(TestUtils.getTextExtraData());
         model.draw(g2d, new FrameInfo(0, img.getWidth(), img.getHeight()));
         return img;
     }

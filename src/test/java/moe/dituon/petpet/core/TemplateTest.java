@@ -2,6 +2,7 @@ package moe.dituon.petpet.core;
 
 import moe.dituon.petpet.share.TemplateDTO;
 import moe.dituon.petpet.share.service.ResourceManager;
+import moe.dituon.petpet.share.template.AvatarExtraData;
 import moe.dituon.petpet.share.template.ExtraData;
 import moe.dituon.petpet.share.template.PetpetTemplate;
 import moe.dituon.petpet.share.template.TemplateBuilder;
@@ -13,6 +14,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -32,16 +34,7 @@ public class TemplateTest {
                 manager.getBackgrounds("ask")
         );
 
-        var templateModel = templateBuilder.build(new ExtraData(
-                Map.of("TO", () -> {
-                    try {
-                        return List.of(manager.getImages(URI.create("https://avatars.githubusercontent.com/u/68615161?v=4")));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }),
-                TextTest.getTestExtraData()
-        ));
+        var templateModel = templateBuilder.build(TestUtils.getExtraData(templateBuilder));
 
         ByteArrayInputStream stream = new ByteArrayInputStream(templateModel.getResult().getBlob());
         Files.copy(stream, Path.of("test.png"), StandardCopyOption.REPLACE_EXISTING);
@@ -60,16 +53,7 @@ public class TemplateTest {
                 manager.getBackgrounds("petpet")
         );
 
-        var templateModel = templateBuilder.build(new ExtraData(
-                Map.of("TO", () -> {
-                    try {
-                        return List.of(manager.getImages(URI.create("https://avatars.githubusercontent.com/u/68615161?v=4")));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }),
-                TextTest.getTestExtraData()
-        ));
+        var templateModel = templateBuilder.build(TestUtils.getExtraData(templateBuilder));
 
         ByteArrayInputStream stream = new ByteArrayInputStream(templateModel.getResult().getBlob());
         Files.copy(stream, Path.of("test.gif"), StandardCopyOption.REPLACE_EXISTING);

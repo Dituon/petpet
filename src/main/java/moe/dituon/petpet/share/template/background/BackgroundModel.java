@@ -21,11 +21,16 @@ public class BackgroundModel {
     }
 
     public BufferedImage[] getImages() throws IOException {
-        if (this.data == null) {
-            return this.resource.getImages();
+        BufferedImage[] backgrounds;
+        if (this.resource == null) {
+            var bg = new BufferedImage(width, height, 1);
+            backgrounds = new BufferedImage[]{bg};
+        } else {
+            backgrounds = this.resource.getImages();
         }
-
-        var backgrounds = this.resource.getImages();
+        if (this.data == null) {
+            return backgrounds;
+        }
 
         var length = this.data.getLength();
         BufferedImage[] arr = new BufferedImage[length];

@@ -70,7 +70,8 @@ public class TemplateModel {
                 var info = new FrameInfo(i, base.getWidth(), base.getHeight());
                 var canvas = new BufferedImage(
                         base.getWidth(), base.getHeight(),
-                        gifFlag ? BufferedImage.TYPE_3BYTE_BGR : base.getType()
+                        gifFlag ? BufferedImage.TYPE_3BYTE_BGR :
+                                (base.getType() == BufferedImage.TYPE_CUSTOM ? BufferedImage.TYPE_3BYTE_BGR : base.getType())
                 );
                 var g2d = canvas.createGraphics();
                 bottomAvatarList.forEach(avatar -> avatar.draw(g2d, info));

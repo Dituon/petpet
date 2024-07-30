@@ -147,6 +147,7 @@ public class GraphicsParagraph {
             stroke = new BasicStroke(this.string.strokeSize, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND);
         }
         if (shape == null) {
+            shape = new Shape[text.length];
             for (int i = 0; i < text.length; i++) {
                 AffineTransform transform = new AffineTransform();
                 transform.translate(x + xOffset[i], y + yOffset[i] - baselineOffset);

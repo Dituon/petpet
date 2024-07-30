@@ -1,7 +1,6 @@
 package moe.dituon.petpet.share.service;
 
 import lombok.Getter;
-import moe.dituon.petpet.share.TemplateDTO;
 import moe.dituon.petpet.share.Type;
 import moe.dituon.petpet.share.template.PetpetTemplate;
 import moe.dituon.petpet.share.template.TemplateBuilder;
@@ -35,7 +34,8 @@ public class TemplateManager {
             var id = file.getName();
             var templateConfig = PetpetTemplate.fromString(Files.readString(templateRaw));
 
-            var background = resourceManager.pushBackground(id, new BackgroundResource(file));
+            var background = new BackgroundResource(file);
+            resourceManager.pushBackground(id, background);
             if (templateConfig.getType() == Type.IMG && background.files.length > 1) {
                 background.randomFlag = true;
             }

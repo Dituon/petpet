@@ -11,6 +11,7 @@ data class ResultImage(
 ) {
     fun saveAs(filePath: String) {
         val file = File(filePath)
+        file.parentFile?.mkdirs()
         file.writeBytes(blob)
     }
 }
