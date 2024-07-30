@@ -6,6 +6,7 @@ import moe.dituon.petpet.share.*;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.font.TextAttribute;
+import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Map;
 
@@ -22,16 +23,16 @@ public class GraphicsAttributedString extends AttributedString {
     protected int strokeSize;
     protected Color strokeColor;
 
-    public static Map<? extends java.text.AttributedCharacterIterator.Attribute, ?> asAttributeMap(TextData data) {
+    public static Map<? extends AttributedCharacterIterator.Attribute, ?> asAttributeMap(TextTemplate data) {
         Font font = new Font(data.getFont(), data.getStyle().getValue(), data.getSize());
         return Map.of(TextAttribute.FONT, font);
     }
 
-    public GraphicsAttributedString(TextData data) {
+    public GraphicsAttributedString(TextTemplate data) {
         this(data.getText(), data);
     }
 
-    public GraphicsAttributedString(String text, TextData data) {
+    public GraphicsAttributedString(String text, TextTemplate data) {
         super(text, asAttributeMap(data));
         this.text = text;
         this.font = StyleContext.getDefaultStyleContext().getFont(
@@ -39,6 +40,7 @@ public class GraphicsAttributedString extends AttributedString {
         );
         this.color = data.getAwtColor();
         this.align = data.getAlign();
+        //TODO
 //        this.baseline = data.getBaseline();
         this.baseline = TextBaseline.TOP;
         this.wrap = data.getWrap();

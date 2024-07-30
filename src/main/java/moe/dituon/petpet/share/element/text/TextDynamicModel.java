@@ -14,9 +14,9 @@ public class TextDynamicModel extends TextModel {
     public static final Pattern TEXT_VAR_REGEX = Pattern.compile("\\$txt([1-9]\\d*)\\[(.*?)]"); //$txt(num)[(xxx)]
 
     protected String text;
-    protected TextData data;
+    protected TextTemplate data;
 
-    public TextDynamicModel(TextData textData, TextExtraData extraInfo) {
+    public TextDynamicModel(TextTemplate textData, TextExtraData extraInfo) {
         this.data = textData;
         text = extraInfo != null ? buildText(
                 textData.getText(), extraInfo, textData.getGreedy()

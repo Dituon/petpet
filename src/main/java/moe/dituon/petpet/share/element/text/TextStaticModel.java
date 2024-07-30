@@ -10,7 +10,7 @@ public class TextStaticModel extends TextModel {
     protected int y;
     protected final GraphicsParagraph paragraph;
 
-    public TextStaticModel(TextData textData, GraphicsParagraph paragraph) {
+    public TextStaticModel(TextTemplate textData, GraphicsParagraph paragraph) {
         var pos = textData.getPos();
         x = pos[0];
         y = pos[1];

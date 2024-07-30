@@ -11,12 +11,12 @@ public class TextBuilder {
     public static final List<String> EXPR_LIST = List.of("$txt", "$from", "$to", "$group");
 
     @Getter
-    protected final TextData data;
+    protected final TextTemplate data;
     @Getter
     protected final boolean dynamic;
     protected GraphicsParagraph staticParagraph;
 
-    public TextBuilder(TextData data) {
+    public TextBuilder(TextTemplate data) {
         this.data = data;
         var text = data.getText();
         this.dynamic = EXPR_LIST.stream().anyMatch(text::contains);
@@ -36,11 +36,11 @@ public class TextBuilder {
         return buildParagraph(string, data, width);
     }
 
-    public static GraphicsParagraph buildParagraph(GraphicsAttributedString string, TextData data) {
+    public static GraphicsParagraph buildParagraph(GraphicsAttributedString string, TextTemplate data) {
         return buildParagraph(string, data.getWrap(), data.getAlign(), data.getBaseline());
     }
 
-    public static GraphicsParagraph buildParagraph(GraphicsAttributedString string, TextData data, int width) {
+    public static GraphicsParagraph buildParagraph(GraphicsAttributedString string, TextTemplate data, int width) {
         return buildParagraph(string, data.getWrap(), data.getAlign(), data.getBaseline(), width);
     }
 
