@@ -1,0 +1,24 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [
+          117,
+          239,
+          185,
+          131
+        ]
+      ],
+      "fit": "COVER",
+      "avatarOnTop": false,
+      "angle": 348
+    }
+  ],
+  "text": [],
+  "alias": [
+    "虎视子",
+    "展示"
+  ]
+}
