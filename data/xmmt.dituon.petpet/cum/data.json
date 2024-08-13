@@ -1,0 +1,22 @@
+{
+  "type": "GIF",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [
+          0,
+          0,
+          159,
+          102
+        ]
+      ],
+      "fit": "CONTAIN",
+      "avatarOnTop": false
+    }
+  ],
+  "text": [],
+  "alias": [
+    "射"
+  ]
+}
