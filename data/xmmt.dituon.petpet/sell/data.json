@@ -1,0 +1,23 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [
+          -2,
+          -4,
+          707,
+          886
+        ]
+      ],
+      "fit": "COVER",
+      "avatarOnTop": false
+    }
+  ],
+  "text": [],
+  "alias": [
+    "卖",
+    "人气"
+  ]
+}
