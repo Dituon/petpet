@@ -38,12 +38,18 @@ public class GoCQPetpet {
 
         if (service.autoUpdate){
             new Thread(() -> {
-                var uploader = new DataUpdater(service, service.dataRoot);
-                if (uploader.autoUpdate()){
-                    LOGGER.info("Petpet 模板更新完毕, 正在重载");
-                    service.readData();
+                try {
+                    System.out.println(123);
+                    var uploader = new DataUpdater(service, service.dataRoot);
+                    if (uploader.autoUpdate()){
+                        LOGGER.info("Petpet 模板更新完毕, 正在重载");
+                        service.readData();
+                    }
+                }catch (Exception e) {
+                    LOGGER.warning(e.toString(), e);
                 }
-            });
+
+            }).start();
         }
 
         try{

@@ -96,19 +96,3 @@ enum class ReplyFormat {
 enum class DisablePolicy {
     NONE, NUDGE, MESSAGE, FULL
 }
-
-@Serializable
-data class UpdateIndex(
-    val version: Float = 0f,
-    val dataPath: String = DataUpdater.DEFAULT_REPO_DATA_PATH,
-    val dataList: List<String> = emptyList(),
-    val fontList: List<String> = emptyList(),
-    var url: String = ""
-) {
-    companion object {
-        @JvmStatic
-        fun parse(str: String): UpdateIndex {
-            return encodeDefaultsIgnoreUnknownKeysJson.decodeFromString(str)
-        }
-    }
-}

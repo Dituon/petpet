@@ -21,7 +21,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1'
     implementation "com.madgag:animated-gif-lib:1.4"
     implementation "net.coobird:thumbnailator:0.4.19"
     implementation 'com.jhlabs:filters:2.0.235-1'

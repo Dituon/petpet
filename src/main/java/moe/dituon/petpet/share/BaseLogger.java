@@ -20,7 +20,7 @@ public class BaseLogger {
         return BaseLoggerInner.INSTANCE;
     }
 
-    private LoggerInterface logger = new JavaUtilLogger("Petpet");
+    protected LoggerInterface logger = new JavaUtilLogger("Petpet");
     public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public void setLogger(LoggerInterface loggerInterface) {
@@ -43,7 +43,7 @@ public class BaseLogger {
         logger.error(message, throwable);
     }
 
-    private interface LoggerInterface {
+    public interface LoggerInterface {
         void info(String message);
 
         void warning(String message);
