@@ -68,6 +68,7 @@ public final class MiraiPetpet extends JavaPlugin {
             DataUpdater updater = new DataUpdater(service, getDataFolder());
             if (updater.autoUpdate()) {
                 LOGGER.info("Petpet 模板更新完毕, 正在重载");
+                service.keyListString = "";
                 service.readData(MiraiPetpet.dataFolder);
             }
         }).start();
@@ -165,6 +166,7 @@ public final class MiraiPetpet extends JavaPlugin {
 
         if (service.devMode && messageString.equals(service.command + " reload")) {
             e.getGroup().sendMessage(service.command + "正在重载...");
+            service.keyListString = "";
             service.readData(dataFolder);
             e.getGroup().sendMessage(service.command + "重载完成!");
             return;
@@ -335,6 +337,7 @@ public final class MiraiPetpet extends JavaPlugin {
 
         if (service.devMode && messageString.equals(service.command + " reload")) {
             e.getSender().sendMessage(service.command + "正在重载...");
+            service.keyListString = "";
             service.readData(dataFolder);
             e.getSender().sendMessage(service.command + "重载完成!");
             return;
