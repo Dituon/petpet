@@ -237,7 +237,7 @@
 > ~~人话: 每次启动都会自动下载新的超赞梗图, 墙裂推荐~~
 <br/>
 
-- **repositoryUrl**: `'https://dituon.github.io/petpet'`
+- **repositoryUrl**: `'https://github.com/Dituon/petpet/raw/main/'`
 
 > 仓库地址, 用于自动更新, 默认为此仓库的`github page`
 
@@ -818,13 +818,17 @@
   > 对于无输入输出设备的服务器 需要启用`headless`
 
 - 自动更新下载速度慢 / 无法连接远程资源?
-  > 修改`Petpet.yml`中`repositoryUrl`的值为`'https://ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main'`(高速镜像)
+  > Github 在中国境内被防火墙拦截
+  > 
+  > 修改`Petpet.yml`中`repositoryUrl`的值为`
+  > - `'https://raw.gitcode.com/dituon/petpet/raw/main/'` (基于 Gitcode 自动偷取的镜像)
+  > - `'https://mirror.ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main/'` (由 `ghproxy.com` 提供的镜像)
 
 - 自动更新后 读取`data.json`出错?
   > 自动更新时网络出错导致, 删除出错的文件 重新获取即可
 
 - 其它错误? 问题?
-  > 若此文档无法解决您的问题, 欢迎提交`issue`
+  > 若此文档无法解决您的问题, 欢迎提交 `issue`
 
 ## 性能 & 兼容性
 
