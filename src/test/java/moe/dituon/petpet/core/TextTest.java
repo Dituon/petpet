@@ -122,7 +122,7 @@ public class TextTest {
         var list = new ArrayList<BufferedImage>();
         for (TextAlign align : testAligns) {
             for (TextBaseline baseline : testBaselines) {
-                var template = new TextData(
+                var template = new TextTemplate(
                         "TextWrap.BREAK\n段落测试\n" + String.format("(align = %s, baseline = %s)", align, baseline)
                 );
                 template.setWrap(TextWrap.BREAK);
@@ -140,7 +140,7 @@ public class TextTest {
         var list = new ArrayList<BufferedImage>();
         for (TextAlign align : testAligns) {
             for (TextBaseline baseline : testBaselines) {
-                var template = new TextData(
+                var template = new TextTemplate(
                         "TextWrap.ZOOM\n段落测试\n" + String.format("(align = %s, baseline = %s)", align, baseline)
                 );
                 template.setWrap(TextWrap.ZOOM);
