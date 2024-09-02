@@ -5,7 +5,7 @@ import moe.dituon.petpet.share.*
 import java.awt.Color
 
 @Serializable
-data class TextTemplate(
+data class TextTemplate @JvmOverloads constructor(
     var text: String,
     var pos: IntArray = intArrayOf(0, 0),
     var angle: Short = 0,

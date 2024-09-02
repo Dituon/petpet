@@ -1,6 +1,7 @@
 package moe.dituon.petpet.core;
 
 import moe.dituon.petpet.share.*;
+import moe.dituon.petpet.share.element.text.TextTemplate;
 import moe.dituon.petpet.share.template.TextExtraData;
 import moe.dituon.petpet.share.element.FrameInfo;
 import moe.dituon.petpet.share.element.text.TextBuilder;
@@ -29,11 +30,11 @@ public class TextTest {
         return new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
     }
 
-    public static BufferedImage testTextModel(TextData template) {
+    public static BufferedImage testTextModel(TextTemplate template) {
         return testTextModel(template, -1);
     }
 
-    public static BufferedImage testTextModel(TextData template, int width) {
+    public static BufferedImage testTextModel(TextTemplate template, int width) {
         var img = getTestImage(width > 0 ? width : TextModel.DEFAULT_WIDTH, 200);
 
         switch (template.getAlign()) {
@@ -102,8 +103,9 @@ public class TextTest {
         var list = new ArrayList<BufferedImage>();
         for (TextAlign align : testAligns) {
             for (TextBaseline baseline : testBaselines) {
-                var template = new TextData(
-                        "TextWrap.NONE\n段落测试\n" + String.format("(align = %s, baseline = %s)", align, baseline)
+                var template = new TextTemplate(
+                        "TextWrap.NONE\n段落测试\n" +
+                                String.format("(align = %s, baseline = %s)", align, baseline)
                 );
                 template.setWrap(TextWrap.NONE);
                 template.setAlign(align);
