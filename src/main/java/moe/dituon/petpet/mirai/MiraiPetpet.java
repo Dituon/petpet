@@ -209,6 +209,8 @@ public final class MiraiPetpet extends JavaPlugin {
                 if (imageCachePool.get(id) == null) continue;
                 toName = "这个";
                 toUrl = imageCachePool.get(id);
+                fromName = getNameOrNick(e.getSender());
+                fromUrl = e.getSender().getAvatarUrl();
                 fuzzyLock = true;
                 continue;
             }
