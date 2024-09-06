@@ -3,6 +3,7 @@ package moe.dituon.petpet.share;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -265,6 +266,6 @@ public class TextModel {
     public static int getTextHeight(String text, Font font) {
         if (container == null) container = new BufferedImage(1, 1, 1).createGraphics();
         FontMetrics fm = container.getFontMetrics(font);
-        return fm.getAscent() - fm.getDescent() - fm.getLeading();
+        return fm.getHeight(); // 使用 getHeight() 来计算字体高度
     }
 }
