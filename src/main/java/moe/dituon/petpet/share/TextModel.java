@@ -3,7 +3,6 @@ package moe.dituon.petpet.share;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
