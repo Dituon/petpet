@@ -113,9 +113,8 @@ public class TextModel {
             short lineAp = (short) (width / maxWidth);
             StringBuilder builder = new StringBuilder(text);
             short lineWidth = (short) (text.length() / lineAp);
-            short i = 1;
-            while (i <= lineAp) {
-                builder.insert(lineWidth * i++, '\n');
+            for (short i = lineAp; i > 0; i--) {
+                builder.insert(lineWidth * i, '\n');
             }
             text = builder.toString();
             width = getWidth(font);
