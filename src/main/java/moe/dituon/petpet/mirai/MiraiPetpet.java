@@ -101,6 +101,7 @@ public final class MiraiPetpet extends JavaPlugin {
             };
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageEvent.class, this::cacheMessageImage);
             GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessagePostSendEvent.class, this::cacheMessageImage);
+            GlobalEventChannel.INSTANCE.subscribeAlways(GroupMessageSyncEvent.class, this::cacheMessageImage);
 
             if (service.respondFriend) {
                 GlobalEventChannel.INSTANCE.subscribeAlways(UserMessageEvent.class, this::cacheMessageImage);
