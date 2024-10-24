@@ -10,15 +10,15 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/dituon/petpet)
 [![](https://jitpack.io/v/Dituon/petpet.svg)](https://jitpack.io/#Dituon/petpet)
 
-自定义合成图片的 Mirai 插件 / 独立程序 / gocq-http插件, 灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
+自定义合成图片的 Mirai 插件 / 独立程序 / onebot 插件, 灵感/部分数据来自 [nonebot-plugin-petpet](https://github.com/noneplugin/nonebot-plugin-petpet)。
 
-原生 java 编写, kotlin仅用于数据序列化, **使用底层API**, **多线程优化**: 轻量, 高性能, 易拓展
+**使用底层接口**, **多线程优化**: 轻量, 高性能, 易拓展
 
 - **[在线编辑器](https://dituon.github.io/petpet-js/editor)**
 
 - **[JS 前端版本](https://github.com/Dituon/petpet-js)**
 
-- **[RUST skia版本 (开发中)](https://github.com/Dituon/petpet-rs)**
+- **[RUST skia版本](https://github.com/Dituon/petpet-rs)**
 
 - **[在线体验](https://dituon.github.io/petpet-js)**
 
@@ -28,9 +28,9 @@
 
 1. 下载 [最新版本](https://github.com/Dituon/petpet/releases/) `petpet.jar` 或 `petpet-no-ws.jar`
 
-2. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
+2. 下载 [模板素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
 
-3. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
+3. 将模板素材放入 `./data/xmmt.dituon.petpet/` 目录
 
 4. 运行 `start.bat` 或 `start.sh`, 可自行更改配置文件 `config.json`, 重启后生效
 
@@ -44,9 +44,9 @@
 
 2. 将插件放入 `Mirai/plugins/`
 
-3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
+3. 下载 [模板素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
 
-4. 将图片素材放入 `Mirai/data/xmmt.dituon.petpet/`
+4. 将模板素材放入 `Mirai/data/xmmt.dituon.petpet/`
 
 5. 启动 `Mirai`, 可自行更改配置文件 `Petpet.yml`, 重启后生效 (参考 [配置项说明](#配置项说明))
 
@@ -57,7 +57,7 @@
 > 可通过发送的图片生成Petpet `kiss [图片]`, **支持GIF**
 >> 可通过回复构造图片, 例如 `[图片]` -> `[回复[图片]] 对称`
 
-> 可使用 `pet`指令 获取 `keyList`
+> 可使用 `pet` 指令 获取 `keyList`
 
 ###  [OneBot](https://onebot.dev/) / [gocq-http](https://github.com/Mrs4s/go-cqhttp) 插件
 
@@ -71,11 +71,11 @@
 
 2. 下载 [最新版本](https://github.com/Dituon/petpet/releases/) `petpet.jar`
 
-3. 下载 [图片素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
+3. 下载 [模板素材](https://github.com/Dituon/petpet/tree/main/data/xmmt.dituon.petpet)
 
-4. 将图片素材放入 `./data/xmmt.dituon.petpet/` 目录
+4. 将模板素材放入 `./data/xmmt.dituon.petpet/` 目录
 
-5. `cd ./` `java -jar petpet.jar -gocq`, 可自行更改配置文件 `gocq-config.json`, 重启后生效
+5. 运行 `start` 脚本, 或 `cd ./` `java -jar petpet.jar -gocq`, 可自行更改配置文件 `gocq-config.json`, 重启后生效
 
 ## 配置文件
 #### 配置项说明
@@ -237,9 +237,9 @@
 > ~~人话: 每次启动都会自动下载新的超赞梗图, 墙裂推荐~~
 <br/>
 
-- **repositoryUrl**: `'https://github.com/Dituon/petpet/raw/main/'`
+- **repositoryUrl**
 
-> 仓库地址, 用于自动更新, 默认为此仓库的`github page`
+> 仓库地址, 用于自动更新, 默认为本仓库地址
 
 - **devMode**: `false`
 
@@ -821,8 +821,7 @@
   > Github 在中国境内被防火墙拦截
   > 
   > 修改`Petpet.yml`中`repositoryUrl`的值为`
-  > - `'https://raw.gitcode.com/dituon/petpet/raw/main/'` (基于 Gitcode 自动偷取的镜像)
-  > - `'https://mirror.ghproxy.com/https://raw.githubusercontent.com/Dituon/petpet/main/'` (由 `ghproxy.com` 提供的镜像)
+  > - `'https://ghp.ci/https://raw.githubusercontent.com/Dituon/petpet/main/'` (由 `ghproxy.com` 提供的镜像)
 
 - 自动更新后 读取`data.json`出错?
   > 自动更新时网络出错导致, 删除出错的文件 重新获取即可
@@ -832,21 +831,19 @@
 
 ## 性能 & 兼容性
 
-程序使用底层`java.awt`类合成图片, 渲染时使用多线程, 静态图片渲染时间一般不会超过`1ms`
+程序使用底层 `java.awt` 类合成图片, 渲染时使用多线程, 静态图片渲染时间一般不会超过`1ms`
 
 对GIF编码器的分析, 转换, 映射部分进行多线程优化, 速度极快
 
-**Android JVM**没有实现`java.awt`, 推荐使用`JDK 11+`版本
+**Android JVM** 没有实现`java.awt`, 推荐使用`JDK 11+`版本
 
 ## 分享你的作品 (模板)
 
-如果你想分享自定义的 Petpet, **欢迎Pr**
+如果你想分享自定义模板, **欢迎Pr**
 
 ## 二次开发
 
-程序提供超多实用API  拓展性极强, 附有互动式开发实例, 欢迎初学者学习!
-
-- 互动式开发实例 参见[`test.moe.dituon.petpet.example.HelloPetpet`](https://github.com/Dituon/petpet/blob/main/src/test/java/moe/dituon/petpet/example/HelloPetpet.java)
+- 开发实例 参见[`test.moe.dituon.petpet.example.HelloPetpet`](https://github.com/Dituon/petpet/blob/main/src/test/java/moe/dituon/petpet/example/HelloPetpet.java)
 
 - 在别的项目二次开发: [mirai-simplepetpet-plugin](https://github.com/hundun000/mirai-simplepetpet-plugin)
 
