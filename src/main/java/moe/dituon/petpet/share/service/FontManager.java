@@ -1,9 +1,14 @@
 package moe.dituon.petpet.share.service;
 
+import moe.dituon.petpet.share.BaseLogger;
+
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FontManager {
     protected static class FontManagerInstance {
@@ -34,6 +39,12 @@ public class FontManager {
         for (Font font : environment.getAllFonts()) {
             addFont(font);
         }
+
+        supportedLanguageFontMap.forEach((k, v) -> {
+            if (v.isEmpty()) {
+                BaseLogger.getInstance().warning("Can not find font that support " + k.name + " (" + k.desc + ")");
+            }
+        });
     }
 
     public void addFont(Font font) {
@@ -51,6 +62,41 @@ public class FontManager {
                         s == null ? new HashSet<>(8) : s
                 ).add(font);
             }
+        }
+    }
+
+    public boolean addFont(File fontFile) throws IOException, FontFormatException {
+        Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+        boolean success = environment.registerFont(customFont);
+        if (success) {
+            addFont(customFont);
+        }
+        return success;
+    }
+
+    public void addFonts(Path fontDirectory) {
+        if (!Files.exists(fontDirectory) || !Files.isDirectory(fontDirectory)) return;
+
+        var files = fontDirectory.toFile().listFiles();
+        if (files == null) return;
+        List<String> successNames = new ArrayList<>(files.length);
+        List<String> failedNames = new ArrayList<>(files.length);
+        for (File fontFile : files) {
+            try {
+                if (this.addFont(fontFile)) {
+                    successNames.add(fontFile.getName());
+                } else {
+                    failedNames.add(fontFile.getName());
+                }
+            } catch (IOException | FontFormatException e) {
+                BaseLogger.getInstance().error("无法读取字体文件: " + fontFile.getAbsolutePath(), e);
+            }
+        }
+        if (successNames.isEmpty()) {
+            BaseLogger.getInstance().info("成功注册字体文件: " + String.join(", ", successNames));
+        }
+        if (!failedNames.isEmpty()) {
+            BaseLogger.getInstance().warning("字体文件已被注册: " + String.join(", ", failedNames));
         }
     }
 
