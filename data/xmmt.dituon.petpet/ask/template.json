@@ -1,0 +1,56 @@
+{
+	"type":"image",
+    "metadata": {
+        "alias": ["问问"],
+        "inRandomList": false
+    },
+    "elements": [
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [0, "head_height + 16px", "100cw", "100ch"]
+        },{
+            "type": "image",
+            "src": "./message.png",
+            "coords": [0, "head_height + to_height - 120px", "to_width", 136]
+        },{
+            "type": "text",
+            "id": "head",
+			"text": "让${1:-${to:-ta}}告诉你吧",
+			"coords": [8, 8],
+			"color": "#191919",
+			"size": 40
+		},{
+            "type": "text",
+			"text": "${1:-${to:-???}}",
+			"coords":["to_width / 2", "head_height + to_height - 120px + 32px"],
+			"color": "#f0bf6e",
+			"size": 22,
+			"align": "center",
+			"style": "bold"
+		},{
+            "type": "text",
+			"text": "${2:-${1:-${to:-}}不知道哦。}",
+            "wrap": "break",
+			"coords": ["to_width / 2", "head_height + to_height - 120px + 68px", "to_width - 16px"],
+			"color": "#ffffff",
+			"size": 24,
+			"align": "center",
+            "baseline": "top"
+		},{
+            "type": "text",
+            "id": "foot",
+			"text": "啊这，ta说${2:-不知道}",
+            "wrap": "break",
+			"coords": [8, "head_height + to_height + 24px", "to_width - 16px"],
+			"color": "#191919",
+			"size": 40,
+			"align": "left"
+		}
+    ],
+    "canvas": {
+        "width": "to_width",
+        "height": "head_height + to_height + foot_height + 32px",
+        "color": "#ffffff"
+    }
+}

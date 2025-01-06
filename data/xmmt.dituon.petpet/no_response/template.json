@@ -1,0 +1,27 @@
+{
+	"type":"image",
+    "metadata": {
+        "alias": ["无响应"]
+    },
+    "elements": [
+        {
+            "type": "image",
+            "src": "./dialog.png",
+            "coords": [0, 0, 1050, 581]
+        },
+        {
+            "type": "image",
+            "id": "avatar",
+            "key": "to",
+            "coords": [0, 581, 1050, "100cw / 1050px / 100ch"],
+            "filter": [{
+                "type": "gray"
+            }]
+        }
+    ],
+    "canvas": {
+        "width": 1050,
+        "height": "581px + avatar_height",
+        "color": "#ffffff"
+    }
+}

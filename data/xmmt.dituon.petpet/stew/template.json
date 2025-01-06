@@ -1,0 +1,33 @@
+{
+	"type":"image",
+    "metadata": {
+        "alias": ["炖", "出气"]
+    },
+    "elements": [
+        {
+            "type": "image",
+            "id": "avatar",
+            "key": "to",
+            "coords": [9, -2, 181, 154]
+        },{
+            "type": "image",
+            "src": "./main.png",
+            "coords": [0, 0, 198, 164]
+        },
+        {
+            "type": "text",
+            "id": "msg",
+            "text": "生活不易,炖${1:-群友}出气",
+            "coords": [4, 164, 190],
+            "wrap": "zoom",
+            "color": "#191919",
+            "max_size": 36,
+            "min_size": 16
+        }
+    ],
+    "canvas": {
+        "width": 198,
+        "height": "164px + msg_height",
+        "color": "#ffffff"
+    }
+}

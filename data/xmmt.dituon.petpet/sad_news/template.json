@@ -1,0 +1,29 @@
+{
+    "type": "image",
+    "metadata": {
+        "alias": ["悲报"],
+        "tags": ["text-only"],
+        "inRandomList": false
+    },
+    "elements": [
+        {
+            "type": "background",
+            "src": "./0.png"
+        },
+        {
+            "type": "text",
+            "text": "${1:-坏消息! 坏消息!}",
+            "color": "#5a5a5a",
+            "coords": [650,487,900],
+            "min_size": 42,
+            "max_size": 108,
+            "font": "MiSans",
+            "style": "bold",
+            "wrap": "zoom",
+            "align": "center",
+            "baseline": "center",
+            "stroke_color": "#dddddd",
+            "stroke_size": 8
+        }
+    ]
+}

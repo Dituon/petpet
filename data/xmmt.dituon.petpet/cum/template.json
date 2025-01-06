@@ -1,0 +1,27 @@
+{
+    "type": "gif",
+    "metadata": {
+        "alias": ["射", "打胶"],
+        "tags": ["nsfw"],
+        "preview": "./12.png",
+        "inRandomList": false
+    },
+    "elements": [
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [0, 0, "100vw", "100vh"]
+        },
+        {
+            "type": "image",
+            "src": "./",
+            "coords": [0, 0, "100vw", "100vh"],
+            "fit": "cover"
+        }
+    ],
+    "canvas": {
+        "width": "min(200/to_width, 200/to_height) * to_width",
+        "height": "min(200/to_width, 200/to_height) * to_height"
+    },
+    "delay": 100
+}
