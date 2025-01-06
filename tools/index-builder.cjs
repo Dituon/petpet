@@ -2,9 +2,9 @@ const fs = require('fs')
 const path = require('path')
 
 const config = {
-  path: "./templates",
+  path: "./data/xmmt.dituon.petpet",
   outputBase: "./",
-  fontsPath: './templates/fonts',
+  fontsPath: './data/xmmt.dituon.petpet/fonts',
   targetVersion: 6.2
 }
 
