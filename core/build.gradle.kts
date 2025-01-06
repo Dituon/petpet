@@ -1,5 +1,15 @@
 plugins {
     id("java")
+    `maven-publish`
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "petpet-core"
+            from(components["java"])
+        }
+    }
 }
 
 dependencies {

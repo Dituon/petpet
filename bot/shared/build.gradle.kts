@@ -1,5 +1,15 @@
 plugins {
     id("java")
+    `maven-publish`
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "petpet-bot-shared"
+            from(components["java"])
+        }
+    }
 }
 
 dependencies {
