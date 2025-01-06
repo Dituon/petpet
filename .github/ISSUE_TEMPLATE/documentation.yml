@@ -1,0 +1,10 @@
+name: 文档问题
+description: 文档信息缺失或描述模糊，需要进一步说明。
+labels:
+  - documentation
+body:
+  - type: textarea
+    attributes:
+      label: 描述
+    validations:
+      required: true

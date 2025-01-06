@@ -1,0 +1,22 @@
+name: 特性请求
+description: 请求添加新功能
+title: '[FR]: '
+labels:
+  - feature
+body:
+  - type: dropdown
+    attributes:
+      label: 模块
+      description: 新特性的类型
+      multiple: true
+      options:
+        - Template - 模板标准相关
+        - Script - 脚本标准相关
+        - Core - 程序相关
+        - Httpserver - HTTP 服务器相关
+        - Bot - 机器人相关
+  - type: textarea
+    attributes:
+      label: 描述
+    validations:
+      required: true

@@ -1,0 +1,74 @@
+name: Bug 反馈
+description: 提交一个 Bug
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        欢迎提交 Bug 反馈：
+
+        - 您只需填写与问题相关的信息，无需逐项填写所有内容。
+        - 在反馈渲染问题前，请先确认模板本身是否存在错误。
+  - type: dropdown
+    attributes:
+      label: 模块
+      description: >-
+        请选择遇到 Bug 的模块，例如: **Mirai 插件冷却时间无效** 应为 **Mirai Plugin** 模块；**脚本函数调用出错**
+        应为 **Script** 模块；**模板渲染结果与文档不一致** 应为 **Core** 模块。
+      options:
+        - Core - 渲染 / 模板加载问题
+        - Script - 脚本执行问题
+        - Httpserver - HTTP 服务器
+        - Onebot Client - Onebot 客户端
+        - Mirai Plugin - Mirai 插件
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 版本号
+      description: 输入遇到问题的版本号，旧版本为 **0.x.x**，例如 **0.6.2**
+      placeholder: 1.0.0-beta1
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: 复现
+      description: 请在下方描述中补充复现流程；如果不知道如何复现，请尽可能描述问题发生时的场景。
+      options:
+        - label: 这个 Bug 是可以被复现的
+          required: false
+  - type: checkboxes
+    attributes:
+      label: 兼容性问题
+      description: 从旧版本升级到新版本出现了这个 Bug
+      options:
+        - label: 这是一个兼容性问题
+          required: false
+  - type: textarea
+    attributes:
+      label: 描述
+      description: 简单描述遇到的 Bug 与场景，**欢迎贴图与上传文件**。
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 运行环境
+      description: 例如 **Java 版本**，系统或容器版本，机器人协议端版本。
+  - type: textarea
+    attributes:
+      label: 运行日志
+      description: 适用于无法加载 模板 / 脚本、连接服务器出错、绘制模板失败 或其它报错情况 （**请勿截图或拍摄屏幕**）
+      placeholder: '2025-01-01 00:00:00 INFO/Petpet: ......'
+      render: text
+  - type: textarea
+    attributes:
+      label: 出错资源
+      description: >-
+        如果加载执行模板或脚本时发生错误，请提供出错的模板或脚本；如果是 HTTP
+        请求引发的错误，请附上请求的具体内容；如果错误发生在机器人环境中，请提供可能相关的配置文件。或在 **Bug 描述**中上传文件。
+      placeholder: '{
+  "type": "image",
+  ......
+}'
+      render: text

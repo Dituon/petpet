@@ -1,0 +1,29 @@
+{
+  "type": "image",
+  "metadata": {
+    "alias": ["a1", "a2"],
+    "tags": ["tag1", "tag2"]
+  },
+  "elements": [
+    {
+      "type": "image",
+      "key": "to",
+      "coords": [106,72,305,235],
+      "fit": "cover"
+    },
+    {
+      "type": "text",
+      "key": "text",
+      "text": "阿尼亚喜欢$txt1[这个]",
+      "coords": [237,460,460],
+      "color": "#ffffff",
+      "wrap": "zoom",
+      "size": 40,
+      "align": "center"
+    },
+    {
+      "type": "background",
+      "src": "../old-template/0.png"
+    }
+  ]
+}
