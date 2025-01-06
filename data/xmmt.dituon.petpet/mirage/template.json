@@ -1,0 +1,24 @@
+{
+    "type": "image",
+    "metadata": {
+        "alias": ["幻影坦克", "幻影"],
+        "apiVersion": 100,
+        "inRandomList": false
+    },
+    "elements": [
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [0, 0, "100cw", "100ch"],
+            "filter": [{
+                "type": "mirage",
+                "key": "from"
+            }]
+        }
+    ],
+    "canvas": {
+        "width": "to_width",
+        "height": "to_height",
+        "color": "#00000000"
+    }
+}
