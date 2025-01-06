@@ -82,7 +82,7 @@
 
 ## 相关链接
 
-- [petpet-JS](https://github.com/Dituon/petpet-js) - Petpet 前端实现，支持旧版模板。
+- [petpet-js](https://github.com/Dituon/petpet-js) - Petpet 前端实现，支持旧版模板。
 - [petpet-rs](https://github.com/Dituon/petpet-rs) - 使用 Rust Skia 后端实现，支持旧版模板。
 - [QQ 交流群](https://qm.qq.com/q/ikRbuuGWRi) - 群号 `961494251`
 

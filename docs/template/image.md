@@ -95,7 +95,7 @@ templates/
 ]
 ```
 
-#[xywh-coords](../images/xywh-coords.png)
+![xywh-coords](../images/xywh-coords.png)
 
 - **Deform**: `[[x1, y1], [x2, y2], [x3, y3], [x4, y4], [anchor_x, anchor_y]]`
 
@@ -109,7 +109,7 @@ templates/
 ]
 ```
 
-#[deform-coords](../images/deform-coords.png)
+![deform-coords](../images/deform-coords.png)
 
 > 坐标数组元素为 [Length](./length.md) 类型。
 
@@ -117,7 +117,7 @@ templates/
 
 - `[x1, y1, x2, y2]`
 
-#[crop](../images/crop.png)
+![crop](../images/crop.png)
 
 简写形式:
 
@@ -128,8 +128,8 @@ templates/
 
 ## Fit
 
-#[fit](../images/fit.png)
-#[position](../images/position.png)
+![fit](../images/fit.png)
+![position](../images/position.png)
 
 ## Rotate Transition
 
@@ -175,7 +175,7 @@ P0 为 (0, 0)，表示初始进度和初始状态。P3 为 (1, 1)，表示最终
 
 ## Origin
 
-#[origin](../images/origin.png)
+![origin](../images/origin.png)
 
 ## BorderRadius
 

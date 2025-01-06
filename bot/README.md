@@ -36,13 +36,13 @@
 
 程序的数据完全兼容旧版本, 但可下载改进旧版模板效果的补丁文件:
 
-**应用模板补丁** (可选)
+- **应用模板补丁** (可选)
 
 1. 下载 [`data-pached.zip`](https://github.com/Dituon/petpet-templates/releases/tag/1.0.0-beta1) 或 [`data-pached.tar.gz`](https://github.com/Dituon/petpet-templates/releases/tag/1.0.0-beta1)
 2. 解压并覆盖至旧版数据目录 `./data/`
 3. 重启程序以重载模板
 
-**从 `overflow` 迁移至 Onebot**
+- **从 `overflow` 迁移至 Onebot**
 
 > 建议在使用 `overflow` 适配到 Mirai 框架的用户部署 [Onebot 版本](#onebot)
 
@@ -50,12 +50,12 @@
 2. 启动 `petpet-onebot.jar` (`java -jar petpet-onebot.jar`)
 3. 编辑配置项, 重启以加载新配置
 
-**更新 Mirai 插件**
+- **更新 Mirai 插件**
 
 1. 下载 [最新版本 `petpet.mirai2.jar`](https://github.com/Dituon/petpet/releases) 并将插件放入 `Mirai/plugins/` 目录
 2. 删除旧版插件
 
-**更新 Onebot 客户端**
+- **更新 Onebot 客户端**
 
 1. 下载 [最新版本 `petpet-onebot.jar`](https://github.com/Dituon/petpet/releases)
 2. 替换旧版程序

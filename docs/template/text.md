@@ -102,7 +102,7 @@
 - `middle`: 中心对齐
 - `bottom`: 下对齐
 
-#[align and baseline](../images/align-baseline.png)
+![align and baseline](../images/align-baseline.png)
 
 ## Text Wrap
 
@@ -114,7 +114,7 @@
 
 > 当 `wrap` 为 `zoom` 时, `size` 属性为字体最小尺寸; 建议使用 `min_size` 与 `max_size` 定义尺寸。
 
-#[wrap](../images/wrap.png)
+![wrap](../images/wrap.png)
 
 ## Text Style
 
