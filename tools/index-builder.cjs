@@ -4,90 +4,48 @@ const path = require('path')
 const config = {
   path: "./templates",
   outputBase: "./",
-  targetVersion: 6.2,
-  buildIndexMap: true,
+  fontsPath: './templates/fonts',
+  targetVersion: 6.2
 }
 
-const fontsPathName = 'fonts'
 const rootDir = process.cwd()
 
-function listDirectoriesSync(dir) {
-  const dirents = fs.readdirSync(dir, { withFileTypes: true })
-  return dirents
-    .filter((dirent) => dirent.isDirectory() && dirent.name !== fontsPathName)
-    .map((dirent) => dirent.name)
-}
+const dataPath = path.join(rootDir, config.path)
+const fontsPath = path.join(rootDir, config.fontsPath)
+const outputPath = path.join(rootDir, config.outputBase)
 
-function listFilesSync(dir) {
-  const dirents = fs.readdirSync(dir, { withFileTypes: true })
-  return dirents
-    .filter((dirent) => dirent.isFile() && dirent.name.endsWith('.png'))
-    .map((dirent) => dirent.name)
-}
+const lengthMap = {}
+const aliasMap = {}
+const typeMap = {}
 
-function readJsonFileSync(filePath) {
-  try {
-    const content = fs.readFileSync(filePath, 'utf8')
-    return JSON.parse(content)
-  } catch (err) {
-    return {}
-  }
-}
-
-function buildDataIndexSync(dataPath) {
-  const dataSubDirs = listDirectoriesSync(path.join(rootDir, dataPath))
-  const dataTemplateNames = dataSubDirs
-
-  let fontsNames = []
-  const fontsDirPath = path.join(rootDir, dataPath, fontsPathName)
-  try {
-    fs.accessSync(fontsDirPath)
-    fontsNames = fs.readdirSync(fontsDirPath)
-  } catch (e) { }
-
-  const jsonData = {
-    version: config.targetVersion,
-    dataPath,
-    dataList: dataTemplateNames,
-    fontList: fontsNames,
-  }
-
-  fs.writeFileSync(path.join(rootDir, config.outputBase, 'index.json'), JSON.stringify(jsonData, null, 4))
-
-  if (!config.buildIndexMap) return
-
-  const lengthIndex = {}
-  const aliasIndex = {}
-  const typeIndex = {}
-
-  for (const dir of dataSubDirs) {
-    if (dir !== fontsPathName) {
-      const dataJsonFile = path.join(rootDir, dataPath, dir, 'data.json')
-      if (!fs.existsSync(dataJsonFile)) {
-        continue
-      }
-
-      const dirPath = path.join(rootDir, dataPath, dir)
-      const files = listFilesSync(dirPath)
-      lengthIndex[dir] = files.length
-
-      const dataJson = readJsonFileSync(dataJsonFile)
-      aliasIndex[dir] = dataJson.alias || []
-      typeIndex[dir] = dataJson.type || 'Unknown'
+const oldTemplatesList = fs.readdirSync(dataPath)
+  .filter(template => {
+    const templatePath = path.join(dataPath, template)
+    const filePath = path.join(templatePath, 'data.json')
+    if (!fs.existsSync(filePath)) {
+      return false
     }
-  }
-
-  const indexMapJsonData = JSON.stringify({
-    length: lengthIndex,
-    alias: aliasIndex,
-    type: typeIndex,
+    lengthMap[template] = fs.readdirSync(templatePath)
+      .filter(file => file.match(/\d\.png/))
+      .length
+    const templateData = require(filePath)
+    aliasMap[template] = templateData.alias ?? []
+    typeMap[template] = templateData.type ?? "Unknown"
+    return true
   })
 
-  fs.writeFileSync(path.join(rootDir, config.outputBase, 'index.map.json'), indexMapJsonData)
-}
+const fontList = fs.readdirSync(fontsPath)
+  .filter(font => font.match(/.+\.(woff|eot|woff2|ttf|svg)/))
 
-try {
-  buildDataIndexSync(config.path)
-} catch (err) {
-  console.error('An error occurred:', err)
-}
+fs.writeFileSync(path.join(outputPath, 'index.json'), JSON.stringify({
+  version: config.targetVersion,
+  dataPath: config.path,  
+  dataList: oldTemplatesList,
+  fontList: fontList
+}, null, 2))
+
+fs.writeFileSync(path.join(outputPath, 'index.map.json'), JSON.stringify({
+  length: lengthMap,
+  alias: aliasMap,
+  type: typeMap
+}))
