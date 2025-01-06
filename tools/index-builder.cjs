@@ -62,11 +62,15 @@ function buildDataIndexSync(dataPath) {
 
   for (const dir of dataSubDirs) {
     if (dir !== fontsPathName) {
+      const dataJsonFile = path.join(rootDir, dataPath, dir, 'data.json')
+      if (!fs.existsSync(dataJsonFile)) {
+        continue
+      }
+
       const dirPath = path.join(rootDir, dataPath, dir)
       const files = listFilesSync(dirPath)
       lengthIndex[dir] = files.length
 
-      const dataJsonFile = path.join(rootDir, dataPath, dir, 'data.json')
       const dataJson = readJsonFileSync(dataJsonFile)
       aliasIndex[dir] = dataJson.alias || []
       typeIndex[dir] = dataJson.type || 'Unknown'
