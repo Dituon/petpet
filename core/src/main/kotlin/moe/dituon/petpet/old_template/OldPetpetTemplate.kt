@@ -40,7 +40,7 @@ data class OldPetpetTemplate(
         for (avatarData in avatar) {
             if (!avatarData.avatarOnTop) elements.add(avatarData.toTemplate(avatarIndex++))
         }
-        if (basePath.list()?.any { it == "0.png" } != false) {
+        if (basePath.list()?.any { it.matches(bgRegex) } != false) {
             elements.add(BackgroundTemplate())
         }
         for (avatarData in avatar) {
@@ -78,6 +78,8 @@ data class OldPetpetTemplate(
     }
 
     companion object {
+        val bgRegex = Regex("\\d+.png$")
+
         @JvmStatic
         fun fromJson(str: String): OldPetpetTemplate {
             return GlobalJson.decodeFromString(str)

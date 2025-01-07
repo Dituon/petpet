@@ -1,5 +1,6 @@
 package moe.dituon.petpet.core.imgres;
 
+import lombok.extern.slf4j.Slf4j;
 import moe.dituon.petpet.core.GlobalContext;
 import moe.dituon.petpet.core.utils.image.ImageDecoder;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 public abstract class LocalImageResource extends ImageResource {
     protected WeakReference<ImageFrameList> framesRef = null;
 
@@ -110,33 +112,53 @@ public abstract class LocalImageResource extends ImageResource {
             backgroundFiles.set(index, file);
         }
 
-        fillNullsWithPrevious(backgroundFiles);
-
-        return backgroundFiles;
+        return fillNullsWithPrevious(backgroundFiles, basePath);
     }
 
-    protected static <T> void fillNullsWithPrevious(List<T> list) {
-        if (list == null || list.isEmpty()) return;
-        if (list.get(0) == null) {
-            list.clear();
+    /**
+     * Removes leading and trailing nulls, and fills any in-between nulls with the previous non-null element.
+     */
+    protected static <T> List<T> fillNullsWithPrevious(List<T> list, File basePath) {
+        if (list == null || list.isEmpty()) return Collections.emptyList();
+
+        // Skip leading nulls
+        int startIndex = 0;
+        while (startIndex < list.size() && list.get(startIndex) == null) {
+            startIndex++;
         }
 
-        while (true) {
-            var lastIndex = list.size() - 1;
-            if (lastIndex < 0) return;
-            if (list.get(lastIndex) == null) {
-                list.remove(lastIndex);
-            } else {
-                break;
-            }
+        if (startIndex == list.size()) return Collections.emptyList();
+
+        // Skip trailing nulls
+        int endIndex = list.size() - 1;
+        while (endIndex >= 0 && list.get(endIndex) == null) {
+            endIndex--;
         }
+
+        List<Integer> warnIndex = new ArrayList<>();
+        for (int i = 0; i < startIndex; i++) {
+            warnIndex.add(i);
+        }
+
+        // Fill in-between nulls using last non-null element
         T lastNonNull = null;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != null) {
-                lastNonNull = list.get(i);
-            } else if (lastNonNull != null) {
-                list.set(i, lastNonNull);
+        for (int i = startIndex; i <= endIndex; i++) {
+            T current = list.get(i);
+            if (current != null) {
+                lastNonNull = current;
+            } else {
+                if (lastNonNull != null) {
+                    list.set(i, lastNonNull);
+                }
+                warnIndex.add(i);
             }
         }
+
+        if (!warnIndex.isEmpty()) {
+            log.warn("兼容性问题: 模板目录的图像序列索引以 0 开始且必须连续; 已自动跳过开头并填充空缺元素 {}: {}",
+                    warnIndex, basePath);
+        }
+
+        return list.subList(startIndex, endIndex + 1);
     }
 }
