@@ -17,5 +17,7 @@ public interface PetpetModel {
     Metadata getMetadata();
 
     @Nullable
-    File getPreviewImage();
+    default File getPreviewImage() {
+        return null;
+    }
 }

@@ -1,23 +1,27 @@
 package moe.dituon.petpet.core.element.text;
 
+import lombok.Getter;
 import moe.dituon.petpet.core.context.CanvasContext;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.element.ElementFrame;
+import moe.dituon.petpet.core.utils.text.TextStringTemplate;
 import moe.dituon.petpet.template.element.TextTemplate;
-import org.apache.commons.text.StringSubstitutor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-// https://github.com/fizyr/subst
 public class TextDynamicModel extends TextModel {
-    public static final String PREFIX = StringSubstitutor.DEFAULT_VAR_START;
+    public static final String PREFIX = "$";
     public final boolean isDynamic;
+    @Getter
+    public final Set<String> dependentIds = new HashSet<>(8);
 
     /**
-     * String | GraphicsParagraph
+     * TextStringTemplate | GraphicsParagraph
      *
-     * @see String
+     * @see TextStringTemplate
      * @see GraphicsParagraph
      */
     protected final List<Object> stringTemplateList; // Dynamic string templates
@@ -30,7 +34,9 @@ public class TextDynamicModel extends TextModel {
         boolean dynamicFlag = false;
         for (String s : template.getText()) {
             if (s.contains(PREFIX)) {
-                stringTemplateList.add(s);
+                var stringTemplate = TextStringTemplate.parse(s);
+                dependentIds.addAll(stringTemplate.getVariables());
+                stringTemplateList.add(stringTemplate);
                 dynamicFlag = true;
             } else {
                 stringTemplateList.add(
@@ -65,12 +71,10 @@ public class TextDynamicModel extends TextModel {
             super(canvasContext, requestContext);
             this.paragraphList = new ArrayList<>(template.getMaxLength());
 
-            var substitutor = new StringSubstitutor(requestContext.textDataMap);
-            substitutor.setEnableSubstitutionInVariables(true);
             for (int i = 0; i < template.getMaxLength(); i++) {
                 var stringTemplate = ElementFrame.getNElement(TextDynamicModel.this.stringTemplateList, i);
-                if (stringTemplate instanceof String) {
-                    var text = substitutor.replace(stringTemplate);
+                if (stringTemplate instanceof TextStringTemplate) {
+                    var text = ((TextStringTemplate) stringTemplate).expand(requestContext.textDataMap);
                     if (text.isEmpty()) continue;
                     var paragraph = createParagraph(
                             new GraphicsAttributedString(text, template, i)

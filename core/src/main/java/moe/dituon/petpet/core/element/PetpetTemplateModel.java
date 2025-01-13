@@ -24,7 +24,7 @@ public class PetpetTemplateModel implements PetpetModel {
     protected final Map<ElementModel, String> elementIdMap;
     protected final CanvasModel canvasModel;
     protected final Set<String> dependentRequestImageIds;
-    protected File previewImage;
+    protected File previewImage = null;
 
     public PetpetTemplateModel(PetpetTemplate template) {
         this.template = template;
@@ -83,13 +83,22 @@ public class PetpetTemplateModel implements PetpetModel {
 
     @Override
     public @Nullable File getPreviewImage() {
+        if (previewImage != null) return previewImage;
         var previewPath = template.getMetadata().getPreview();
         if (previewPath != null) {
-            return template.getBasePath().toPath().resolve(previewPath).toFile();
+            previewImage = template.getBasePath().toPath().resolve(previewPath).toFile();
         }
         if (canvasModel.getBackgroundModel() != null) {
-            return canvasModel.getBackgroundModel().getPreviewImage();
+            previewImage = canvasModel.getBackgroundModel().getPreviewImage();
         }
-        return null;
+        return previewImage;
+    }
+
+    public Set<String> getRequestImageKeys() {
+        return dependentRequestImageIds;
+    }
+
+    public Set<String> getRequestTextKeys() {
+        return canvasModel.getDependentIds();
     }
 }

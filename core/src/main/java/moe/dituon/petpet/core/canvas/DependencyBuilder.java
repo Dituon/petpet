@@ -108,6 +108,7 @@ public class DependencyBuilder {
 
         protected void populateAdjacencyAndInDegree() {
             for (ElementModel element : elementList) {
+                if (element instanceof TextModel) continue;
                 var id = idMap.get(element);
                 putNode(id, element.getDependentIds());
                 if (element.isDependsOnCanvasSize()) {
@@ -195,9 +196,11 @@ public class DependencyBuilder {
         @Getter
         private class UndefinedDependable implements Dependable {
             private final String id;
+
             public UndefinedDependable(String id) {
                 this.id = id;
             }
+
             @Override
             public boolean isAbsolute() {
                 return true;

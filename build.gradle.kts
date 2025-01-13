@@ -84,8 +84,6 @@ allprojects {
     dependencies {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
-        implementation("org.apache.commons:commons-text:1.10.0")
-
         compileOnly("org.projectlombok:lombok:1.18.34")
         annotationProcessor("org.projectlombok:lombok:1.18.34")
         testCompileOnly("org.projectlombok:lombok:1.18.34")
