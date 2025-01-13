@@ -1,6 +1,7 @@
 package moe.dituon.petpet.template.fields.length
 
 import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
@@ -44,6 +45,16 @@ object TextXYWCoordsSerializer : KSerializer<TextXYWCoords> {
         TextXYWCoords(TextCoordsSerializer.deserialize(decoder))
 }
 
+val emptyCoords = AvatarEmptyCoords()
+object EmptyCoordsSerializer : KSerializer<AvatarEmptyCoords> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("AvatarEmptyCoords", PrimitiveKind.STRING)
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun serialize(encoder: Encoder, value: AvatarEmptyCoords) = encoder.encodeNull()
+
+    override fun deserialize(decoder: Decoder) = emptyCoords
+}
+
 val XYWHCoordsSerializer: KSerializer<List<Length>> = ListSerializer(LengthSerializer)
 val P4ACoordsSerializer: KSerializer<List<List<Length>>> = ListSerializer(ListSerializer(LengthSerializer))
 val TextCoordsSerializer: KSerializer<List<Length>> = ListSerializer(LengthSerializer)
@@ -52,9 +63,13 @@ object AvatarCoordsElementSerializer : JsonContentPolymorphicSerializer<AvatarCo
     AvatarCoords::class
 ) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<AvatarCoords> =
-        when (element.jsonArray.size) {
-            4 -> AvatarXYWHCoordsSerializer
-            5 -> AvatarP4ACoordsSerializer
+        when (element) {
+            is JsonNull -> EmptyCoordsSerializer
+            is JsonArray -> when (element.jsonArray.size) {
+                4 -> AvatarXYWHCoordsSerializer
+                5 -> AvatarP4ACoordsSerializer
+                else -> throw Exception(element.jsonArray.size.toString())
+            }
             else -> throw Exception()
         }
 }
@@ -68,7 +83,7 @@ object AvatarCoordsListSerializer :
     override fun transformDeserialize(element: JsonElement): JsonElement {
         val array = element.jsonArray
         if (array.isEmpty()) throw IllegalArgumentException("Coords list can not be empty")
-        val firstEle = array[0]
+        val firstEle = array.firstOrNull { it !is JsonNull } ?: throw IllegalArgumentException("Coords list can not be empty")
         if (firstEle is JsonPrimitive || firstEle.jsonArray.size == 2) return JsonArray(listOf(element))
         return element
     }
