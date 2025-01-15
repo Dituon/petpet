@@ -1,6 +1,7 @@
 package moe.dituon.petpet.bot.qq.mirai;
 
 import moe.dituon.petpet.service.BaseService;
+import moe.dituon.petpet.service.EnvironmentChecker;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
@@ -44,6 +45,7 @@ public final class MiraiPetpet extends JavaPlugin {
 //            }
 //        }).start();
 
+        EnvironmentChecker.check();
         log.info("\u001B[95m\n\n" +
                 "    ██████╗ ███████╗████████╗██████╗ ███████╗████████╗\n" +
                 "    ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝\n" +

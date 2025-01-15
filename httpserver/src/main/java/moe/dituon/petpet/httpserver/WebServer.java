@@ -8,6 +8,7 @@ import moe.dituon.petpet.core.imgres.BufferedImageResource;
 import moe.dituon.petpet.core.imgres.ImageResourceMap;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.service.BaseService;
+import moe.dituon.petpet.service.EnvironmentChecker;
 
 import java.awt.*;
 import java.io.File;
@@ -30,8 +31,8 @@ public class WebServer {
         }
         var defaultFont = service.setDefaultFontFamily(service.config.getDefaultFontFamily());
         service.updateScriptService();
+        EnvironmentChecker.check();
 
-        log.info("正在启动 Petpet Http Server...");
         log.info("\u001B[95m\n\n" +
                 "    ██████╗ ███████╗████████╗██████╗ ███████╗████████╗\n" +
                 "    ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝\n" +

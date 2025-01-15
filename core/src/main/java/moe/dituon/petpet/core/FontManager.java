@@ -40,26 +40,28 @@ public class FontManager {
     public static final SupportedLanguage LANG_VI = new SupportedLanguage("vi", "Vietnamese", new char[]{0x0102});
 //    public static final SupportedLanguage LANG_EMOJI = new SupportedLanguage("emoji", "Emoji", Character.toChars(0x1F600));
 
-    final GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    protected final GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
     public final SupportedLanguage[] supportedLanguages = new SupportedLanguage[]{
             LANG_EN, LANG_ZH, LANG_JA, LANG_KO, LANG_TH, LANG_RU, LANG_AR, LANG_HE, LANG_VI
 //            , LANG_EMOJI
     };
-    final Map<Font, Set<SupportedLanguage>> fontSupportedLanguageMap = new HashMap<>(256);
-    final Map<SupportedLanguage, Set<Font>> supportedLanguageFontMap = new HashMap<>(16);
+
+    @Getter
+    protected final Map<Font, Set<SupportedLanguage>> fontSupportedLanguageMap = new HashMap<>(256);
+    @Getter
+    protected final Map<SupportedLanguage, Set<Font>> supportedLanguageFontMap;
     @Getter
     protected String defaultFontFamily = DEFAULT_FONT;
 
     protected FontManager() {
+        supportedLanguageFontMap = new HashMap<>(supportedLanguages.length);
+        for (SupportedLanguage language : supportedLanguages) {
+            supportedLanguageFontMap.put(language, new HashSet<>(16));
+        }
+
         for (Font font : environment.getAllFonts()) {
             addFont(font);
         }
-
-        supportedLanguageFontMap.forEach((k, v) -> {
-            if (v.isEmpty()) {
-                log.warn("Can not find font that support {} ({})", k.name, k.desc);
-            }
-        });
 
         setDefaultFontFamily(null);
     }
@@ -108,7 +110,7 @@ public class FontManager {
             }
             if (allSupported) {
                 langSet.add(language);
-                supportedLanguageFontMap.computeIfAbsent(language, l -> new HashSet<>(8)).add(font);
+                supportedLanguageFontMap.get(language).add(font);
             }
         }
     }
