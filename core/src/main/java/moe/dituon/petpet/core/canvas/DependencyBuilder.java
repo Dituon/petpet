@@ -108,7 +108,6 @@ public class DependencyBuilder {
 
         protected void populateAdjacencyAndInDegree() {
             for (ElementModel element : elementList) {
-                if (element instanceof TextModel) continue;
                 var id = idMap.get(element);
                 putNode(id, element.getDependentIds());
                 if (element.isDependsOnCanvasSize()) {
