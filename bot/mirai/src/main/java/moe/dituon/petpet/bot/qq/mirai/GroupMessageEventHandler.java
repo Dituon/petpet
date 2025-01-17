@@ -180,7 +180,7 @@ public class GroupMessageEventHandler extends MiraiMessageEventHandler {
             textMap.put("raw", rawParams);
             for (int i = 0; i < params.length; i++) {
                 // text variable e.g. text${1}
-                textMap.put(String.valueOf(i + 1), params[i]);
+                textMap.put(String.valueOf(i), params[i]);
             }
 
             boolean ignoreAt = false;

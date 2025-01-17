@@ -16,7 +16,7 @@ public class TextDynamicModel extends TextModel {
     public static final String PREFIX = "$";
     public final boolean isDynamic;
     @Getter
-    public final Set<String> dependentIds = new HashSet<>(8);
+    public final Set<String> requestKeys = new HashSet<>(8);
 
     /**
      * TextStringTemplate | GraphicsParagraph
@@ -35,7 +35,7 @@ public class TextDynamicModel extends TextModel {
         for (String s : template.getText()) {
             if (s.contains(PREFIX)) {
                 var stringTemplate = TextStringTemplate.parse(s);
-                dependentIds.addAll(stringTemplate.getVariables());
+                requestKeys.addAll(stringTemplate.getVariables());
                 stringTemplateList.add(stringTemplate);
                 dynamicFlag = true;
             } else {

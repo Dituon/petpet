@@ -217,7 +217,7 @@ open class GroupMessageEventHandler(private val service: OnebotBotService): Mess
             textMap["raw"] = rawParams
             for (i in params.indices) {
                 // text variable e.g. text${1}
-                textMap[(i + 1).toString()] = params[i]
+                textMap[(i).toString()] = params[i]
             }
 
             var ignoreAt = false

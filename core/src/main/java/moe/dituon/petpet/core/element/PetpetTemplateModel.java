@@ -24,6 +24,12 @@ public class PetpetTemplateModel implements PetpetModel {
     protected final Map<ElementModel, String> elementIdMap;
     protected final CanvasModel canvasModel;
     protected final Set<String> dependentRequestImageIds;
+    @Getter
+    protected final Set<String> requestImageKeys;
+    protected int requestImageListLength = -1;
+    @Getter
+    protected final Set<String> requestTextKeys;
+    protected int requestTextListLength = -1;
     protected File previewImage = null;
 
     public PetpetTemplateModel(PetpetTemplate template) {
@@ -34,6 +40,8 @@ public class PetpetTemplateModel implements PetpetModel {
         this.elementIdMap = dependencyBuilder.getElementIdMap();
         this.canvasModel = dependencyBuilder.getCanvasModel();
         this.dependentRequestImageIds = dependencyBuilder.getUndefinedIds();
+        this.requestImageKeys = dependencyBuilder.getDependentRequestImageKeys();
+        this.requestTextKeys = dependencyBuilder.getDependentRequestTextKeys();
     }
 
     @Override
@@ -76,6 +84,52 @@ public class PetpetTemplateModel implements PetpetModel {
         return result;
     }
 
+    /**
+     * 获取请求图像参数列表长度:
+     * 例:
+     * <pre>
+     * key: "0"             // length: 1
+     * key: ["0", "2"]      // length: 3
+     * key: "3"             // length: 4
+     * key: "to"            // length: 0
+     * </pre>
+     */
+    public int getRequestImageListLength() {
+        if (requestImageListLength == -1) {
+            requestImageListLength = getKeySetLength(requestImageKeys);
+        }
+        return requestImageListLength;
+    }
+
+    /**
+     * 获取请求文本参数列表长度:
+     * 例:
+     * <pre>
+     * Hello, ${0}!         // length: 1
+     * Hello, ${0} ${2}!    // length: 3
+     * Hello, ${3}!         // length: 4
+     * Hello, ${to} (${to_id})! // length: 0
+     * </pre>
+     */
+    public int getRequestTextListLength() {
+        if (requestTextListLength == -1) {
+            requestTextListLength = getKeySetLength(requestTextKeys);
+        }
+        return requestTextListLength;
+    }
+
+    protected static int getKeySetLength(Set<String> keySet) {
+        int maxIndex = -1;
+        for (String key : keySet) {
+            try {
+                int index = Integer.parseInt(key);
+                maxIndex = Math.max(maxIndex, index);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return maxIndex + 1;
+    }
+
     @Override
     public Metadata getMetadata() {
         return template.getMetadata();
@@ -92,13 +146,5 @@ public class PetpetTemplateModel implements PetpetModel {
             previewImage = canvasModel.getBackgroundModel().getPreviewImage();
         }
         return previewImage;
-    }
-
-    public Set<String> getRequestImageKeys() {
-        return dependentRequestImageIds;
-    }
-
-    public Set<String> getRequestTextKeys() {
-        return canvasModel.getDependentIds();
     }
 }

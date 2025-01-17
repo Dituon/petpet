@@ -30,8 +30,18 @@ data class OldTextTemplate @JvmOverloads constructor(
     fun toTemplate(index: Int): TextTemplate {
         var text = text
         TEXT_VAR_TOKENS.forEach { s -> text = text.replace("\$${s}", "\${$s:-$s}") }
+        // 将第一个参数替换为 raw key 代替旧版的贪婪匹配
+        var shouldReplaceRaw = greedy
         text = TEXT_VAR_REGEX.replace(text) {
-            "\${${it.groups[1]?.value}:-${it.groups[2]?.value}}"
+            var key = if (shouldReplaceRaw) {
+                shouldReplaceRaw = false
+                "raw"
+            } else {
+                it.groups[1]?.value!!
+            }
+            // 旧版的 $txt<n>[] 变量索引从 1 开始, 新版索引从 0 开始
+            key = (key.toIntOrNull()?.minus(1) ?: key).toString()
+            "\${${key}:${it.groups[2]?.value}}"
         }
         var x: Length =
             NumberLength(pos[0].toFloat(), LengthType.PX)
@@ -42,19 +52,16 @@ data class OldTextTemplate @JvmOverloads constructor(
             LengthType.PX
         ) else null
         when (position[0]) {
-            Position.LEFT -> {}
             Position.CENTER -> x = xCenterDynamicLength.plus(x)
             Position.RIGHT -> x = rightDynamicLength.plus(x)
             else -> {}
         }
         when (position[1]) {
-            Position.TOP -> {}
             Position.CENTER -> y = yCenterDynamicLength.plus(y)
             Position.BOTTOM -> {
                 y = bottomDynamicLength.plus(y)
                 baseline = TextBaseline.BOTTOM
             }
-
             else -> {}
         }
 

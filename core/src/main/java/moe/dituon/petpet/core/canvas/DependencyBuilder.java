@@ -5,6 +5,7 @@ import moe.dituon.petpet.core.element.Dependable;
 import moe.dituon.petpet.core.element.ElementModel;
 import moe.dituon.petpet.core.element.avatar.AvatarModel;
 import moe.dituon.petpet.core.element.background.BackgroundModel;
+import moe.dituon.petpet.core.element.text.TextDynamicModel;
 import moe.dituon.petpet.core.element.text.TextModel;
 import moe.dituon.petpet.template.PetpetTemplate;
 import moe.dituon.petpet.template.element.AvatarTemplate;
@@ -17,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class DependencyBuilder {
+    private static final String CANVAS_TEMP_ID = "canvas";
+
     @Getter
     protected final List<ElementModel> elementList;
     protected boolean backgroundImageIsCanvas = false;
@@ -25,14 +28,16 @@ public class DependencyBuilder {
     @Getter
     protected final CanvasModel canvasModel;
 
-    private static final String CANVAS_TEMP_ID = "canvas";
-
     @Getter
     protected final List<Dependable> buildOrder;
     @Getter
     protected final Map<ElementModel, String> elementIdMap;
     @Getter
     protected final Set<String> undefinedIds;
+    @Getter
+    protected Set<String> dependentRequestImageKeys = null;
+    @Getter
+    protected Set<String> dependentRequestTextKeys = null;
 
     public DependencyBuilder(@NotNull PetpetTemplate template) {
         this.elementList = new ArrayList<>(template.getElements().size());
@@ -110,6 +115,18 @@ public class DependencyBuilder {
             for (ElementModel element : elementList) {
                 var id = idMap.get(element);
                 putNode(id, element.getDependentIds());
+                if (element instanceof AvatarModel) {
+                    if (dependentRequestImageKeys == null) {
+                        dependentRequestImageKeys = new HashSet<>(8);
+                    }
+                    dependentRequestImageKeys.addAll(((AvatarModel) element).getRequestKeys());
+                }
+                if (element instanceof TextDynamicModel) {
+                    if (dependentRequestTextKeys == null) {
+                        dependentRequestTextKeys = new HashSet<>(8);
+                    }
+                    dependentRequestTextKeys.addAll(((TextDynamicModel) element).getRequestKeys());
+                }
                 if (element.isDependsOnCanvasSize()) {
                     adjList.computeIfAbsent(CANVAS_TEMP_ID, k -> new ArrayList<>()).add(id);
                     inDegree.put(id, inDegree.getOrDefault(id, 0) + 1);
@@ -123,6 +140,12 @@ public class DependencyBuilder {
 //                    }
 //                    // TODO: background model
 //                }
+            }
+            if (dependentRequestImageKeys == null) {
+                dependentRequestImageKeys = Collections.emptySet();
+            }
+            if (dependentRequestTextKeys == null) {
+                dependentRequestTextKeys = Collections.emptySet();
             }
 
             putNode(CANVAS_TEMP_ID, canvasModel.getDependentIds());
