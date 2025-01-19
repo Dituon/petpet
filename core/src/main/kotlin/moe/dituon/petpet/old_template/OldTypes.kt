@@ -43,7 +43,7 @@ enum class Position {
 }
 
 val TEXT_VAR_REGEX = "\\\$txt([1-9]\\d*)\\[(.*?)]".toRegex()
-val TEXT_VAR_TOKENS = listOf("form", "to", "group", "bot")
+val TEXT_VAR_TOKENS = listOf("from", "to", "group", "bot")
 
 
 enum class AvatarType {
