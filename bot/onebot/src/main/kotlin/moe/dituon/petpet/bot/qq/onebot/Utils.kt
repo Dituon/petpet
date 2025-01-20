@@ -23,6 +23,23 @@ suspend fun Bot.sendGroupForwardMsg(groupId: Long, msg: String): ActionData<MsgI
     return result.withToken()
 }
 
+suspend fun Bot.sendPrivateForwardMsg(userId: Long, msg: String): ActionData<MsgId> {
+    val action = ActionPathEnum.SEND_PRIVATE_FORWARD_MSG
+    val params = JsonObject()
+    params.addProperty("user_id", userId)
+    params.add("messages", JsonParser.parseString(msg))
+
+    val result = actionHandler.action(this, action, params)
+    return result.withToken()
+}
+
+suspend fun getMemberName(groupId: Long, userId: Long): String {
+    val data = globalBotInstance.getGroupMemberInfo(groupId, userId, false).data ?: return "Member"
+    return data.card.ifEmpty {
+        data.nickname
+    }
+}
+
 val banner = """${"\u001b[35m"}
 
     ██████╗ ███████╗████████╗██████╗ ███████╗████████╗

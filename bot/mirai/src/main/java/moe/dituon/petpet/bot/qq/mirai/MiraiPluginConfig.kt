@@ -11,7 +11,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("触发 petpet 的指令")
     val command: String by value("pet")
 
-    @ValueDescription("使用 戳一戳 的触发概率 (0 - 100)")
+    @ValueDescription("群聊中使用 戳一戳 的触发概率 (0 - 100)")
     val probability: Float by value(30f)
 
     @ValueDescription("禁用列表 (暂时无效)")
@@ -26,7 +26,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("是否响应群聊消息")
     val respondGroup: Boolean by value(true)
 
-    @ValueDescription("是否响应私聊消息")
+    @ValueDescription("是否响应私聊 (包括临时会话) 消息")
     val respondFriend: Boolean by value(true)
 
     @ValueDescription("默认回复类型, 详见文档")

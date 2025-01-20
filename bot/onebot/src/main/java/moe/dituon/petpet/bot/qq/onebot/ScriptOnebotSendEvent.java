@@ -71,7 +71,7 @@ public class ScriptOnebotSendEvent extends BotSendEvent {
     }
 
     /**
-     * 需要在调用段实现转发消息
+     * 需要在调用端实现转发消息
      */
     public @Nullable List<String> getResponseMessage() {
         if (messageGroupList.isEmpty()) {
@@ -79,6 +79,7 @@ public class ScriptOnebotSendEvent extends BotSendEvent {
         }
         if (!isResponseInForward && event instanceof GroupMessageEvent) {
             return messageGroupList.stream()
+                    .filter(msgs -> !msgs.isEmpty())
                     .map(msgs ->
                             "[{\"type\": \"reply\",\"data\": {\"id\": \""
                                     + ((GroupMessageEvent) event).getMessageId()
@@ -88,10 +89,12 @@ public class ScriptOnebotSendEvent extends BotSendEvent {
                     ).collect(Collectors.toList());
         }
         return messageGroupList.stream()
+                .filter(msgs -> !msgs.isEmpty())
                 .map(msgs -> '[' + String.join(",", msgs) + ']')
                 .collect(Collectors.toList());
     }
 
+    @Override
     public boolean isResponseInForward() {
         return isResponseInForward;
     }

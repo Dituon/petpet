@@ -5,6 +5,10 @@ import cn.evolvefield.onebot.client.core.Bot
 import cn.evolvefield.onebot.client.handler.EventBus
 import cn.evolvefield.onebot.client.listener.EventListener
 import cn.evolvefield.onebot.sdk.event.message.GroupMessageEvent
+import cn.evolvefield.onebot.sdk.event.message.PrivateMessageEvent
+import moe.dituon.petpet.bot.qq.onebot.handler.OnebotGroupMessageHandler
+import moe.dituon.petpet.bot.qq.onebot.handler.OnebotMessageHandler
+import moe.dituon.petpet.bot.qq.onebot.handler.OnebotSentMessageHandler
 import moe.dituon.petpet.service.EnvironmentChecker
 import net.mamoe.yamlkt.Yaml
 import org.slf4j.Logger
@@ -66,12 +70,32 @@ suspend fun main() {
             GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames.size
         } 字体; 默认字体为 ${defaultFont};"
     )
-    val handler = GroupMessageEventHandler(service)
     bot.getLoginInfo().data ?: throw IllegalStateException("获取机器人信息失败")
-    EventBus.addListener(object : EventListener<GroupMessageEvent> {
-        override suspend fun onMessage(e: GroupMessageEvent) {
-            log.info(e.rawMessage)
-            handler.handle(e)
+
+    val imageCacheHandler = OnebotSentMessageHandler(service)
+    if (config.respondGroup) {
+        val groupMessageHandler = OnebotGroupMessageHandler(service)
+        EventBus.addListener(object : EventListener<GroupMessageEvent> {
+            override suspend fun onMessage(e: GroupMessageEvent) = groupMessageHandler.handle(e)
+        })
+        if (config.imageCachePoolSize > 0) {
+            EventBus.addListener(object : EventListener<GroupMessageEvent> {
+                override suspend fun onMessage(e: GroupMessageEvent) = imageCacheHandler.handle(e)
+            })
         }
-    })
+    }
+
+    if (config.respondFriend) {
+        val privateMessageHandler = OnebotMessageHandler(service)
+        EventBus.addListener(object : EventListener<PrivateMessageEvent> {
+            override suspend fun onMessage(e: PrivateMessageEvent) = privateMessageHandler.handle(e)
+        })
+        if (config.imageCachePoolSize > 0) {
+            EventBus.addListener(object : EventListener<PrivateMessageEvent> {
+                override suspend fun onMessage(e: PrivateMessageEvent) = imageCacheHandler.handle(e)
+            })
+        }
+    }
+
+    log.info("Petpet Onebot 客户端启动完毕, 发送 ${config.command} 以触发默认模板...")
 }

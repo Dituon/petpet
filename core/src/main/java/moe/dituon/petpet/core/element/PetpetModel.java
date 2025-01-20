@@ -9,7 +9,7 @@ import java.io.File;
 
 public interface PetpetModel {
     default EncodedImage draw() {
-        return draw(RequestContext.EMPTY);
+        return draw(RequestContext.newImmutableEmpty());
     }
 
     EncodedImage draw(RequestContext requestContext);

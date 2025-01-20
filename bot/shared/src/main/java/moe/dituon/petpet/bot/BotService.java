@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public class BotService extends ObservableBaseService {
     public static final String BOT_LOAD_EVENT_KEY = "bot_load";
+    public static final String NO_TEMPLATE_MESSAGE = "暂未加载任何 Petpet 模板...";
 
     @Getter
     protected List<String> randomIdList = new ArrayList<>(256);
@@ -68,6 +69,9 @@ public class BotService extends ObservableBaseService {
 
     protected String buildIndexString() {
         StringBuilder sb = new StringBuilder();
+        if (staticModelMap.isEmpty()) {
+            return NO_TEMPLATE_MESSAGE;
+        }
         for (Map.Entry<String, PetpetModel> entry : staticModelMap.entrySet()) {
             var model = entry.getValue();
             if (model.getMetadata() == null || model.getMetadata().getHidden()) {

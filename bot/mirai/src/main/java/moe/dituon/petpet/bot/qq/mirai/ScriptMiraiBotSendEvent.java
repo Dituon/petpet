@@ -65,15 +65,20 @@ public class ScriptMiraiBotSendEvent extends BotSendEvent {
         getMessageBuilder().add(img);
     }
 
+    /**
+     * 当回复转发消息时, 数组仅包含一个转发消息元素; 当回复普通消息时, 数组可能包含多个元素
+     */
     public List<MessageChain> getResponseMessage() {
         if (isResponseInForward) {
             var fb = new ForwardMessageBuilder(event.getBot().getAsFriend(), messageBuilderList.size());
             for (MessageChainBuilder mb : messageBuilderList) {
+                if (mb.isEmpty()) continue;
                 fb.add(event.getBot(), mb.build());
             }
             return List.of(new MessageChainBuilder(1).append(fb.build()).build());
         }
         return messageBuilderList.stream()
+                .filter(builder -> !builder.isEmpty())
                 .map(MessageChainBuilder::build)
                 .collect(Collectors.toList());
     }

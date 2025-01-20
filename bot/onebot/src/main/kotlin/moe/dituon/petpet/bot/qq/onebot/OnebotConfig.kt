@@ -43,7 +43,7 @@ data class OnebotConfig(
     @Comment("触发 petpet 的指令")
     val command: String = "pet",
 
-    @Comment("使用 戳一戳 的触发概率 (0 - 1)")
+    @Comment("群聊中使用 戳一戳 的触发概率 (0 - 1)")
     val nudgeProbability: Float = 0.3f,
 
     @Comment("禁用列表")
@@ -55,7 +55,7 @@ data class OnebotConfig(
     @Comment("是否响应机器人发出的戳一戳")
     val respondSelfNudge: Boolean = false,
 
-    @Comment("是否响应私聊消息")
+    @Comment("是否响应私聊 (包括临时会话) 消息")
     val respondFriend: Boolean = true,
 
     @Comment("是否响应群聊消息")

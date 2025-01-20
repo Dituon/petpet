@@ -11,7 +11,7 @@ import moe.dituon.petpet.core.element.PetpetModel;
 import moe.dituon.petpet.core.element.PetpetTemplateModel;
 import moe.dituon.petpet.core.element.avatar.AvatarModel;
 import moe.dituon.petpet.script.PetpetScriptModel;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -22,20 +22,28 @@ import java.util.Map;
 /**
  * 针对于 QQ 群聊的抽象 Bot 服务
  */
-@Getter
 @Slf4j
 public class QQBotService extends BotService {
     public static final float DEFAULT_NUDGE_PROBABILITY = 0.3f;
 
+    @Getter
     protected final QQBotConfig config;
+    @Getter
     protected final Map<String, Integer> commandPermissionNameMap;
+    @Getter
     protected final float nudgeProbability;
+    @Getter
     protected final Map<Long, String> imageCachePool;
+    @Getter
     protected final int defaultGroupCommandPermission;
+    @Getter
     protected final int defaultGroupEditPermission;
-    protected final Map<Long, ContactPermission> groupPermissionMap = new HashMap<>(256);
+    @Getter
+    protected final Map<Object, ContactPermission> groupPermissionMap = new HashMap<>(256);
     @Setter
+    @Getter
     protected Path permissionConfigPath = Path.of("./permissions");
+    @Getter
     public final TimeParser timeParser;
     protected final Map<PetpetModel, Map<String, Integer>> templateExpectedSizeCache = new HashMap<>(256);
 
@@ -54,7 +62,7 @@ public class QQBotService extends BotService {
 
         this.commandPermissionNameMap = new HashMap<>(
                 ContactPermission.COMMAND_PERMISSION_NAME_MAP.size()
-                + config.getCommandPermissionName().size()
+                        + config.getCommandPermissionName().size()
         );
         initPermissionNameMap(config);
         this.defaultGroupCommandPermission = stringToCommandPermission(config.getDefaultGroupCommandPermission());
@@ -74,12 +82,12 @@ public class QQBotService extends BotService {
         return super.addTemplate(id, model);
     }
 
-    public ContactPermission getPermission(long id) {
+    public ContactPermission getPermission(Object id) {
         return groupPermissionMap.computeIfAbsent(id, k -> new ContactPermission(this, k));
     }
 
     @Override
-    public @Nullable PetpetModel getDefaultTemplate() {
+    public @NotNull PetpetModel getDefaultTemplate() {
         if (defaultTemplate == null) {
             defaultTemplate = new TemplateIndexScriptModel(this);
         }

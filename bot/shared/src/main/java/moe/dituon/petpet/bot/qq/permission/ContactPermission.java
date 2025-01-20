@@ -14,8 +14,6 @@ import java.util.Set;
 
 @Slf4j
 public class ContactPermission {
-//    public static final Pattern SPLIT_PATTERN = Pattern.compile("(\\s|\\||&)+");
-
     /**
      * 通过指令生成模板 (pet id)
      */
@@ -63,7 +61,12 @@ public class ContactPermission {
             "cooldown_time", EDIT_COOLDOWN_TIME
     );
 
-    public final long id;
+    public static final String ENABLE_MESSAGE = "已启用 %s";
+    public static final String DISABLE_MESSAGE = "已禁用 %s";
+    public static final String PROBABILITY_MESSAGE = "戳一戳触发概率更新为 %.2f%%";
+    public static final String COOLDOWN_MESSAGE = "冷却时间更新为 %s";
+
+    public final Object id;
     public final QQBotService service;
     @Setter
     protected int commandPermission = -1;
@@ -81,7 +84,7 @@ public class ContactPermission {
 
     protected final Path configPath;
 
-    public ContactPermission(QQBotService service, long id) {
+    public ContactPermission(QQBotService service, Object id) {
         this.id = id;
         this.service = service;
         this.configPath = getConfigFile(id);
@@ -89,7 +92,6 @@ public class ContactPermission {
     }
 
     protected void init() {
-        var configPath = getConfigFile(id);
         if (!Files.exists(configPath)) {
             return;
         }
@@ -214,8 +216,8 @@ public class ContactPermission {
         }
     }
 
-    protected Path getConfigFile(Long id) {
-        return service.getPermissionConfigPath().resolve(id + ".json");
+    protected Path getConfigFile(Object id) {
+        return service.getPermissionConfigPath().resolve(id.toString() + ".json");
     }
 
     public int turnOnCommandPermission(String permissions) {
@@ -280,19 +282,19 @@ public class ContactPermission {
             case "on":
             case "enable": {
                 int p = this.turnOnCommandPermission(parameter);
-                return String.format("已启用 %s", commandPermissionToString(p));
+                return String.format(ENABLE_MESSAGE, commandPermissionToString(p));
             }
             case "off":
             case "disable": {
                 int p = this.turnOffCommandPermission(parameter);
-                return String.format("已禁用 %s", commandPermissionToString(p));
+                return String.format(DISABLE_MESSAGE, commandPermissionToString(p));
             }
             case "nudge_probability":
                 float probability = this.setContactNudgeProbability(parameter);
-                return String.format("戳一戳触发概率更新为 %.2f%%", probability * 100);
+                return String.format(PROBABILITY_MESSAGE, probability * 100);
             case "cooldown_time":
                 this.setContactCooldownTime(parameter);
-                return String.format("冷却时间更新为 %s", parameter);
+                return String.format(COOLDOWN_MESSAGE, parameter);
 // TODO
 //            case "disable_template":
 //                this.setContactDisabledTemplateIds(parameter);

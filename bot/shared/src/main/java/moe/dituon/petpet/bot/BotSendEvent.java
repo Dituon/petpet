@@ -1,5 +1,7 @@
 package moe.dituon.petpet.bot;
 
+import lombok.Getter;
+import moe.dituon.petpet.bot.qq.handler.QQMessageChain;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.script.event.ScriptSendEvent;
@@ -10,6 +12,7 @@ import java.io.File;
 
 
 public abstract class BotSendEvent extends ScriptSendEvent {
+    @Getter
     protected boolean isResponseInForward = false;
 
     protected BotSendEvent(RequestContext requestContext, @Nullable File basePath) {

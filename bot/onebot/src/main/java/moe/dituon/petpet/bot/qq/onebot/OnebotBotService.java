@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import moe.dituon.petpet.bot.qq.QQBotService;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -35,5 +36,24 @@ public class OnebotBotService extends QQBotService {
         var id = UUID.randomUUID().toString();
         httpServer.cache.put(id, image);
         return onebotConfig.getHttpServerUrl() + id;
+    }
+
+    public boolean cacheImage(long targetId, int messageId, String imageUrl) {
+        long id = getCacheId(targetId, messageId);
+        this.getImageCachePool().put(id, imageUrl);
+        return true;
+    }
+
+    public @Nullable String getCachedImage(long targetId, int messageId) {
+        long id = getCacheId(targetId, messageId);
+        return this.getImageCachePool().get(id);
+    }
+
+    /**
+     * 计算消息唯一 id
+     */
+    public long getCacheId(long targetId, int messageId) {
+        // message id = target id + source id
+        return targetId + messageId;
     }
 }

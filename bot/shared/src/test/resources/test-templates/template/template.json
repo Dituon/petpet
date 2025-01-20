@@ -1,0 +1,29 @@
+{
+  "type": "image",
+  "metadata": {
+    "alias": ["alia0", "alia1"],
+    "tags": ["tag0", "tag1"],
+    "description": "description"
+  },
+  "elements": [
+    {
+      "type": "image",
+      "key": "to",
+      "coords": [0, 0, 100, 100]
+    },
+    {
+      "type": "image",
+      "key": "from",
+      "coords": [0, 100, 100, 100]
+    },
+    {
+      "type": "text",
+      "coords": [100, 0],
+      "text": "from: $from; to: $to;"
+    }
+  ],
+  "canvas": {
+    "width": 200,
+    "height": 100
+  }
+}

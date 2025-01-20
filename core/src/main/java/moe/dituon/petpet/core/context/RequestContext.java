@@ -17,8 +17,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class RequestContext {
-    public static final RequestContext EMPTY = new RequestContext(ImageResourceMap.EMPTY, null);
-
     @Getter
     public final ImageResourceMap imageResourceMap;
     @Getter
@@ -38,6 +36,13 @@ public class RequestContext {
 
     public static RequestContext fromImageResourceMap(ImageResourceMap map) {
         return new RequestContext(map, null);
+    }
+
+    protected RequestContext() {
+        imageResourceMap = ImageResourceMap.EMPTY;
+        textDataMap = Collections.emptyMap();
+        resourceManager = GlobalContext.getInstance().resourceManager;
+        frameListCache = Collections.emptyMap();
     }
 
     public RequestContext(
@@ -131,6 +136,10 @@ public class RequestContext {
                 }
             });
         }
+    }
+
+    public static RequestContext newImmutableEmpty() {
+        return new RequestContext(ImageResourceMap.EMPTY, Collections.emptyMap());
     }
 
     public static RequestContext newEmpty() {

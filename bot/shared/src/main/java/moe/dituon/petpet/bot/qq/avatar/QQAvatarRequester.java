@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class QQAvatarRequester {
+    public static final int DEFAULT_SIZE = 640;
     public static final int[] SPEC_LEVELS = new int[]{40, 100, 140, 640};
 
     public static String getAvatarUrlString(long qqId, int maxSize) {
@@ -17,9 +18,13 @@ public class QQAvatarRequester {
 
     public static String getAvatarUrlString(String qqId, int maxSize) {
         int spec = SPEC_LEVELS[3];
-        for (int level : SPEC_LEVELS) {
-            if (level >= maxSize) {
-                spec = level;
+        if (maxSize <= 0) {
+            spec = DEFAULT_SIZE;
+        } else {
+            for (int level : SPEC_LEVELS) {
+                if (level >= maxSize) {
+                    spec = level;
+                }
             }
         }
         return "https://q.qlogo.cn/headimg_dl?dst_uin=" + qqId + "&spec=" + spec;
