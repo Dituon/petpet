@@ -1,0 +1,27 @@
+{
+    "type": "gif",
+    "metadata": {
+        "alias": ["催眠", "催眠app"],
+        "preview": "./0.png",
+        "inRandomList": false
+    },
+    "elements": [
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [0, 0, "100vw", "100vh"]
+        },
+        {
+            "type": "image",
+            "src": "./",
+            "coords": [0, "40vh", "60vw", "60vh"],
+            "fit": "contain",
+            "position": "left bottom"
+        }
+    ],
+    "canvas": {
+        "width": "min(240/to_width, 240/to_height) * to_width",
+        "height": "min(240/to_width, 240/to_height) * to_height"
+    },
+    "delay": 20
+}

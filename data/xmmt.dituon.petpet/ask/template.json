@@ -16,13 +16,13 @@
         },{
             "type": "text",
             "id": "head",
-			"text": "让${1:-${to:-ta}}告诉你吧",
+			"text": "让${0:-${to:-ta}}告诉你吧",
 			"coords": [8, 8],
 			"color": "#191919",
 			"size": 40
 		},{
             "type": "text",
-			"text": "${1:-${to:-???}}",
+			"text": "${0:-${to:-???}}",
 			"coords":["to_width / 2", "head_height + to_height - 120px + 32px"],
 			"color": "#f0bf6e",
 			"size": 22,
@@ -30,7 +30,7 @@
 			"style": "bold"
 		},{
             "type": "text",
-			"text": "${2:-${1:-${to:-}}不知道哦。}",
+			"text": "${1:${0:${to:咱}}不知道哦。}",
             "wrap": "break",
 			"coords": ["to_width / 2", "head_height + to_height - 120px + 68px", "to_width - 16px"],
 			"color": "#ffffff",
@@ -40,7 +40,7 @@
 		},{
             "type": "text",
             "id": "foot",
-			"text": "啊这，ta说${2:-不知道}",
+			"text": "啊这，ta说${2:不知道}",
             "wrap": "break",
 			"coords": [8, "head_height + to_height + 24px", "to_width - 16px"],
 			"color": "#191919",
