@@ -30,7 +30,7 @@ data class OnebotConfig(
     @Comment("重连休息时间 (毫秒)")
     val retryRestMills: Long = 60_000L,
 
-    @Comment("心跳包检测时间 (秒)，设为0关闭检测")
+    @Comment("心跳包检测时间 (秒)，设为 0 关闭检测")
     val heartbeatCheckSeconds: Int = 60,
 
 
@@ -82,7 +82,7 @@ data class OnebotConfig(
 //    @Comment("GIF缩放阈值/尺寸 (暂时不可用)")
 //    val gifMaxSize: List<Int> = listOf(200, 200, 32),
 
-    @Comment("GIF质量, 1为质量最佳, 超过20不会有明显性能提升")
+    @Comment("GIF 质量, 1 为质量最佳, 超过 20 不会有明显性能提升")
     val gifQuality: Int = 5,
 
     @Comment("是否启用 headless 模式")
@@ -100,7 +100,7 @@ data class OnebotConfig(
 //    @Comment("是否启用消息注入 (详见文档)")
 //    val messageHook: Boolean = false,
 
-    @Comment("触发图片生成后的用户冷却时长 (毫秒), 设为-1禁用")
+    @Comment("触发图片生成后的用户冷却时长 (毫秒), 设为 0 禁用")
     val userCooldownTime: Long = Cooler.DEFAULT_USER_COOLDOWN,
 
     @Comment("触发图片生成后的群聊冷却时长 (同上)")

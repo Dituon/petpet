@@ -90,17 +90,10 @@
 
 以下功能尚未实现。如需使用这些功能，可选择 [6.2-latest](https://github.com/Dituon/petpet/tree/6.2-latest) 版本。
 
-**Mirai**
+**Bot**
 
-- [ ] 响应私聊消息
-- [ ] 响应群聊戳一戳
 - [ ] Message Hook
 - [ ] 消息事件同步锁
-
-**Onebot**
-
-- [ ] 响应私聊消息
-- [ ] 响应群聊戳一戳
 
 **Core**
 

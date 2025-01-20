@@ -53,7 +53,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("GIF缩放阈值/尺寸 (暂时不可用)")
     val gifMaxSize: List<Int> by value(listOf(200, 200, 32))
 
-    @ValueDescription("GIF 质量, 1为质量最佳, 超过20不会有明显性能提升")
+    @ValueDescription("GIF 质量, 1 为质量最佳, 超过 20 不会有明显性能提升")
     val gifQuality: Int by value(5)
 
     @ValueDescription("是否使用 headless 模式")
@@ -71,7 +71,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
 //    @ValueDescription("是否启用消息注入 (详见文档)")
 //    val messageHook: Boolean by value(false)
 
-    @ValueDescription("触发图片生成后的用户冷却时长, 填入-1则禁用, 单位为毫秒")
+    @ValueDescription("触发图片生成后的用户冷却时长 (毫秒), 设为 0 禁用")
     val userCoolDown:Long by value(Cooler.DEFAULT_USER_COOLDOWN)
 
     @ValueDescription("触发图片生成后的群聊冷却时长 (同上)")

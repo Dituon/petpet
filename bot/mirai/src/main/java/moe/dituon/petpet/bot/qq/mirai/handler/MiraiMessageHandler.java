@@ -50,7 +50,7 @@ public class MiraiMessageHandler extends QQMessageEventHandler {
 
         @Override
         protected BotSendEvent buildBotSendEvent(PetpetScriptModel script, RequestContext context) {
-            return new ScriptMiraiBotSendEvent(messageEvent, context, script.getBasePath());
+            return new ScriptMiraiBotSendEvent(messageEvent.getBot(), context, script.getBasePath());
         }
 
         @Override
@@ -108,6 +108,11 @@ public class MiraiMessageHandler extends QQMessageEventHandler {
             for (var msg : ((ScriptMiraiBotSendEvent) e).getResponseMessage()) {
                 this.messageEvent.getSubject().sendMessage(msg);
             }
+        }
+
+        @Override
+        protected boolean inGroupContext() {
+            return false;
         }
     }
 }

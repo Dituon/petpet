@@ -19,15 +19,14 @@ class OnebotGroupMessageHandler(
 
     fun handle(event: GroupMessageEvent) {
         if (event.userId == globalBotInstance.id) return
-        MiraiGroupMessageContext(event).handleCommand()
+        OnebotGroupMessageContext(event).handleCommand()
     }
 
-    private inner class MiraiGroupMessageContext(
+    private inner class OnebotGroupMessageContext(
         private val groupMessageEvent: GroupMessageEvent
-    ) : OnebotMessageHandler.MiraiMessageContext(
+    ) : OnebotMessageHandler.OnebotMessageContext(
         OnebotGroupMessageChainWrapper(onebotService, groupMessageEvent, groupMessageEvent.groupId)
     ) {
-
         override fun senderHasGroupPermission(): Boolean {
             return groupMessageEvent.sender?.role != "member"
         }
@@ -98,6 +97,10 @@ class OnebotGroupMessageHandler(
                     }
                 }
             }
+        }
+
+        override fun inGroupContext(): Boolean {
+            return true
         }
     }
 }

@@ -3,6 +3,7 @@ package moe.dituon.petpet.bot.qq.mirai;
 import moe.dituon.petpet.bot.BotSendEvent;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
+import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.ForwardMessageBuilder;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -16,17 +17,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ScriptMiraiBotSendEvent extends BotSendEvent {
-    public final MessageEvent event;
+    public final Bot bot;
     protected List<MessageChainBuilder> messageBuilderList = null;
     protected int messageGroupIndex = 0;
 
     public ScriptMiraiBotSendEvent(
-            MessageEvent event,
+            Bot bot,
             RequestContext requestContext,
             @Nullable File basePath
     ) {
         super(requestContext, basePath);
-        this.event = event;
+        this.bot = bot;
     }
 
     protected MessageChainBuilder getMessageBuilder() {
@@ -59,7 +60,7 @@ public class ScriptMiraiBotSendEvent extends BotSendEvent {
 
     @Override
     public void responseImage(EncodedImage image) {
-        var img = event.getSubject().uploadImage(
+        var img = bot.getAsFriend().uploadImage(
                 ExternalResource.create(image.bytes)
         );
         getMessageBuilder().add(img);
@@ -70,10 +71,10 @@ public class ScriptMiraiBotSendEvent extends BotSendEvent {
      */
     public List<MessageChain> getResponseMessage() {
         if (isResponseInForward) {
-            var fb = new ForwardMessageBuilder(event.getBot().getAsFriend(), messageBuilderList.size());
+            var fb = new ForwardMessageBuilder(bot.getAsFriend(), messageBuilderList.size());
             for (MessageChainBuilder mb : messageBuilderList) {
                 if (mb.isEmpty()) continue;
-                fb.add(event.getBot(), mb.build());
+                fb.add(bot, mb.build());
             }
             return List.of(new MessageChainBuilder(1).append(fb.build()).build());
         }

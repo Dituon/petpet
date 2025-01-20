@@ -24,6 +24,8 @@ class QQMessageEventHandlerTest {
         QQBotConfig(
             command,
             commandHead,
+            userCooldownTime = 0,
+            groupCooldownTime = 0
         )
     ).apply {
         service.addTemplates(testResourcePath.resolve("test-templates").toFile())

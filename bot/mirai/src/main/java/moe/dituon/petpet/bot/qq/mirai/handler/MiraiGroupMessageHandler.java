@@ -59,7 +59,7 @@ public class MiraiGroupMessageHandler extends MiraiMessageHandler {
 
         @Override
         protected BotSendEvent buildBotSendEvent(PetpetScriptModel script, RequestContext context) {
-            return new ScriptMiraiBotSendEvent(groupMessageEvent, context, script.getBasePath());
+            return new ScriptMiraiBotSendEvent(groupMessageEvent.getBot(), context, script.getBasePath());
         }
 
         @Override
@@ -67,6 +67,11 @@ public class MiraiGroupMessageHandler extends MiraiMessageHandler {
             for (var msg : ((ScriptMiraiBotSendEvent) e).getResponseMessage()) {
                 this.groupMessageEvent.getGroup().sendMessage(new QuoteReply(groupMessageEvent.getMessage()).plus(msg));
             }
+        }
+
+        @Override
+        protected boolean inGroupContext() {
+            return true;
         }
     }
 }

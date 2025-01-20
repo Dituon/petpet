@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ScriptOnebotSendEvent extends BotSendEvent {
-    public final MessageEvent event;
     public final OnebotBotService service;
     protected ArrayList<List<String>> messageGroupList = null;
     protected int messageGroupIndex = 0;
+    protected final boolean isGroupEvent;
+    protected final int messageId;
 
     public ScriptOnebotSendEvent(
             OnebotBotService service,
@@ -24,9 +25,26 @@ public class ScriptOnebotSendEvent extends BotSendEvent {
             RequestContext requestContext,
             @Nullable File basePath
     ) {
+        this(
+                service,
+                event instanceof GroupMessageEvent,
+                event.getJson().getAsJsonObject().get("message_id").getAsInt(),
+                requestContext,
+                basePath
+        );
+    }
+
+    public ScriptOnebotSendEvent(
+            OnebotBotService service,
+            boolean isGroupEvent,
+            int messageId,
+            RequestContext requestContext,
+            @Nullable File basePath
+    ) {
         super(requestContext, basePath);
         this.service = service;
-        this.event = event;
+        this.isGroupEvent = isGroupEvent;
+        this.messageId = messageId;
     }
 
     @Override
@@ -77,12 +95,12 @@ public class ScriptOnebotSendEvent extends BotSendEvent {
         if (messageGroupList.isEmpty()) {
             return null;
         }
-        if (!isResponseInForward && event instanceof GroupMessageEvent) {
+        if (!isResponseInForward && isGroupEvent) {
             return messageGroupList.stream()
                     .filter(msgs -> !msgs.isEmpty())
                     .map(msgs ->
                             "[{\"type\": \"reply\",\"data\": {\"id\": \""
-                                    + ((GroupMessageEvent) event).getMessageId()
+                                    + messageId
                                     + "\"}},"
                                     + String.join(",", msgs)
                                     + "]"

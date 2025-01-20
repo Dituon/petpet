@@ -19,11 +19,11 @@ open class OnebotMessageHandler(
 
     fun handle(event: MessageEvent) {
         if (event.userId == globalBotInstance.id) return
-        val handler = MiraiMessageContext(event)
+        val handler = OnebotMessageContext(event)
         handler.handleCommand()
     }
 
-    protected open inner class MiraiMessageContext : MessageContext {
+    protected open inner class OnebotMessageContext : MessageContext {
         private val messageEvent: MessageEvent
         private val messageEventObject: JsonObject
 
@@ -112,6 +112,10 @@ open class OnebotMessageHandler(
          */
         protected fun cacheSelfImage() {
             // TODO
+        }
+
+        override fun inGroupContext(): Boolean {
+            return false
         }
     }
 }

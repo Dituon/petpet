@@ -6,7 +6,9 @@ import cn.evolvefield.onebot.client.handler.EventBus
 import cn.evolvefield.onebot.client.listener.EventListener
 import cn.evolvefield.onebot.sdk.event.message.GroupMessageEvent
 import cn.evolvefield.onebot.sdk.event.message.PrivateMessageEvent
+import cn.evolvefield.onebot.sdk.event.notice.NotifyNoticeEvent
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotGroupMessageHandler
+import moe.dituon.petpet.bot.qq.onebot.handler.OnebotGroupNudgeHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotMessageHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotSentMessageHandler
 import moe.dituon.petpet.service.EnvironmentChecker
@@ -95,6 +97,13 @@ suspend fun main() {
                 override suspend fun onMessage(e: PrivateMessageEvent) = imageCacheHandler.handle(e)
             })
         }
+    }
+
+    if (config.nudgeProbability > 0) {
+        val groupNudgeHandler = OnebotGroupNudgeHandler(service)
+        EventBus.addListener(object : EventListener<NotifyNoticeEvent> {
+            override suspend fun onMessage(e: NotifyNoticeEvent) = groupNudgeHandler.handle(e)
+        })
     }
 
     log.info("Petpet Onebot 客户端启动完毕, 发送 ${config.command} 以触发默认模板...")

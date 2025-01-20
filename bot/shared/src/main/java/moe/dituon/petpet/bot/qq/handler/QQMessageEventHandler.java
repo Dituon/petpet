@@ -6,15 +6,16 @@ import moe.dituon.petpet.bot.qq.QQBotConfig;
 import moe.dituon.petpet.bot.qq.QQBotService;
 import moe.dituon.petpet.bot.qq.avatar.QQAvatarRequester;
 import moe.dituon.petpet.bot.qq.permission.ContactPermission;
+import moe.dituon.petpet.bot.utils.Cooler;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.element.PetpetModel;
 import moe.dituon.petpet.core.element.PetpetTemplateModel;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.script.PetpetScriptModel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -80,19 +81,29 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
             if (messageText.startsWith(config.getCommand())) { // pet (id?) (param?)
                 var params = messageText.substring(config.getCommand().length()).trim();
                 // 没有被 pet off command 禁用
-                boolean isHandle = (permission.getCommandPermission() & ContactPermission.COMMAND) != 0;
-                if (message.hasTarget() && isHandle) { // pet [@user|IMG] (id?) (param?)
+                boolean isEnable = (permission.getCommandPermission() & ContactPermission.COMMAND) != 0;
+                if (message.hasTarget() && isEnable) { // pet [@user|IMG] (id?) (param?)
+                    if (isInCooldown()) {
+                        replyCooldown();
+                        return;
+                    }
                     // 如果发送 pet 指令且有指定目标, 则使用随机模板
                     template = service.randomTemplate();
                     responseTemplate();
-                } else if (params.isEmpty() && isHandle) { // pet
+                    lockCooldown();
+                } else if (params.isEmpty() && isEnable) { // pet
                     // 如果只发送了 pet 指令, 使用默认模板
+                    // 默认模板不会受到 冷却时间 影响
                     template = service.getDefaultTemplate();
                     responseTemplate();
                 } else if (handleOpCommand()) { // pet [on|off]
                     // 处理管理员指令, 匹配成功直接返回
                     return;
-                } else if (isHandle) { // pet (id?) (param?)
+                } else if (isEnable) { // pet (id?) (param?)
+                    if (isInCooldown()) {
+                        replyCooldown();
+                        return;
+                    }
                     // 可能包含模板 id 与文本参数
                     var tokens = params.split(" +");
                     template = service.getTemplate(tokens[0]);
@@ -105,8 +116,13 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
                     }
                     messageTokens = Arrays.copyOfRange(tokens, 1, tokens.length);
                     responseTemplate();
+                    lockCooldown();
                 }
             } else if (messageText.startsWith(config.getCommandHead())) {
+                if (isInCooldown()) {
+                    replyCooldown();
+                    return;
+                }
                 // #(id?) (param?)
                 rawMessageText = messageText.substring(config.getCommandHead().length()).trim();
                 var tokens = rawMessageText.split(" +");
@@ -115,6 +131,7 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
                 rawMessageText = rawMessageText.substring(tokens[0].length()).trim();
                 messageTokens = Arrays.copyOfRange(tokens, 1, tokens.length);
                 responseTemplate();
+                lockCooldown();
             }
         }
 
@@ -153,6 +170,10 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
                 );
             }
 
+            return buildRequestContext(imageList);
+        }
+
+        protected RequestContext buildRequestContext(List<QQMessageElement.ResizeableImageElement> imageList) {
             // 构建 imageUrlMap 和 textMap
             Map<String, String> imageUrlMap;
             Map<String, String> textMap;
@@ -179,7 +200,34 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
             return map;
         }
 
-        protected Map<String, String> buildImageUrlMap(List<QQMessageElement.ResizeableImageElement> imageList, Collection<String> keys) {
+        protected boolean isInCooldown() {
+            if (inGroupContext()) {
+                return Cooler.isLocked(getSenderId()) || Cooler.isLocked(getSubjectId());
+            }
+            return Cooler.isLocked(getSubjectId());
+        }
+
+        protected void replyCooldown() {
+            replyMessage(config.getInCoolDownMessage());
+        }
+
+        protected void lockCooldown() {
+            long cooldownTime = permission.getCooldownTime();
+            if (inGroupContext()) {
+                long userCooldownTime = config.getUserCooldownTime();
+                if (userCooldownTime > 0) {
+                    Cooler.lock(getSenderId(), userCooldownTime);
+                }
+            }
+            if (cooldownTime > 0) {
+                Cooler.lock(getSubjectId(), cooldownTime);
+            }
+        }
+
+        protected Map<String, String> buildImageUrlMap(
+                List<QQMessageElement.ResizeableImageElement> imageList,
+                Collection<String> keys
+        ) {
             final var finalImageList = imageList;
             return buildMap(keys, key -> {
                 switch (key) {
@@ -198,7 +246,10 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
             });
         }
 
-        protected Map<String, String> buildTextMap(List<QQMessageElement.ResizeableImageElement> imageList, Collection<String> keys) {
+        protected Map<String, String> buildTextMap(
+                List<QQMessageElement.ResizeableImageElement> imageList,
+                Collection<String> keys
+        ) {
             final var finalImageList = imageList;
             return buildMap(keys, key -> {
                 switch (key) {
@@ -235,9 +286,12 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
             }
         }
 
-
         protected int getAvatarSize(String key) {
             return service.getTemplateExpectedSize(template).getOrDefault(key, 0);
+        }
+
+        protected boolean inGroupContext() {
+            return !getSubjectId().equals(getSenderId());
         }
 
         /**

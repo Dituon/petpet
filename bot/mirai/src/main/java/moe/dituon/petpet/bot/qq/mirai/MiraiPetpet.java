@@ -1,6 +1,7 @@
 package moe.dituon.petpet.bot.qq.mirai;
 
 import moe.dituon.petpet.bot.qq.mirai.handler.MiraiGroupMessageHandler;
+import moe.dituon.petpet.bot.qq.mirai.handler.MiraiGroupNudgeHandler;
 import moe.dituon.petpet.bot.qq.mirai.handler.MiraiMessageHandler;
 import moe.dituon.petpet.bot.qq.mirai.handler.MiraiSentMessageHandler;
 import moe.dituon.petpet.service.BaseService;
@@ -86,6 +87,11 @@ public final class MiraiPetpet extends JavaPlugin {
                 GlobalEventChannel.INSTANCE.subscribeAlways(FriendMessageSyncEvent.class, sentMessageHandler::handle);
                 GlobalEventChannel.INSTANCE.subscribeAlways(GroupTempMessageSyncEvent.class, sentMessageHandler::handle);
             }
+        }
+
+        if (config.getProbability() > 0) {
+            var nudgeHandler = new MiraiGroupNudgeHandler(service);
+            GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, nudgeHandler::handle);
         }
     }
 }
