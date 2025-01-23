@@ -75,7 +75,7 @@ open class OnebotMessageChainWrapper(
                     val atTarget = data[FIELD_QQ].asString
                     if (atTarget == AT_ALL) return@forEach
 
-                    if (!firstAtSenderRemoved && msgObj[FIELD_USER_ID].asString == atTarget) {
+                    if (!firstAtSenderRemoved && eventObject[FIELD_USER_ID].asString == atTarget) {
                         firstAtSenderRemoved = true
                         return@forEach
                     }
