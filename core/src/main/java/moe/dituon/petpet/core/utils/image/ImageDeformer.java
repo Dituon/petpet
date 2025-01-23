@@ -114,6 +114,26 @@ public class ImageDeformer {
         return m0;
     }
 
+    public static void toAbsoluteCoords(Point2D[] points) {
+        float ltx = Float.MAX_VALUE;
+        float lty = Float.MAX_VALUE;
+
+        for (int i = 0; i < 4; i++) {
+            float x = (float) points[i].getX();
+            float y = (float) points[i].getY();
+            ltx = Math.min(ltx, x);
+            lty = Math.min(lty, y);
+        }
+        for (int i = 0; i < 4; i++) {
+            float x = (float) points[i].getX();
+            float y = (float) points[i].getY();
+            points[i] = new Point2D.Float(x - ltx, y - lty);
+        }
+        float x = (float) points[4].getX();
+        float y = (float) points[4].getY();
+        points[4] = new Point2D.Float(x + ltx, y + lty);
+    }
+
     protected static Matrix3D computeProjectionMatrix(Point2D[] p) {
         Matrix3D m = new Matrix3D(
                 (float) p[0].getX(), (float) p[1].getX(), (float) p[2].getX(),

@@ -115,6 +115,7 @@ public class AvatarP4AFrame extends AvatarFrame {
             image = filterList.filter(image, index, template, requestContext);
             this.lengthContext = canvasContext.createLengthContext(image.getWidth(), image.getHeight());
             this.coords = AvatarP4AFrame.this.coords.getValue(lengthContext);
+            ImageDeformer.toAbsoluteCoords(coords);
             if (borderRadius != null) {
                 image = borderRadius.buildImage(image, lengthContext);
             }
