@@ -12,6 +12,7 @@ import moe.dituon.petpet.core.position.AvatarXYWHCoords
 import moe.dituon.petpet.core.position.FitType
 import moe.dituon.petpet.core.transform.Offset
 import moe.dituon.petpet.core.utils.image.ImageCropper
+import moe.dituon.petpet.core.utils.image.ImageXYWHCropper
 import moe.dituon.petpet.template.fields.ImageFilterListElement
 import moe.dituon.petpet.template.fields.ImageFilterTemplate
 import moe.dituon.petpet.template.fields.length.*
@@ -106,6 +107,7 @@ data class AvatarTemplate(
 
         @JvmStatic
         fun builder(id: String) = Builder(id)
+
         @JvmStatic
         fun builder() = Builder()
     }
@@ -119,7 +121,9 @@ data class AvatarTemplate(
             private set
         var coords: List<AvatarCoords> = listOf(defaultCoords)
             private set
-        var crop: List<ImageCropper> = listOf(ImageCropper.EmptyImageCropper.INSTANCE)
+        var crop: List<ImageCropper> = listOf(
+            ImageCropper.EmptyImageCropper.INSTANCE
+        )
             private set
         var default: List<String> = emptyList()
             private set
@@ -146,8 +150,8 @@ data class AvatarTemplate(
         fun coords(coords: AvatarCoords) = apply { this.coords = listOf(coords) }
         fun coords(coords: List<AvatarCoords>) = apply { this.coords = coords }
 
-        fun crop(crop: ImageCropper) = apply { this.crop = listOf(crop) }
-        fun crop(crop: List<ImageCropper>) = apply { this.crop = crop }
+        fun crop(crop: ImageXYWHCropper) = apply { this.crop = listOf(crop) }
+        fun crop(crop: List<ImageXYWHCropper>) = apply { this.crop = crop }
 
         fun default(default: String) = apply { this.default = listOf(default) }
         fun default(default: List<String>) = apply { this.default = default }

@@ -14,6 +14,8 @@ import kotlinx.serialization.json.jsonPrimitive
 import moe.dituon.petpet.core.length.Length
 import moe.dituon.petpet.core.length.LengthType
 import moe.dituon.petpet.core.length.NumberLength
+import moe.dituon.petpet.core.length.NumberPercentageLength
+import moe.dituon.petpet.core.length.PercentageLength
 
 object LengthAsStringSerializer : KSerializer<Length> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Length", PrimitiveKind.STRING)
@@ -23,6 +25,16 @@ object LengthAsStringSerializer : KSerializer<Length> {
 
     override fun deserialize(decoder: Decoder): Length =
         Length.fromString(decoder.decodeString())
+}
+
+object PercentageLengthAsStringSerializer : KSerializer<PercentageLength> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Length", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: PercentageLength) =
+        encoder.encodeString(value.toString())
+
+    override fun deserialize(decoder: Decoder): PercentageLength =
+        PercentageLength.fromString(decoder.decodeString())
 }
 
 object LengthAsNumberSerializer : KSerializer<Length> {
@@ -35,6 +47,16 @@ object LengthAsNumberSerializer : KSerializer<Length> {
         NumberLength(decoder.decodeFloat(), LengthType.PX)
 }
 
+object PercentageLengthAsNumberSerializer : KSerializer<PercentageLength> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Length", PrimitiveKind.FLOAT)
+
+    override fun serialize(encoder: Encoder, value: PercentageLength) =
+        encoder.encodeString(value.toString())
+
+    override fun deserialize(decoder: Decoder) =
+        NumberPercentageLength(NumberLength.px(decoder.decodeFloat()))
+}
+
 
 object LengthSerializer : JsonContentPolymorphicSerializer<Length>(Length::class) {
     override fun selectDeserializer(element: JsonElement) = when {
@@ -45,4 +67,14 @@ object LengthSerializer : JsonContentPolymorphicSerializer<Length>(Length::class
     }
 }
 
+object PercentageLengthSerializer : JsonContentPolymorphicSerializer<PercentageLength>(PercentageLength::class) {
+    override fun selectDeserializer(element: JsonElement) = when {
+        element is JsonPrimitive -> if (element.jsonPrimitive.isString)
+            PercentageLengthAsStringSerializer else PercentageLengthAsNumberSerializer
+
+        else -> throw Exception()
+    }
+}
+
 typealias LengthElement = @Serializable(LengthSerializer::class) Length
+typealias PercentageLengthElement = @Serializable(PercentageLengthSerializer::class) PercentageLength

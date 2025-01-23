@@ -13,6 +13,7 @@ import moe.dituon.petpet.core.position.FitType
 import moe.dituon.petpet.core.transform.Offset
 import moe.dituon.petpet.core.transition.RotateTransition
 import moe.dituon.petpet.core.utils.image.ImageCropper
+import moe.dituon.petpet.core.utils.image.ImageXYWHCropper
 import moe.dituon.petpet.template.element.AvatarTemplate
 import moe.dituon.petpet.template.fields.*
 import moe.dituon.petpet.template.fields.length.AvatarCoordsListSerializer
@@ -68,12 +69,12 @@ data class OldAvatarTemplate @JvmOverloads constructor(
             when (cropType) {
                 CropType.NONE -> ImageCropper.empty()
                 CropType.PIXEL -> when (crop!!.size) {
-                    2 -> ImageCropper(
+                    2 -> ImageXYWHCropper(
                         NumberLength.px(crop!![0]),
                         NumberLength.px(crop!![1])
                     )
 
-                    4 -> ImageCropper(
+                    4 -> ImageXYWHCropper(
                         NumberLength.px(crop!![0]),
                         NumberLength.px(crop!![1]),
                         NumberLength.px(crop!![2]),
@@ -84,7 +85,7 @@ data class OldAvatarTemplate @JvmOverloads constructor(
                 }
 
                 CropType.PERCENT -> when (crop!!.size) {
-                    2 -> ImageCropper(
+                    2 -> ImageXYWHCropper(
                         NumberLength(
                             crop!![0].toFloat(),
                             LengthType.CW
@@ -95,7 +96,7 @@ data class OldAvatarTemplate @JvmOverloads constructor(
                         )
                     )
 
-                    4 -> ImageCropper(
+                    4 -> ImageXYWHCropper(
                         NumberLength(
                             crop!![0].toFloat(),
                             LengthType.CW
