@@ -185,7 +185,21 @@ P0 为 (0, 0)，表示初始进度和初始状态。P3 为 (1, 1)，表示最终
 
 ![origin](../images/origin.png)
 
+## Border
+
+> 目前仅在坐标格式为 `x, y, width, height` 时有效。
+
+`"<width> <color>"`
+
+例如:
+
+- `"6px #ffffff"`: 6px 宽度，白色边框
+- `"#ffffff 6px"`: 同上
+- `"2px"`: 2px 宽度，默认颜色 (`#000000`) 边框
+
 ## BorderRadius
+
+> 目前仅在坐标格式为 `x, y, width, height` 时有效。
 
 `"left-top right-top left-bottom right-bottom"`
 

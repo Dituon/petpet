@@ -6,6 +6,7 @@ import moe.dituon.petpet.core.filter.ImageFilterList;
 import moe.dituon.petpet.core.position.FitType;
 import moe.dituon.petpet.core.transform.Offset;
 import moe.dituon.petpet.core.transition.RotateTransition;
+import moe.dituon.petpet.core.utils.image.ImageBorder;
 import moe.dituon.petpet.core.utils.image.ImageCropper;
 import moe.dituon.petpet.template.element.AvatarTemplate;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +20,7 @@ public abstract class AvatarFrame extends ElementFrame {
     @Nullable
     public final String defaultUrl;
     public final ImageCropper cropper;
+    public final ImageBorder border;
     public final FitType fit;
     public final Offset position;
     public final float angle;
@@ -36,6 +38,7 @@ public abstract class AvatarFrame extends ElementFrame {
         this.id = getNElement(template.getKey());
         this.defaultUrl = getNElement(template.getDefault());
         this.cropper = getNElement(template.getCrop());
+        this.border = getNElement(template.getBorder());
         this.fit = getNElement(template.getFit());
         this.position = getNElement(template.getPosition());
         this.angle = getNElement(template.getAngle());

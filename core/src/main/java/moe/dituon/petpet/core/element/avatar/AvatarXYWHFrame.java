@@ -201,15 +201,16 @@ public class AvatarXYWHFrame extends AvatarFrame {
                 g2d.setTransform(transform);
             }
             Shape prevClip = null;
+            Shape borderShape = null;
             if (AvatarXYWHFrame.super.borderRadius != null) {
                 prevClip = g2d.getClip();
-                var shape = AvatarXYWHFrame.super.borderRadius.getShape(
+                borderShape = AvatarXYWHFrame.super.borderRadius.getShape(
                         new ClipPath.RealPosition(
                                 lengthContext.canvasWidth, lengthContext.canvasHeight,
                                 x, y, w, h
                         )
                 );
-                g2d.setClip(shape);
+                g2d.setClip(borderShape);
             }
 
             // FEATURE: alpha
@@ -273,8 +274,17 @@ public class AvatarXYWHFrame extends AvatarFrame {
                 default:
                     g2d.drawImage(img, x, y, w, h, null);
             }
-            if (prevTransform != null) g2d.setTransform(prevTransform);
-            g2d.setClip(prevClip);
+            if (prevTransform != null) {
+                g2d.setTransform(prevTransform);
+            }
+            if (borderShape != null) {
+                AvatarXYWHFrame.super.border.draw(g2d, borderShape, lengthContext);
+            } else {
+                AvatarXYWHFrame.super.border.draw(g2d, x, y, w, h);
+            }
+            if (AvatarXYWHFrame.super.borderRadius != null) {
+                g2d.setClip(prevClip);
+            }
         }
 
         @Override

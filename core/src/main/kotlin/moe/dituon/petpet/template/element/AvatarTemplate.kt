@@ -11,8 +11,10 @@ import moe.dituon.petpet.core.position.AvatarCoords
 import moe.dituon.petpet.core.position.AvatarXYWHCoords
 import moe.dituon.petpet.core.position.FitType
 import moe.dituon.petpet.core.transform.Offset
+import moe.dituon.petpet.core.utils.image.ImageBorder
 import moe.dituon.petpet.core.utils.image.ImageCropper
 import moe.dituon.petpet.core.utils.image.ImageXYWHCropper
+import moe.dituon.petpet.template.fields.BorderList
 import moe.dituon.petpet.template.fields.ImageFilterListElement
 import moe.dituon.petpet.template.fields.ImageFilterTemplate
 import moe.dituon.petpet.template.fields.length.*
@@ -54,6 +56,7 @@ data class AvatarTemplate(
     val rotate: RotateTransitionElement? = null,
     val origin: OffsetList = listOf(Offset.CENTER),
     val opacity: FloatOrArray = floatArrayOf(1f),
+    val border: BorderList = listOf(ImageBorder.EmptyImageBorder.INSTANCE),
     @JsonNames("border_radius")
     val borderRadius: BorderRadiusList = emptyList(),
     val filter: ImageFilterListElement = ImageFilterList.EMPTY,
@@ -72,6 +75,7 @@ data class AvatarTemplate(
         angle.size,
         origin.size,
         opacity.size,
+        border.size,
         borderRadius.size,
         if (filter.isEmpty()) 0 else filter.maxOf { it.maxLength }
     )
@@ -87,6 +91,7 @@ data class AvatarTemplate(
         angle = builder.angle,
         origin = builder.origin,
         opacity = builder.opacity,
+        border = builder.border,
         borderRadius = builder.borderRadius,
         filter = builder.filter,
     )
@@ -137,6 +142,8 @@ data class AvatarTemplate(
             private set
         var opacity: FloatArray = floatArrayOf(1f)
             private set
+        var border: List<ImageBorder> = listOf(ImageBorder.EmptyImageBorder.INSTANCE)
+            private set
         var borderRadius: List<BorderRadius> = emptyList()
             private set
         var filter: ImageFilterList = ImageFilterList.EMPTY
@@ -173,6 +180,9 @@ data class AvatarTemplate(
 
         fun opacity(opacity: Float) = apply { this.opacity = floatArrayOf(opacity) }
         fun opacity(opacity: FloatArray) = apply { this.opacity = opacity }
+
+        fun border(border: ImageBorder) = apply { this.border = listOf(border) }
+        fun border(border: List<ImageBorder>) = apply { this.border = border }
 
         fun borderRadius(borderRadius: BorderRadius) = apply { this.borderRadius = listOf(borderRadius) }
         fun borderRadius(borderRadius: List<BorderRadius>) = apply { this.borderRadius = borderRadius }
