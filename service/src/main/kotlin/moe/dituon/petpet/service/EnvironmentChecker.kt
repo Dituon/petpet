@@ -8,8 +8,8 @@ class EnvironmentChecker {
     companion object {
         @JvmStatic
         val log: Logger = LoggerFactory.getLogger("Petpet")
-        val infoHead =  "=============== Petpet 环境检查 ==============="
-        val infoSplit = "=============================================="
+        const val infoHead =  "=============== Petpet 环境检查 ==============="
+        const val infoSplit = "=============================================="
 
         @JvmStatic
         fun check() {
@@ -23,8 +23,8 @@ class EnvironmentChecker {
 
                     使用 $vendor 提供的 JVM 可能不支持以下功能:
                     - 彩色 Emoji 渲染
-                    - 全局字体回退
-                    - 基于 jcef 的 HTML 渲染
+                    - Linux 上的增强字体渲染
+                    - 亚像素抗锯齿
                     """.trimIndent())
             }
             val unsupportedLanguages = GlobalContext.getInstance().fontManager

@@ -65,7 +65,7 @@ public class BorderRadius extends ClipPath {
 
 
         Path2D path = new Path2D.Float();
-        path.moveTo(leftTopX + x, y); // 加入 x 偏移
+        path.moveTo(leftTopX + x, y);
         path.lineTo(w - rightTopX + x, y);
         path.curveTo(w - rightTopX / 2 + x, y, w + x, rightTopY / 2 + y, w + x, rightTopY + y);
         path.lineTo(w + x, h - rightBottomY + y);

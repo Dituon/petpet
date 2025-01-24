@@ -33,36 +33,15 @@
 
 ## 项目结构
 
-**源码**
-
 - `bot/`: 机器人模块
   - `mirai/`: Mirai 插件
   - `onebot/`: Onebot 客户端
   - `shared/`: 通用代码
 - `core/`: 渲染核心模块
+- `docs/`: 标准文档
 - `httpserver/`: HTTP 服务器模块
 - `script/`: 脚本与动态模板模块
 - `service/`: 通用服务模块
-
-**其它**
-
-- `docs/`: 标准文档
-- `data/`: 旧版数据自动更新目录
-- `index.json`: 旧版数据自动更新索引
-
-## 新版更新内容
-
-1. 为了区分于旧版架构，新版版本号从 `v1.0.0` 开始。
-2. 新增 [脚本动态模板](docs/script/index.md)
-3. 新增 [`mirage` (幻影坦克)](docs/template/filter.md#滤镜类型) 滤镜
-4. 支持 [旋转缓动动画](docs/template/image.md#rotate-transition)
-5. 支持 [边框半径](docs/template/image.md#borderradius)
-6. 支持 [文本基线](docs/template/text.md#text-baseline)
-7. 支持 [`max_size` & `min_size`](docs/template/text.md#text-wrap)
-8. 支持 回退字体
-9. 新增 [权限管理](bot/README.md#权限管理)
-
-更多更新内容请参考 [docs/template](docs/template/index.md)
 
 ## 自定义模板
 
