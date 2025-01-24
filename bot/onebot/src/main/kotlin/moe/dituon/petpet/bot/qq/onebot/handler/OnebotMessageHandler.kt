@@ -52,7 +52,10 @@ open class OnebotMessageHandler(
         }
 
         override fun getSenderName(): String {
-            return messageEventObject["sender"].asJsonObject["nickname"].asString
+            val senderObject = messageEventObject["sender"].asJsonObject
+            val card = senderObject["card"]?.asString
+            val nickname = senderObject["nickname"]?.asString
+            return if (!card.isNullOrBlank()) card else nickname ?: ""
         }
 
         override fun getSenderId(): String {
