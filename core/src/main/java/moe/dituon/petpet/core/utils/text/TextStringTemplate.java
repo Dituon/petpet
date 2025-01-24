@@ -231,7 +231,7 @@ public class TextStringTemplate {
         @Override
         public void expand(StringBuilder output, Map<String, String> variables) throws ExpandException {
             String value = variables.get(name);
-            if (value == null && defaultValue != null) {
+            if ((value == null || value.isEmpty()) && defaultValue != null) {
                 TextStringTemplate nestedTemplate;
                 try {
                     nestedTemplate = TextStringTemplate.parse(defaultValue);
@@ -258,5 +258,23 @@ public class TextStringTemplate {
         public ExpandException(String message) {
             super(message);
         }
+    }
+
+    @Override
+    public String toString() {
+        return source;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TextStringTemplate)) return false;
+        TextStringTemplate that = (TextStringTemplate) o;
+        return Objects.equals(source, that.source);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(source);
     }
 }

@@ -75,7 +75,9 @@ public class TextDynamicModel extends TextModel {
                 var stringTemplate = ElementFrame.getNElement(TextDynamicModel.this.stringTemplateList, i);
                 if (stringTemplate instanceof TextStringTemplate) {
                     var text = ((TextStringTemplate) stringTemplate).expand(requestContext.textDataMap);
-                    if (text.isEmpty()) continue;
+                    if (text.isEmpty()) {
+                        throw new IllegalArgumentException("Text template [" + stringTemplate + "] result cannot be empty");
+                    }
                     var paragraph = createParagraph(
                             new GraphicsAttributedString(text, template, i)
                     );
