@@ -38,10 +38,22 @@ public class QQNudgeEventHandler extends QQMessageEventHandler {
 
         @Override
         protected RequestContext buildRequestContext() {
-            List<QQMessageElement.ResizeableImageElement> imageList = List.of(
-                    QQMessageElement.AtElement.from(getTargetId(), getTargetName()), // Target
-                    QQMessageElement.AtElement.from(getSenderId(), getSenderName()) // Sender
-            );
+            List<QQMessageElement.ResizeableImageElement> imageList;
+            String BotId = getBotId();
+            String SenderId = getSenderId();
+            String TargetId = getTargetId();
+            if (BotId.equals(TargetId) || SenderId.equals(TargetId)){
+                //特殊情况：戳Bot或戳自己
+                imageList = List.of(
+                        QQMessageElement.AtElement.from(getBotId(), getBotName()), // Sender
+                        QQMessageElement.AtElement.from(getSenderId(), getSenderName())  // Target
+                );
+            } else {
+                imageList = List.of(
+                        QQMessageElement.AtElement.from(getSenderId(), getSenderName()), // Sender
+                        QQMessageElement.AtElement.from(getTargetId(), getTargetName())  // Target
+                );
+            }
 
             // 构建 imageUrlMap 和 textMap
             return buildRequestContext(imageList);
