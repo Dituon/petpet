@@ -93,7 +93,7 @@ data class TextTemplate(
     val angle: FloatOrArray = floatArrayOf(0f),
     val color: ColorList = listOf(TextModel.DEFAULT_COLOR),
     @SerialName("font")
-    val fontName: StringList = listOf("simsun"),
+    val fontName: StringList = listOf(),
     @JsonNames("min_size")
     val size: FloatOrArray = floatArrayOf(16f),
     @JsonNames("max_size")
@@ -183,7 +183,7 @@ data class TextTemplate(
             private set
         var color: List<Color> = mutableListOf(TextModel.DEFAULT_COLOR)
             private set
-        var fontName: List<String> = mutableListOf("simsun")
+        var fontName: List<String> = mutableListOf()
             private set
         var size: FloatArray = floatArrayOf(16f)
             private set
