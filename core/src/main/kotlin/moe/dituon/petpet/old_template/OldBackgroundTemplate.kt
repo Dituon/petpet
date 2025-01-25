@@ -6,6 +6,6 @@ import kotlinx.serialization.json.JsonArray
 @Serializable
 data class OldBackgroundTemplate @JvmOverloads constructor(
     var size: JsonArray,
-    var color: String = "#ffffff",
+    var color: String? = null,
     var length: Int = 1
 )

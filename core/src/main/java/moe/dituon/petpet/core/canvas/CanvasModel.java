@@ -128,10 +128,11 @@ public class CanvasModel implements Dependable {
     }
 
     protected BufferedImage createImage(int length, int i, int width, int height) {
-        var img = new BufferedImage(width, height, length == 1 ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_3BYTE_BGR);
-        var g2d = img.createGraphics();
         var color = ElementFrame.getNElement(template.getColor(), i);
-        if (color.getAlpha() != 0) {
+        boolean bgIsTransparent = color == null || color.getAlpha() == 0;
+        var img = new BufferedImage(width, height, bgIsTransparent ? BufferedImage.TYPE_4BYTE_ABGR : BufferedImage.TYPE_3BYTE_BGR);
+        if (!bgIsTransparent) {
+            var g2d = img.createGraphics();
             g2d.setColor(color);
             g2d.fillRect(0, 0, width, height);
         }

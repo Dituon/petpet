@@ -15,7 +15,7 @@ data class TemplateCanvas(
     val width: LengthElement? = null,
     val height: LengthElement? = null,
     val length: LengthElement = NumberLength.px(1),
-    val color: ColorList = listOf(Color.WHITE),
+    val color: ColorList = emptyList(),
     val reverse: Boolean = false,
 ) {
     @Transient
@@ -41,7 +41,7 @@ data class TemplateCanvas(
             private set
         var length: Length = NumberLength.px(1)
             private set
-        var color: MutableList<Color> = mutableListOf(Color.WHITE)
+        var color: MutableList<Color> = mutableListOf()
             private set
         var reverse: Boolean = false
 

@@ -14,6 +14,7 @@ import moe.dituon.petpet.template.element.BackgroundTemplate
 import moe.dituon.petpet.template.element.ElementTemplate
 import moe.dituon.petpet.template.fields.decodeColor
 import moe.dituon.petpet.uitls.GlobalJson
+import java.awt.Color
 import java.io.File
 
 @Serializable
@@ -55,6 +56,9 @@ data class OldPetpetTemplate(
                 .replace("Height", DynamicLength.ELEMENT_HEIGHT_SUFFIX)
         }
 
+        val backgroundColor: List<Color> = background?.color?.takeIf { it.isNotEmpty() }
+            ?.let { listOf(decodeColor(it)) } ?: emptyList()
+
         return PetpetTemplate(
             type = when (type) {
                 Type.GIF -> TemplateType.GIF
@@ -68,7 +72,7 @@ data class OldPetpetTemplate(
             canvas = if (background == null) TemplateCanvas() else TemplateCanvas(
                 width = Length.fromString(replaceElementToken(background!!.size[0].jsonPrimitive.content)),
                 height = Length.fromString(replaceElementToken(background!!.size[1].jsonPrimitive.content)),
-                color = listOf(decodeColor(background!!.color)),
+                color = backgroundColor,
                 length = NumberLength.px(background!!.length),
             ),
             delay = intArrayOf(delay)
