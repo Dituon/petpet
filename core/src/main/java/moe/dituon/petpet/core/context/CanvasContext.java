@@ -7,6 +7,7 @@ import moe.dituon.petpet.core.imgres.ImageFrame;
 import moe.dituon.petpet.core.imgres.ImageFrameList;
 import moe.dituon.petpet.core.length.DynamicLength;
 import moe.dituon.petpet.core.length.LengthContext;
+import moe.dituon.petpet.core.utils.image.ImageUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,7 +118,7 @@ public class CanvasContext {
         list.add(first);
         for (int i = 1; i < length; i++) {
             //TODO: delay
-            list.add(new ImageFrame(cloneImage(first.image), first.delay));
+            list.add(new ImageFrame(ImageUtils.cloneImage(first.image), first.delay));
         }
         this.frameList = new ImageFrameList(list);
         this.graphicsList = new ArrayList<>(Collections.nCopies(length, null));
@@ -183,12 +184,5 @@ public class CanvasContext {
             staticLengthContext = createLengthContext(0, 0);
         }
         return staticLengthContext;
-    }
-
-    protected static BufferedImage cloneImage(BufferedImage raw) {
-        ColorModel cm = raw.getColorModel();
-        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = raw.copyData(null);
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 }

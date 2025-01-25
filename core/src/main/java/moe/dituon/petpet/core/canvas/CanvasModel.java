@@ -91,7 +91,7 @@ public class CanvasModel implements Dependable {
     public List<BufferedImage> createCanvasImages(CanvasContext canvasContext, RequestContext requestContext) {
         if (this.backgroundModel != null) {
             if (this.backgroundAtBottom) {
-                return this.backgroundModel.getImages();
+                return this.backgroundModel.getClonedImages();
             } else {
                 return createImageList(backgroundModel.getLength(), backgroundModel.getWidth(), backgroundModel.getHeight());
             }

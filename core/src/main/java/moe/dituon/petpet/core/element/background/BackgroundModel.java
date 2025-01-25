@@ -7,6 +7,7 @@ import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.element.ElementModel;
 import moe.dituon.petpet.core.imgres.AbsoluteLocalImageResource;
 import moe.dituon.petpet.core.imgres.ImageFrameList;
+import moe.dituon.petpet.core.utils.image.ImageUtils;
 import moe.dituon.petpet.template.element.BackgroundTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class BackgroundModel implements ElementModel {
     protected static final int[] DEFAULT_DELAY = new int[]{65};
@@ -67,6 +69,12 @@ public class BackgroundModel implements ElementModel {
 
     public List<BufferedImage> getImages() {
         return getFrameListSync().getImages();
+    }
+
+    public List<BufferedImage> getClonedImages() {
+        return getFrameListSync()
+                .stream().map(f -> ImageUtils.cloneImage(f.image))
+                .collect(Collectors.toList());
     }
 
     private BufferedImage createEmptyImage() {
