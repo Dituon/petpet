@@ -180,10 +180,16 @@ public class GifEncoder {
                 for (int i = 0; i < pixels.length; i += 4) {
                     if (pixels[i] != (0)) {
                         pixels[i] = (byte) 0xFF;
-                    } else if (transPixel == null) {
-                        transPixel = new byte[]{
-                                pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]
-                        };
+                    } else {
+                        pixels[i] = 0;
+                        pixels[i + 1] = 0;
+                        pixels[i + 2] = 0;
+                        pixels[i + 3] = 0;
+                        if (transPixel == null) {
+                            transPixel = new byte[]{
+                                    0, 0, 0, 0
+                            };
+                        }
                     }
                 }
                 neuQuant = new NeuQuantABGR(quality, pixels);
