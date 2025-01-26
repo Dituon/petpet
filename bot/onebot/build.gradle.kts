@@ -9,7 +9,7 @@ dependencies {
     implementation(project(":service"))
     implementation(project(":bot:shared"))
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("top.mrxiaom.mirai:onebot:1.0.1")
+    implementation("top.mrxiaom.mirai:onebot:1.0.2")
     implementation("org.java-websocket:Java-WebSocket:1.5.7")
     implementation("net.mamoe.yamlkt:yamlkt:0.13.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")

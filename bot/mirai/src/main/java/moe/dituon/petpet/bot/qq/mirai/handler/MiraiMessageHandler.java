@@ -12,6 +12,7 @@ import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.contact.User;
 import net.mamoe.mirai.event.events.MessageEvent;
+import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.Image;
 
 import java.io.IOException;
@@ -113,6 +114,11 @@ public class MiraiMessageHandler extends QQMessageEventHandler {
         @Override
         protected boolean inGroupContext() {
             return false;
+        }
+
+        @Override
+        protected void replyNudge() {
+            messageEvent.getSender().nudge().sendTo(messageEvent.getSender());
         }
     }
 }

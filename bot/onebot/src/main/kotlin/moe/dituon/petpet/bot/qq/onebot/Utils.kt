@@ -40,7 +40,29 @@ suspend fun getMemberName(groupId: Long, userId: Long): String {
     }
 }
 
-val banner = """${"\u001b[35m"}
+suspend fun sendNudge(userId: Long) {
+    when (globalBotInstance.appName.lowercase()) {
+        "llonebot", "napcat" -> {
+            // 等待 overflow onebot 1.0.3 版本新增的 extPoke 系列方法
+            return
+        }
+    }
+    val msg = "[{\"type\":\"poke\",\"data\":{\"id\":${userId}}}]"
+    globalBotInstance.sendPrivateMsg(userId, msg, false)
+}
+
+suspend fun sendNudge(groupId: Long, userId: Long) {
+    when (globalBotInstance.appName.lowercase()) {
+        "llonebot", "napcat" -> {
+            // 等待 overflow onebot 1.0.3 版本新增的 extPoke 系列方法
+            return
+        }
+    }
+    val msg = "[{\"type\":\"poke\",\"data\":{\"id\":${userId}}}]"
+    globalBotInstance.sendGroupMsg(groupId, msg, false)
+}
+
+const val banner = """${"\u001b[35m"}
 
     ██████╗ ███████╗████████╗██████╗ ███████╗████████╗
     ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝

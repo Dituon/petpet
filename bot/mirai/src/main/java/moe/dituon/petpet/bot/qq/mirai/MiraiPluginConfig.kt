@@ -77,7 +77,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("触发图片生成后的群聊冷却时长 (同上)")
     val groupCoolDown: Long by value(Cooler.DEFAULT_GROUP_COOLDOWN)
 
-    @ValueDescription("触发冷却后的回复消息, '[nudge]' 为戳一戳, 设为空字符串禁用")
+    @ValueDescription("触发冷却后的回复消息, '${QQBotService.REPLY_NUDGE_KEYWORD}' 为戳一戳, 设为空字符串禁用")
     val inCoolDownMessage: String by value(Cooler.DEFAULT_MESSAGE)
 
     @ValueDescription("指令权限别名")

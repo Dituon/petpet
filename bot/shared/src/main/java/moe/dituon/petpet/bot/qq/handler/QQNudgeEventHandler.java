@@ -39,11 +39,11 @@ public class QQNudgeEventHandler extends QQMessageEventHandler {
         @Override
         protected RequestContext buildRequestContext() {
             List<QQMessageElement.ResizeableImageElement> imageList;
-            String BotId = getBotId();
-            String SenderId = getSenderId();
-            String TargetId = getTargetId();
-            if (BotId.equals(TargetId) || SenderId.equals(TargetId)){
-                //特殊情况：戳Bot或戳自己
+            String botId = getBotId();
+            String senderId = getSenderId();
+            String targetId = getTargetId();
+            if (botId.equals(targetId) || senderId.equals(targetId)){
+                //特殊情况：戳 Bot 或戳自己
                 imageList = List.of(
                         QQMessageElement.AtElement.from(getBotId(), getBotName()), // Sender
                         QQMessageElement.AtElement.from(getSenderId(), getSenderName())  // Target
@@ -67,5 +67,15 @@ public class QQNudgeEventHandler extends QQMessageEventHandler {
         protected abstract String getTargetId();
 
         protected abstract String getTargetName();
+
+        @Override
+        protected void replyCooldown() {
+            // 戳一戳触发冷却时不回复消息
+        }
+
+        @Override
+        protected void replyNudge() {
+            // 戳一戳触发冷却时不回复消息
+        }
     }
 }

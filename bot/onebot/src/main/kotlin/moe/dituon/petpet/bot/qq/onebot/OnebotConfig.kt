@@ -106,7 +106,7 @@ data class OnebotConfig(
     @Comment("触发图片生成后的群聊冷却时长 (同上)")
     val groupCooldownTime: Long = Cooler.DEFAULT_GROUP_COOLDOWN,
 
-    @Comment("触发冷却后的回复消息, '[nudge]'为戳一戳, 设为空字符串禁用")
+    @Comment("触发冷却后的回复消息, '${QQBotService.REPLY_NUDGE_KEYWORD}' 为戳一戳, 设为空字符串禁用")
     val inCoolDownMessage: String = Cooler.DEFAULT_MESSAGE,
 
     @Comment("指令权限别名")

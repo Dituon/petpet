@@ -25,6 +25,7 @@ import java.util.Map;
 @Slf4j
 public class QQBotService extends BotService {
     public static final float DEFAULT_NUDGE_PROBABILITY = 0.3f;
+    public static final String REPLY_NUDGE_KEYWORD = "[nudge]";
 
     @Getter
     protected final QQBotConfig config;
@@ -43,6 +44,8 @@ public class QQBotService extends BotService {
     @Setter
     @Getter
     protected Path permissionConfigPath = Path.of("./permissions");
+    @Getter
+    public final boolean cooldownReplyNudge;
     @Getter
     public final TimeParser timeParser;
     protected final Map<PetpetModel, Map<String, Integer>> templateExpectedSizeCache = new HashMap<>(256);
@@ -68,6 +71,7 @@ public class QQBotService extends BotService {
         this.defaultGroupCommandPermission = stringToCommandPermission(config.getDefaultGroupCommandPermission());
         this.defaultGroupEditPermission = stringToEditPermission(config.getDefaultGroupEditPermission());
         this.timeParser = new TimeParser(config.getTimeUnitName());
+        this.cooldownReplyNudge = REPLY_NUDGE_KEYWORD.equals(config.getInCoolDownMessage());
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::onJvmExit));
     }

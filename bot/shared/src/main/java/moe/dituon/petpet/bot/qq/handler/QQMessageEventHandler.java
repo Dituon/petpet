@@ -208,6 +208,13 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
         }
 
         protected void replyCooldown() {
+            var msg = config.getInCoolDownMessage();
+            if (msg.isEmpty()) {
+                return;
+            } else if (service.cooldownReplyNudge) {
+                replyNudge();
+                return;
+            }
             replyMessage(config.getInCoolDownMessage());
         }
 
@@ -324,5 +331,7 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
         protected abstract void replyMessage(EncodedImage image);
 
         protected abstract void replyMessage(BotSendEvent event);
+
+        protected abstract void replyNudge();
     }
 }

@@ -5,10 +5,7 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.runBlocking
 import moe.dituon.petpet.bot.BotSendEvent
 import moe.dituon.petpet.bot.qq.handler.QQMessageEventHandler
-import moe.dituon.petpet.bot.qq.onebot.OnebotBotService
-import moe.dituon.petpet.bot.qq.onebot.ScriptOnebotSendEvent
-import moe.dituon.petpet.bot.qq.onebot.globalBotInstance
-import moe.dituon.petpet.bot.qq.onebot.sendPrivateForwardMsg
+import moe.dituon.petpet.bot.qq.onebot.*
 import moe.dituon.petpet.core.context.RequestContext
 import moe.dituon.petpet.core.utils.image.EncodedImage
 import moe.dituon.petpet.script.PetpetScriptModel
@@ -62,7 +59,7 @@ open class OnebotMessageHandler(
             return userId.toString()
         }
 
-        private val userId: Long
+        protected val userId: Long
             get() = messageEventObject["user_id"].asLong
 
         override fun getSubjectName(): String {
@@ -119,6 +116,10 @@ open class OnebotMessageHandler(
 
         override fun inGroupContext(): Boolean {
             return false
+        }
+
+        override fun replyNudge(): Unit = runBlocking {
+            sendNudge(userId)
         }
     }
 }

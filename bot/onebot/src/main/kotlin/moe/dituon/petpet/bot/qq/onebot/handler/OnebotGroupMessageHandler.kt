@@ -5,10 +5,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import moe.dituon.petpet.bot.BotSendEvent
-import moe.dituon.petpet.bot.qq.onebot.OnebotBotService
-import moe.dituon.petpet.bot.qq.onebot.ScriptOnebotSendEvent
-import moe.dituon.petpet.bot.qq.onebot.globalBotInstance
-import moe.dituon.petpet.bot.qq.onebot.sendGroupForwardMsg
+import moe.dituon.petpet.bot.qq.onebot.*
 import moe.dituon.petpet.core.context.RequestContext
 import moe.dituon.petpet.core.utils.image.EncodedImage
 import moe.dituon.petpet.script.PetpetScriptModel
@@ -101,6 +98,10 @@ class OnebotGroupMessageHandler(
 
         override fun inGroupContext(): Boolean {
             return true
+        }
+
+        override fun replyNudge(): Unit = runBlocking {
+            sendNudge(groupMessageEvent.userId, groupMessageEvent.groupId)
         }
     }
 }
