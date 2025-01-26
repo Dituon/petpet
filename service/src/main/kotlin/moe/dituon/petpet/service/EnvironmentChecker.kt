@@ -8,7 +8,7 @@ class EnvironmentChecker {
     companion object {
         @JvmStatic
         val log: Logger = LoggerFactory.getLogger("Petpet")
-        const val infoHead =  "=============== Petpet 环境检查 ==============="
+        const val infoHead = "=============== Petpet 环境检查 ==============="
         const val infoSplit = "=============================================="
 
         @JvmStatic
@@ -25,7 +25,8 @@ class EnvironmentChecker {
                     - 彩色 Emoji 渲染
                     - Linux 上的增强字体渲染
                     - 亚像素抗锯齿
-                    """.trimIndent())
+                    """.trimIndent()
+                )
             }
             val unsupportedLanguages = GlobalContext.getInstance().fontManager
                 .supportedLanguageFontMap.filter { it.value.isEmpty() }.keys
@@ -34,10 +35,9 @@ class EnvironmentChecker {
                     "- ${it.name} (${it.desc})"
                 }
                 infos.add(
+                    "无法找到支持以下语言的字体:" +
+                    fonts.joinToString("\n") +
                     """
-                    无法找到支持以下语言的字体:
-                    ${fonts.joinToString("\n")}
-
                     请在系统环境中安装字体, 或在 Petpet 字体目录中添加字体文件;
                     未安装字体可能导致无法渲染对应语言的文本
                     """.trimIndent()

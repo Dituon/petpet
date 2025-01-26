@@ -4,33 +4,37 @@
 
 #### Onebot
 
-0. 部署支持 [`Onebot v11`](https://github.com/botuniverse/onebot-11) 标准的服务端, 例如:
+1. 部署支持 [`Onebot v11`](https://github.com/botuniverse/onebot-11) 标准的服务端, 例如:
     - [NapCat](https://napneko.github.io/guide/start-install) - 基于无头 NTQQ 的实现
     - [LLOneBot](https://llonebot.github.io/zh-CN/guide/getting-started) - 基于 LiteLoaderQQNT 的实现
     - [AstralGocq](https://github.com/ProtocolScience/AstralGocq) - 基于 Mirai & AndroidNT 协议的实现
 
-1. 下载 [最新版本 `petpet-onebot.jar`](https://github.com/Dituon/petpet/releases)
+2. 下载 [最新版本 `petpet-onebot.jar`](https://github.com/Dituon/petpet/releases)
 
-2. 下载 [模板素材](https://github.com/Dituon/petpet-templates) 并放入 `./data/xmmt.dituon.petpet/` 目录
+3. 下载 [模板素材](https://github.com/Dituon/petpet-templates) 并放入 `./data/xmmt.dituon.petpet/` 目录
 
-3. 启动 `petpet-onebot.jar` (`java -jar petpet-onebot.jar`)
+4. 启动 `petpet-onebot.jar` (`java -jar petpet-onebot.jar`)
 
-4. 修改 `onebot.yml` 配置文件:
+5. 修改 `onebot.yml` 配置文件:
     - `url`: 正向 Onebot WS 实现端地址 (正向模式)
     - `reversedPort`: 反向 Onebot WS 端口 (反向模式)
     - `token`: 连接 Onebot 实现端的令牌 (默认为空)
 
-5. 编辑其它配置项, 重启以加载新配置
+6. 编辑其它配置项, 重启以加载新配置
+
+> 如果需要缓存由其它客户端发出的消息, 请在协议端开启 **报告自身消息**
 
 #### Mirai
 
-0. 部署 [Mirai](https://github.com/mamoe/mirai) 或 [Overflow](https://mirai.mrxiaom.top/) 框架
+1. 部署 [Mirai](https://github.com/mamoe/mirai) 或 [Overflow](https://mirai.mrxiaom.top/) 框架
 
-1. 下载 [最新版本 `petpet.mirai2.jar`](https://github.com/Dituon/petpet/releases) 并将插件放入 `Mirai/plugins/` 目录
+2. 下载 [最新版本 `petpet.mirai2.jar`](https://github.com/Dituon/petpet/releases) 并将插件放入 `Mirai/plugins/` 目录
 
-2. 下载 [模板素材](https://github.com/Dituon/petpet-templates) 并放入 `Mirai/data/xmmt.dituon.petpet/` 目录
+3. 下载 [模板素材](https://github.com/Dituon/petpet-templates) 并放入 `Mirai/data/xmmt.dituon.petpet/` 目录
 
-3. 启动 Mirai, 可自行更改配置文件 `Petpet.yml`, 重启后生效
+4. 启动 Mirai, 可自行更改配置文件 `Petpet.yml`, 重启后生效
+
+> 如果需要缓存由其它 客户端 / 插件 发出的消息, 请在协议端开启 **报告自身消息**
 
 ## 从旧版迁移
 

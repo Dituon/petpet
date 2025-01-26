@@ -84,12 +84,10 @@ public class BorderRadius extends ClipPath {
      * @see #getShape(RealPosition)
      */
     public BufferedImage buildImage(BufferedImage image, LengthContext context) {
-        int type = image.getType();
-        if (image.getColorModel().getTransparency() == Transparency.OPAQUE) {
-            type = BufferedImage.TYPE_4BYTE_ABGR;
-        }
-
-        var base = new BufferedImage(image.getWidth(), image.getHeight(), type);
+        var base = new BufferedImage(image.getWidth(), image.getHeight(),
+                image.getColorModel().getTransparency() == Transparency.OPAQUE
+                        ? BufferedImage.TYPE_4BYTE_ABGR : image.getType()
+        );
         Graphics2D g2d = base.createGraphics();
         g2d.setClip(getShape(RealPosition.fromLengthContext(context)));
         g2d.drawImage(image, 0, 0, null);
