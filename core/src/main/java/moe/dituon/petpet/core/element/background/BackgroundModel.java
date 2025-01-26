@@ -73,7 +73,9 @@ public class BackgroundModel implements ElementModel {
 
     public List<BufferedImage> getClonedImages() {
         return getFrameListSync()
-                .stream().map(f -> ImageUtils.cloneImage(f.image))
+                .stream().map(f -> f.image.getType() == BufferedImage.TYPE_BYTE_INDEXED
+                        ? ImageUtils.cloneImageAsAbgr(f.image)
+                        : ImageUtils.cloneImage(f.image))
                 .collect(Collectors.toList());
     }
 

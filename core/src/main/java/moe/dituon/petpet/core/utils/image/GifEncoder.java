@@ -222,5 +222,7 @@ public class GifEncoder {
                 }
             }
         }
+
+        // TODO: FrameDataIndexed
     }
 }

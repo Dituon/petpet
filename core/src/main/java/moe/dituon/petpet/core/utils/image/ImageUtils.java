@@ -11,4 +11,12 @@ public class ImageUtils {
         WritableRaster raster = raw.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
+
+    public static BufferedImage cloneImageAsAbgr(BufferedImage raw) {
+        BufferedImage image = new BufferedImage(raw.getWidth(), raw.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+        var g2d = image.createGraphics();
+        g2d.drawImage(raw, 0, 0, null);
+        g2d.dispose();
+        return image;
+    }
 }
