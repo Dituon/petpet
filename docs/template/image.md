@@ -95,6 +95,12 @@ templates/
 ]
 ```
 
+> 坐标支持动态变量, 详见 [Length](./length.md)。
+
+```jsonc
+[0, 0, "100vw", "100vh"] // 例: 图像占满整个画布
+```
+
 ![xywh-coords](../images/xywh-coords.png)
 
 - **Deform**: `[[x1, y1], [x2, y2], [x3, y3], [x4, y4], [anchor_x, anchor_y]]`
