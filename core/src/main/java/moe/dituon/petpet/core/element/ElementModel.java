@@ -34,5 +34,9 @@ public interface ElementModel extends DrawableElement, Dependable {
         public abstract int getHeight();
 
         public abstract int getLength();
+
+        public int getStartIndex() {
+            return 0;
+        }
     }
 }

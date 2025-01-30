@@ -9,14 +9,11 @@ import moe.dituon.petpet.core.element.ElementModel;
 import moe.dituon.petpet.core.position.AvatarCoords;
 import moe.dituon.petpet.template.element.AvatarTemplate;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AvatarModel implements ElementModel {
-    public final AvatarTemplate data;
+    public final AvatarTemplate template;
     public final List<AvatarFrame> frames;
     public final List<AvatarCoords> coords;
     @Getter
@@ -26,15 +23,20 @@ public class AvatarModel implements ElementModel {
     @Getter
     public final boolean isDependsOnElementSize;
 
+    public final int startIndex;
+    public final int endIndex;
+
     protected int expectedWidth = -1;
     protected int expectedHeight = -1;
 
     protected Set<String> dependentIds = null;
 
     public AvatarModel(AvatarTemplate template) {
-        this.data = template;
+        this.template = template;
 
         this.coords = template.getCoords();
+        this.startIndex = template.getStart();
+        this.endIndex = template.getEnd();
         var tempFrames = new AvatarFrame[template.getMaxLength()];
         for (int i = 0; i < template.getMaxLength(); i++) {
             switch (ElementFrame.getNElement(coords, i).getType()) {
@@ -101,7 +103,7 @@ public class AvatarModel implements ElementModel {
 
     @Override
     public String getId() {
-        return this.data.getId();
+        return this.template.getId();
     }
 
     @Override
@@ -126,7 +128,7 @@ public class AvatarModel implements ElementModel {
     }
 
     public List<String> getRequestKeys() {
-        return this.data.getKey();
+        return this.template.getKey();
     }
 
     @Override
@@ -185,13 +187,18 @@ public class AvatarModel implements ElementModel {
         @Override
         public void draw() {
             int canvasLength = this.canvasContext.getLength();
+            final int absoluteEndIndex = endIndex >= 0 ? endIndex : (canvasLength + endIndex + 1);
             var frameList = this.renderedFrames;
             if (frameList.size() < canvasLength) {
                 var tempFrames = new ElementFrame.RenderedFrame[canvasLength];
                 for (int i = 0; i < canvasLength; i++) {
-                    tempFrames[i] = frameList.get(i % frameList.size()).cloneByIndex(i);
+                    if (i > absoluteEndIndex || i < startIndex) {
+                        tempFrames[i] = null;   // cannot draw
+                        continue;
+                    }
+                    tempFrames[i] = frameList.get(i % frameList.size()).cloneByIndex(i - startIndex);
                 }
-                frameList = List.of(tempFrames);
+                frameList = Arrays.asList(tempFrames);
             } else if (frameList.size() > canvasLength) {
                 frameList = frameList.subList(0, canvasLength);
             }
@@ -199,6 +206,11 @@ public class AvatarModel implements ElementModel {
             GlobalContext.getInstance().execImageProcess(frameList, (i, frame) -> {
                 frame.draw(i);
             });
+        }
+
+        @Override
+        public int getStartIndex() {
+            return startIndex;
         }
     }
 }

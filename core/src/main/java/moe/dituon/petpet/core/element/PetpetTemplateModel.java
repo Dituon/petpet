@@ -61,7 +61,7 @@ public class PetpetTemplateModel implements PetpetModel {
                 int height = rendered.getHeight();
 
                 canvasContext.putSize(this.elementIdMap.get(element), width, height);
-                maxLength = Math.max(maxLength, rendered.getLength());
+                maxLength = Math.max(maxLength, rendered.getLength() + rendered.getStartIndex());
                 if (element.getId() != null) {
                     canvasContext.putSize(element.getId(), width, height);
                 }
@@ -75,7 +75,9 @@ public class PetpetTemplateModel implements PetpetModel {
                 ));
             }
         }
-        if (canvasContext.getLength() == 1) canvasContext.setLength(maxLength);
+        if (canvasContext.getLength() == 1) {
+            canvasContext.setLength(maxLength, this.template.getDelay());
+        }
         for (ElementModel.RenderedElement ele : renderedElementList) {
             ele.draw();
         }

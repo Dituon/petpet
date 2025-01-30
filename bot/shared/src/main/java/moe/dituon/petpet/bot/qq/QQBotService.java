@@ -149,7 +149,7 @@ public class QQBotService extends BotService {
                     continue;
                 }
                 var avatarEle = (AvatarModel) ele;
-                for (String key : avatarEle.data.getKey()) {
+                for (String key : avatarEle.template.getKey()) {
                     int size = Math.max(avatarEle.getExpectedWidth(), avatarEle.getExpectedHeight());
                     map.merge(key, size, Math::max);
                 }

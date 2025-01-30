@@ -106,6 +106,10 @@ public class CanvasContext {
     }
 
     public void setLength(int length) {
+        this.setLength(length, new int[this.frameList.isEmpty() ? 0 : this.frameList.get(0).delay]);
+    }
+
+    public void setLength(int length, int[] delays) {
         if (this.length != 1) {
             throw new IllegalStateException("setLength() can only be called on single frame canvas");
         }
@@ -118,7 +122,7 @@ public class CanvasContext {
         list.add(first);
         for (int i = 1; i < length; i++) {
             //TODO: delay
-            list.add(new ImageFrame(ImageUtils.cloneImage(first.image), first.delay));
+            list.add(new ImageFrame(ImageUtils.cloneImage(first.image), delays[i % delays.length]));
         }
         this.frameList = new ImageFrameList(list);
         this.graphicsList = new ArrayList<>(Collections.nCopies(length, null));

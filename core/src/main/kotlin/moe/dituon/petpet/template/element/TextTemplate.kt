@@ -112,6 +112,8 @@ data class TextTemplate(
     // TODO
     @JsonNames("border_radius")
     val borderRadius: BorderRadiusList = emptyList(),
+    val start: Int = 0,
+    val end: Int = -1
 ) : ElementTemplate() {
     @Transient
     val maxLength: Int = maxOf(
@@ -167,6 +169,8 @@ data class TextTemplate(
         strokeSize = builder.strokeSize,
         background = builder.background,
         borderRadius = builder.borderRadius,
+        start = builder.start,
+        end = builder.end
     )
 
     class Builder(
@@ -204,6 +208,10 @@ data class TextTemplate(
         var background: List<Color> = emptyList()
             private set
         var borderRadius: List<BorderRadius> = emptyList()
+            private set
+        var start: Int = 0
+            private set
+        var end: Int = -1
             private set
 
         fun id(id: String) = apply { this.id = id }
@@ -252,6 +260,9 @@ data class TextTemplate(
 
         fun borderRadius(borderRadius: BorderRadius) = apply { this.borderRadius = mutableListOf(borderRadius) }
         fun borderRadius(borderRadius: List<BorderRadius>) = apply { this.borderRadius = borderRadius }
+
+        fun start(start: Int) = apply { this.start = start }
+        fun end(end: Int) = apply { this.end = end }
 
         fun build() = TextTemplate(this)
     }

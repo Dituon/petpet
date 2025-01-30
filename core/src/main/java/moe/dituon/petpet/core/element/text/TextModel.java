@@ -29,6 +29,8 @@ public class TextModel implements ElementModel {
     protected final List<GraphicsParagraph> paragraphList;
     @Getter
     public final boolean isAbsolute;
+    public final int startIndex;
+    public final int endIndex;
 
     public TextModel(TextTemplate template) {
         this(template, true);
@@ -38,6 +40,8 @@ public class TextModel implements ElementModel {
         this.template = template;
         this.paragraphList = new ArrayList<>(template.getMaxLength());
         this.isAbsolute = template.getCoords().stream().allMatch(TextXYWCoords::isAbsolute);
+        this.startIndex = template.getStart();
+        this.endIndex = template.getEnd();
         if (initFlag) init(template);
     }
 
@@ -45,6 +49,8 @@ public class TextModel implements ElementModel {
         this.template = dynamicModel.template;
         this.paragraphList = dynamicModel.paragraphList;
         this.isAbsolute = dynamicModel.isAbsolute;
+        this.startIndex = dynamicModel.startIndex;
+        this.endIndex = dynamicModel.endIndex;
         init(template);
     }
 
@@ -98,20 +104,23 @@ public class TextModel implements ElementModel {
         throw new UnknownError();
     }
 
-    protected static List<GraphicsParagraph> repeatByLength(@NotNull List<GraphicsParagraph> list, int length) {
+    protected List<GraphicsParagraph> repeatByLength(@NotNull List<GraphicsParagraph> list, int length, int absoluteEndIndex) {
         if (list.size() >= length) return list;
-        if (list.size() == 1) return Collections.nCopies(length, list.get(0));
+        if (list.size() == 1 && startIndex == 0 && absoluteEndIndex == length) {
+                return Collections.nCopies(length, list.get(0));
+        }
         return IntStream.range(0, length)
-                .mapToObj(i -> list.get(i % list.size()))
+                .mapToObj(i -> (i > absoluteEndIndex || i < startIndex) ? null : list.get(i % list.size()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void draw(CanvasContext canvasContext, RequestContext requestContext) {
         int canvasLength = canvasContext.getLength();
+        final int absoluteEndIndex = endIndex >= 0 ? endIndex : (canvasLength + endIndex + 1);
         var frameList = paragraphList;
         if (paragraphList.size() <= canvasLength) {
-            frameList = repeatByLength(frameList, canvasLength);
+            frameList = repeatByLength(frameList, canvasLength, absoluteEndIndex);
         }
         GlobalContext.getInstance().execImageProcess(frameList, (i, p) -> {
             p.draw(
@@ -151,6 +160,11 @@ public class TextModel implements ElementModel {
         @Override
         public int getLength() {
             return template.getMaxLength();
+        }
+
+        @Override
+        public int getStartIndex() {
+            return startIndex;
         }
     }
 

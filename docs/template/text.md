@@ -27,6 +27,8 @@
 | **style**        | [TextStyle](#text-style)       | 文本样式                                             | `plain`  |
 | **stroke_color** | [Color](./types.md#color)      | 文本描边颜色                                           | `none`   |
 | **stroke_size**  | float                          | 文本描边大小, 单位为 px                                   | `0px`    |
+| **start**        | int                            | 起始索引                                             | `0`      |
+| **end**          | int                            | 结束索引 (负数时为末尾索引, 例如 `-1` 表示最后一帧)                  | `-1`     |
 
 ## 动画
 

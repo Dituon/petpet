@@ -12,20 +12,22 @@
 }
 ```
 
-| **属性**            | **类型**                                 | **描述**            | **默认值**     |
-|-------------------|----------------------------------------|-------------------|-------------|
-| **key**           | string                                 | 与输入数据匹配的键名        | `"unknown"` |
-| **default**       | [ImageSrc](#imagesrc)                  | 默认图像地址, 别名为 `src` | 无           |
-| **coords**        | [Coords](#coords)                      | 图像坐标              | 必须          |
-| **crop**          | [Crop](#crop)                          | 图像裁剪坐标            | 无           |
-| **fit**           | [Fit](#fit)                            | 图像适应方式            | `fill`      |
-| **position**      | [Offset](./length.md#offset)           | 图像适应偏移            | `center`    |
-| **rotate**        | [RotateTransition](#rotate-transition) | 图像旋转函数            | `false`     |
-| **angle**         | float                                  | 顺时针方向旋转角度，单位为度    | `0`         |
-| **origin**        | [Offset](./length.md#offset)           | 图像旋转原点            | `center`    |
-| **opacity**       | float                                  | 图像不透明度，取值范围[0, 1] | `1`         |
-| **border_radius** | [BorderRadius](#borderradius)          | 边框圆角半径            | `0`         |
-| **filter**        | [Filter](./filter.md#image-filter)[]   | 图像滤镜              | 无           |
+| **属性**            | **类型**                                 | **描述**                          | **默认值**     |
+|-------------------|----------------------------------------|---------------------------------|-------------|
+| **key**           | string                                 | 与输入数据匹配的键名                      | `"unknown"` |
+| **default**       | [ImageSrc](#imagesrc)                  | 默认图像地址, 别名为 `src`               | 无           |
+| **coords**        | [Coords](#coords)                      | 图像坐标                            | 必须          |
+| **crop**          | [Crop](#crop)                          | 图像裁剪坐标                          | 无           |
+| **fit**           | [Fit](#fit)                            | 图像适应方式                          | `fill`      |
+| **position**      | [Offset](./length.md#offset)           | 图像适应偏移                          | `center`    |
+| **rotate**        | [RotateTransition](#rotate-transition) | 图像旋转函数                          | `false`     |
+| **angle**         | float                                  | 顺时针方向旋转角度，单位为度                  | `0`         |
+| **origin**        | [Offset](./length.md#offset)           | 图像旋转原点                          | `center`    |
+| **opacity**       | float                                  | 图像不透明度，取值范围[0, 1]               | `1`         |
+| **border_radius** | [BorderRadius](#borderradius)          | 边框圆角半径                          | `0`         |
+| **filter**        | [Filter](./filter.md#image-filter)[]   | 图像滤镜                            | 无           |
+| **start**         | int                                    | 起始索引                            | `0`         |
+| **end**           | int                                    | 结束索引 (负数时为末尾索引, 例如 `-1` 表示最后一帧) | `-1`        |
 
 ## 动画
 

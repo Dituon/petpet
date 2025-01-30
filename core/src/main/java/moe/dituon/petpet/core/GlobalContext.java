@@ -72,6 +72,10 @@ public class GlobalContext {
         var latch = new CountDownLatch(elements.size());
         for (int i = 0; i < elements.size(); i++) {
             var element = elements.get(i);
+            if (element == null) {
+                latch.countDown();
+                continue;
+            }
             int fi = i;
             imageProcessExecutor.execute(() -> {
                 function.accept(fi, element);

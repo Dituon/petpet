@@ -1,6 +1,7 @@
 package moe.dituon.petpet.core.element.text;
 
 import lombok.Getter;
+import moe.dituon.petpet.core.GlobalContext;
 import moe.dituon.petpet.core.context.CanvasContext;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.element.ElementFrame;
@@ -114,20 +115,17 @@ public class TextDynamicModel extends TextModel {
         @Override
         public void draw() {
             int canvasLength = canvasContext.getLength();
+            final int absoluteEndIndex = endIndex >= 0 ? endIndex : (canvasLength + endIndex + 1);
             var frameList = paragraphList;
             if (paragraphList.size() <= canvasLength) {
-                frameList = repeatByLength(frameList, canvasLength);
+                frameList = repeatByLength(frameList, canvasLength, absoluteEndIndex);
             }
-            for (int i = 0; i < canvasLength; i++) {
-                draw(frameList.get(i), i);
-            }
-        }
-
-        protected void draw(GraphicsParagraph paragraph, int i) {
-            paragraph.draw(
-                    super.canvasContext.getGraphics(i),
-                    super.canvasContext.createLengthContext(paragraph.width, paragraph.height)
-            );
+            GlobalContext.getInstance().execImageProcess(frameList, (i, p) -> {
+                p.draw(
+                        super.canvasContext.getGraphics(i),
+                        super.canvasContext.createLengthContext(p.width, p.height)
+                );
+            });
         }
     }
 }
