@@ -101,11 +101,11 @@ public class RequestContext {
         return varsMap;
     }
 
-    public ImageResource getImageResource(String id, @Nullable String defaultUrl) {
+    public ImageResource getImageResource(String id, @Nullable String defaultUrl, File basePath) {
         var resource = this.imageResourceMap.get(id);
         if (resource != null) return resource;
         if (defaultUrl == null) throw new IllegalArgumentException("No image data found for id: " + id);
-        return this.resourceManager.getImageResource(defaultUrl);
+        return this.resourceManager.getImageResource(defaultUrl, basePath);
     }
 
     public ImageFrameList getFrameList(
@@ -127,7 +127,7 @@ public class RequestContext {
         synchronized (cacheKey) {
             return this.frameListCache.computeIfAbsent(cacheKey, key -> {
                 try {
-                    return this.getImageResource(id, defaultUrl)
+                    return this.getImageResource(id, defaultUrl, basePath)
                             .getFrameListAsync(basePath)
                             .get();
                 } catch (InterruptedException | ExecutionException e) {

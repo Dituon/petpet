@@ -1,5 +1,7 @@
 package moe.dituon.petpet.core.imgres;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,7 +106,7 @@ public class ImageResourceManager {
         return getWebResource(url);
     }
 
-    public ImageResource getImageResource(String urlOrPath) {
+    public ImageResource getImageResource(String urlOrPath, @Nullable File basePath) {
         if (this.webImageCache.containsKey(urlOrPath)) {
             return this.webImageCache.get(urlOrPath);
         }
@@ -112,7 +114,10 @@ public class ImageResourceManager {
             var url = new URL(urlOrPath);
             return getWebResource(url);
         } catch (MalformedURLException e) {
-            return getLocalResource(new File(urlOrPath));
+            return getLocalResource(
+                    basePath == null ? new File(urlOrPath)
+                            : basePath.toPath().resolve(urlOrPath).toFile()
+            );
         }
     }
 

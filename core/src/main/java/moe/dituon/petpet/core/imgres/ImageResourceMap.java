@@ -2,7 +2,9 @@ package moe.dituon.petpet.core.imgres;
 
 import lombok.experimental.Delegate;
 import moe.dituon.petpet.core.GlobalContext;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,11 +53,19 @@ public class ImageResourceMap implements Map<String, ImageResource> {
             Map<String, String> map,
             ImageResourceManager manager
     ) {
+        return fromStringMap(map, manager, null);
+    }
+
+    public static ImageResourceMap fromStringMap(
+            Map<String, String> map,
+            ImageResourceManager manager,
+            @Nullable File basePath
+    ) {
         if (map.isEmpty()) return EMPTY;
 
         HashMap<String, ImageResource> resultMap = new HashMap<>(map.size());
         for (Entry<String, String> entry : map.entrySet()) {
-            resultMap.put(entry.getKey(), manager.getImageResource(entry.getValue()));
+            resultMap.put(entry.getKey(), manager.getImageResource(entry.getValue(), basePath));
         }
         return new ImageResourceMap(resultMap);
     }
