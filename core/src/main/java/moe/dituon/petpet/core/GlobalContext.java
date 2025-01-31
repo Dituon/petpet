@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class GlobalContext {
-    public static final int API_VERSION = 100;
+    public static final int API_VERSION = 101;
     @Getter
     @Setter
     protected BaseRenderConfig renderConfig;
