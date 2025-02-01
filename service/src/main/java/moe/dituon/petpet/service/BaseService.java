@@ -23,20 +23,14 @@ public abstract class BaseService extends TemplateManger {
 
     @Getter
     protected Map<String, List<String>> aliaIdMap = new HashMap<>(512);
-    protected Map<String, List<String>> replaceAliaMap = Collections.emptyMap();
 
     @Override
-    public PetpetModel addTemplate(String id, PetpetTemplate template) {
+    public PetpetModel addTemplate(String id, PetpetModel template) {
         var prev = super.addTemplate(id, template);
-        for (String alia : getAlias(id, template)) {
+        for (String alia : template.getMetadata().getAlias()) {
             this.aliaIdMap.computeIfAbsent(alia, k -> new ArrayList<>(4)).add(id);
         }
         return prev;
-    }
-
-    protected List<String> getAlias(String id, PetpetTemplate template) {
-        var replacedAlias = replaceAliaMap.get(id);
-        return replacedAlias != null ? replacedAlias : template.getMetadata().getAlias();
     }
 
     @Override

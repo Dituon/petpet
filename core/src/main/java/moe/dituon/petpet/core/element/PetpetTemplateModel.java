@@ -1,6 +1,7 @@
 package moe.dituon.petpet.core.element;
 
 import lombok.Getter;
+import lombok.Setter;
 import moe.dituon.petpet.core.canvas.CanvasModel;
 import moe.dituon.petpet.core.canvas.DependencyBuilder;
 import moe.dituon.petpet.core.context.CanvasContext;
@@ -31,6 +32,9 @@ public class PetpetTemplateModel implements PetpetModel {
     protected final Set<String> requestTextKeys;
     protected int requestTextListLength = -1;
     protected File previewImage = null;
+    @Getter
+    @Setter
+    protected Metadata metadata;
 
     public PetpetTemplateModel(PetpetTemplate template) {
         this.template = template;
@@ -42,6 +46,7 @@ public class PetpetTemplateModel implements PetpetModel {
         this.dependentRequestImageIds = dependencyBuilder.getUndefinedIds();
         this.requestImageKeys = dependencyBuilder.getDependentRequestImageKeys();
         this.requestTextKeys = dependencyBuilder.getDependentRequestTextKeys();
+        this.metadata = template.getMetadata();
     }
 
     @Override
@@ -133,14 +138,9 @@ public class PetpetTemplateModel implements PetpetModel {
     }
 
     @Override
-    public Metadata getMetadata() {
-        return template.getMetadata();
-    }
-
-    @Override
     public @Nullable File getPreviewImage() {
         if (previewImage != null) return previewImage;
-        var previewPath = template.getMetadata().getPreview();
+        var previewPath = metadata.getPreview();
         if (previewPath != null) {
             previewImage = template.getBasePath().toPath().resolve(previewPath).toFile();
         }

@@ -1,7 +1,9 @@
 package moe.dituon.petpet.bot.qq.mirai;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import moe.dituon.petpet.bot.TemplateExtraMetadata;
 import moe.dituon.petpet.bot.qq.QQBotService;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Contact;
@@ -11,12 +13,22 @@ import net.mamoe.mirai.utils.ExternalResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.util.Collections;
+import java.util.Map;
 
 @Slf4j
 public class MiraiBotService extends QQBotService {
+    public static final File DEFAULT_CUSTOM_METADATA_PATH = new File("TemplateMetadata.yml");
+
     @Getter
     protected final MiraiPluginConfig miraiConfig;
+    @Getter
+    @Setter
+    protected File customMetadataPath = DEFAULT_CUSTOM_METADATA_PATH;
 
     public MiraiBotService(MiraiPluginConfig config) {
         super(config.toQQBotConfig());
@@ -61,5 +73,37 @@ public class MiraiBotService extends QQBotService {
         }
         // message id = target id + source id
         return source.getTargetId() + sourceIds[0];
+    }
+
+
+    @Override
+    protected Map<String, TemplateExtraMetadata> initCustomTemplateMetadata() {
+        Map<String, TemplateExtraMetadata> metadataMap;
+        try {
+            var str = Files.readString(customMetadataPath.toPath());
+            metadataMap = UtilsKt.decodeCustomMetadataConfig(str);
+        } catch (Exception ex) {
+            if (!(ex instanceof NoSuchFileException)) {
+                log.warn("无法读取自定义模板元数据文件: {}", customMetadataPath.getAbsolutePath(), ex);
+            }
+            return Collections.emptyMap();
+        }
+        return metadataMap;
+    }
+
+    @Override
+    public void updateScriptService() {
+        var savedMap = buildSavedMetadataMap();
+        if (savedMap.isEmpty()) {
+            super.updateScriptService();
+            return;
+        }
+        try {
+            var str = UtilsKt.encodeCustomMetadataConfig(savedMap);
+            Files.writeString(customMetadataPath.toPath(), str);
+        } catch (IOException e) {
+            log.warn("无法保存自定义模板元数据文件: {}", customMetadataPath.getAbsolutePath(), e);
+        }
+        super.updateScriptService();
     }
 }

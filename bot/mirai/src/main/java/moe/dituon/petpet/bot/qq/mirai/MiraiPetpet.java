@@ -34,6 +34,11 @@ public final class MiraiPetpet extends JavaPlugin {
 
         var config = MiraiPluginConfig.INSTANCE;
         service = new MiraiBotService(config);
+        service.setCustomMetadataPath(getConfigFolderPath()
+                .toAbsolutePath()
+                .resolve(MiraiBotService.DEFAULT_CUSTOM_METADATA_PATH.getName())
+                .toFile()
+        );
         service.addTemplates(getDataFolder());
         service.addFonts(getDataFolder().toPath().resolve("./fonts"));
         service.setPermissionConfigPath(getConfigFolderPath().resolve("permissions"));

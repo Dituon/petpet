@@ -24,7 +24,7 @@ val log: Logger = LoggerFactory.getLogger("Petpet-Onebot")
 
 val config: OnebotConfig by lazy {
     var config: OnebotConfig? = null
-    val configFile = File("onebot.yml")
+    val configFile = OnebotBotService.DEFAULT_CONFIG_FILE
     if (configFile.exists()) try {
         config = Yaml.decodeFromString(OnebotConfig.serializer(), configFile.readText())
     } catch (t: Throwable) {

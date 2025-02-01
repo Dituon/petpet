@@ -7,6 +7,7 @@ import moe.dituon.petpet.service.ObservableBaseService;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +30,25 @@ public class BotService extends ObservableBaseService {
     protected String defaultTemplateId = null;
     protected boolean defaultTemplateLock = false;
 
+    protected Map<String, TemplateExtraMetadata> extraMetadataMap = null;
+
+    protected Map<String, TemplateExtraMetadata> getExtraMetadataMap() {
+        if (extraMetadataMap == null) {
+            extraMetadataMap = initCustomTemplateMetadata();
+        }
+        return extraMetadataMap;
+    }
+
+    protected Map<String, TemplateExtraMetadata> initCustomTemplateMetadata() {
+        return Collections.emptyMap();
+    }
+
     @Override
     public PetpetModel addTemplate(String id, PetpetModel model) {
+        var customMetadata = getExtraMetadataMap().get(id);
+        if (customMetadata != null) {
+            model.setMetadata(customMetadata.toMetadata());
+        }
         var prev = super.addTemplate(id, model);
         if (model.getMetadata() == null) {
             return prev;

@@ -248,6 +248,21 @@
 
 Onebot 客户端的更多配置项请参考 [bot/onebot/](./onebot/README.md)
 
+## 模板元数据配置文件
+
+在配置文件 `template-metadata.yml` 中修改的模板元数据会覆盖原模板数据。
+
+例如，将模板 `acclaim` 的别名改为 `喝彩` 和 `欢呼`
+
+```yaml
+acclaim: 
+  alias: 
+    - 喝彩
+    - 欢呼
+```
+
+对元数据的修改详见 [docs/template/metadata](../docs/template/metadata.md)
+
 ## 权限管理
 
 权限操作:

@@ -10,3 +10,4 @@ build
 /permissions
 http-server.json
 onebot.yml
+template-metadata.yml

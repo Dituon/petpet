@@ -1,6 +1,7 @@
 package moe.dituon.petpet.script;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
@@ -27,7 +28,8 @@ public class PetpetJsScriptModel implements PetpetScriptModel {
     protected final CompiledScript script;
     @Nullable
     @Getter
-    protected final Metadata metadata;
+    @Setter
+    protected Metadata metadata;
     @Getter
     public final EventManager eventManager = new EventManager();
     @Getter

@@ -9,6 +9,7 @@ import moe.dituon.petpet.old_template.OldPetpetTemplate;
 import moe.dituon.petpet.script.PetpetJsScriptModel;
 import moe.dituon.petpet.script.PetpetScriptModel;
 import moe.dituon.petpet.service.event.ScriptLoadEvent;
+import moe.dituon.petpet.template.Metadata;
 import moe.dituon.petpet.template.PetpetTemplate;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,9 +56,9 @@ public abstract class TemplateManger {
     }
 
     @Getter
-    protected Map<String, PetpetModel> staticModelMap = new HashMap<>(256);
+    protected final Map<String, PetpetModel> staticModelMap = new HashMap<>(256);
     @Getter
-    protected Map<String, PetpetScriptModel> scriptModelMap = new HashMap<>(32);
+    protected final Map<String, PetpetScriptModel> scriptModelMap = new HashMap<>(32);
 
     protected TemplateManger() {
     }
@@ -81,24 +82,28 @@ public abstract class TemplateManger {
     }
 
     public @Nullable PetpetModel addTemplate(String id, PetpetTemplate template) {
-        if (template.getMetadata().getApiVersion() > GlobalContext.API_VERSION) {
-            log.warn(
-                    "Template '{}' version {} is higher than the current API version {}",
-                    id,
-                    template.getMetadata().getApiVersion(),
-                    GlobalContext.API_VERSION
-            );
-        }
-        var model = new PetpetTemplateModel(template);
-        return addTemplate(id, model);
+        return addTemplate(id, new PetpetTemplateModel(template));
     }
 
     public @Nullable PetpetModel addTemplate(String id, PetpetModel model) {
+        checkTemplateApiVersion(id, model.getMetadata());
         if (model instanceof PetpetScriptModel) {
             if (model.getMetadata() == null) return null;
             this.scriptModelMap.put(id, (PetpetScriptModel) model);
         }
         return staticModelMap.put(id, model);
+    }
+
+    protected void checkTemplateApiVersion(String id, @Nullable Metadata metadata) {
+        if (metadata == null) return;
+        if (metadata.getApiVersion() > GlobalContext.API_VERSION) {
+            log.warn(
+                    "Template '{}' version {} is higher than the current API version {}",
+                    id,
+                    metadata.getApiVersion(),
+                    GlobalContext.API_VERSION
+            );
+        }
     }
 
     public @Nullable PetpetModel addTemplate(File path) {

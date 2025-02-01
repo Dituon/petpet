@@ -8,7 +8,7 @@ dependencies {
     implementation(project(":script"))
     implementation(project(":service"))
     implementation(project(":bot:shared"))
-    implementation("net.bytebuddy:byte-buddy:1.15.11")
+    implementation("net.mamoe.yamlkt:yamlkt:0.13.0")
     compileOnly("org.openjdk.nashorn:nashorn-core:15.4")
 }
 

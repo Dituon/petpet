@@ -3,14 +3,11 @@ package moe.dituon.petpet.bot.qq.mirai.handler;
 import moe.dituon.petpet.bot.BotSendEvent;
 import moe.dituon.petpet.bot.qq.handler.QQNudgeEventHandler;
 import moe.dituon.petpet.bot.qq.mirai.MiraiBotService;
-import moe.dituon.petpet.bot.qq.mirai.MiraiUtils;
 import moe.dituon.petpet.bot.qq.mirai.ScriptMiraiBotSendEvent;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.script.PetpetScriptModel;
 import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.contact.Member;
-import net.mamoe.mirai.contact.MemberKt;
 import net.mamoe.mirai.contact.User;
 import net.mamoe.mirai.event.events.NudgeEvent;
 

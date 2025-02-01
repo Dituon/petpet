@@ -1,9 +1,8 @@
 package moe.dituon.petpet.bot.qq.mirai.handler;
 
-import moe.dituon.petpet.bot.qq.QQBotService;
 import moe.dituon.petpet.bot.qq.handler.QQMessageElement;
 import moe.dituon.petpet.bot.qq.mirai.MiraiBotService;
-import moe.dituon.petpet.bot.qq.mirai.MiraiUtils;
+import moe.dituon.petpet.bot.qq.mirai.UtilsKt;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -30,7 +29,7 @@ public class MiraiGroupMessageChainWrapper extends MiraiMessageChainWrapper {
 
         @Override
         public String getTargetName() {
-            return MiraiUtils.getMemberName(group.get(at.getTarget()));
+            return UtilsKt.getMemberName(group.get(at.getTarget()));
         }
     }
 

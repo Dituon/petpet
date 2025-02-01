@@ -15,6 +15,7 @@ public interface PetpetModel {
     EncodedImage draw(RequestContext requestContext);
 
     Metadata getMetadata();
+    void setMetadata(Metadata metadata);
 
     @Nullable
     default File getPreviewImage() {

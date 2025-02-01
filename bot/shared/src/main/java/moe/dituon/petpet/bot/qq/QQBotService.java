@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import moe.dituon.petpet.bot.BotService;
+import moe.dituon.petpet.bot.TemplateExtraMetadata;
 import moe.dituon.petpet.bot.qq.permission.ContactPermission;
 import moe.dituon.petpet.bot.qq.permission.TimeParser;
 import moe.dituon.petpet.core.element.ElementModel;
@@ -13,6 +14,9 @@ import moe.dituon.petpet.core.element.avatar.AvatarModel;
 import moe.dituon.petpet.script.PetpetScriptModel;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
@@ -160,6 +164,18 @@ public class QQBotService extends BotService {
 
     public String updateDefaultFont() {
         return setDefaultFontFamily(config.getDefaultFontFamily());
+    }
+
+    protected Map<String, TemplateExtraMetadata> buildSavedMetadataMap() {
+        var tempMap = new HashMap<String, TemplateExtraMetadata>(staticModelMap.size());
+        staticModelMap.entrySet().stream()
+                .filter(e -> !getExtraMetadataMap().containsKey(e.getKey()) && e.getValue().getMetadata() != null)
+                .forEach(e -> tempMap.put(e.getKey(), TemplateExtraMetadata.fromMetadata(e.getValue().getMetadata())));
+        if (tempMap.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        tempMap.putAll(getExtraMetadataMap());
+        return tempMap;
     }
 
     @Override

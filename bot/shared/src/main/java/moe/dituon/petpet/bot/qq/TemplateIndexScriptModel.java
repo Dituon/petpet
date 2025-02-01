@@ -49,6 +49,10 @@ public class TemplateIndexScriptModel implements PetpetScriptModel {
     }
 
     @Override
+    public void setMetadata(Metadata metadata) {
+    }
+
+    @Override
     public @Nullable File getPreviewImage() {
         return null;
     }
