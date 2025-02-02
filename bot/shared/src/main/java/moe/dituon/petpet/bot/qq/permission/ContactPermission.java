@@ -8,9 +8,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class ContactPermission {
@@ -63,6 +63,8 @@ public class ContactPermission {
 
     public static final String ENABLE_MESSAGE = "已启用 %s";
     public static final String DISABLE_MESSAGE = "已禁用 %s";
+    public static final String ENABLE_TEMPLATE_MESSAGE = "已启用模板 %s";
+    public static final String DISABLE_TEMPLATE_MESSAGE = "已禁用模板 %s";
     public static final String PROBABILITY_MESSAGE = "戳一戳触发概率更新为 %.2f%%";
     public static final String COOLDOWN_MESSAGE = "冷却时间更新为 %s";
 
@@ -142,7 +144,13 @@ public class ContactPermission {
     }
 
     public Set<String> getDisabledTemplateIds() {
-        if (disabledTemplateIds == null) return service.getConfig().getDisabledTemplates();
+        if (disabledTemplateIds == null) {
+            var defaultDisabledTemplates = service.getConfig().getDisabledTemplates();
+            if ((getEditPermission() & EDIT_DISABLE_TEMPLATE_LIST) == 0) {
+                return defaultDisabledTemplates;
+            }
+            disabledTemplateIds = new HashSet<>(defaultDisabledTemplates);
+        }
         return disabledTemplateIds;
     }
 
@@ -210,9 +218,9 @@ public class ContactPermission {
             if (!Files.exists(configPath)) {
                 Files.createDirectories(configPath.getParent());
             }
-            Files.writeString(configPath, config.toJsonString());
+            Files.writeString(configPath, config.toJsonString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            log.error("Can not save permission config: {}", configPath.toAbsolutePath());
+            log.error("Can not save permission config: {}", configPath.toAbsolutePath(), e);
         }
     }
 
@@ -266,7 +274,79 @@ public class ContactPermission {
 
     public void setContactDisabledTemplateIds(String templateIds) {
         checkEditPermission(ContactPermission.EDIT_DISABLE_TEMPLATE_LIST);
-        this.disabledTemplateIds = Set.of(templateIds.trim().split(" +"));
+        this.disabledTemplateIds = Arrays.stream(templateIds.trim().split(" +"))
+                .map(service::getTemplateId)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * @param permissionOrId 传入权限列表或模板 ID
+     * @param flag           为 true 时启用模板，false 时禁用模板
+     */
+    protected @Nullable String editCommandPermissionOrTemplate(String permissionOrId, boolean flag) {
+        if (permissionOrId.isBlank()) {
+            int p = service.getDefaultGroupCommandPermission();
+            if (flag) {
+                commandPermission = getCommandPermission() | p;
+            } else {
+                commandPermission = getCommandPermission() & ~p;
+            }
+            return String.format(
+                    flag ? ENABLE_MESSAGE : DISABLE_MESSAGE,
+                    commandPermissionToString(commandPermission)
+            );
+        }
+
+        var tokens = permissionOrId.trim().split("[\\s|&]+");
+        var editedTemplates = new ArrayList<String>(tokens.length);
+        boolean canEditTemplateList = (getEditPermission() & EDIT_DISABLE_TEMPLATE_LIST) != 0;
+        int i = 0;
+        for (String token : tokens) {
+            Integer p = service.commandPermissionNameMap.get(token);
+            if (p == null) {
+                var templateIds = service.getTemplateIds(token);
+                if (templateIds.length != 0 && canEditTemplateList) {
+                    var thisDisabledTemplateIds = getDisabledTemplateIds();
+                    for (String templateId : templateIds) {
+                        if (flag) {
+                            thisDisabledTemplateIds.remove(templateId);
+                        } else {
+                            thisDisabledTemplateIds.add(templateId);
+                        }
+                        editedTemplates.add(templateId);
+                    }
+                }
+                continue;
+            }
+            i |= p;
+        }
+        String templateMsg = editedTemplates.isEmpty() ? null : String.format(
+                flag ? ENABLE_TEMPLATE_MESSAGE : DISABLE_TEMPLATE_MESSAGE,
+                String.join(", ", editedTemplates)
+        );
+        if (i == 0) {
+            if (editedTemplates.isEmpty()) {
+                return null;
+            }
+            return templateMsg;
+        }
+        commandPermission = flag ? getCommandPermission() | i : getCommandPermission() & ~i;
+        var permissionMsg = String.format(
+                flag ? ENABLE_MESSAGE : DISABLE_MESSAGE,
+                commandPermissionToString(i)
+        );
+        if (editedTemplates.isEmpty()) {
+            return permissionMsg;
+        }
+        return permissionMsg + "\n" + templateMsg;
+    }
+
+    public @Nullable String turnOnCommandPermissionOrTemplate(String permissionOrId) {
+        return editCommandPermissionOrTemplate(permissionOrId, true);
+    }
+
+    public @Nullable String turnOffCommandPermissionOrTemplate(String permissionOrId) {
+        return editCommandPermissionOrTemplate(permissionOrId, false);
     }
 
     /**
@@ -281,13 +361,11 @@ public class ContactPermission {
         switch (operation) {
             case "on":
             case "enable": {
-                int p = this.turnOnCommandPermission(parameter);
-                return String.format(ENABLE_MESSAGE, commandPermissionToString(p));
+                return turnOnCommandPermissionOrTemplate(parameter);
             }
             case "off":
             case "disable": {
-                int p = this.turnOffCommandPermission(parameter);
-                return String.format(DISABLE_MESSAGE, commandPermissionToString(p));
+                return turnOffCommandPermissionOrTemplate(parameter);
             }
             case "nudge_probability":
                 float probability = this.setContactNudgeProbability(parameter);
@@ -295,9 +373,6 @@ public class ContactPermission {
             case "cooldown_time":
                 this.setContactCooldownTime(parameter);
                 return String.format(COOLDOWN_MESSAGE, parameter);
-// TODO
-//            case "disable_template":
-//                this.setContactDisabledTemplateIds(parameter);
             default:
                 return null;
         }

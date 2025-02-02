@@ -1,6 +1,7 @@
 package moe.dituon.petpet.bot;
 
 import lombok.Getter;
+import lombok.Setter;
 import moe.dituon.petpet.core.element.PetpetModel;
 import moe.dituon.petpet.service.BaseService;
 import moe.dituon.petpet.service.ObservableBaseService;
@@ -53,7 +54,7 @@ public class BotService extends ObservableBaseService {
         if (model.getMetadata() == null) {
             return prev;
         }
-        if (model.getMetadata().getInRandomList()) {
+        if (isModelInRandomList(id, model)) {
             randomIdList.add(id);
         }
         if (!defaultTemplateLock && model.getMetadata().getDefaultTemplateWeight() != 0 && (this.defaultTemplate == null
@@ -63,6 +64,10 @@ public class BotService extends ObservableBaseService {
             this.defaultTemplateId = id;
         }
         return prev;
+    }
+
+    protected boolean isModelInRandomList(String id, PetpetModel model) {
+        return model.getMetadata().getInRandomList();
     }
 
     public String randomId() {

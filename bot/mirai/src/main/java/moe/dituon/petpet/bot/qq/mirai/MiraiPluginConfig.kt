@@ -14,7 +14,7 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("群聊中使用 戳一戳 的触发概率 (0 - 100)")
     val probability: Float by value(30f)
 
-    @ValueDescription("禁用列表 (暂时无效)")
+    @ValueDescription("禁用列表")
     val disabled: Set<String> by value(emptySet())
 
     @ValueDescription("模板触发前缀")

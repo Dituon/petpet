@@ -34,7 +34,7 @@ public class QQBotService extends BotService {
     @Getter
     protected final QQBotConfig config;
     @Getter
-    protected final Map<String, Integer> commandPermissionNameMap;
+    public final Map<String, Integer> commandPermissionNameMap;
     @Getter
     protected final float nudgeProbability;
     @Getter
@@ -53,6 +53,10 @@ public class QQBotService extends BotService {
     @Getter
     public final TimeParser timeParser;
     protected final Map<PetpetModel, Map<String, Integer>> templateExpectedSizeCache = new HashMap<>(256);
+
+    @Setter
+    @Getter
+    protected boolean savePermission = true;
 
     public QQBotService(QQBotConfig config) {
         if (config.getHeadless()) {
@@ -100,6 +104,11 @@ public class QQBotService extends BotService {
             defaultTemplate = new TemplateIndexScriptModel(this);
         }
         return defaultTemplate;
+    }
+
+    @Override
+    protected boolean isModelInRandomList(String id, PetpetModel model) {
+        return config.getDisabledTemplates().contains(id) || model.getMetadata().getInRandomList()  ;
     }
 
     private void initPermissionNameMap(QQBotConfig config) {
@@ -188,9 +197,14 @@ public class QQBotService extends BotService {
 
     // save permission config
     protected void onJvmExit() {
+        if (!savePermission) return;
+        int i = 0;
         for (ContactPermission permission : groupPermissionMap.values()) {
             permission.saveConfig();
+            i++;
         }
-        log.info("Saved permission config");
+        if (i != 0) {
+            log.info("Saved {} permission config", i);
+        }
     }
 }

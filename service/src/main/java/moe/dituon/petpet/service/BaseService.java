@@ -33,15 +33,35 @@ public abstract class BaseService extends TemplateManger {
         return prev;
     }
 
+    public @Nullable String getTemplateId(String idOrAlias) {
+        if (staticModelMap.containsKey(idOrAlias)) {
+            return idOrAlias;
+        }
+        var ids = aliaIdMap.get(idOrAlias);
+        if (ids != null) {
+            return ids.get(RANDOM.nextInt(ids.size()));
+        }
+        return null;
+    }
+
+    public String[] getTemplateIds(String idOrAlias) {
+        if (staticModelMap.containsKey(idOrAlias)) {
+            return new String[]{idOrAlias};
+        }
+        var ids = aliaIdMap.get(idOrAlias);
+        if (ids != null) {
+            return ids.toArray(String[]::new);
+        }
+        return new String[0];
+    }
+
+    public @Nullable PetpetModel getTemplateById(String id) {
+        return staticModelMap.get(id);
+    }
+
     @Override
     public @Nullable PetpetModel getTemplate(String idOrAlias) {
-        var template = staticModelMap.get(idOrAlias);
-        if (template == null) {
-            var ids = aliaIdMap.get(idOrAlias);
-            if (ids == null) return null;
-            template = staticModelMap.get(ids.get(RANDOM.nextInt(ids.size())));
-        }
-        return template;
+        return staticModelMap.get(getTemplateId(idOrAlias));
     }
 
     @Override

@@ -97,9 +97,6 @@ data class OnebotConfig(
 //    @Comment("是否启用开发模式 (支持热重载)")
 //    val devMode: Boolean = false,
 
-//    @Comment("是否启用消息注入 (详见文档)")
-//    val messageHook: Boolean = false,
-
     @Comment("触发图片生成后的用户冷却时长 (毫秒), 设为 0 禁用")
     val userCooldownTime: Long = Cooler.DEFAULT_USER_COOLDOWN,
 
@@ -129,7 +126,7 @@ data class OnebotConfig(
 
     @Comment("传递给 Onebot 协议端的图像服务器地址")
     val httpServerUrl: String = OnebotBotService.DEFAULT_HTTP_SERVER_URL,
-    ) {
+) {
     fun toClientConfig() = BotConfig(
         url,
         reversedPort,

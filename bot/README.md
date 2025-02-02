@@ -113,8 +113,6 @@
 - **disabledTemplates**: `[]`
 
     > 禁用表列, 默认为空, 在此表列中的模板会被排除
-    >
-    > **暂时无效**
 
 - **keyCommandHead**: `''`
 
@@ -267,7 +265,7 @@ acclaim:
 
 权限操作:
 
-- `pet on/off <权限节点>`: 启用或禁用功能
+- `pet on/off <权限节点|模板ID>`: 启用或禁用功能或模板
 
   > 权限ID: `command_permission`
   >
@@ -310,6 +308,8 @@ acclaim:
     - `pet on command`:  启用 `command` 节点
     - `pet 禁用 img at`: 禁用 `image` 与 `at` 节点
     - `pet off`: 禁用所有权限节点
+    - `pet off kiss`: 禁用 `kiss` 模板
+    - `pet on at kiss`: 启用 `at` 节点与 `kiss` 模板
 
 - `pet nudge_probability <概率>`
 
@@ -342,12 +342,3 @@ acclaim:
     - `pet cooldown_time 1m`: 群聊冷却时间为 **1 分钟**
     - `pet 冷却 2h`: 群聊冷却时间为 **2 小时**
     - `pet 冷却 3600秒`: 群聊冷却时间为 **3600 秒**
-
-- `pet disable_template <关键词>`
-
-  **暂时无效**
-
-  > 权限ID: `disable_template`
-  >
-  >  默认别名: `禁用` `禁用模板`
-

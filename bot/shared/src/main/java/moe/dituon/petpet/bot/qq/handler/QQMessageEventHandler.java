@@ -106,8 +106,9 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
                     }
                     // 可能包含模板 id 与文本参数
                     var tokens = params.split(" +");
-                    template = service.getTemplate(tokens[0]);
-                    if (template == null) { // 匹配模板失败, 使用默认模板
+                    var id = service.getTemplateId(tokens[0]);
+                    template = service.getTemplateById(id);
+                    if (template == null || permission.getDisabledTemplateIds().contains(id)) { // 匹配模板失败, 使用默认模板
                         // TODO: 可配置使用 随机模板 或 默认模板
                         template = service.getDefaultTemplate();
                         rawMessageText = params;
@@ -126,8 +127,11 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
                 // #(id?) (param?)
                 rawMessageText = messageText.substring(config.getCommandHead().length()).trim();
                 var tokens = rawMessageText.split(" +");
-                template = service.getTemplate(tokens[0]);
-                if (template == null) return;
+                var id = service.getTemplateId(tokens[0]);
+                template = service.getTemplateById(id);
+                if (template == null || permission.getDisabledTemplateIds().contains(id)) {
+                    return;
+                }
                 rawMessageText = rawMessageText.substring(tokens[0].length()).trim();
                 messageTokens = Arrays.copyOfRange(tokens, 1, tokens.length);
                 responseTemplate();

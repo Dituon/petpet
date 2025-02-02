@@ -29,6 +29,7 @@ class QQMessageEventHandlerTest {
         )
     ).apply {
         service.addTemplates(testResourcePath.resolve("test-templates").toFile())
+        service.isSavePermission = false
     }
     private val defaultTemplate = handler.service.defaultTemplate
 
@@ -54,6 +55,41 @@ class QQMessageEventHandlerTest {
         handler.handle("pet off")
         // 无权限不返回模板或提示消息
         assert(handler.replyTemplate == null && handler.replyText == null)
+    }
+
+    @Test
+    fun testEditPermission() {
+        handler.senderHasGroupPermission = true
+        handler.handle("pet on cmd")
+        handler.handle("pet off alia0")
+        assert(handler.replyText == "$command ${String.format(ContactPermission.DISABLE_TEMPLATE_MESSAGE, "template")}")
+
+        handler.handle("pet alia0")
+        assert(handler.replyTemplate == defaultTemplate)
+
+        handler.senderHasGroupPermission = false
+        handler.handle("pet on alia0")
+        assert(handler.replyTemplate == defaultTemplate)
+
+        handler.senderHasGroupPermission = true
+        handler.handle("pet on alia1")
+        assert(handler.replyText == "$command ${String.format(ContactPermission.ENABLE_TEMPLATE_MESSAGE, "template")}")
+
+        handler.handle("pet alia0")
+        assert(handler.replyTemplate == handler.service.getTemplate("alia0"))
+
+        handler.handle("pet off alia1 cmd at")
+        assert(
+            handler.replyText!!.contains(String.format(ContactPermission.DISABLE_TEMPLATE_MESSAGE, "template"))
+                    && handler.replyText!!.contains("command")
+                    && handler.replyText!!.contains("at")
+        )
+
+        handler.handle("pet alia0")
+        assert(handler.replyTemplate == null && handler.replyText == null)
+
+        handler.handle("pet on all alia0")
+        assert(handler.replyTemplate == null)
     }
 
     @Test
@@ -277,6 +313,9 @@ class TestHandler(
         }
 
         override fun replyMessage(event: BotSendEvent?) {
+        }
+
+        override fun replyNudge() {
         }
     }
 }
