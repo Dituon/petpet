@@ -7,6 +7,10 @@ import cn.evolvefield.onebot.client.listener.EventListener
 import cn.evolvefield.onebot.sdk.event.message.GroupMessageEvent
 import cn.evolvefield.onebot.sdk.event.message.PrivateMessageEvent
 import cn.evolvefield.onebot.sdk.event.notice.NotifyNoticeEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotGroupMessageHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotGroupNudgeHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotMessageHandler
@@ -75,14 +79,19 @@ suspend fun main() {
     bot.getLoginInfo().data ?: throw IllegalStateException("获取机器人信息失败")
 
     val imageCacheHandler = OnebotSentMessageHandler(service)
+    val eventScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     if (config.respondGroup) {
         val groupMessageHandler = OnebotGroupMessageHandler(service)
         EventBus.addListener(object : EventListener<GroupMessageEvent> {
-            override suspend fun onMessage(e: GroupMessageEvent) = groupMessageHandler.handle(e)
+            override suspend fun onMessage(e: GroupMessageEvent) {
+                eventScope.launch { groupMessageHandler.handle(e) }
+            }
         })
         if (config.imageCachePoolSize > 0) {
             EventBus.addListener(object : EventListener<GroupMessageEvent> {
-                override suspend fun onMessage(e: GroupMessageEvent) = imageCacheHandler.handle(e)
+                override suspend fun onMessage(e: GroupMessageEvent) {
+                    eventScope.launch { imageCacheHandler.handle(e) }
+                }
             })
         }
     }
@@ -90,11 +99,15 @@ suspend fun main() {
     if (config.respondFriend) {
         val privateMessageHandler = OnebotMessageHandler(service)
         EventBus.addListener(object : EventListener<PrivateMessageEvent> {
-            override suspend fun onMessage(e: PrivateMessageEvent) = privateMessageHandler.handle(e)
+            override suspend fun onMessage(e: PrivateMessageEvent) {
+                eventScope.launch { privateMessageHandler.handle(e) }
+            }
         })
         if (config.imageCachePoolSize > 0) {
             EventBus.addListener(object : EventListener<PrivateMessageEvent> {
-                override suspend fun onMessage(e: PrivateMessageEvent) = imageCacheHandler.handle(e)
+                override suspend fun onMessage(e: PrivateMessageEvent) {
+                    eventScope.launch { imageCacheHandler.handle(e) }
+                }
             })
         }
     }
@@ -102,7 +115,9 @@ suspend fun main() {
     if (config.nudgeProbability > 0) {
         val groupNudgeHandler = OnebotGroupNudgeHandler(service)
         EventBus.addListener(object : EventListener<NotifyNoticeEvent> {
-            override suspend fun onMessage(e: NotifyNoticeEvent) = groupNudgeHandler.handle(e)
+            override suspend fun onMessage(e: NotifyNoticeEvent) {
+                eventScope.launch { groupNudgeHandler.handle(e) }
+            }
         })
     }
 
