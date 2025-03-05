@@ -120,16 +120,16 @@ public abstract class QQMessageEventHandler extends MessageEventHandler {
                     lockCooldown();
                 }
             } else if (messageText.startsWith(config.getCommandHead())) {
-                if (isInCooldown()) {
-                    replyCooldown();
-                    return;
-                }
                 // #(id?) (param?)
                 rawMessageText = messageText.substring(config.getCommandHead().length()).trim();
                 var tokens = rawMessageText.split(" +");
                 var id = service.getTemplateId(tokens[0]);
                 template = service.getTemplateById(id);
                 if (template == null || permission.getDisabledTemplateIds().contains(id)) {
+                    return;
+                }
+                if (isInCooldown()) {
+                    replyCooldown();
                     return;
                 }
                 rawMessageText = rawMessageText.substring(tokens[0].length()).trim();
