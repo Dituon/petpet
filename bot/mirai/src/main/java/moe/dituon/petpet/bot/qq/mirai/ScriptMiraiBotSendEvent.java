@@ -4,7 +4,6 @@ import moe.dituon.petpet.bot.BotSendEvent;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.ForwardMessageBuilder;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
@@ -73,8 +72,10 @@ public class ScriptMiraiBotSendEvent extends BotSendEvent {
         if (isResponseInForward) {
             var fb = new ForwardMessageBuilder(bot.getAsFriend(), messageBuilderList.size());
             for (MessageChainBuilder mb : messageBuilderList) {
-                if (mb.isEmpty()) continue;
-                fb.add(bot, mb.build());
+                try {
+                    fb.add(bot, mb.build());
+                } catch (Exception ignored) {
+                }
             }
             return List.of(new MessageChainBuilder(1).append(fb.build()).build());
         }
