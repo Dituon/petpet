@@ -1,0 +1,39 @@
+{
+    "metadata": {
+        "alias": ["回南天", "水雾"],
+        "preview": "./fg.png"
+    },
+    "elements": [
+        {
+            "type": "image",
+            "id": "avatar",
+            "key": "to",
+            "coords": [0, 0, "100cw", "100ch"],
+            "filter": [
+                {
+                    "type": "blur",
+                    "radius": 20
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "src": "./fg.png",
+            "coords": [0, 0, "100vw", "100vh"]
+        },
+        {
+            "type": "text",
+            "coords": ["50vw", "15vh", "80vw"],
+            "align": "center",
+            "baseline": "middle",
+            "wrap": "break",
+            "style": "bold",
+            "size": 36,
+            "text": "${raw:兄弟, 回南了}"
+        }
+    ],
+    "canvas": {
+        "width": "avatar_width",
+        "height": "avatar_height"
+    }
+}
