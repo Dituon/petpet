@@ -1,0 +1,24 @@
+{
+    "type": "IMG",
+    "avatar": [{
+        "type": "TO",
+        "pos": [0, 0, 320, 320],
+        "fit": "COVER",
+        "avatarOnTop": false,
+        "filter": [
+            {
+                "type": "blur",
+                "radius": 20
+            }
+        ]
+    }],
+    "text": [{
+        "text": "$txt1[兄弟, 回南了]",
+        "pos": [160, 64],
+        "align": "CENTER",
+        "style": "BOLD",
+        "size": 36,
+        "greedy": true
+    }],
+    "alias": ["回南天", "水雾"]
+}

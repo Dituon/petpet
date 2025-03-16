@@ -29,7 +29,7 @@
             "wrap": "break",
             "style": "bold",
             "size": 36,
-            "text": "${raw:兄弟, 回南了}"
+            "text": "${raw:-兄弟, 回南了}"
         }
     ],
     "canvas": {
