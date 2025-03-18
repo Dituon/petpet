@@ -1,7 +1,10 @@
 package moe.dituon.petpet.bot.qq.onebot.handler
 
 import cn.evolvefield.onebot.sdk.event.message.MessageEvent
+import cn.evolvefield.onebot.sdk.util.CQCode
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import moe.dituon.petpet.bot.qq.handler.QQMessageChainInterface
 import moe.dituon.petpet.bot.qq.handler.QQMessageElement
 import moe.dituon.petpet.bot.qq.onebot.OnebotBotService
@@ -40,7 +43,12 @@ open class OnebotMessageChainWrapper(
     }
 
     init {
-        val messages = eventObject.getAsJsonArray(FIELD_MESSAGE)
+        val msg = eventObject[FIELD_MESSAGE]
+        val messages = if (msg is JsonPrimitive) {
+            CQCode.toJson(msg.toString())
+        } else {
+            msg as JsonArray
+        }
         val contentBuilder = StringBuilder()
         var firstAtSenderRemoved = false
         var imageCached = false
