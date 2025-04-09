@@ -1,0 +1,31 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [
+        [
+          8,
+          158,
+          482,
+          482
+        ]
+      ],
+      "fit": "COVER",
+      "avatarOnTop": false
+    }
+  ],
+  "text": [
+    {
+      "text": "$txt1[$to]",
+      "pos": [
+        38,
+        62
+      ],
+      "color": "#ffffff",
+      "font": "simhei",
+      "size": 40
+    }
+  ],
+  "alias": ["验证", "选择"]
+}
