@@ -20,9 +20,10 @@
       "text": "$txt1[$to]",
       "pos": [
         38,
-        62
+        96
       ],
       "color": "#ffffff",
+      "align": "LEFT",
       "size": 40
     }
   ],
