@@ -105,6 +105,9 @@ public class GraphicsParagraph extends ElementFrame {
         }
 
         switch (string.baseline) {
+            case ALPHABETIC:
+                baselineOffset = ascent;
+                break;
             case MIDDLE:
                 baselineOffset = (float) this.height / 2;
                 break;

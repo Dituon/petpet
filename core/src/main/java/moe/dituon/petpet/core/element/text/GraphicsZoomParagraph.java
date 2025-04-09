@@ -101,6 +101,9 @@ public class GraphicsZoomParagraph extends GraphicsParagraph {
         }
 
         switch (string.baseline) {
+            case ALPHABETIC:
+                baselineOffset = ascent;
+                break;
             case MIDDLE:
                 baselineOffset = (float) this.height / 2;
                 break;

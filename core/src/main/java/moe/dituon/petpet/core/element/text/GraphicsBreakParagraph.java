@@ -53,6 +53,7 @@ public class GraphicsBreakParagraph extends GraphicsParagraph {
         textLayouts = new TextLayout[paragraphEnd];
 
         float drawPosY = 0;
+        float ascent = 0;
 
         lineMeasurer.setPosition(paragraphStart);
 
@@ -79,7 +80,8 @@ public class GraphicsBreakParagraph extends GraphicsParagraph {
                     break;
             }
 
-            drawPosY += layout.getAscent();
+            ascent = layout.getAscent();
+            drawPosY += ascent;
             textLayouts[i] = layout;
             xOffset[i] = drawPosX;
             yOffset[i] = drawPosY;
@@ -88,10 +90,9 @@ public class GraphicsBreakParagraph extends GraphicsParagraph {
         super.height = Math.round(drawPosY);
 
         switch (string.baseline) {
-            //TODO
-//            case ALPHABETIC:
-//                baselineOffset = -ascent;
-//                break;
+            case ALPHABETIC:
+                baselineOffset = ascent;
+                break;
             case MIDDLE:
                 baselineOffset = drawPosY / 2;
                 break;

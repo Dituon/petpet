@@ -18,7 +18,7 @@ data class OldTextTemplate @JvmOverloads constructor(
     var font: String = "",
     var size: Int = 16,
     var align: TextAlign = TextAlign.LEFT,
-    var baseline: TextBaseline = TextBaseline.TOP,
+    var baseline: TextBaseline = TextBaseline.ALPHABETIC,
     var wrap: TextWrap = TextWrap.NONE,
     var style: TextStyle = TextStyle.PLAIN,
     var position: List<Position> = listOf(Position.LEFT, Position.TOP),
@@ -90,7 +90,7 @@ data class OldTextTemplate @JvmOverloads constructor(
                 if (align == TextAlign.CENTER) {
                     TextBaseline.MIDDLE
                 } else {
-                    TextBaseline.TOP
+                    baseline
                 }
             ),
             wrap = listOf(wrap),
