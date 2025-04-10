@@ -23,7 +23,7 @@ public class PetpetBulgePinchFilter {
         int cy = (int) (input.getHeight() * centerY);
 
         if (radius == 0) {
-            radius = Math.min(cx, cy) / 2f;
+            radius = Math.min(cx, cy);
         }
 
         int w = input.getWidth();
