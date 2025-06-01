@@ -124,7 +124,11 @@ public class AvatarXYWHFrame extends AvatarFrame {
                     AvatarXYWHFrame.this.defaultUrl,
                     AvatarXYWHFrame.this.template.getBasePath()
             );
-            this.length = frames.size();
+            int start = template.getStart(), end = template.getEnd();
+            if (end < 0) {
+                end = frames.size() + end + 1;
+            }
+            this.length = end - start;
             var image = getNElement(frames).image;
             this.ow = image.getWidth();
             this.oh = image.getHeight();

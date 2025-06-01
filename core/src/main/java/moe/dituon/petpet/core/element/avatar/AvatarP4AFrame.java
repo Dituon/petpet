@@ -109,7 +109,11 @@ public class AvatarP4AFrame extends AvatarFrame {
             this.frames = requestContext.getFrameList(
                     AvatarP4AFrame.this.id, AvatarP4AFrame.this.defaultUrl, AvatarP4AFrame.this.template.getBasePath()
             );
-            this.length = frames.size();
+            int start = template.getStart(), end = template.getEnd();
+            if (end < 0) {
+                end = frames.size() + end + 1;
+            }
+            this.length = end - start;
             var image = getNElement(frames).image;
             image = AvatarP4AFrame.super.cropper.crop(image, canvasContext.getWidth(), canvasContext.getHeight());
             image = filterList.filter(image, index, template, requestContext);
