@@ -167,9 +167,7 @@ public class AvatarModel implements ElementModel {
             } else if (frameLength == 1) {
                 this.width = renderedFrames.get(0).getWidth();
                 this.height = renderedFrames.get(0).getHeight();
-                this.length = renderedFrames.stream()
-                        .mapToInt(ElementFrame.RenderedFrame::getLength)
-                        .max().orElse(1);
+                this.length = frameLength;
             } else {
                 this.width = renderedFrames.stream()
                         .mapToInt(ElementFrame.RenderedFrame::getWidth)
