@@ -64,7 +64,7 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.plugin.lombok")
 
     group = "moe.dituon.petpet"
-    version = "1.0.0-beta2"
+    version = "1.0.0-beta3"
 
     java {
         sourceCompatibility = JavaVersion.VERSION_11
