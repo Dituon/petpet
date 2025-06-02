@@ -9,6 +9,7 @@ import moe.dituon.petpet.core.imgres.ImageResourceMap;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.service.BaseService;
 import moe.dituon.petpet.service.EnvironmentChecker;
+import moe.dituon.petpet.service.TemplateUpdater;
 
 import java.awt.*;
 import java.io.File;
@@ -23,14 +24,7 @@ public class WebServer {
         if (service.config.getHeadless()) {
             System.setProperty("java.awt.headless", "true");
         }
-        for (String dataPath : service.config.getTemplatePath()) {
-            service.addTemplates(new File(dataPath));
-        }
-        for (String fontPath : service.config.getFontPath()) {
-            service.addFonts(new File(fontPath).toPath());
-        }
-        var defaultFont = service.setDefaultFontFamily(service.config.getDefaultFontFamily());
-        service.updateScriptService();
+        var defaultFont = loadService();
         EnvironmentChecker.check();
 
         log.info("\u001B[95m\n\n" +
@@ -60,6 +54,31 @@ public class WebServer {
                 })
                 .start(service.config.getPort());
         log.info("Petpet Http Server 启动成功!");
+
+        if (service.config.getUpdate().getEnabled()) new Thread(() -> {
+            boolean success = new TemplateUpdater(service.config.getUpdate(), service).startUpdate();
+            if (success) {
+                log.info("Petpet 正在重载数据...");
+                service.clear();
+                var newDefaultFont = loadService();
+                log.info(String.format("已加载 %s 模板; 已注册 %s 脚本;", service.getStaticModelMap().size(), service.getScriptModelMap().size()));
+                log.info(String.format("已加载 %s 字体; 默认字体为 %s;", GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames().length, newDefaultFont));
+            }
+        }).start();
+    }
+
+    /**
+     * @return 默认字体 name
+     */
+    protected String loadService() {
+        for (String dataPath : service.config.getTemplatePath()) {
+            service.addTemplates(new File(dataPath));
+        }
+        for (String fontPath : service.config.getFontPath()) {
+            service.addFonts(new File(fontPath).toPath());
+        }
+        service.updateScriptService();
+        return service.setDefaultFontFamily(service.config.getDefaultFontFamily());
     }
 
     protected void handleGenerate(Context ctx, String id) {

@@ -1,10 +1,9 @@
 package moe.dituon.petpet.bot;
 
 import lombok.Getter;
-import lombok.Setter;
 import moe.dituon.petpet.core.element.PetpetModel;
 import moe.dituon.petpet.service.BaseService;
-import moe.dituon.petpet.service.ObservableBaseService;
+import moe.dituon.petpet.service.UpdatableBaseService;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.Map;
 /**
  * 对于通用社交媒体的抽象 Bot 服务
  */
-public class BotService extends ObservableBaseService {
+public class BotService extends UpdatableBaseService {
     public static final String BOT_LOAD_EVENT_KEY = "bot_load";
     public static final String NO_TEMPLATE_MESSAGE = "暂未加载任何 Petpet 模板...";
 

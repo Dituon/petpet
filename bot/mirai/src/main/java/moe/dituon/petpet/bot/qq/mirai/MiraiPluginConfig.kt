@@ -3,6 +3,7 @@ package moe.dituon.petpet.bot.qq.mirai
 import moe.dituon.petpet.bot.qq.*
 import moe.dituon.petpet.bot.utils.Cooler
 import moe.dituon.petpet.core.FontManager
+import moe.dituon.petpet.service.TemplateUpdaterConfig
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
@@ -59,12 +60,6 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("是否使用 headless 模式")
     val headless: Boolean by value(true)
 
-    @ValueDescription("是否自动从仓库更新模板 (暂时无效)")
-    val autoUpdate: Boolean by value(true)
-
-    @ValueDescription("用于自动更新的仓库地址 (暂时无效)")
-    val repositoryUrls: List<String> by value(listOf(""))
-
 //    @ValueDescription("是否启用开发模式 (支持热重载)")
 //    val devMode: Boolean by value(false)
 
@@ -95,6 +90,9 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
     @ValueDescription("默认群聊管理权限")
     val defaultGroupEditPermission: String by value(DEFAULT_DEFAULT_GROUP_EDIT_PERMISSION)
 
+    @ValueDescription("自动更新配置, 详见文档")
+    val update: TemplateUpdaterConfig by value(TemplateUpdaterConfig())
+
     fun toQQBotConfig() = QQBotConfig(
         command = command,
         commandHead = commandHead,
@@ -116,9 +114,8 @@ object MiraiPluginConfig : AutoSavePluginConfig("PetPet") {
         groupCooldownTime = groupCoolDown,
         userCooldownTime = userCoolDown,
         inCoolDownMessage = inCoolDownMessage,
-        autoUpdate = autoUpdate,
-        repositoryUrls = repositoryUrls,
         headless = headless,
+        update = update,
         gifQuality = gifQuality,
     )
 }

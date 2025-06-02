@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class FontManager {
@@ -23,6 +24,7 @@ public class FontManager {
     public static FontManager getInstance() {
         return FontManagerInstance.INSTANCE;
     }
+
     public static final String DEFAULT_WINDOWS_FONT = "Microsoft YaHei";
     public static final String DEFAULT_MACOS_FONT = "PingFang SC";
     public static final String DEFAULT_LINUX_FONT = "Noto Sans CJK SC";
@@ -47,11 +49,22 @@ public class FontManager {
     };
 
     @Getter
+    protected final Map<Font, File> localFontMap = new HashMap<>(32);
+    /**
+     * 未指定路径时默认用于下载更新的本地路径
+     */
+    @Getter
+    @Nullable
+    protected File localFontDirectory = null;
+
+    @Getter
     protected final Map<Font, Set<SupportedLanguage>> fontSupportedLanguageMap = new HashMap<>(256);
     @Getter
     protected final Map<SupportedLanguage, Set<Font>> supportedLanguageFontMap;
     @Getter
     protected String defaultFontFamily = DEFAULT_FONT;
+    @Getter
+    protected Set<String> fontFamilies;
 
     protected FontManager() {
         supportedLanguageFontMap = new HashMap<>(supportedLanguages.length);
@@ -64,6 +77,7 @@ public class FontManager {
         }
 
         setDefaultFontFamily(null);
+        updateAvailableFontFamilyNames();
     }
 
     public String setDefaultFontFamily(@Nullable String defaultFamily) {
@@ -89,6 +103,12 @@ public class FontManager {
         return defaultFontFamily;
     }
 
+    protected void updateAvailableFontFamilyNames() {
+        fontFamilies = Arrays.stream(environment.getAvailableFontFamilyNames())
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+    }
+
 
     public Font getFont(
             @Nullable String family,
@@ -98,7 +118,7 @@ public class FontManager {
         return StyleContext.getDefaultStyleContext().getFont(family == null ? defaultFontFamily : family, style, size);
     }
 
-    public void addFont(Font font) {
+    protected void addFont(Font font) {
         var langSet = fontSupportedLanguageMap.computeIfAbsent(font, f -> new HashSet<>(supportedLanguages.length));
         for (SupportedLanguage language : supportedLanguages) {
             boolean allSupported = true;
@@ -113,19 +133,25 @@ public class FontManager {
                 supportedLanguageFontMap.get(language).add(font);
             }
         }
+        updateAvailableFontFamilyNames();
     }
 
 
     public boolean addFont(File fontFile) throws IOException, FontFormatException {
         Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile);
         boolean success = environment.registerFont(customFont);
+
         if (success) {
             addFont(customFont);
+            localFontMap.put(customFont, fontFile);
         }
         return success;
     }
 
     public void addFonts(Path fontDirectory) {
+        if (localFontDirectory == null) {
+            localFontDirectory = fontDirectory.toFile();
+        }
         if (!Files.exists(fontDirectory) || !Files.isDirectory(fontDirectory)) return;
 
         var files = fontDirectory.toFile().listFiles();
@@ -149,6 +175,14 @@ public class FontManager {
         if (!failedNames.isEmpty()) {
             log.info("Font has been registered: {}", String.join(", ", failedNames));
         }
+    }
+
+    public boolean isFontAvailable(String fontName) {
+        return fontFamilies.contains(fontName.toLowerCase());
+    }
+
+    public boolean isFontAvailable(Set<String> fontNames) {
+        return fontFamilies.containsAll(fontNames);
     }
 
     public static class SupportedLanguage {

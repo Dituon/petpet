@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package moe.dituon.petpet.core.utils.stream;
+package moe.dituon.petpet.core.utils.io;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;

@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
+import moe.dituon.petpet.core.utils.io.FileMD5Utils;
 import moe.dituon.petpet.script.event.EventManager;
 import moe.dituon.petpet.script.event.ScriptSendEvent;
 import moe.dituon.petpet.script.functions.EventListenerRegisterer;
@@ -21,6 +22,8 @@ import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.Map;
 
 @Slf4j
 public class PetpetJsScriptModel implements PetpetScriptModel {
@@ -66,6 +69,24 @@ public class PetpetJsScriptModel implements PetpetScriptModel {
         var eventContext = new ScriptSendEvent(requestContext, basePath);
         eventManager.trigger("send", eventContext);
         return eventContext.getResult();
+    }
+
+    @Override
+    public @Nullable File getDirectory() {
+        return basePath;
+    }
+
+    private Map<String, String> resourceMD5Map = null;
+    @Override
+    public Map<String, String> getResourceMD5Map() {
+        if (resourceMD5Map == null) {
+            try {
+                resourceMD5Map = FileMD5Utils.getFileMd5Map(basePath);
+            } catch (IOException e) {
+                resourceMD5Map = Collections.emptyMap();
+            }
+        }
+        return resourceMD5Map;
     }
 
     public static PetpetJsScriptModel fromJsFile(File jsFile) {

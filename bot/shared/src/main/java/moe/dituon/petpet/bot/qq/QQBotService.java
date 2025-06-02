@@ -195,6 +195,12 @@ public class QQBotService extends BotService {
         }
     }
 
+    @Override
+    public void clear() {
+        templateExpectedSizeCache.clear();
+        super.clear();
+    }
+
     // save permission config
     protected void onJvmExit() {
         if (!savePermission) return;

@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import moe.dituon.petpet.bot.utils.Cooler
 import moe.dituon.petpet.core.BaseRenderConfig
 import moe.dituon.petpet.core.FontManager
+import moe.dituon.petpet.service.TemplateUpdaterConfig
 import java.util.concurrent.TimeUnit
 
 val DEFAULT_COMMAND_PERMISSION_NAME = mapOf(
@@ -98,11 +99,10 @@ data class QQBotConfig(
     @SerialName("in_cooldown_message")
     val inCoolDownMessage: String = Cooler.DEFAULT_MESSAGE,
 
-    @SerialName("auto_update")
-    val autoUpdate: Boolean = true,
-    @SerialName("repository_urls")
-    val repositoryUrls: List<String> = listOf(),
     val headless: Boolean = true,
+
+    val update: TemplateUpdaterConfig = TemplateUpdaterConfig(),
+
     @SerialName("gif_quality")
     override val gifQuality: Int = 10,
 ): BaseRenderConfig(

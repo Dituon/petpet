@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.*;
 
 public abstract class BaseService extends TemplateManger {
-    public static final String VERSION = "1.0.0-beta2";
+    public static final String VERSION = "1.0.0-beta3";
     protected static final Random RANDOM = new Random();
     protected static final FontManager FONT_MANAGER = GlobalContext.getInstance().fontManager;
 
@@ -94,5 +94,11 @@ public abstract class BaseService extends TemplateManger {
 
     public String setDefaultFontFamily(String defaultFamily) {
         return FONT_MANAGER.setDefaultFontFamily(defaultFamily);
+    }
+
+    @Override
+    public void clear() {
+        aliaIdMap.clear();
+        super.clear();
     }
 }

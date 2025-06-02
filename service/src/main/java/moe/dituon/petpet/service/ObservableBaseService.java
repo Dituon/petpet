@@ -21,4 +21,10 @@ public abstract class ObservableBaseService extends BaseService {
         updateVersion++;
         return removed;
     }
+
+    @Override
+    public void clear() {
+        updateVersion = Integer.MIN_VALUE;
+        super.clear();
+    }
 }

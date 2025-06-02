@@ -2,6 +2,7 @@ package moe.dituon.petpet.httpserver
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import moe.dituon.petpet.service.TemplateUpdaterConfig
 import moe.dituon.petpet.uitls.GlobalJson
 
 @Serializable
@@ -16,6 +17,7 @@ data class ServerServiceConfig(
 //    val gifMaxSize: List<Int> = emptyList(),
 //    val gifQuality: Int = 5,
 //    val serviceThreadPoolSize: Int = 0,
+    val update: TemplateUpdaterConfig = TemplateUpdaterConfig(),
     val headless: Boolean = true
 ) {
     fun toJsonString() = GlobalJson.encodeToString(serializer(), this)

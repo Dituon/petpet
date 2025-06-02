@@ -2,7 +2,7 @@ package moe.dituon.petpet.core.utils.image;
 
 import com.pngencoder.PngEncoder;
 import moe.dituon.petpet.core.context.CanvasContext;
-import moe.dituon.petpet.core.utils.stream.FastByteArrayOutputStream;
+import moe.dituon.petpet.core.utils.io.FastByteArrayOutputStream;
 
 public class ImageEncoder {
     protected static final int DEFAULT_BLOCK_SIZE = 8192;

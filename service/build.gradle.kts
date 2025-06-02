@@ -15,4 +15,5 @@ publishing {
 dependencies {
     implementation(project(":core"))
     implementation(project(":script"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")
 }

@@ -6,6 +6,7 @@ import moe.dituon.petpet.bot.qq.mirai.handler.MiraiMessageHandler;
 import moe.dituon.petpet.bot.qq.mirai.handler.MiraiSentMessageHandler;
 import moe.dituon.petpet.service.BaseService;
 import moe.dituon.petpet.service.EnvironmentChecker;
+import moe.dituon.petpet.service.TemplateUpdater;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
@@ -13,6 +14,7 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.MiraiLogger;
 
 import java.awt.*;
+import java.io.File;
 
 @SuppressWarnings("unused")
 public final class MiraiPetpet extends JavaPlugin {
@@ -39,20 +41,20 @@ public final class MiraiPetpet extends JavaPlugin {
                 .resolve(MiraiBotService.DEFAULT_CUSTOM_METADATA_PATH.getName())
                 .toFile()
         );
-        service.addTemplates(getDataFolder());
-        service.addFonts(getDataFolder().toPath().resolve("./fonts"));
         service.setPermissionConfigPath(getConfigFolderPath().resolve("permissions"));
-        var defaultFont = service.updateDefaultFont();
-        service.updateScriptService();
-        //TODO
-//        if (config.getAutoUpdate()) new Thread(() -> {
-//            DataUpdater updater = new DataUpdater(service, getDataFolder());
-//            if (updater.autoUpdate()) {
-//                getLogger().info("Petpet 模板更新完毕, 正在重载");
-//                config.keyListString = "";
-//                config.readData(MiraiPetpet.dataFolder);
-//            }
-//        }).start();
+        var defaultFont = loadService();
+        if (config.getUpdate().getEnabled()) new Thread(() -> {
+            boolean success = new TemplateUpdater(config.getUpdate(), service).startUpdate();
+            if (success) {
+                log.info("Petpet 正在重载数据...");
+                service.clear();
+                var newDefaultFont = loadService();
+                log.info(String.format("已加载 %s 模板; 随机表列包含 %s 模板;", service.getStaticModelMap().size(), service.getRandomIdList().size()));
+                log.info(String.format("已注册 %s 脚本; 默认模板为 %s;", service.getScriptModelMap().size(), service.getDefaultTemplateId()));
+                log.info(String.format("已加载 %s 字体; 默认字体为 %s;", GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames().length, newDefaultFont));
+
+            }
+        }).start();
 
         EnvironmentChecker.check();
         log.info("\u001B[95m\n\n" +
@@ -98,5 +100,15 @@ public final class MiraiPetpet extends JavaPlugin {
             var nudgeHandler = new MiraiGroupNudgeHandler(service);
             GlobalEventChannel.INSTANCE.subscribeAlways(NudgeEvent.class, nudgeHandler::handle);
         }
+    }
+
+    /**
+     * @return 默认字体 name
+     */
+    private String loadService() {
+        service.addTemplates(getDataFolder());
+        service.addFonts(getDataFolder().toPath().resolve("./fonts"));
+        service.updateScriptService();
+        return service.updateDefaultFont();
     }
 }

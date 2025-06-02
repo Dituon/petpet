@@ -9,11 +9,13 @@ import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.imgres.ImageFrameList;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.core.utils.image.ImageEncoder;
+import moe.dituon.petpet.core.utils.io.FileMD5Utils;
 import moe.dituon.petpet.template.Metadata;
 import moe.dituon.petpet.template.PetpetTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class PetpetTemplateModel implements PetpetModel {
@@ -148,5 +150,23 @@ public class PetpetTemplateModel implements PetpetModel {
             previewImage = canvasModel.getBackgroundModel().getPreviewImage();
         }
         return previewImage;
+    }
+
+    @Override
+    public @Nullable File getDirectory() {
+        return this.template.getBasePath();
+    }
+
+    private Map<String, String> resourceMD5Map = null;
+    @Override
+    public Map<String, String> getResourceMD5Map() {
+        if (resourceMD5Map == null) {
+            try {
+                resourceMD5Map = FileMD5Utils.getFileMd5Map(this.template.getBasePath());
+            } catch (IOException e) {
+                resourceMD5Map = Collections.emptyMap();
+            }
+        }
+        return resourceMD5Map;
     }
 }

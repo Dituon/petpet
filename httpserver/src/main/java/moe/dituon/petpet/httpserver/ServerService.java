@@ -2,7 +2,7 @@ package moe.dituon.petpet.httpserver;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import moe.dituon.petpet.service.ObservableBaseService;
+import moe.dituon.petpet.service.UpdatableBaseService;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.Collections;
 
 @Slf4j
-public class ServerService extends ObservableBaseService {
+public class ServerService extends UpdatableBaseService {
     protected String infoCache = null;
     protected int previousVersion = super.updateVersion;
     public static final File CONFIG_FILE = new File("http-server.json");

@@ -144,6 +144,11 @@ public abstract class TemplateManger {
         return staticModelMap.remove(id);
     }
 
+    public void clear() {
+        staticModelMap.clear();
+        scriptModelMap.clear();
+    }
+
     public void updateScriptService() {
         if (scriptModelMap.isEmpty()) return;
         var loadEvent = new ScriptLoadEvent(this);

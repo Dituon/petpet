@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import moe.dituon.petpet.bot.qq.*
 import moe.dituon.petpet.bot.utils.Cooler
 import moe.dituon.petpet.core.FontManager
+import moe.dituon.petpet.service.TemplateUpdaterConfig
 import net.mamoe.yamlkt.Comment
 
 @Serializable
@@ -126,6 +127,9 @@ data class OnebotConfig(
 
     @Comment("传递给 Onebot 协议端的图像服务器地址")
     val httpServerUrl: String = OnebotBotService.DEFAULT_HTTP_SERVER_URL,
+
+    @Comment("自动更新配置, 详见文档")
+    val update: TemplateUpdaterConfig = TemplateUpdaterConfig()
 ) {
     fun toClientConfig() = BotConfig(
         url,
@@ -162,9 +166,8 @@ data class OnebotConfig(
         groupCooldownTime = groupCooldownTime,
         userCooldownTime = userCooldownTime,
         inCoolDownMessage = inCoolDownMessage,
-//        autoUpdate = autoUpdate,
-//        repositoryUrls = repositoryUrls,
         headless = headless,
+        update = update,
         gifQuality = gifQuality,
     )
 }

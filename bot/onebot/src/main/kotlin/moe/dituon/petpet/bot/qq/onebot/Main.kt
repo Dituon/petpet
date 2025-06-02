@@ -16,6 +16,7 @@ import moe.dituon.petpet.bot.qq.onebot.handler.OnebotGroupNudgeHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotMessageHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotSentMessageHandler
 import moe.dituon.petpet.service.EnvironmentChecker
+import moe.dituon.petpet.service.TemplateUpdater
 import net.mamoe.yamlkt.Yaml
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -58,14 +59,20 @@ suspend fun main() {
     }
     globalBotInstance = bot
     val service = OnebotBotService(bot, config)
-    for (templatePath in config.templatePath) {
-        service.addTemplates(systemPath.resolve(templatePath))
+
+    var defaultFont: String ?= null
+    fun loadService() {
+        for (templatePath in config.templatePath) {
+            service.addTemplates(systemPath.resolve(templatePath))
+        }
+        for (fontPath in config.fontPath) {
+            service.addFonts(systemPath.resolve(fontPath).toPath())
+        }
+        defaultFont = service.updateDefaultFont()
+        service.updateScriptService()
     }
-    for (fontPath in config.fontPath) {
-        service.addFonts(systemPath.resolve(fontPath).toPath())
-    }
-    val defaultFont = service.updateDefaultFont()
-    service.updateScriptService()
+    loadService()
+
     EnvironmentChecker.check()
     log.info(banner)
     log.info("Petpet Onebot 客户端启动成功:")
@@ -77,6 +84,24 @@ suspend fun main() {
         } 字体; 默认字体为 ${defaultFont};"
     )
     bot.getLoginInfo().data ?: throw IllegalStateException("获取机器人信息失败")
+
+    if (config.update.enabled) {
+        CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+            val success = TemplateUpdater(config.update, service).startUpdate()
+            if (success) {
+                log.info("Petpet 正在重载数据...")
+                service.clear()
+                loadService()
+                log.info("已加载 ${service.staticModelMap.size} 模板; 随机表列包含 ${service.randomIdList.size} 模板;")
+                log.info("已注册 ${service.scriptModelMap.size} 脚本; 默认模板为 ${service.defaultTemplateId};")
+                log.info(
+                    "已加载 ${
+                        GraphicsEnvironment.getLocalGraphicsEnvironment().availableFontFamilyNames.size
+                    } 字体; 默认字体为 ${defaultFont};"
+                )
+            }
+        }
+    }
 
     val imageCacheHandler = OnebotSentMessageHandler(service)
     val eventScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -122,4 +147,8 @@ suspend fun main() {
     }
 
     log.info("Petpet Onebot 客户端启动完毕, 发送 ${config.command} 以触发默认模板...")
+}
+
+fun startService() {
+
 }

@@ -4,12 +4,11 @@ import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import com.madgag.gif.fmsware.NeuQuant;
 import moe.dituon.petpet.core.GlobalContext;
 import moe.dituon.petpet.core.context.CanvasContext;
-import moe.dituon.petpet.core.utils.stream.FastByteArrayOutputStream;
+import moe.dituon.petpet.core.utils.io.FastByteArrayOutputStream;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.IndexColorModel;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
