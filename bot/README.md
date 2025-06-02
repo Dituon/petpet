@@ -244,6 +244,12 @@
     > - 当本配置项为 `command_permission` 时, 群聊管理员只能编辑指令权限节点, 不能修改戳一戳触发概率或其它权限
     > - 当本配置项为 `nudge_probability cooldown_time` 时, 群聊管理员可以编辑戳一戳触发概率与冷却时间
 
+- **update**
+
+    > 从远程仓库自动更新模板与字体
+    > 
+    > 详见 [Updater](../service/README.md#updater) 配置项文档
+
 Onebot 客户端的更多配置项请参考 [bot/onebot/](./onebot/README.md)
 
 ## 模板元数据配置文件

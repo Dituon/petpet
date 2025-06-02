@@ -34,10 +34,17 @@
   >
   > 以上尝试都失败且模板没有指定有效字体时可能导致程序无法绘制 CJK 文字
   <br/>
+  
+- **update**
+
+  > 从远程仓库自动更新模板与字体
+  >
+  > 详见 [Updater](../service/README.md#updater) 配置项文档
 
 - **headless**: `true`
 
   > 是否使用 headless 模式 , 默认为 `true`
+
 
 ## 接口文档
 
