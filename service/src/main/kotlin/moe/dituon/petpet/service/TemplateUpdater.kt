@@ -213,6 +213,9 @@ class TemplateUpdater(
             }
         }.awaitAll().filterNotNull()
 
+        if (!indexList.isEmpty()) {
+            logger.info("Petpet 已成功读取 ${indexList.size} 远程仓库索引, 开始检查本地资源...")
+        }
         val templatesIndex = mutableMapOf<String, UpdateIndexTemplateElement>()
         val fontsIndex = mutableMapOf<String, UpdateIndexFontElement>()
         // 反向合并索引以确保优先级

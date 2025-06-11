@@ -10,7 +10,7 @@ data class TemplateUpdaterConfig(
     val repositoryUrls: List<String> = listOf(
         // TODO: 改为独立的文件储存此仓库列表
         "https://raw.githubusercontent.com/Dituon/petpet-templates/main/",
-        "https://gh-proxy.com/https://raw.fastgit.org/Dituon/petpet-templates/main/",
+        "https://gh-proxy.com/https://raw.githubusercontent.com/Dituon/petpet-templates/main/",
         "https://gh.d2n.moe/https://raw.githubusercontent.com/Dituon/petpet-templates/main/",
     ),
     val excludeTemplate: Set<String> = emptySet(),
