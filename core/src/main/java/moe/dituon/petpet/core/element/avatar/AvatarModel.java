@@ -87,15 +87,8 @@ public class AvatarModel implements ElementModel {
         int maxWidth = 0;
         int maxHeight = 0;
         for (var frame : frames) {
-            int w = frame.getExpectedWidth();
-            int h = frame.getExpectedHeight();
-            if (w == 0 || h == 0) {
-                this.expectedWidth = 0;
-                this.expectedHeight = 0;
-                return;
-            }
-            maxWidth = Math.max(maxWidth, w);
-            maxHeight = Math.max(maxHeight, h);
+            maxWidth = Math.max(maxWidth, frame.getExpectedWidth());
+            maxHeight = Math.max(maxHeight, frame.getExpectedHeight());
         }
         this.expectedWidth = maxWidth;
         this.expectedHeight = maxHeight;

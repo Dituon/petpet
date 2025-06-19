@@ -63,13 +63,13 @@ public class ServerService extends UpdatableBaseService {
         if (super.updateVersion != this.previousVersion) {
             synchronized (this) {
                 if (super.updateVersion != this.previousVersion) {
-                    this.infoCache = ServerInfo.fromModelMap(this.staticModelMap).toJsonString();
+                    this.infoCache = ServerInfo.fromService(this).toJsonString();
                     this.previousVersion = super.updateVersion;
                 }
             }
         }
         if (this.infoCache == null) {
-            this.infoCache = ServerInfo.fromModelMap(Collections.emptyMap()).toJsonString();
+            this.infoCache = new ServerInfo().toJsonString();
         }
         return this.infoCache;
     }

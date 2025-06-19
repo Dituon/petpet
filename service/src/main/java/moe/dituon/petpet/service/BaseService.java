@@ -4,8 +4,12 @@ import lombok.Getter;
 import moe.dituon.petpet.core.FontManager;
 import moe.dituon.petpet.core.GlobalContext;
 import moe.dituon.petpet.core.context.RequestContext;
+import moe.dituon.petpet.core.element.ElementModel;
 import moe.dituon.petpet.core.element.PetpetModel;
+import moe.dituon.petpet.core.element.PetpetTemplateModel;
+import moe.dituon.petpet.core.element.avatar.AvatarModel;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
+import moe.dituon.petpet.script.PetpetScriptModel;
 import moe.dituon.petpet.template.PetpetTemplate;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +24,7 @@ public abstract class BaseService extends TemplateManger {
     public static final String VERSION = "1.0.0-beta3";
     protected static final Random RANDOM = new Random();
     protected static final FontManager FONT_MANAGER = GlobalContext.getInstance().fontManager;
+    protected final Map<PetpetModel, Map<String, Integer>> templateExpectedSizeCache = new HashMap<>(256);
 
     @Getter
     protected Map<String, List<String>> aliaIdMap = new HashMap<>(512);
@@ -96,9 +101,30 @@ public abstract class BaseService extends TemplateManger {
         return FONT_MANAGER.setDefaultFontFamily(defaultFamily);
     }
 
+    public Map<String, Integer> getTemplateExpectedSize(PetpetModel model) {
+        return templateExpectedSizeCache.computeIfAbsent(model, k -> {
+            var map = new HashMap<String, Integer>(4);
+            if (model instanceof PetpetScriptModel) {
+                return Collections.emptyMap();
+            }
+            for (ElementModel ele : ((PetpetTemplateModel) model).getElementList()) {
+                if (ele.getElementType() != ElementModel.Type.AVATAR) {
+                    continue;
+                }
+                var avatarEle = (AvatarModel) ele;
+                int size = Math.max(avatarEle.getExpectedWidth(), avatarEle.getExpectedHeight());
+                for (String key : avatarEle.template.getKey()) {
+                    map.merge(key, size, Math::max);
+                }
+            }
+            return map;
+        });
+    }
+
     @Override
     public void clear() {
         aliaIdMap.clear();
+        templateExpectedSizeCache.clear();
         super.clear();
     }
 }

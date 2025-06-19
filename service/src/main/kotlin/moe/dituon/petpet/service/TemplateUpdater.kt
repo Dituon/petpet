@@ -139,13 +139,12 @@ class TemplateUpdater(
         }
         val result = deferredResults.awaitAll().filterNotNull().toMap() to deprecatedFontSet
         if (updateHintList.isNotEmpty()) {
-            logger.info(
-                """${"\n"}
-                以下模板未与远程仓库同步:
-                ${updateHintList.joinToString("\n")}
-                删除模板以进行手动同步, 亦可更改配置项中的更新策略以自动同步或跳过本项检查
-            """.trimIndent()
-            )
+            logger.info("""
+ 
+以下模板未与远程仓库同步:
+${updateHintList.joinToString("\n")}
+删除模板以进行手动同步, 亦可更改配置项中的更新策略以自动同步或跳过本项检查
+""")
         }
         result
     }

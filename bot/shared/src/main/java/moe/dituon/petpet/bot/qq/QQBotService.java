@@ -52,7 +52,6 @@ public class QQBotService extends BotService {
     public final boolean cooldownReplyNudge;
     @Getter
     public final TimeParser timeParser;
-    protected final Map<PetpetModel, Map<String, Integer>> templateExpectedSizeCache = new HashMap<>(256);
 
     @Setter
     @Getter
@@ -151,26 +150,6 @@ public class QQBotService extends BotService {
         return i;
     }
 
-    public Map<String, Integer> getTemplateExpectedSize(PetpetModel model) {
-        return templateExpectedSizeCache.computeIfAbsent(model, k -> {
-            var map = new HashMap<String, Integer>(4);
-            if (model instanceof PetpetScriptModel) {
-                return Collections.emptyMap();
-            }
-            for (ElementModel ele : ((PetpetTemplateModel) model).getElementList()) {
-                if (ele.getElementType() != ElementModel.Type.AVATAR) {
-                    continue;
-                }
-                var avatarEle = (AvatarModel) ele;
-                for (String key : avatarEle.template.getKey()) {
-                    int size = Math.max(avatarEle.getExpectedWidth(), avatarEle.getExpectedHeight());
-                    map.merge(key, size, Math::max);
-                }
-            }
-            return map;
-        });
-    }
-
     public String updateDefaultFont() {
         return setDefaultFontFamily(config.getDefaultFontFamily());
     }
@@ -193,12 +172,6 @@ public class QQBotService extends BotService {
         if (defaultTemplate == null) {
             log.warn("无法找到默认模板, 将使用默认 forward_text 回复方案");
         }
-    }
-
-    @Override
-    public void clear() {
-        templateExpectedSizeCache.clear();
-        super.clear();
     }
 
     // save permission config
