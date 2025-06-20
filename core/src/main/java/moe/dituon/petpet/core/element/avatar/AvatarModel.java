@@ -8,6 +8,7 @@ import moe.dituon.petpet.core.element.ElementFrame;
 import moe.dituon.petpet.core.element.ElementModel;
 import moe.dituon.petpet.core.position.AvatarCoords;
 import moe.dituon.petpet.template.element.AvatarTemplate;
+import moe.dituon.petpet.template.fields.ImageMirageFilter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class AvatarModel implements ElementModel {
     protected int expectedWidth = -1;
     protected int expectedHeight = -1;
 
+    protected Set<String> requestKeys = null;
     protected Set<String> dependentIds = null;
 
     public AvatarModel(AvatarTemplate template) {
@@ -60,6 +62,7 @@ public class AvatarModel implements ElementModel {
     /**
      * Get the expected width of the image; <br/>
      * Expected value to come from absolute coordinates.
+     *
      * @return 0 if coordinates are not absolute
      */
     public int getExpectedWidth() {
@@ -73,6 +76,7 @@ public class AvatarModel implements ElementModel {
     /**
      * Get the expected height of the image; <br/>
      * Expected value to come from absolute coordinates.
+     *
      * @return 0 if coordinates are not absolute
      */
     public int getExpectedHeight() {
@@ -120,8 +124,18 @@ public class AvatarModel implements ElementModel {
         return this.dependentIds;
     }
 
-    public List<String> getRequestKeys() {
-        return this.template.getKey();
+    public Set<String> getRequestKeys() {
+        if (this.requestKeys != null) return this.requestKeys;
+        var filter = template.getFilter();
+        if (filter.isEmpty()) {
+            this.requestKeys = new HashSet<>(template.getKey());
+            return requestKeys;
+        }
+        this.requestKeys = new HashSet<>(template.getKey().size() + 2);
+        this.requestKeys.addAll(template.getKey());
+        filter.stream().filter(ImageMirageFilter.class::isInstance)
+                .forEach(f -> this.requestKeys.addAll(((ImageMirageFilter) f).getRequestKey()));
+        return this.requestKeys;
     }
 
     @Override
@@ -162,7 +176,7 @@ public class AvatarModel implements ElementModel {
                 this.height = renderedFrames.get(0).getHeight();
                 this.length = renderedFrames.stream()
                         .mapToInt(ElementFrame.RenderedFrame::getLength)
-                        .max().orElse(0);;
+                        .max().orElse(0);
             } else {
                 this.width = renderedFrames.stream()
                         .mapToInt(ElementFrame.RenderedFrame::getWidth)
