@@ -7,7 +7,6 @@ import moe.dituon.petpet.core.context.RequestContext;
 import moe.dituon.petpet.core.utils.image.EncodedImage;
 import moe.dituon.petpet.script.PetpetScriptModel;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.QuoteReply;
 
 import java.io.IOException;
@@ -65,6 +64,10 @@ public class MiraiGroupMessageHandler extends MiraiMessageHandler {
         @Override
         protected void replyMessage(BotSendEvent e) {
             for (var msg : ((ScriptMiraiBotSendEvent) e).getResponseMessage()) {
+                if (e.isResponseInForward()) {
+                    this.groupMessageEvent.getGroup().sendMessage(msg);
+                    continue;
+                }
                 this.groupMessageEvent.getGroup().sendMessage(new QuoteReply(groupMessageEvent.getMessage()).plus(msg));
             }
         }
