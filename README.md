@@ -69,15 +69,8 @@
 
 以下功能尚未实现。如需使用这些功能，可选择 [6.2-latest](https://github.com/Dituon/petpet/tree/6.2-latest) 版本。
 
-**Bot**
-
-- [ ] Message Hook
-- [ ] 消息事件同步锁
-- [ ] 自动更新
-
 **Core**
 
-- [ ] 重采样缩放
 - [ ] 合成时比例缩小图像
 - [ ] 可选 js 引擎
 - [ ] 缩小打包体积
