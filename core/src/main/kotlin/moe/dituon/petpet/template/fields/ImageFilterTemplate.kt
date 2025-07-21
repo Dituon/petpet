@@ -1,11 +1,7 @@
 package moe.dituon.petpet.template.fields
 
 import com.jhlabs.image.*
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import kotlinx.serialization.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -53,6 +49,7 @@ sealed class ImageFilterTemplate {
             "MIRROR" -> ImageMirrorFilter.serializer()
             "FLIP" -> ImageFlipFilter.serializer()
             "MIRAGE" -> ImageMirageFilter.serializer()
+            "SWING_TWIST" -> ImageSwingTwistFilter.serializer()
             else -> throw IllegalArgumentException("Can not deserialize request with action: $type")
         }
     }
@@ -394,6 +391,7 @@ data class ImageMirageFilter(
         innerDesat.size, coverDesat.size,
         weight.size, maxSize.size, colored.size
     )
+
     @Transient
     val requestKey: Set<String> = key.toMutableSet().apply {
         remove("unknown")
@@ -473,6 +471,36 @@ class ImageFlipFilter : ImageFilterTemplate() {
     override val maxLength = 1
 
     override fun filter(image: BufferedImage, i: Int) = PetpetFlipFilter.filter(image)!!
+    override fun filter(
+        image: BufferedImage,
+        i: Int,
+        parentTemplate: AvatarTemplate?,
+        requestContext: RequestContext?
+    ) = filter(image, i)
+}
+
+@Serializable
+@SerialName("swing_twist")
+class ImageSwingTwistFilter(
+    @SerialName("max_angle")
+    private val maxAngle: FloatOrArray = floatArrayOf(0.5f),
+    private val amplitude: FloatOrArray = floatArrayOf(0.5f),
+    private val omega: FloatOrArray = floatArrayOf((2.0 * Math.PI / 5.0).toFloat()),
+    private val decay: FloatOrArray = floatArrayOf(0.1f),
+    @SerialName("index_offset")
+    private val indexOffset: Int = 0,
+) : ImageFilterTemplate() {
+    override val maxLength: Int = 1
+
+    fun toFilter(i: Int) = PetpetSwingTwistFilter(
+        maxAngle[i % maxAngle.size],
+        amplitude[i % amplitude.size],
+        omega[i % omega.size],
+        decay[i % decay.size]
+    )
+
+    override fun filter(image: BufferedImage, i: Int): BufferedImage = toFilter(i).filter(image, i + indexOffset)
+
     override fun filter(
         image: BufferedImage,
         i: Int,
