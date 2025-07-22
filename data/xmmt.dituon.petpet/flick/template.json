@@ -1,0 +1,45 @@
+{
+    "type": "gif",
+    "metadata": {
+        "alias": [
+            "弹",
+            "脑瓜崩"
+        ],
+        "preview": "./6.png",
+        "apiVersion": 102
+    },
+    "elements": [
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [0, 0, "100vw", "100vh"],
+            "fit": "contain",
+            "end": 11
+        },
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [0, 0, "100vw", "100vh"],
+            "fit": "contain",
+            "filter": [
+                {
+                    "type": "swing_twist",
+                    "index_offset": -3
+                }
+            ],
+            "start": 12
+        },
+        {
+            "type": "image",
+            "src": "./",
+            "coords": [0, 0, "100cw", "100ch"],
+            "start": 3,
+            "end": 13
+        }
+    ],
+    "canvas": {
+        "length": 34,
+        "width": "min(240/to_width, 240/to_height) * to_width",
+        "height": "min(240/to_width, 240/to_height) * to_height"
+    }
+}
