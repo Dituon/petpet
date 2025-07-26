@@ -64,3 +64,23 @@ data/
 | **color**   | [Color](./types.md#color) | 背景色    | `#ffffff` |
 | **reverse** | boolean                   | 是否倒序播放 | false     |
 
+### 倒放示例
+
+使用 `reverse` 属性可以让 GIF 动画倒序播放：
+
+```json
+{
+    "type": "gif",
+    "canvas": {
+        "width": "200px",
+        "height": "200px",
+        "reverse": true  // 启用倒放
+    },
+    "elements": [
+        // 元素定义...
+    ]
+}
+```
+
+当 `reverse` 设置为 `true` 时，生成的 GIF 将会从最后一帧开始播放到第一帧，保持原始的帧延迟时间。
+

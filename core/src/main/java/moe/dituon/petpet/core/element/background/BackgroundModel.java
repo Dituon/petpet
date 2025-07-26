@@ -25,6 +25,7 @@ public class BackgroundModel implements ElementModel {
     public final int length;
     protected final AbsoluteLocalImageResource backgroundResource;
     protected final int[] delay;
+    protected final boolean reverse;
     protected int imageType = -1;
     protected int width = -1;
     protected int height = -1;
@@ -46,12 +47,17 @@ public class BackgroundModel implements ElementModel {
                 template.getBasePath().toPath().resolve(template.getSrc()).toFile()
         );
         this.delay = delay == null ? DEFAULT_DELAY : delay;
+        this.reverse = template.getReverse();
         this.length = backgroundResource.length;
     }
 
     protected ImageFrameList getFrameListSync() {
         try {
             ImageFrameList frameList = backgroundResource.getFrameListAsync().get();
+            // Apply element-level reverse if needed
+            if (this.reverse) {
+                frameList = moe.dituon.petpet.core.utils.image.FrameListReverser.reverseFrameList(frameList);
+            }
             this.imageType = frameList.imageType;
             this.width = frameList.width;
             this.height = frameList.height;

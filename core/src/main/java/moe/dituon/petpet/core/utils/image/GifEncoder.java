@@ -49,10 +49,20 @@ public class GifEncoder {
 
             latch.await();
             gifEncoder.setSize(context.getWidth(), context.getHeight());
-// TODO:           params.getReverse()
-            for (int i = 0; i < frames.length; i++) {
-                gifEncoder.setDelay(context.getFrameList().get(i).delay);
-                gifEncoder.addFrame(frames[i]);
+            
+            if (context.isReverse()) {
+                // 倒序添加帧
+                for (int i = frames.length - 1; i >= 0; i--) {
+                    // 倒放时，直接使用对应帧的原始延迟
+                    gifEncoder.setDelay(context.getFrameList().get(i).delay);
+                    gifEncoder.addFrame(frames[i]);
+                }
+            } else {
+                // 正常顺序添加帧
+                for (int i = 0; i < frames.length; i++) {
+                    gifEncoder.setDelay(context.getFrameList().get(i).delay);
+                    gifEncoder.addFrame(frames[i]);
+                }
             }
             gifEncoder.finish();
             output.close();

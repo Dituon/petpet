@@ -28,6 +28,7 @@
 | **filter**        | [Filter](./filter.md#image-filter)[]   | 图像滤镜                            | 无           |
 | **start**         | int                                    | 起始索引                            | `0`         |
 | **end**           | int                                    | 结束索引 (负数时为末尾索引, 例如 `-1` 表示最后一帧) | `-1`        |
+| **reverse**       | boolean                                | 是否倒放该元素的帧序列                     | `false`     |
 
 ## 动画
 
@@ -218,3 +219,34 @@ P0 为 (0, 0)，表示初始进度和初始状态。P3 为 (1, 1)，表示最终
 - `"10% 50px 6vw"`: `"10% 50px 50px 6vw"`
 
 > 圆角半径为 [Percentage Length](./length.md#percentage-length) 类型。
+
+## Reverse
+
+元素级别的倒放功能可以对单个输入图片进行倒放处理，而不影响其他元素或最终输出。
+
+示例：仅倒放 `to` 元素
+
+```json
+{
+  "type": "gif",
+  "canvas": {
+    "width": 400,
+    "height": 200
+  },
+  "elements": [
+    {
+      "type": "image",
+      "key": "from",
+      "coords": [0, 0, 200, 200]
+    },
+    {
+      "type": "image",
+      "key": "to",
+      "coords": [200, 0, 200, 200],
+      "reverse": true  // 仅倒放此元素
+    }
+  ]
+}
+```
+
+> 注意：元素级的 `reverse` 与画布级的 `canvas.reverse` 是独立的。元素级倒放在图片加载时进行，而画布级倒放在最终 GIF 编码时进行。

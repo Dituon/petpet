@@ -28,6 +28,7 @@ data class BackgroundTemplate(
     val src: String = "./",
     // TODO
     val images: List<String> = emptyList(),
+    val reverse: Boolean = false
 ) : ElementTemplate() {
     @Transient
     var basePath: File = systemPath

@@ -106,9 +106,14 @@ public class AvatarP4AFrame extends AvatarFrame {
                 this.frames = null;
                 return;
             }
-            this.frames = requestContext.getFrameList(
+            ImageFrameList frameList = requestContext.getFrameList(
                     AvatarP4AFrame.this.id, AvatarP4AFrame.this.defaultUrl, AvatarP4AFrame.this.template.getBasePath()
             );
+            // Apply element-level reverse if needed
+            if (template.getReverse()) {
+                frameList = moe.dituon.petpet.core.utils.image.FrameListReverser.reverseFrameList(frameList);
+            }
+            this.frames = frameList;
             int start = template.getStart(), end = template.getEnd();
             if (end < 0) {
                 end = frames.size() + end + 1;

@@ -61,7 +61,8 @@ data class AvatarTemplate(
     val borderRadius: BorderRadiusList = emptyList(),
     val filter: ImageFilterListElement = ImageFilterList.EMPTY,
     val start: Int = 0,
-    val end: Int = -1
+    val end: Int = -1,
+    val reverse: Boolean = false
 ) : ElementTemplate() {
     @Transient
     var basePath: File = systemPath
@@ -97,7 +98,8 @@ data class AvatarTemplate(
         borderRadius = builder.borderRadius,
         filter = builder.filter,
         start = builder.start,
-        end = builder.end
+        end = builder.end,
+        reverse = builder.reverse
     )
 
     companion object {
@@ -156,6 +158,8 @@ data class AvatarTemplate(
             private set
         var end: Int = -1
             private set
+        var reverse: Boolean = false
+            private set
 
         fun id(id: String) = apply { this.id = id }
 
@@ -209,6 +213,7 @@ data class AvatarTemplate(
 
         fun start(start: Int) = apply { this.start = start }
         fun end(end: Int) = apply { this.end = end }
+        fun reverse(reverse: Boolean) = apply { this.reverse = reverse }
 
         fun build() = AvatarTemplate(this)
     }
