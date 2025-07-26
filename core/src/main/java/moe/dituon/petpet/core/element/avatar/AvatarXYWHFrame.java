@@ -119,11 +119,16 @@ public class AvatarXYWHFrame extends AvatarFrame {
                 this.frames = null;
                 return;
             }
-            this.frames = requestContext.getFrameList(
+            ImageFrameList frameList = requestContext.getFrameList(
                     AvatarXYWHFrame.this.id,
                     AvatarXYWHFrame.this.defaultUrl,
                     AvatarXYWHFrame.this.template.getBasePath()
             );
+            // Apply element-level reverse if needed
+            if (template.getReverse()) {
+                frameList = moe.dituon.petpet.core.utils.image.FrameListReverser.reverseFrameList(frameList);
+            }
+            this.frames = frameList;
             int start = template.getStart(), end = template.getEnd();
             if (end < 0) {
                 end = frames.size() + end + 1;
