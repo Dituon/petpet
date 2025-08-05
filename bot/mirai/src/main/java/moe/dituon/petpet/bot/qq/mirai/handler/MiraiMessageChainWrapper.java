@@ -59,7 +59,11 @@ public class MiraiMessageChainWrapper implements QQMessageChainInterface {
                 this.elements.add(wrapAtElement(at));
                 this.hasTarget = true;
             } else if (ele instanceof QuoteReply) {
-                this.replyImage = service.getCachedImage(((QuoteReply) ele).getSource());
+                if(source != null) {
+                    this.replyImage = service.getCachedImage(((QuoteReply) ele).getSource(), source.getTargetId());
+                } else {
+                    this.replyImage = service.getCachedImage(((QuoteReply) ele).getSource());
+                }
                 this.hasTarget = true;
             }
         }

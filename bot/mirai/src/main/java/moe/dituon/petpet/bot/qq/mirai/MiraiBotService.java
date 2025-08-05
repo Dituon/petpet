@@ -60,6 +60,11 @@ public class MiraiBotService extends QQBotService {
         return this.getImageCachePool().get(id);
     }
 
+    public @Nullable String getCachedImage(MessageSource source, Long targetId) {
+        long id = getUniqueSourceId(source, targetId);
+        return this.getImageCachePool().get(id);
+    }
+
     /**
      * 计算消息唯一 id, 如果无法获取消息 id (低概率事件) 则返回 0
      */
@@ -75,6 +80,17 @@ public class MiraiBotService extends QQBotService {
         return source.getTargetId() + sourceIds[0];
     }
 
+    public long getUniqueSourceId(@Nullable MessageSource source, Long targetId) {
+        if (source == null) {
+            return 0L;
+        }
+        int[] sourceIds = source.getIds();
+        if (sourceIds.length == 0) {
+            return 0L;
+        }
+        // message id = target id + source id
+        return targetId + sourceIds[0];
+    }
 
     @Override
     protected Map<String, TemplateExtraMetadata> initCustomTemplateMetadata() {
