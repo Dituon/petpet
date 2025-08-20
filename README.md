@@ -63,7 +63,7 @@
 
 - [petpet-js](https://github.com/Dituon/petpet-js) - Petpet 前端实现，支持旧版模板。
 - [petpet-rs](https://github.com/Dituon/petpet-rs) - 使用 Rust Skia 后端实现，支持旧版模板。
-- [QQ 交流群](https://qm.qq.com/q/ikRbuuGWRi) - 群号 `961494251`
+- [QQ 交流群](https://qm.qq.com/q/Luj7RRD42Y) - 群号 `761479821`
 
 ## TODO List
 
@@ -92,4 +92,4 @@
 
 欢迎提交自定义模板至 [petpet-templates](https://github.com/Dituon/petpet-templates)。
 
-QQ 交流群号: [`781804589`](https://qm.qq.com/q/SDSzp6qyyc)
+QQ 交流群号: [`761479821`](https://qm.qq.com/q/Luj7RRD42Y)
