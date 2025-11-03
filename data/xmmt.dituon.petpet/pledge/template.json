@@ -1,0 +1,38 @@
+{
+  "type": "image",
+  "metadata": {
+    "alias": ["誓死效忠"],
+    "preview": "./0.png",
+    "inRandomList": true,
+    "template_version": 0
+  },
+  "elements": [
+    {
+      "type": "image",
+      "src": "./0.png",
+      "coords": [0, 0, 830, 709]
+    },
+    {
+      "type": "text",
+      "text": "誓死效忠${0:-${to:-ta}}",
+      "coords": [417, 71, 666],
+      "align": "center",
+      "baseline": "middle",
+      "wrap": "zoom",
+      "color": "#000",
+      "size": 32
+    },
+    {
+      "type": "image",
+      "id": "avatar",
+      "key": "to",
+      "fit": "contain",
+      "coords": [335, 475, "22vw", "22vw"],
+      "position": "-10% center"
+    }
+  ],
+  "canvas": {
+    "width": "830px",
+    "height": "709px"
+  }
+}
