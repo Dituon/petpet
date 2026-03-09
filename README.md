@@ -92,4 +92,4 @@
 
 欢迎提交自定义模板至 [petpet-templates](https://github.com/Dituon/petpet-templates)。
 
-QQ 交流群号: [`761479821`](https://qm.qq.com/q/Luj7RRD42Y)
+QQ 交流群号: [`781804589`](https://qm.qq.com/q/TBmPPFjd0O)
