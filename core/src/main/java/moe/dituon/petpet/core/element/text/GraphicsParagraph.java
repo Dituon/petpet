@@ -175,6 +175,9 @@ public class GraphicsParagraph extends ElementFrame {
         float x = string.x.getValue(lengthContext);
         float y = string.y.getValue(lengthContext);
 
+        // FEATURE: alpha
+        g2d.setComposite(string.alphaComposite);
+
         AffineTransform prevTransform = null;
         if (string.theta != 0) {
             // FEATURE: rotate

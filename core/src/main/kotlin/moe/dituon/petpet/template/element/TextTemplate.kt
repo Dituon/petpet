@@ -100,6 +100,7 @@ data class TextTemplate(
     val maxSize: FloatOrArray = floatArrayOf(96f),
     val align: TextAlignList = listOf(TextAlign.LEFT),
     val origin: OffsetList = listOf(Offset.EMPTY),
+    val opacity: FloatOrArray = floatArrayOf(1f),
     val baseline: TextBaselineList = listOf(TextBaseline.TOP),
     val wrap: TextWrapList = listOf(TextWrap.NONE),
     val style: TextStyleList = listOf(TextStyle.PLAIN),

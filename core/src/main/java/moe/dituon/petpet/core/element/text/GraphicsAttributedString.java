@@ -29,6 +29,7 @@ public class GraphicsAttributedString extends AttributedString {
     public final float angle;
     public final float theta;
     public final Offset origin;
+    public final AlphaComposite alphaComposite;
     public final float strokeSize;
     public final Color strokeColor;
     public final Length x;
@@ -58,6 +59,7 @@ public class GraphicsAttributedString extends AttributedString {
         this.baseline = getNElement(data.getBaseline());
         this.wrap = getNElement(data.getWrap());
         this.origin = getNElement(data.getOrigin());
+        this.alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getNElement(data.getOpacity()));
         this.angle = getNElement(data.getAngle());
         this.theta = (float) Math.toRadians(this.angle);
         this.strokeColor = getNElement(data.getStrokeColor());
@@ -84,6 +86,7 @@ public class GraphicsAttributedString extends AttributedString {
         this.baseline = string.baseline;
         this.wrap = string.wrap;
         this.origin = string.origin;
+        this.alphaComposite = string.alphaComposite;
         this.angle = string.angle;
         this.theta = string.theta;
         this.strokeColor = string.strokeColor;

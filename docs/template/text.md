@@ -17,6 +17,7 @@
 | **coords**       | [Coords](#coords)              | 文本坐标                                             | 必须       |
 | **angle**        | float                          | 顺时针方向旋转角度，单位为度                                   | `0`      |
 | **origin**       | [Offset](./length.md#offset)   | 文本旋转原点                                           | `center` |
+| **opacity**      | float                          | 文本不透明度，取值范围[0, 1]                                | `1`      |
 | **color**        | [Color](./types.md#color)      | 文本颜色                                             | `#fff`   |
 | **font**         | string                         | 字体名                                              | `simsun` |
 | **size**         | float                          | 文本尺寸, 单位为 px, 别名为 `min_size`, 不能小于 `1`           | `16`     |

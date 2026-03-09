@@ -132,6 +132,9 @@ public class GraphicsBreakParagraph extends GraphicsParagraph {
         float y = this.string.y.getValue(lengthContext);
         super.setGraphicsHint(g2d);
 
+        // FEATURE: alpha
+        g2d.setComposite(string.alphaComposite);
+
         AffineTransform prevTransform = null;
         if (this.string.theta != 0) {
             // FEATURE: rotate
