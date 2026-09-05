@@ -1,0 +1,34 @@
+{
+  "type": "image",
+  "metadata": {
+    "api_version": 100,
+    "template_version": 1,
+    "alias": ["dlss5"],
+    "desc": "dlss5",
+    "in_random_list": false
+  },
+  "canvas": {
+    "width": 1006,
+    "height": 500,
+    "color": "#ffffff"
+  },
+  "elements": [
+    {
+      "type": "image",
+      "key": "from",
+      "coords": [0, 0, 500, 500],
+      "fit": "cover"
+    },
+    {
+      "type": "image",
+      "key": "to",
+      "coords": [506, 0, 500, 500],
+      "fit": "cover"
+    },
+    {
+      "type": "image",
+      "src": "./0.png",
+      "coords": [0, 0, 1006, 500]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+﻿{
+  "type": "image",
+  "metadata": {
+    "alias": ["骞插槢"],
+    "preview": "./0.png",
+    "inRandomList": true,
+    "template_version": 0
+  },
+  "elements": [
+    {
+      "type": "image",
+      "src": "./0.png",
+      "coords": [0, 0, 960, 1088]
+    },
+    {
+      "type": "image",
+      "id": "left",
+      "key": "from",
+      "fit": "contain",
+      "coords": [81, 570, "35vh", "35vh"],
+      "position": "left bottom"
+    },
+    {
+      "type": "image",
+      "id": "right",
+      "key": "to",
+      "fit": "contain",
+      "coords": [534, 570, "35vh", "35vh"],
+      "position": "right bottom"
+    },
+    {
+      "type": "image",
+      "id": "hand",
+      "src": "./1.png",
+      "fit": "cover",
+      "coords": [0, 831, "100cw", "100ch"]
+    }
+  ],
+  "canvas": {
+    "width": "960px",
+    "height": "1088px"
+  }
+}

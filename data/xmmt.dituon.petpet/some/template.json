@@ -1,0 +1,34 @@
+{
+  "type": "image",
+  "metadata": {
+    "alias": ["就是我"],
+    "preview": "./0.png",
+    "inRandomList": true,
+    "template_version": 0
+  },
+  "elements": [
+    {
+      "type": "image",
+      "src": "./0.png",
+      "coords": [0, 0, 1028, 754]
+    },
+    {
+      "type": "image",
+      "id": "avatar",
+      "key": "to",
+      "fit": "cover",
+      "position": "center center",
+      "coords": [
+        [2, 6],
+        [26, 439],
+        [460, 279],
+        [465, 1],
+        [33, 6]
+      ]
+    }
+  ],
+  "canvas": {
+    "width": "1028px",
+    "height": "754px"
+  }
+}

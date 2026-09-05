@@ -1,0 +1,38 @@
+{
+    "type": "gif",
+    "metadata": {
+        "alias": [
+            "hi",
+            "hellohi"
+        ]
+    },
+    "elements": [
+        {
+            "type": "image",
+            "key": "to",
+            "coords": [
+                0,
+                0,
+                720,
+                720
+            ],
+            "fit": "contain"
+        },
+        {
+            "type": "image",
+            "src": "./",
+            "coords": [
+                0,
+                0,
+                720,
+                720
+            ]
+        }
+    ],
+    "canvas": {
+        "width": 720,
+        "height": 720,
+        "length": 5
+    },
+    "delay": 33
+}
