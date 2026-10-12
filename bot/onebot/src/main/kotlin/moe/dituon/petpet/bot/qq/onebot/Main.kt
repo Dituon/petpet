@@ -17,6 +17,7 @@ import moe.dituon.petpet.bot.qq.onebot.handler.OnebotMessageHandler
 import moe.dituon.petpet.bot.qq.onebot.handler.OnebotSentMessageHandler
 import moe.dituon.petpet.service.EnvironmentChecker
 import moe.dituon.petpet.service.TemplateUpdater
+import moe.dituon.petpet.uitls.readTextWithoutBom
 import net.mamoe.yamlkt.Yaml
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -31,7 +32,7 @@ val config: OnebotConfig by lazy {
     var config: OnebotConfig? = null
     val configFile = OnebotBotService.DEFAULT_CONFIG_FILE
     if (configFile.exists()) try {
-        config = Yaml.decodeFromString(OnebotConfig.serializer(), configFile.readText())
+        config = Yaml.decodeFromString(OnebotConfig.serializer(), configFile.readTextWithoutBom())
     } catch (t: Throwable) {
         val bak = File(configFile.parentFile, "${configFile.name}.old_${System.currentTimeMillis()}.bak")
         configFile.copyTo(bak, true)

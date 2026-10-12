@@ -5,6 +5,16 @@ import kotlinx.serialization.builtins.*
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
 import moe.dituon.petpet.template.fields.ImageFilterTemplate
+import java.io.File
+
+/** UTF-8 BOM (Byte Order Mark) 字符, 部分编辑器 (如 Windows 记事本) 保存文件时会写入 */
+const val UTF8_BOM: String = "\uFEFF"
+
+/** 去除字符串开头的 UTF-8 BOM, 避免 kotlinx.serialization 等 JSON 解析器报 JsonDecodingException */
+fun String.trimBom(): String = removePrefix(UTF8_BOM)
+
+/** 读取文件文本并去除开头的 UTF-8 BOM */
+fun File.readTextWithoutBom(): String = readText().trimBom()
 
 val GlobalJson = Json {
     encodeDefaults = true

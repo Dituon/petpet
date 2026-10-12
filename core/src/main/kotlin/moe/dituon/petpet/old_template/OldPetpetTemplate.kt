@@ -14,6 +14,7 @@ import moe.dituon.petpet.template.element.BackgroundTemplate
 import moe.dituon.petpet.template.element.ElementTemplate
 import moe.dituon.petpet.template.fields.decodeColor
 import moe.dituon.petpet.uitls.GlobalJson
+import moe.dituon.petpet.uitls.readTextWithoutBom
 import java.awt.Color
 import java.io.File
 
@@ -91,7 +92,7 @@ data class OldPetpetTemplate(
 
         @JvmStatic
         fun fromJsonFile(file: File): OldPetpetTemplate {
-            val template = fromJson(file.readText())
+            val template = fromJson(file.readTextWithoutBom())
             template.basePath = file.parentFile
             return template
         }

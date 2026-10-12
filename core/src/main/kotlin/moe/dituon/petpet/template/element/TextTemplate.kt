@@ -17,6 +17,7 @@ import moe.dituon.petpet.template.fields.length.TextCoordsList
 import moe.dituon.petpet.uitls.FloatOrArray
 import moe.dituon.petpet.uitls.GlobalJson
 import moe.dituon.petpet.uitls.StringList
+import moe.dituon.petpet.uitls.readTextWithoutBom
 import moe.dituon.petpet.uitls.wrapJsonElement
 import java.awt.Color
 import java.awt.Font
@@ -144,7 +145,7 @@ data class TextTemplate(
 
         @JvmStatic
         fun fromJsonFile(file: File): TextTemplate {
-            return fromJson(file.readText())
+            return fromJson(file.readTextWithoutBom())
         }
 
         @JvmStatic

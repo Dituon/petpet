@@ -23,6 +23,7 @@ import moe.dituon.petpet.uitls.FloatOrArray
 import moe.dituon.petpet.uitls.GlobalJson
 import moe.dituon.petpet.uitls.IntAsStringList
 import moe.dituon.petpet.uitls.StringList
+import moe.dituon.petpet.uitls.readTextWithoutBom
 import java.io.File
 import java.nio.file.Path
 
@@ -111,7 +112,7 @@ data class AvatarTemplate(
 
         @JvmStatic
         fun fromJsonFile(file: File): AvatarTemplate {
-            val avatar = fromJson(file.readText())
+            val avatar = fromJson(file.readTextWithoutBom())
             avatar.basePath = file.parentFile
             return avatar
         }

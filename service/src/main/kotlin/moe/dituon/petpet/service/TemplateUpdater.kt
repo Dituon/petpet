@@ -8,6 +8,7 @@ import moe.dituon.petpet.core.GlobalContext
 import moe.dituon.petpet.core.element.PetpetModel
 import moe.dituon.petpet.core.utils.io.FileMD5Utils
 import moe.dituon.petpet.uitls.GlobalJson
+import moe.dituon.petpet.uitls.trimBom
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Font
@@ -229,7 +230,7 @@ ${updateHintList.joinToString("\n")}
         val indexFileUrl = repoUrl.toURI().resolve(INDEX_FILE_NAME).toURL()
         return GlobalJson.decodeFromString(
             UpdateIndex.serializer(),
-            withContext(downloadDispatcher) { indexFileUrl.readText() }
+            withContext(downloadDispatcher) { indexFileUrl.readText().trimBom() }
         )
     }
 

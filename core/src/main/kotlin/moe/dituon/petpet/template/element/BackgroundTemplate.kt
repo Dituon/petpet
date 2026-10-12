@@ -9,6 +9,7 @@ import moe.dituon.petpet.core.position.AvatarXYWHCoords
 import moe.dituon.petpet.template.fields.ColorElement
 import moe.dituon.petpet.template.fields.length.AvatarCoordsList
 import moe.dituon.petpet.uitls.GlobalJson
+import moe.dituon.petpet.uitls.readTextWithoutBom
 import java.awt.Color
 import java.io.File
 import java.nio.file.Path
@@ -42,7 +43,7 @@ data class BackgroundTemplate(
 
         @JvmStatic
         fun fromJsonFile(file: File): BackgroundTemplate {
-            val background = fromJson(file.readText())
+            val background = fromJson(file.readTextWithoutBom())
             background.basePath = file.parentFile
             return background
         }

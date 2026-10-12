@@ -12,6 +12,7 @@ import moe.dituon.petpet.template.element.BackgroundTemplate
 import moe.dituon.petpet.template.element.ElementTemplate
 import moe.dituon.petpet.uitls.GlobalJson
 import moe.dituon.petpet.uitls.IntOrArray
+import moe.dituon.petpet.uitls.readTextWithoutBom
 import java.io.File
 import java.nio.file.Path
 import kotlin.math.round
@@ -92,7 +93,7 @@ data class PetpetTemplate(
 
         @JvmStatic
         fun fromJsonFile(file: File): PetpetTemplate {
-            val template = fromJson(file.readText())
+            val template = fromJson(file.readTextWithoutBom())
             template.basePath = file.parentFile
             return template
         }
