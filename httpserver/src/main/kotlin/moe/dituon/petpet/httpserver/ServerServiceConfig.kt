@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import moe.dituon.petpet.service.TemplateUpdaterConfig
 import moe.dituon.petpet.uitls.GlobalJson
+import moe.dituon.petpet.uitls.trimBom
 
 @Serializable
 data class ServerServiceConfig(
@@ -25,7 +26,7 @@ data class ServerServiceConfig(
     companion object {
         @JvmStatic
         fun fromJsonString(str: String): ServerServiceConfig {
-            return GlobalJson.decodeFromString(str)
+            return GlobalJson.decodeFromString(str.trimBom())
         }
     }
 }

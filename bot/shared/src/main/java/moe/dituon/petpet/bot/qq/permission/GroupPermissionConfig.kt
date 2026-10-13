@@ -3,6 +3,7 @@ package moe.dituon.petpet.bot.qq.permission
 import kotlinx.serialization.Serializable
 import lombok.Builder
 import moe.dituon.petpet.uitls.GlobalJson
+import moe.dituon.petpet.uitls.trimBom
 
 @Serializable
 @Builder
@@ -28,7 +29,7 @@ data class GroupPermissionConfig(
     companion object {
         @JvmStatic
         fun fromJsonString(str: String): GroupPermissionConfig =
-            GlobalJson.decodeFromString(str)
+            GlobalJson.decodeFromString(str.trimBom())
 
         @JvmStatic
         fun builder() = Builder()
