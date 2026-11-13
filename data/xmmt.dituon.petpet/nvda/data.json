@@ -1,0 +1,21 @@
+{
+  "type": "IMG",
+  "avatar": [
+    {
+      "type": "TO",
+      "pos": [10, 180, 688, 488],
+      "avatarOnTop": false
+    }
+  ],
+  "text": [
+    {
+      "text": "最新消息：$txt1[$to]被认为是英伟达首席执行官的潜在继承者。",
+      "pos": [27, 169, 1250],
+      "size": 44,
+      "font": "MiSans",
+      "wrap": "ZOOM"
+    }
+  ],
+  "alias": ["英伟达", "继承者", "nvidia"],
+  "inRandomList": false
+}
